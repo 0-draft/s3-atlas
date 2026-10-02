@@ -1,0 +1,72 @@
+{
+  "verifiedDate": "2026-10-03",
+  "region": "us-east-1",
+  "egressTiers": [
+    {
+      "uptoTB": 10,
+      "pricePerGB": 0.09
+    },
+    {
+      "uptoTB": 50,
+      "pricePerGB": 0.085
+    },
+    {
+      "uptoTB": 150,
+      "pricePerGB": 0.07
+    },
+    {
+      "uptoTB": null,
+      "pricePerGB": 0.05
+    }
+  ],
+  "egressFreeGBPerMonth": 100,
+  "interRegionPerGB": {
+    "toUsEast2": 0.01,
+    "toOtherRegions": 0.02
+  },
+  "toCloudFrontPerGB": 0,
+  "transferAccelerationPerGB": {
+    "inFromUsEuJapan": 0.04,
+    "inFromOther": 0.08,
+    "out": 0.04
+  },
+  "replicationTimeControlPerGB": 0.015,
+  "lifecycleTransitionPer1k": {
+    "STANDARD_IA": 0.01,
+    "ONEZONE_IA": 0.01,
+    "INTELLIGENT_TIERING": 0.01,
+    "GLACIER_IR": 0.02,
+    "GLACIER": 0.03,
+    "DEEP_ARCHIVE": 0.05
+  },
+  "kms": {
+    "requestsPer10k": 0.03,
+    "customerManagedKeyPerMonth": 1,
+    "freeRequestsPerMonth": 20000
+  },
+  "natGateway": {
+    "perHour": 0.045,
+    "perGBProcessed": 0.045
+  },
+  "interfaceEndpoint": {
+    "perHourPerAZ": 0.01,
+    "perGBProcessedFirstPB": 0.01
+  },
+  "gatewayEndpoint": {
+    "perHour": 0,
+    "perGB": 0
+  },
+  "management": {
+    "inventoryPerMillionObjects": 0.0025,
+    "storageLensAdvancedPerMillionObjectsFirst25B": 0.2,
+    "storageClassAnalysisPerMillionObjects": 0.1,
+    "taggingPer10kTags": 0.0065,
+    "batchOperationsPerJob": 0.25,
+    "batchOperationsPerMillionOps": 1,
+    "metadataJournalPerMillionUpdates": 0.3
+  },
+  "notes": {
+    "en": "Internet egress tiers apply after the 100 GB/month free allowance, which is aggregated across all AWS services and Regions. uptoTB is the cumulative upper bound of each tier (null = no upper bound). Source: AWS Price List API (AWSDataTransfer, AmazonS3, awskms, AmazonVPC offers). NAT Gateway rates are from the VPC pricing page example (us-east-2); us-east-1 assumed equal.",
+    "ja": "インターネット向け転送の段階料金は、全 AWS サービス・全リージョン合計で月 100 GB の無料枠を超えた分に適用。uptoTB は各段階の累積上限 (null は上限なし)。出典は AWS Price List API (AWSDataTransfer / AmazonS3 / awskms / AmazonVPC)。NAT Gateway は VPC 料金ページの例示 (us-east-2) の値で、us-east-1 も同額と仮定。"
+  }
+}

@@ -1,0 +1,618 @@
+[
+  {
+    "id": "aws-s3",
+    "name": "Amazon S3 Standard",
+    "vendor": "Amazon Web Services",
+    "type": "hyperscaler",
+    "storagePricePerGBMonth": 0.023,
+    "egressPricePerGB": 0.09,
+    "putPer1k": 0.005,
+    "getPer1k": 0.0004,
+    "minStorageDays": 0,
+    "s3Compatible": "native",
+    "strongConsistency": true,
+    "features": { "versioning": true, "objectLock": true, "lifecycle": true, "replication": true, "events": true, "iceberg": true, "vectors": true, "cdn": true },
+    "strengths": {
+      "en": ["The reference implementation of the S3 API; every tool supports it first", "Broadest storage-class ladder (Express One Zone to Glacier Deep Archive)", "Deep integration with the AWS ecosystem (Lambda, Athena, EMR, Bedrock)", "Managed Iceberg (S3 Tables) and native vectors (S3 Vectors)", "Strong read-after-write consistency since December 2020"],
+      "ja": ["S3 API のリファレンス実装。あらゆるツールが最初に対応する", "最も広いストレージクラス階層 (Express One Zone から Glacier Deep Archive まで)", "AWS エコシステム (Lambda / Athena / EMR / Bedrock) との深い統合", "マネージド Iceberg (S3 Tables) とネイティブベクトル (S3 Vectors)", "2020 年 12 月から強い read-after-write 整合性"]
+    },
+    "weaknesses": {
+      "en": ["Internet egress of $0.09/GB dominates bills for distribution workloads", "Request charges and many small line items make costs hard to predict", "List price for hot storage is 2-3x the alt-cloud providers"],
+      "ja": ["インターネット egress $0.09/GB が配信系ワークロードの請求を支配する", "リクエスト課金や細かい課金項目が多く、コスト予測が難しい", "ホット層の定価は alt-cloud 勢の 2〜3 倍"]
+    },
+    "bestFor": {
+      "en": "Workloads whose compute already runs on AWS, data lakes/lakehouses, and anything needing the full feature set and compliance coverage",
+      "ja": "コンピュートが AWS 上にあるワークロード、データレイク/レイクハウス、フル機能とコンプライアンス網羅性が必要なもの全般"
+    },
+    "pricingUrl": "https://aws.amazon.com/s3/pricing/",
+    "verifiedDate": "2026-10-03"
+  },
+  {
+    "id": "gcs",
+    "name": "Google Cloud Storage (Standard)",
+    "vendor": "Google Cloud",
+    "type": "hyperscaler",
+    "storagePricePerGBMonth": 0.02,
+    "egressPricePerGB": 0.12,
+    "putPer1k": 0.005,
+    "getPer1k": 0.0004,
+    "minStorageDays": 0,
+    "s3Compatible": "partial",
+    "strongConsistency": true,
+    "features": { "versioning": true, "objectLock": true, "lifecycle": true, "replication": true, "events": true, "iceberg": true, "vectors": false, "cdn": true },
+    "strengths": {
+      "en": ["Strong global consistency including list operations", "Dual-region and multi-region buckets with a single namespace", "Tight integration with BigQuery / BigLake and Vertex AI", "Autoclass automatic tiering"],
+      "ja": ["list を含むグローバルな強い整合性", "単一名前空間の dual-region / multi-region バケット", "BigQuery / BigLake / Vertex AI との密結合", "Autoclass による自動階層化"]
+    },
+    "weaknesses": {
+      "en": ["Internet egress ($0.12/GB for the first TB on Premium Tier) is higher than S3", "S3 compatibility is via the XML API with HMAC keys; not every S3 feature maps", "Multi-region and dual-region operations cost more since the 2023 repricing"],
+      "ja": ["インターネット egress (Premium Tier 最初の 1TB は $0.12/GB) は S3 より高い", "S3 互換は HMAC キー + XML API 経由で、全機能が対応するわけではない", "2023 年の価格改定以降、multi/dual-region の操作単価が高い"]
+    },
+    "bestFor": {
+      "en": "Analytics and AI workloads centred on BigQuery or Vertex AI, and teams wanting simple multi-region buckets",
+      "ja": "BigQuery / Vertex AI 中心の分析・AI ワークロード、シンプルな multi-region バケットが欲しいチーム"
+    },
+    "pricingUrl": "https://cloud.google.com/storage/pricing",
+    "verifiedDate": "2026-10-03"
+  },
+  {
+    "id": "azure-blob",
+    "name": "Azure Blob Storage (Hot LRS) / ADLS Gen2",
+    "vendor": "Microsoft",
+    "type": "hyperscaler",
+    "storagePricePerGBMonth": 0.0208,
+    "egressPricePerGB": 0.087,
+    "putPer1k": 0.005,
+    "getPer1k": 0.0004,
+    "minStorageDays": 0,
+    "s3Compatible": "none",
+    "strongConsistency": true,
+    "features": { "versioning": true, "objectLock": true, "lifecycle": true, "replication": true, "events": true, "iceberg": null, "vectors": false, "cdn": true },
+    "strengths": {
+      "en": ["ADLS Gen2 hierarchical namespace gives atomic directory rename for analytics", "Hot / Cool / Cold / Archive tiers with per-blob tiering", "Enterprise identity integration via Entra ID", "Natural fit for Microsoft Fabric / OneLake"],
+      "ja": ["ADLS Gen2 の階層型名前空間で、分析向けのアトミックなディレクトリ rename が可能", "Hot / Cool / Cold / Archive をブロブ単位で切り替え可能", "Entra ID による企業 ID 統合", "Microsoft Fabric / OneLake との親和性"]
+    },
+    "weaknesses": {
+      "en": ["No native S3 API; needs a gateway or SDK changes", "Pricing matrix (redundancy x tier x region) is complex", "Archive rehydration can take hours"],
+      "ja": ["ネイティブの S3 API がなく、ゲートウェイか SDK 書き換えが必要", "冗長性 x 階層 x リージョンの価格マトリクスが複雑", "Archive の rehydrate に数時間かかる"]
+    },
+    "bestFor": {
+      "en": "Microsoft-centric enterprises, Fabric / Synapse / Databricks on Azure analytics",
+      "ja": "Microsoft 中心の企業、Azure 上の Fabric / Synapse / Databricks 分析基盤"
+    },
+    "pricingUrl": "https://azure.microsoft.com/en-us/pricing/details/storage/blobs/",
+    "verifiedDate": "2026-10-03"
+  },
+  {
+    "id": "cloudflare-r2",
+    "name": "Cloudflare R2",
+    "vendor": "Cloudflare",
+    "type": "alt-cloud",
+    "storagePricePerGBMonth": 0.015,
+    "egressPricePerGB": 0,
+    "putPer1k": 0.0045,
+    "getPer1k": 0.00036,
+    "minStorageDays": 0,
+    "s3Compatible": "high",
+    "strongConsistency": true,
+    "features": { "versioning": false, "objectLock": true, "lifecycle": true, "replication": false, "events": true, "iceberg": true, "vectors": false, "cdn": true },
+    "strengths": {
+      "en": ["Zero egress fees to the internet", "Sits on Cloudflare's global network with Workers / CDN integration", "Managed Iceberg catalog (Basin Catalog, formerly R2 Data Catalog)", "Super Slurper / Sippy for incremental migration from S3"],
+      "ja": ["インターネットへの egress が無料", "Cloudflare のグローバルネットワーク上にあり Workers / CDN と統合", "マネージド Iceberg カタログ (Basin Catalog、旧 R2 Data Catalog)", "Super Slurper / Sippy で S3 から段階移行できる"]
+    },
+    "weaknesses": {
+      "en": ["No S3 object versioning, no bucket replication, no object tagging/ACL APIs", "Object lock is via R2 bucket-lock rules, not the S3 Object Lock API", "Fewer storage classes (Standard and Infrequent Access only)"],
+      "ja": ["S3 のオブジェクトバージョニング、バケットレプリケーション、タグ/ACL API が未実装", "オブジェクトロックは S3 Object Lock API ではなく R2 独自の bucket lock ルール", "ストレージクラスが少ない (Standard と Infrequent Access のみ)"]
+    },
+    "bestFor": {
+      "en": "Egress-heavy public content, multi-cloud data sharing, edge apps on Workers",
+      "ja": "egress の多い公開コンテンツ、マルチクラウドでのデータ共有、Workers 上のエッジアプリ"
+    },
+    "pricingUrl": "https://developers.cloudflare.com/r2/pricing/",
+    "verifiedDate": "2026-10-03"
+  },
+  {
+    "id": "backblaze-b2",
+    "name": "Backblaze B2",
+    "vendor": "Backblaze",
+    "type": "alt-cloud",
+    "storagePricePerGBMonth": 0.00695,
+    "egressPricePerGB": 0.01,
+    "putPer1k": 0,
+    "getPer1k": 0,
+    "minStorageDays": 0,
+    "s3Compatible": "high",
+    "strongConsistency": null,
+    "features": { "versioning": true, "objectLock": true, "lifecycle": true, "replication": true, "events": true, "iceberg": false, "vectors": false, "cdn": false },
+    "strengths": {
+      "en": ["$6.95/TB-month with free egress up to 3x average stored data", "API calls free for pay-as-you-go since May 2026 (except Event Notifications)", "No minimum storage duration", "Free egress to partner CDNs and compute (Bandwidth Alliance style)"],
+      "ja": ["$6.95/TB-月、平均保存量の 3 倍まで egress 無料", "2026 年 5 月から従量課金の API コール無料 (Event Notifications を除く)", "最低保存期間なし", "提携 CDN / コンピュートへの egress 無料"]
+    },
+    "weaknesses": {
+      "en": ["Few regions compared with hyperscalers", "No managed analytics, table, or vector features", "Price rose from $6 to $6.95/TB on 2026-05-01"],
+      "ja": ["ハイパースケーラーに比べリージョンが少ない", "マネージド分析・テーブル・ベクトル機能なし", "2026-05-01 に $6 から $6.95/TB へ値上げ"]
+    },
+    "bestFor": {
+      "en": "Backups, media archives, and origin storage behind a partner CDN",
+      "ja": "バックアップ、メディアアーカイブ、提携 CDN の背後のオリジン"
+    },
+    "pricingUrl": "https://www.backblaze.com/cloud-storage/pricing",
+    "verifiedDate": "2026-10-03"
+  },
+  {
+    "id": "wasabi",
+    "name": "Wasabi Hot Cloud Storage",
+    "vendor": "Wasabi Technologies",
+    "type": "alt-cloud",
+    "storagePricePerGBMonth": 0.00799,
+    "egressPricePerGB": 0,
+    "putPer1k": 0,
+    "getPer1k": 0,
+    "minStorageDays": 90,
+    "s3Compatible": "high",
+    "strongConsistency": null,
+    "features": { "versioning": true, "objectLock": true, "lifecycle": true, "replication": true, "events": null, "iceberg": false, "vectors": false, "cdn": false },
+    "strengths": {
+      "en": ["Flat $7.99/TB-month with no egress or API fees", "Predictable bills for backup software (Veeam etc.)", "Reserved Capacity Storage for multi-year discounts"],
+      "ja": ["$7.99/TB-月の定額で egress / API 料金なし", "Veeam などバックアップ用途で請求が読みやすい", "Reserved Capacity Storage で複数年割引"]
+    },
+    "weaknesses": {
+      "en": ["90-day minimum storage duration per object", "1 TB minimum monthly charge", "Free egress only if monthly egress stays within stored volume (fair-use policy)", "Raised to $7.99 from $6.99 on 2026-07-01"],
+      "ja": ["オブジェクトごとに 90 日の最低保存期間", "月 1TB の最低課金", "月間 egress が保存量以内でないと無料にならない (公正利用ポリシー)", "2026-07-01 に $6.99 から $7.99 へ値上げ"]
+    },
+    "bestFor": {
+      "en": "Long-lived backup and archive data with modest download volume",
+      "ja": "ダウンロード量が控えめな長期保存のバックアップ・アーカイブ"
+    },
+    "pricingUrl": "https://wasabi.com/pricing",
+    "verifiedDate": "2026-10-03"
+  },
+  {
+    "id": "oci-object-storage",
+    "name": "OCI Object Storage (Standard)",
+    "vendor": "Oracle",
+    "type": "hyperscaler",
+    "storagePricePerGBMonth": 0.0255,
+    "egressPricePerGB": 0.0085,
+    "putPer1k": 0.00034,
+    "getPer1k": 0.00034,
+    "minStorageDays": 0,
+    "s3Compatible": "partial",
+    "strongConsistency": true,
+    "features": { "versioning": true, "objectLock": true, "lifecycle": true, "replication": true, "events": true, "iceberg": null, "vectors": false, "cdn": false },
+    "strengths": {
+      "en": ["First 10 TB/month of internet egress free, then about $0.0085/GB", "Same price in every commercial region", "Archive tier around $0.0026/GB-month"],
+      "ja": ["インターネット egress は月 10TB まで無料、以降約 $0.0085/GB", "全商用リージョンで同一価格", "Archive 層は約 $0.0026/GB-月"]
+    },
+    "weaknesses": {
+      "en": ["S3 Compatibility API is a subset (customer secret keys, limited feature mapping)", "Hot storage list price is above S3", "Smaller third-party ecosystem"],
+      "ja": ["S3 Compatibility API はサブセット (Customer Secret Key、機能対応が限定的)", "ホット層の定価は S3 より高い", "サードパーティエコシステムが小さい"]
+    },
+    "bestFor": {
+      "en": "Oracle Database / OCI workloads and egress-heavy workloads that still want a hyperscaler",
+      "ja": "Oracle Database / OCI 上のワークロード、ハイパースケーラーで egress を抑えたいケース"
+    },
+    "pricingUrl": "https://www.oracle.com/cloud/storage/pricing/",
+    "verifiedDate": "2026-10-03"
+  },
+  {
+    "id": "ibm-cos",
+    "name": "IBM Cloud Object Storage (Standard, regional)",
+    "vendor": "IBM",
+    "type": "hyperscaler",
+    "storagePricePerGBMonth": 0.0238,
+    "egressPricePerGB": null,
+    "putPer1k": 0.005,
+    "getPer1k": 0.0004,
+    "minStorageDays": 0,
+    "s3Compatible": "high",
+    "strongConsistency": true,
+    "features": { "versioning": true, "objectLock": true, "lifecycle": true, "replication": true, "events": true, "iceberg": null, "vectors": false, "cdn": null },
+    "strengths": {
+      "en": ["Descends from Cleversafe information-dispersal erasure coding", "Smart Tier auto-pricing and One-Rate plan (flat USD 10/TB at 2 PB+, egress included)", "Available as software for on-premises deployment"],
+      "ja": ["Cleversafe 由来の情報分散型イレイジャーコーディング", "Smart Tier の自動料金と One-Rate プラン (2PB 以上で egress 込み USD 10/TB 定額)", "オンプレ向けソフトウェアとしても提供"]
+    },
+    "weaknesses": {
+      "en": ["Pricing is region/resiliency dependent and hard to verify publicly", "Smaller developer mindshare", "Few AI-native features"],
+      "ja": ["料金がリージョン/冗長性で変わり公開情報で検証しにくい", "開発者のマインドシェアが小さい", "AI ネイティブ機能が少ない"]
+    },
+    "bestFor": {
+      "en": "IBM Cloud / watsonx customers and regulated industries already on IBM",
+      "ja": "IBM Cloud / watsonx の顧客、IBM 系の規制業界"
+    },
+    "pricingUrl": "https://www.ibm.com/cloud/object-storage/pricing",
+    "verifiedDate": "2026-10-03"
+  },
+  {
+    "id": "alibaba-oss",
+    "name": "Alibaba Cloud OSS (Standard LRS)",
+    "vendor": "Alibaba Cloud",
+    "type": "hyperscaler",
+    "storagePricePerGBMonth": 0.017,
+    "egressPricePerGB": 0.076,
+    "putPer1k": null,
+    "getPer1k": null,
+    "minStorageDays": 0,
+    "s3Compatible": "partial",
+    "strongConsistency": true,
+    "features": { "versioning": true, "objectLock": true, "lifecycle": true, "replication": true, "events": true, "iceberg": null, "vectors": null, "cdn": true },
+    "strengths": {
+      "en": ["Largest footprint in mainland China and strong APAC presence", "Rich classes (Standard / IA / Archive / Cold Archive / Deep Cold Archive)", "Free OSS-to-CDN transfer outside mainland China"],
+      "ja": ["中国本土で最大級、APAC にも強い", "Standard / IA / Archive / Cold Archive / Deep Cold Archive と階層が豊富", "中国本土外では OSS から CDN への転送が無料"]
+    },
+    "weaknesses": {
+      "en": ["Native API is OSS API; S3 compatibility is partial", "Geopolitical and data-sovereignty concerns for Western customers", "Region-by-region pricing makes comparisons hard"],
+      "ja": ["ネイティブは OSS API で S3 互換は部分的", "欧米顧客には地政学・データ主権上の懸念", "リージョンごとの価格で比較しにくい"]
+    },
+    "bestFor": {
+      "en": "Workloads serving users in mainland China or APAC",
+      "ja": "中国本土や APAC のユーザー向けワークロード"
+    },
+    "pricingUrl": "https://www.alibabacloud.com/en/product/oss/pricing",
+    "verifiedDate": "2026-10-03"
+  },
+  {
+    "id": "do-spaces",
+    "name": "DigitalOcean Spaces",
+    "vendor": "DigitalOcean",
+    "type": "alt-cloud",
+    "storagePricePerGBMonth": 0.02,
+    "egressPricePerGB": 0.01,
+    "putPer1k": 0,
+    "getPer1k": 0,
+    "minStorageDays": 0,
+    "s3Compatible": "high",
+    "strongConsistency": null,
+    "features": { "versioning": true, "objectLock": null, "lifecycle": true, "replication": false, "events": false, "iceberg": false, "vectors": false, "cdn": true },
+    "strengths": {
+      "en": ["$5/month includes 250 GiB storage and 1 TiB transfer", "Built-in CDN at no extra cost", "Cold storage tier at $0.007/GiB-month", "Simple developer experience"],
+      "ja": ["月 $5 で 250GiB ストレージと 1TiB 転送込み", "CDN が追加料金なしで付属", "Cold ストレージ層 $0.007/GiB-月", "シンプルな開発者体験"]
+    },
+    "weaknesses": {
+      "en": ["Per-bucket rate limits and fewer enterprise features", "No cross-region replication or event notifications", "Limited regions"],
+      "ja": ["バケットあたりのレート制限、エンタープライズ機能が少ない", "クロスリージョンレプリケーション・イベント通知なし", "リージョンが限られる"]
+    },
+    "bestFor": {
+      "en": "Small-to-mid apps already on DigitalOcean that serve assets through the bundled CDN",
+      "ja": "DigitalOcean 上の中小規模アプリで、付属 CDN でアセット配信するもの"
+    },
+    "pricingUrl": "https://docs.digitalocean.com/products/spaces/details/pricing/",
+    "verifiedDate": "2026-10-03"
+  },
+  {
+    "id": "akamai-object-storage",
+    "name": "Akamai Object Storage (Linode)",
+    "vendor": "Akamai",
+    "type": "alt-cloud",
+    "storagePricePerGBMonth": 0.02,
+    "egressPricePerGB": 0.005,
+    "putPer1k": 0,
+    "getPer1k": 0,
+    "minStorageDays": 0,
+    "s3Compatible": "high",
+    "strongConsistency": null,
+    "features": { "versioning": true, "objectLock": null, "lifecycle": true, "replication": false, "events": false, "iceberg": false, "vectors": false, "cdn": true },
+    "strengths": {
+      "en": ["$5/month includes 250 GB storage and 1 TB transfer pool", "Very low transfer overage ($0.005/GB in most data centers)", "No API request charges today", "Close to the Akamai CDN"],
+      "ja": ["月 $5 で 250GB と 1TB の転送プール込み", "転送超過が非常に安い (多くの DC で $0.005/GB)", "現時点で API リクエスト課金なし", "Akamai CDN に近い"]
+    },
+    "weaknesses": {
+      "en": ["Per-account and per-bucket capacity and rate limits by endpoint type", "Request-based pricing for E3 endpoints under evaluation (not before 2027-10-01)", "Fewer data-management features"],
+      "ja": ["エンドポイント種別ごとにアカウント/バケット容量とレート制限", "E3 エンドポイントのリクエスト課金を検討中 (2027-10-01 以降)", "データ管理機能が少ない"]
+    },
+    "bestFor": {
+      "en": "Media and download origins where transfer cost matters most",
+      "ja": "転送コストが最重要なメディア・ダウンロードのオリジン"
+    },
+    "pricingUrl": "https://techdocs.akamai.com/cloud-computing/docs/object-storage-pricing",
+    "verifiedDate": "2026-10-03"
+  },
+  {
+    "id": "hetzner-object-storage",
+    "name": "Hetzner Object Storage",
+    "vendor": "Hetzner",
+    "type": "alt-cloud",
+    "storagePricePerGBMonth": 0.0076,
+    "egressPricePerGB": 0.0012,
+    "putPer1k": 0,
+    "getPer1k": 0,
+    "minStorageDays": 0,
+    "s3Compatible": "high",
+    "strongConsistency": null,
+    "features": { "versioning": true, "objectLock": true, "lifecycle": null, "replication": false, "events": false, "iceberg": false, "vectors": false, "cdn": false },
+    "strengths": {
+      "en": ["Base EUR 6.49/month includes 1 TB storage and 1 TB egress", "API calls and ingress free", "EU (Germany/Finland) data residency, GDPR-friendly"],
+      "ja": ["基本料金 月 EUR 6.49 で 1TB 保存と 1TB egress 込み", "API コールと ingress 無料", "EU (ドイツ/フィンランド) のデータ所在、GDPR 対応"]
+    },
+    "weaknesses": {
+      "en": ["Only a few EU locations", "Bucket limits (100 TB and 50M objects per bucket)", "Prices raised about 30% on 2026-04-01", "USD per-GB figures here are estimates derived from EUR/hourly pricing"],
+      "ja": ["EU の数拠点のみ", "バケット上限 (1 バケット 100TB / 5,000 万オブジェクト)", "2026-04-01 に約 30% 値上げ", "ここの USD/GB 値は EUR 時間課金からの推定"]
+    },
+    "bestFor": {
+      "en": "Cost-sensitive EU workloads co-located with Hetzner servers",
+      "ja": "Hetzner サーバーと同居するコスト重視の EU ワークロード"
+    },
+    "pricingUrl": "https://www.hetzner.com/storage/object-storage/",
+    "verifiedDate": "2026-10-03"
+  },
+  {
+    "id": "tigris",
+    "name": "Tigris",
+    "vendor": "Tigris Data",
+    "type": "alt-cloud",
+    "storagePricePerGBMonth": 0.02,
+    "egressPricePerGB": 0,
+    "putPer1k": 0.005,
+    "getPer1k": 0.0005,
+    "minStorageDays": 0,
+    "s3Compatible": "high",
+    "strongConsistency": true,
+    "features": { "versioning": null, "objectLock": null, "lifecycle": true, "replication": true, "events": true, "iceberg": false, "vectors": false, "cdn": true },
+    "strengths": {
+      "en": ["Globally distributed bucket; data moves close to where it is read", "Zero egress fees in every region", "Same price in all geographies", "Popular with Fly.io and AI inference workloads"],
+      "ja": ["グローバル分散バケットで、読まれる場所の近くにデータが移動する", "全リージョンで egress 無料", "地域によらず同一価格", "Fly.io や AI 推論ワークロードで採用"]
+    },
+    "weaknesses": {
+      "en": ["Young company; long-term durability track record is short", "Feature coverage of less common S3 APIs is still growing", "Hot storage price equals GCS, not the cheapest"],
+      "ja": ["若い会社で長期の耐久性実績が短い", "マイナーな S3 API の対応は発展途上", "ホット層価格は GCS と同水準で最安ではない"]
+    },
+    "bestFor": {
+      "en": "Globally read data such as model weights and user assets for multi-region apps",
+      "ja": "モデル重みやマルチリージョンアプリのユーザーアセットなど、世界中で読まれるデータ"
+    },
+    "pricingUrl": "https://www.tigrisdata.com/pricing/",
+    "verifiedDate": "2026-10-03"
+  },
+  {
+    "id": "storj",
+    "name": "Storj (Standard)",
+    "vendor": "Storj Labs",
+    "type": "alt-cloud",
+    "storagePricePerGBMonth": 0.007,
+    "egressPricePerGB": 0.007,
+    "putPer1k": 0,
+    "getPer1k": 0,
+    "minStorageDays": 30,
+    "s3Compatible": "high",
+    "strongConsistency": null,
+    "features": { "versioning": true, "objectLock": true, "lifecycle": null, "replication": false, "events": false, "iceberg": false, "vectors": false, "cdn": false },
+    "strengths": {
+      "en": ["Decentralised: erasure-coded pieces spread over tens of thousands of nodes", "High parallel download throughput", "Simple $7/TB storage and $7/TB egress"],
+      "ja": ["分散型: イレイジャーコードの断片を数万ノードに分散", "並列ダウンロードのスループットが高い", "保存 $7/TB・egress $7/TB とシンプル"]
+    },
+    "weaknesses": {
+      "en": ["Pricing model changed several times in 2025-2026", "30-day minimum retention and 50 KB minimum object size", "Latency for small objects is higher than centralised clouds", "Compliance-focused tiers (Advanced / Select) cost more"],
+      "ja": ["2025〜2026 年に料金体系が何度も変わった", "30 日の最低保持と 50KB の最小オブジェクトサイズ", "小さいオブジェクトのレイテンシは集中型クラウドより高い", "コンプライアンス向け (Advanced / Select) は高い"]
+    },
+    "bestFor": {
+      "en": "Large media files and backups where parallel throughput matters",
+      "ja": "並列スループットが効く大きなメディアファイルやバックアップ"
+    },
+    "pricingUrl": "https://www.storj.io/pricing",
+    "verifiedDate": "2026-10-03"
+  },
+  {
+    "id": "minio",
+    "name": "MinIO (Community, archived) / AIStor",
+    "vendor": "MinIO, Inc.",
+    "type": "self-hosted",
+    "storagePricePerGBMonth": null,
+    "egressPricePerGB": null,
+    "putPer1k": null,
+    "getPer1k": null,
+    "minStorageDays": null,
+    "s3Compatible": "high",
+    "strongConsistency": true,
+    "features": { "versioning": true, "objectLock": true, "lifecycle": true, "replication": true, "events": true, "iceberg": null, "vectors": null, "cdn": false },
+    "strengths": {
+      "en": ["Historically the most S3-faithful self-hosted server", "High throughput on NVMe; simple single binary", "AIStor (commercial) continues active development"],
+      "ja": ["歴史的に最も S3 に忠実なセルフホストサーバー", "NVMe 上で高スループット、単一バイナリでシンプル", "商用版 AIStor は開発継続"]
+    },
+    "weaknesses": {
+      "en": ["Community console features removed (2025), binaries/images discontinued (Oct 2025)", "Repo put in maintenance mode (Dec 2025) then marked no longer maintained (2026)", "AGPLv3 licence obligations; AIStor requires a paid licence"],
+      "ja": ["コミュニティ版の管理コンソール機能が削除 (2025)、バイナリ/イメージ配布停止 (2025-10)", "リポジトリは 2025-12 にメンテナンスモード、2026 に no longer maintained", "AGPLv3 の義務、AIStor は有償ライセンス必須"]
+    },
+    "bestFor": {
+      "en": "Existing deployments willing to pay for AIStor; new projects should evaluate alternatives",
+      "ja": "AIStor に払う意思のある既存環境。新規案件は代替を検討すべき"
+    },
+    "pricingUrl": "https://min.io/pricing",
+    "verifiedDate": "2026-10-03"
+  },
+  {
+    "id": "ceph-rgw",
+    "name": "Ceph RADOS Gateway (RGW)",
+    "vendor": "Ceph Foundation (OSS)",
+    "type": "self-hosted",
+    "storagePricePerGBMonth": null,
+    "egressPricePerGB": null,
+    "putPer1k": null,
+    "getPer1k": null,
+    "minStorageDays": null,
+    "s3Compatible": "high",
+    "strongConsistency": true,
+    "features": { "versioning": true, "objectLock": true, "lifecycle": true, "replication": true, "events": true, "iceberg": false, "vectors": false, "cdn": false },
+    "strengths": {
+      "en": ["Battle-tested at exabyte scale (CERN, telcos, OpenStack clouds)", "Unified block / file / object on one cluster", "Multisite replication, bucket notifications, LGPL licence"],
+      "ja": ["エクサバイト級で実績 (CERN、通信事業者、OpenStack クラウド)", "1 クラスタでブロック/ファイル/オブジェクトを統合", "マルチサイト複製、バケット通知、LGPL ライセンス"]
+    },
+    "weaknesses": {
+      "en": ["Operationally complex; needs dedicated storage engineers", "Multisite replication is asynchronous (eventual across zones)", "Small-object performance needs tuning"],
+      "ja": ["運用が複雑で専任のストレージエンジニアが必要", "マルチサイト複製は非同期 (ゾーン間は結果整合)", "小オブジェクト性能はチューニング必須"]
+    },
+    "bestFor": {
+      "en": "Large organisations building a private cloud with in-house storage expertise",
+      "ja": "社内にストレージ専門家がいてプライベートクラウドを作る大組織"
+    },
+    "pricingUrl": "https://docs.ceph.com/en/latest/radosgw/",
+    "verifiedDate": "2026-10-03"
+  },
+  {
+    "id": "seaweedfs",
+    "name": "SeaweedFS",
+    "vendor": "SeaweedFS (OSS)",
+    "type": "self-hosted",
+    "storagePricePerGBMonth": null,
+    "egressPricePerGB": null,
+    "putPer1k": null,
+    "getPer1k": null,
+    "minStorageDays": null,
+    "s3Compatible": "partial",
+    "strongConsistency": null,
+    "features": { "versioning": true, "objectLock": null, "lifecycle": null, "replication": true, "events": null, "iceberg": false, "vectors": false, "cdn": false },
+    "strengths": {
+      "en": ["Haystack-inspired design that handles billions of small files well", "Apache 2.0 licence", "Filer offers POSIX-ish, WebDAV and S3 front ends; cloud tiering"],
+      "ja": ["Haystack 由来の設計で数十億の小ファイルに強い", "Apache 2.0 ライセンス", "Filer で POSIX 風 / WebDAV / S3 のフロントエンド、クラウド階層化"]
+    },
+    "weaknesses": {
+      "en": ["S3 API coverage is narrower than MinIO/Ceph", "Small core maintainer team", "Consistency semantics depend on filer store choice"],
+      "ja": ["S3 API の網羅性は MinIO / Ceph より狭い", "コアメンテナが少数", "整合性の性質は Filer ストアの選択に依存"]
+    },
+    "bestFor": {
+      "en": "Self-hosted stores of very many small files (images, thumbnails)",
+      "ja": "大量の小ファイル (画像・サムネイル) のセルフホスト"
+    },
+    "pricingUrl": "https://github.com/seaweedfs/seaweedfs",
+    "verifiedDate": "2026-10-03"
+  },
+  {
+    "id": "garage",
+    "name": "Garage",
+    "vendor": "Deuxfleurs (OSS)",
+    "type": "self-hosted",
+    "storagePricePerGBMonth": null,
+    "egressPricePerGB": null,
+    "putPer1k": null,
+    "getPer1k": null,
+    "minStorageDays": null,
+    "s3Compatible": "partial",
+    "strongConsistency": null,
+    "features": { "versioning": false, "objectLock": false, "lifecycle": true, "replication": true, "events": false, "iceberg": false, "vectors": false, "cdn": false },
+    "strengths": {
+      "en": ["Lightweight; designed for geo-distributed clusters on modest hardware", "CRDT-based metadata tolerates high-latency links", "Popular landing spot for MinIO refugees in 2025-2026"],
+      "ja": ["軽量で、貧弱なハードの地理分散クラスタ向けに設計", "CRDT ベースのメタデータで高遅延リンクに耐える", "2025〜2026 年の MinIO 難民の移行先として人気"]
+    },
+    "weaknesses": {
+      "en": ["No S3 versioning or Object Lock", "Not aimed at high-throughput enterprise workloads", "AGPLv3 licence"],
+      "ja": ["S3 バージョニング / Object Lock なし", "高スループットのエンタープライズ用途向けではない", "AGPLv3 ライセンス"]
+    },
+    "bestFor": {
+      "en": "Homelabs, small self-hosted services, multi-site setups over the internet",
+      "ja": "ホームラボ、小規模セルフホスト、インターネット越しのマルチサイト構成"
+    },
+    "pricingUrl": "https://garagehq.deuxfleurs.fr/",
+    "verifiedDate": "2026-10-03"
+  },
+  {
+    "id": "vast-data",
+    "name": "VAST Data Platform (S3)",
+    "vendor": "VAST Data",
+    "type": "on-prem",
+    "storagePricePerGBMonth": null,
+    "egressPricePerGB": null,
+    "putPer1k": null,
+    "getPer1k": null,
+    "minStorageDays": null,
+    "s3Compatible": "high",
+    "strongConsistency": true,
+    "features": { "versioning": true, "objectLock": true, "lifecycle": null, "replication": true, "events": true, "iceberg": null, "vectors": true, "cdn": false },
+    "strengths": {
+      "en": ["All-flash disaggregated architecture serving file and object on the same data", "Strong position in GPU cloud / AI training clusters", "Built-in database and vector features (VAST DataBase / InsightEngine)"],
+      "ja": ["オールフラッシュの分離型アーキテクチャで同じデータにファイルとオブジェクトでアクセス", "GPU クラウド / AI 学習クラスタで強い", "データベース・ベクトル機能を内蔵 (VAST DataBase / InsightEngine)"]
+    },
+    "weaknesses": {
+      "en": ["Premium price; flash cost exposed to the 2026 NAND shortage", "Vendor lock-in to a proprietary platform"],
+      "ja": ["高価格。2026 年の NAND 不足の影響を受けやすい", "独自プラットフォームへのロックイン"]
+    },
+    "bestFor": {
+      "en": "AI training data and checkpoints in on-prem or neocloud GPU clusters",
+      "ja": "オンプレやネオクラウドの GPU クラスタでの AI 学習データ・チェックポイント"
+    },
+    "pricingUrl": "https://www.vastdata.com/",
+    "verifiedDate": "2026-10-03"
+  },
+  {
+    "id": "everpure-flashblade",
+    "name": "Everpure (formerly Pure Storage) FlashBlade",
+    "vendor": "Everpure",
+    "type": "on-prem",
+    "storagePricePerGBMonth": null,
+    "egressPricePerGB": null,
+    "putPer1k": null,
+    "getPer1k": null,
+    "minStorageDays": null,
+    "s3Compatible": "high",
+    "strongConsistency": true,
+    "features": { "versioning": true, "objectLock": true, "lifecycle": true, "replication": true, "events": null, "iceberg": false, "vectors": false, "cdn": false },
+    "strengths": {
+      "en": ["Unified fast file and object on all-flash", "Proven S3 drop-in (37signals moved ~6 PB off S3 to FlashBlade in 2025)", "Evergreen subscription model and SafeMode snapshots"],
+      "ja": ["オールフラッシュで高速ファイルとオブジェクトを統合", "S3 のドロップイン置換の実績 (37signals が 2025 年に約 6PB を移行)", "Evergreen サブスクリプションと SafeMode スナップショット"]
+    },
+    "weaknesses": {
+      "en": ["Capex and data-centre operations required", "Flash pricing rose sharply in 2026"],
+      "ja": ["設備投資とデータセンター運用が必要", "2026 年にフラッシュ価格が急騰"]
+    },
+    "bestFor": {
+      "en": "Companies repatriating large, steady S3 footprints to their own data centres",
+      "ja": "大きく安定した S3 データを自社 DC に戻す (リパトリエーション) 企業"
+    },
+    "pricingUrl": "https://www.everpure.com/",
+    "verifiedDate": "2026-10-03"
+  },
+  {
+    "id": "netapp-storagegrid",
+    "name": "NetApp StorageGRID",
+    "vendor": "NetApp",
+    "type": "on-prem",
+    "storagePricePerGBMonth": null,
+    "egressPricePerGB": null,
+    "putPer1k": null,
+    "getPer1k": null,
+    "minStorageDays": null,
+    "s3Compatible": "high",
+    "strongConsistency": true,
+    "features": { "versioning": true, "objectLock": true, "lifecycle": true, "replication": true, "events": true, "iceberg": null, "vectors": false, "cdn": false },
+    "strengths": {
+      "en": ["Policy-driven ILM across sites and cloud tiers", "Long enterprise track record, multi-site geo-distribution", "Can tier to S3 / Azure as a cloud pool"],
+      "ja": ["サイトやクラウド階層をまたぐポリシー駆動の ILM", "長いエンタープライズ実績、マルチサイト地理分散", "S3 / Azure をクラウドプールとして階層化可能"]
+    },
+    "weaknesses": {
+      "en": ["Complex licensing and appliance sizing", "Less presence in cloud-native developer communities"],
+      "ja": ["ライセンスとアプライアンスのサイジングが複雑", "クラウドネイティブ開発者コミュニティでの存在感は薄い"]
+    },
+    "bestFor": {
+      "en": "Enterprises with NetApp estates needing compliant on-prem object archives",
+      "ja": "NetApp 資産を持ち、コンプライアンス対応のオンプレアーカイブが必要な企業"
+    },
+    "pricingUrl": "https://www.netapp.com/data-storage/storagegrid/",
+    "verifiedDate": "2026-10-03"
+  },
+  {
+    "id": "dell-objectscale",
+    "name": "Dell ObjectScale / ECS",
+    "vendor": "Dell Technologies",
+    "type": "on-prem",
+    "storagePricePerGBMonth": null,
+    "egressPricePerGB": null,
+    "putPer1k": null,
+    "getPer1k": null,
+    "minStorageDays": null,
+    "s3Compatible": "high",
+    "strongConsistency": true,
+    "features": { "versioning": true, "objectLock": true, "lifecycle": true, "replication": true, "events": null, "iceberg": null, "vectors": false, "cdn": false },
+    "strengths": {
+      "en": ["Long-running enterprise object platform with geo-replication", "Dell support and procurement channels", "Software-defined and appliance options"],
+      "ja": ["地理複製を備えた長期運用のエンタープライズ向けオブジェクト基盤", "Dell のサポートと調達チャネル", "SDS とアプライアンスの両方を提供"]
+    },
+    "weaknesses": {
+      "en": ["Product naming and roadmap transitions (ECS to ObjectScale)", "Capex model"],
+      "ja": ["製品名とロードマップの移行 (ECS から ObjectScale へ)", "設備投資モデル"]
+    },
+    "bestFor": {
+      "en": "Dell-standardised enterprises wanting on-prem S3 for backup and analytics",
+      "ja": "Dell 標準化企業で、バックアップや分析用のオンプレ S3 が欲しい場合"
+    },
+    "pricingUrl": "https://www.dell.com/en-us/dt/storage/objectscale.htm",
+    "verifiedDate": "2026-10-03"
+  }
+]

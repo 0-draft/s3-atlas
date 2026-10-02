@@ -1,0 +1,607 @@
+[
+  {
+    "id": "STANDARD",
+    "name": {
+      "en": "S3 Standard",
+      "ja": "S3 標準"
+    },
+    "tier": "hot",
+    "pricePerGBMonth": 0.023,
+    "durability": "99.999999999%",
+    "availabilityDesign": "99.99%",
+    "availabilitySLA": "99.9%",
+    "azs": 3,
+    "minDurationDays": 0,
+    "minBillableKB": null,
+    "retrievalFeePerGB": null,
+    "firstByteLatency": {
+      "en": "milliseconds",
+      "ja": "ミリ秒"
+    },
+    "retrievalOptions": [],
+    "putPer1k": 0.005,
+    "getPer1k": 0.0004,
+    "monitoringPer1kObjects": null,
+    "useCases": {
+      "en": [
+        "Static website and app assets",
+        "Frequently accessed application data",
+        "Hot zone of a data lake",
+        "Recent logs"
+      ],
+      "ja": [
+        "Web/アプリの静的アセット",
+        "頻繁にアクセスするアプリデータ",
+        "データレイクのホットゾーン",
+        "直近のログ"
+      ]
+    },
+    "notes": {
+      "en": "Default class. Tiered pricing: $0.023 first 50 TB, $0.022 next 450 TB, $0.021 over 500 TB. AZ count is '>= 3'. No minimum duration, minimum size, or retrieval fee.",
+      "ja": "既定のクラス。段階料金: 最初の 50 TB $0.023、次の 450 TB $0.022、500 TB 超 $0.021。AZ 数は「3 以上」。最低保存期間・最小課金サイズ・取り出し料金なし。"
+    }
+  },
+  {
+    "id": "EXPRESS_ONEZONE",
+    "name": {
+      "en": "S3 Express One Zone",
+      "ja": "S3 Express One Zone"
+    },
+    "tier": "hot",
+    "pricePerGBMonth": 0.11,
+    "durability": "99.999999999%",
+    "availabilityDesign": "99.95%",
+    "availabilitySLA": "99.9%",
+    "azs": 1,
+    "minDurationDays": 0,
+    "minBillableKB": null,
+    "retrievalFeePerGB": 0.0006,
+    "firstByteLatency": {
+      "en": "single-digit milliseconds",
+      "ja": "一桁ミリ秒"
+    },
+    "retrievalOptions": [
+      {
+        "name": {
+          "en": "Data retrieval (all bytes)",
+          "ja": "データ取り出し (全バイト)"
+        },
+        "time": {
+          "en": "single-digit milliseconds",
+          "ja": "一桁ミリ秒"
+        },
+        "pricePerGB": 0.0006
+      }
+    ],
+    "putPer1k": 0.00113,
+    "getPer1k": 0.00003,
+    "monitoringPer1kObjects": null,
+    "useCases": {
+      "en": [
+        "ML training data loading",
+        "Interactive analytics",
+        "HPC scratch and shuffle data",
+        "Media rendering intermediates"
+      ],
+      "ja": [
+        "ML 学習データの高速読み込み",
+        "インタラクティブ分析",
+        "HPC のスクラッチ / シャッフルデータ",
+        "メディアレンダリングの中間データ"
+      ]
+    },
+    "notes": {
+      "en": "Directory buckets only. Data upload fee $0.0032/GB and retrieval fee $0.0006/GB apply to all bytes (since the 2025-04-10 price cut). Not resilient to loss of the AZ. Supports append. Not a lifecycle transition target.",
+      "ja": "directory bucket 専用。upload $0.0032/GB と retrieval $0.0006/GB が全バイトに課金 (2025-04-10 の値下げ以降)。AZ 喪失には耐えない。append 対応。ライフサイクル遷移の対象外。"
+    }
+  },
+  {
+    "id": "INTELLIGENT_TIERING",
+    "name": {
+      "en": "S3 Intelligent-Tiering",
+      "ja": "S3 Intelligent-Tiering"
+    },
+    "tier": "hot",
+    "pricePerGBMonth": 0.023,
+    "durability": "99.999999999%",
+    "availabilityDesign": "99.9%",
+    "availabilitySLA": "99%",
+    "azs": 3,
+    "minDurationDays": 0,
+    "minBillableKB": null,
+    "retrievalFeePerGB": null,
+    "firstByteLatency": {
+      "en": "milliseconds (opt-in archive tiers: minutes to hours)",
+      "ja": "ミリ秒 (opt-in の Archive 層は分〜時間)"
+    },
+    "retrievalOptions": [
+      {
+        "name": {
+          "en": "Archive Access: Expedited",
+          "ja": "Archive Access: Expedited"
+        },
+        "time": {
+          "en": "1-5 minutes",
+          "ja": "1〜5 分"
+        },
+        "pricePerGB": 0.03
+      },
+      {
+        "name": {
+          "en": "Archive Access: Standard",
+          "ja": "Archive Access: Standard"
+        },
+        "time": {
+          "en": "3-5 hours",
+          "ja": "3〜5 時間"
+        },
+        "pricePerGB": 0
+      },
+      {
+        "name": {
+          "en": "Archive Access: Bulk",
+          "ja": "Archive Access: Bulk"
+        },
+        "time": {
+          "en": "5-12 hours",
+          "ja": "5〜12 時間"
+        },
+        "pricePerGB": 0
+      },
+      {
+        "name": {
+          "en": "Deep Archive Access: Standard",
+          "ja": "Deep Archive Access: Standard"
+        },
+        "time": {
+          "en": "within 12 hours",
+          "ja": "12 時間以内"
+        },
+        "pricePerGB": 0
+      },
+      {
+        "name": {
+          "en": "Deep Archive Access: Bulk",
+          "ja": "Deep Archive Access: Bulk"
+        },
+        "time": {
+          "en": "within 48 hours",
+          "ja": "48 時間以内"
+        },
+        "pricePerGB": 0
+      }
+    ],
+    "putPer1k": 0.005,
+    "getPer1k": 0.0004,
+    "monitoringPer1kObjects": 0.0025,
+    "tiers": [
+      {
+        "id": "FREQUENT",
+        "name": {
+          "en": "Frequent Access",
+          "ja": "Frequent Access"
+        },
+        "pricePerGBMonth": 0.023
+      },
+      {
+        "id": "INFREQUENT",
+        "name": {
+          "en": "Infrequent Access (after 30 days)",
+          "ja": "Infrequent Access (30 日後)"
+        },
+        "pricePerGBMonth": 0.0125
+      },
+      {
+        "id": "ARCHIVE_INSTANT",
+        "name": {
+          "en": "Archive Instant Access (after 90 days)",
+          "ja": "Archive Instant Access (90 日後)"
+        },
+        "pricePerGBMonth": 0.004
+      },
+      {
+        "id": "ARCHIVE",
+        "name": {
+          "en": "Archive Access (opt-in, 90+ days)",
+          "ja": "Archive Access (opt-in、90 日以上)"
+        },
+        "pricePerGBMonth": 0.0036
+      },
+      {
+        "id": "DEEP_ARCHIVE",
+        "name": {
+          "en": "Deep Archive Access (opt-in, 180+ days)",
+          "ja": "Deep Archive Access (opt-in、180 日以上)"
+        },
+        "pricePerGBMonth": 0.00099
+      }
+    ],
+    "useCases": {
+      "en": [
+        "Data lakes with unknown access patterns",
+        "User-generated content",
+        "Datasets with changing access"
+      ],
+      "ja": [
+        "アクセスパターン不明のデータレイク",
+        "ユーザー生成コンテンツ",
+        "アクセス傾向が変わるデータセット"
+      ]
+    },
+    "notes": {
+      "en": "pricePerGBMonth is the Frequent Access tier (first 50 TB). No retrieval fees for the automatic tiers. Objects under 128 KB are not monitored, stay in Frequent Access, and incur no monitoring fee. Minimum duration removed in 2021-09.",
+      "ja": "pricePerGBMonth は Frequent Access 層 (最初の 50 TB)。自動層には取り出し料金なし。128 KB 未満は監視されず Frequent Access に固定、監視料金もかからない。最低保存期間は 2021-09 に撤廃。"
+    }
+  },
+  {
+    "id": "STANDARD_IA",
+    "name": {
+      "en": "S3 Standard-Infrequent Access",
+      "ja": "S3 標準 - 低頻度アクセス"
+    },
+    "tier": "warm",
+    "pricePerGBMonth": 0.0125,
+    "durability": "99.999999999%",
+    "availabilityDesign": "99.9%",
+    "availabilitySLA": "99%",
+    "azs": 3,
+    "minDurationDays": 30,
+    "minBillableKB": 128,
+    "retrievalFeePerGB": 0.01,
+    "firstByteLatency": {
+      "en": "milliseconds",
+      "ja": "ミリ秒"
+    },
+    "retrievalOptions": [
+      {
+        "name": {
+          "en": "Retrieval",
+          "ja": "取り出し"
+        },
+        "time": {
+          "en": "milliseconds",
+          "ja": "ミリ秒"
+        },
+        "pricePerGB": 0.01
+      }
+    ],
+    "putPer1k": 0.01,
+    "getPer1k": 0.001,
+    "monitoringPer1kObjects": null,
+    "useCases": {
+      "en": [
+        "Backups",
+        "Disaster recovery copies",
+        "Older infrequently read data"
+      ],
+      "ja": [
+        "バックアップ",
+        "DR 用コピー",
+        "稀に読む古いデータ"
+      ]
+    },
+    "notes": {
+      "en": "Since 2026-07-16, lifecycle rules can transition objects to Standard-IA from day 0 (the former 30-days-in-Standard prerequisite was removed); the 30-day minimum storage duration and 128 KB minimum billable size still apply. Break-even with Standard is roughly one full read per month.",
+      "ja": "2026-07-16 以降、ライフサイクルで作成当日から Standard-IA へ遷移可能 (従来の「Standard に 30 日以上」の前提は撤廃)。ただし最低保存期間 30 日と最小課金サイズ 128 KB は残る。Standard との損益分岐はおおよそ月 1 回の全量読み出し。"
+    }
+  },
+  {
+    "id": "ONEZONE_IA",
+    "name": {
+      "en": "S3 One Zone-Infrequent Access",
+      "ja": "S3 1 ゾーン - 低頻度アクセス"
+    },
+    "tier": "warm",
+    "pricePerGBMonth": 0.01,
+    "durability": "99.999999999%",
+    "availabilityDesign": "99.5%",
+    "availabilitySLA": "99%",
+    "azs": 1,
+    "minDurationDays": 30,
+    "minBillableKB": 128,
+    "retrievalFeePerGB": 0.01,
+    "firstByteLatency": {
+      "en": "milliseconds",
+      "ja": "ミリ秒"
+    },
+    "retrievalOptions": [
+      {
+        "name": {
+          "en": "Retrieval",
+          "ja": "取り出し"
+        },
+        "time": {
+          "en": "milliseconds",
+          "ja": "ミリ秒"
+        },
+        "pricePerGB": 0.01
+      }
+    ],
+    "putPer1k": 0.01,
+    "getPer1k": 0.001,
+    "monitoringPer1kObjects": null,
+    "useCases": {
+      "en": [
+        "Re-creatable data such as thumbnails",
+        "Cross-Region Replication replicas",
+        "Secondary copies of on-premises data"
+      ],
+      "ja": [
+        "サムネイルなど再作成可能なデータ",
+        "CRR のレプリカ",
+        "オンプレデータの二次コピー"
+      ]
+    },
+    "notes": {
+      "en": "Stored in a single AZ; data is lost if the AZ is destroyed. Like Standard-IA, transitions are allowed from day 0 since 2026-07-16, but the 30-day minimum storage duration remains.",
+      "ja": "単一 AZ に保存。AZ が失われるとデータも失われる。Standard-IA と同様に 2026-07-16 以降は作成当日から遷移可能だが、最低保存期間 30 日は残る。"
+    }
+  },
+  {
+    "id": "GLACIER_IR",
+    "name": {
+      "en": "S3 Glacier Instant Retrieval",
+      "ja": "S3 Glacier Instant Retrieval"
+    },
+    "tier": "cold",
+    "pricePerGBMonth": 0.004,
+    "durability": "99.999999999%",
+    "availabilityDesign": "99.9%",
+    "availabilitySLA": "99%",
+    "azs": 3,
+    "minDurationDays": 90,
+    "minBillableKB": 128,
+    "retrievalFeePerGB": 0.03,
+    "firstByteLatency": {
+      "en": "milliseconds",
+      "ja": "ミリ秒"
+    },
+    "retrievalOptions": [
+      {
+        "name": {
+          "en": "Retrieval",
+          "ja": "取り出し"
+        },
+        "time": {
+          "en": "milliseconds",
+          "ja": "ミリ秒"
+        },
+        "pricePerGB": 0.03
+      }
+    ],
+    "putPer1k": 0.02,
+    "getPer1k": 0.01,
+    "monitoringPer1kObjects": null,
+    "useCases": {
+      "en": [
+        "Medical images",
+        "News media archives",
+        "Quarterly-accessed user content"
+      ],
+      "ja": [
+        "医療画像",
+        "ニュースメディアのアーカイブ",
+        "四半期に 1 回程度読まれるユーザーコンテンツ"
+      ]
+    },
+    "notes": {
+      "en": "Archive pricing with millisecond GET; no restore step required. Lifecycle transition requests cost $0.02 per 1,000.",
+      "ja": "アーカイブ価格帯だがミリ秒で GET 可能、復元不要。ライフサイクル遷移料金は 1,000 件 $0.02。"
+    }
+  },
+  {
+    "id": "GLACIER",
+    "name": {
+      "en": "S3 Glacier Flexible Retrieval",
+      "ja": "S3 Glacier Flexible Retrieval"
+    },
+    "tier": "archive",
+    "pricePerGBMonth": 0.0036,
+    "durability": "99.999999999%",
+    "availabilityDesign": "99.99% (after restore)",
+    "availabilitySLA": "99.9%",
+    "azs": 3,
+    "minDurationDays": 90,
+    "minBillableKB": null,
+    "retrievalFeePerGB": 0.01,
+    "firstByteLatency": {
+      "en": "minutes to hours (restore required)",
+      "ja": "分〜時間 (復元が必要)"
+    },
+    "retrievalOptions": [
+      {
+        "name": {
+          "en": "Expedited",
+          "ja": "Expedited (迅速)"
+        },
+        "time": {
+          "en": "1-5 minutes",
+          "ja": "1〜5 分"
+        },
+        "pricePerGB": 0.03
+      },
+      {
+        "name": {
+          "en": "Standard",
+          "ja": "Standard (標準)"
+        },
+        "time": {
+          "en": "3-5 hours",
+          "ja": "3〜5 時間"
+        },
+        "pricePerGB": 0.01
+      },
+      {
+        "name": {
+          "en": "Bulk",
+          "ja": "Bulk (大容量)"
+        },
+        "time": {
+          "en": "5-12 hours",
+          "ja": "5〜12 時間"
+        },
+        "pricePerGB": 0
+      }
+    ],
+    "putPer1k": 0.03,
+    "getPer1k": 0.0004,
+    "monitoringPer1kObjects": null,
+    "useCases": {
+      "en": [
+        "Long-term backups",
+        "Media asset archives",
+        "Audit data read once or twice a year"
+      ],
+      "ja": [
+        "バックアップの長期保管",
+        "メディアアセットのアーカイブ",
+        "年 1〜2 回の監査用データ"
+      ]
+    },
+    "notes": {
+      "en": "API value is GLACIER. retrievalFeePerGB is the Standard tier. Request fees: Expedited $10 per 1,000, Standard $0.05 per 1,000, Bulk free. Each object adds 40 KB overhead (8 KB billed at Standard, 32 KB at this class). Provisioned Capacity $100/unit/month.",
+      "ja": "API 値は GLACIER。retrievalFeePerGB は Standard 取り出しの値。リクエスト料金: Expedited 1,000 件 $10、Standard 1,000 件 $0.05、Bulk 無料。1 オブジェクトあたり 40 KB のオーバーヘッド (8 KB は Standard 料金、32 KB は本クラス料金)。Provisioned Capacity は 1 ユニット月 $100。"
+    },
+    "overheadClassKB": 32,
+    "overheadStandardKB": 8
+  },
+  {
+    "id": "DEEP_ARCHIVE",
+    "name": {
+      "en": "S3 Glacier Deep Archive",
+      "ja": "S3 Glacier Deep Archive"
+    },
+    "tier": "archive",
+    "pricePerGBMonth": 0.00099,
+    "durability": "99.999999999%",
+    "availabilityDesign": "99.99% (after restore)",
+    "availabilitySLA": "99.9%",
+    "azs": 3,
+    "minDurationDays": 180,
+    "minBillableKB": null,
+    "retrievalFeePerGB": 0.02,
+    "firstByteLatency": {
+      "en": "hours (restore required)",
+      "ja": "時間単位 (復元が必要)"
+    },
+    "retrievalOptions": [
+      {
+        "name": {
+          "en": "Standard",
+          "ja": "Standard (標準)"
+        },
+        "time": {
+          "en": "within 12 hours",
+          "ja": "12 時間以内"
+        },
+        "pricePerGB": 0.02
+      },
+      {
+        "name": {
+          "en": "Bulk",
+          "ja": "Bulk (大容量)"
+        },
+        "time": {
+          "en": "within 48 hours",
+          "ja": "48 時間以内"
+        },
+        "pricePerGB": 0.0025
+      }
+    ],
+    "putPer1k": 0.05,
+    "getPer1k": 0.0004,
+    "monitoringPer1kObjects": null,
+    "useCases": {
+      "en": [
+        "Regulatory archives kept 7-10 years",
+        "Tape replacement",
+        "Raw data that may never be read again"
+      ],
+      "ja": [
+        "規制対応の 7〜10 年保管",
+        "テープの置き換え",
+        "二度と読まないかもしれない生データ"
+      ]
+    },
+    "notes": {
+      "en": "Lowest-cost class. retrievalFeePerGB is the Standard tier. Request fees: Standard $0.10 per 1,000, Bulk $0.025 per 1,000. No Expedited option. Same 40 KB per-object overhead as Glacier Flexible Retrieval.",
+      "ja": "最安のクラス。retrievalFeePerGB は Standard 取り出しの値。リクエスト料金: Standard 1,000 件 $0.10、Bulk 1,000 件 $0.025。Expedited なし。Glacier Flexible と同じく 1 オブジェクト 40 KB のオーバーヘッド。"
+    },
+    "overheadClassKB": 32,
+    "overheadStandardKB": 8
+  },
+  {
+    "id": "REDUCED_REDUNDANCY",
+    "name": {
+      "en": "Reduced Redundancy Storage (legacy)",
+      "ja": "低冗長化ストレージ (レガシー)"
+    },
+    "tier": "hot",
+    "pricePerGBMonth": 0.024,
+    "durability": "99.99%",
+    "availabilityDesign": "99.99%",
+    "availabilitySLA": "99.9%",
+    "azs": 3,
+    "minDurationDays": 0,
+    "minBillableKB": null,
+    "retrievalFeePerGB": null,
+    "firstByteLatency": {
+      "en": "milliseconds",
+      "ja": "ミリ秒"
+    },
+    "retrievalOptions": [],
+    "putPer1k": 0.005,
+    "getPer1k": 0.0004,
+    "monitoringPer1kObjects": null,
+    "useCases": {
+      "en": [
+        "Not recommended for new data"
+      ],
+      "ja": [
+        "新規データには非推奨"
+      ]
+    },
+    "notes": {
+      "en": "AWS recommends against using RRS; S3 Standard is cheaper. Price shown is the first 1 TB tier. Lost objects return HTTP 405. Cannot be a lifecycle transition target. putPer1k/getPer1k assumed equal to Standard (not separately listed; unverified).",
+      "ja": "AWS 自身が非推奨と明記。Standard の方が安い。価格は最初の 1 TB の段階。失われたオブジェクトへのリクエストは 405 を返す。ライフサイクルの遷移先にできない。putPer1k/getPer1k は Standard と同額と仮定 (個別の記載なし、未確認)。"
+    }
+  },
+  {
+    "id": "OUTPOSTS",
+    "name": {
+      "en": "S3 on Outposts",
+      "ja": "S3 on Outposts"
+    },
+    "tier": "hot",
+    "pricePerGBMonth": null,
+    "durability": "Not published as a fixed figure (unverified)",
+    "availabilityDesign": "Depends on Outposts deployment (unverified)",
+    "availabilitySLA": "Not covered by the S3 Region SLA (unverified)",
+    "azs": "on-premises (Outposts rack)",
+    "minDurationDays": 0,
+    "minBillableKB": null,
+    "retrievalFeePerGB": null,
+    "firstByteLatency": {
+      "en": "milliseconds (local)",
+      "ja": "ミリ秒 (ローカル)"
+    },
+    "retrievalOptions": [],
+    "putPer1k": null,
+    "getPer1k": null,
+    "monitoringPer1kObjects": null,
+    "useCases": {
+      "en": [
+        "Data residency requirements",
+        "Local processing at factories, hospitals, and branches"
+      ],
+      "ja": [
+        "データレジデンシー要件",
+        "工場・病院・拠点でのローカル処理"
+      ]
+    },
+    "notes": {
+      "en": "Only usable in buckets on AWS Outposts. Always encrypted with SSE-S3 (SSE-C optional, SSE-KMS unsupported). Priced as part of Outposts capacity, not a public per-GB-month rate.",
+      "ja": "AWS Outposts 上のバケットでのみ使用可能。常に SSE-S3 で暗号化 (SSE-C は任意、SSE-KMS 非対応)。料金は Outposts のキャパシティに含まれ、公開の GB-月単価はない。"
+    }
+  }
+]

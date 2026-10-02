@@ -1,0 +1,886 @@
+[
+  {
+    "date": "2006-03-14",
+    "title": {
+      "en": "Amazon S3 launches",
+      "ja": "Amazon S3 ローンチ"
+    },
+    "description": {
+      "en": "S3 becomes generally available in the US with a simple PUT/GET/DELETE/LIST API, a 5 GB object limit, and storage at $0.15 per GB-month.",
+      "ja": "米国で一般提供開始。シンプルな PUT/GET/DELETE/LIST API、最大オブジェクト 5 GB、ストレージ単価 $0.15/GB-月。"
+    },
+    "category": "launch",
+    "url": "https://aws.amazon.com/about-aws/whats-new/2006/03/announcing-amazon-s3---simple-storage-service"
+  },
+  {
+    "date": "2010-02-08",
+    "title": {
+      "en": "Versioning (beta)",
+      "ja": "バージョニング (ベータ)"
+    },
+    "description": {
+      "en": "S3 Versioning lets buckets keep every version of an object to protect against accidental overwrites and deletes; production status followed on 2010-03-16.",
+      "ja": "オブジェクトの全バージョンを保持し、誤った上書き・削除から保護するバージョニングが登場。2010-03-16 に正式版に。"
+    },
+    "category": "data",
+    "url": "https://aws.amazon.com/about-aws/whats-new/2010/02/08/versioning-feature-for-amazon-s3-now-available/"
+  },
+  {
+    "date": "2010-05-19",
+    "title": {
+      "en": "Reduced Redundancy Storage",
+      "ja": "Reduced Redundancy Storage (RRS)"
+    },
+    "description": {
+      "en": "A cheaper storage option with 99.99% durability for reproducible data. It is now a legacy class that AWS recommends against.",
+      "ja": "再作成可能なデータ向けに耐久性 99.99% の安価なクラスが登場。現在はレガシーで AWS 自身が非推奨。"
+    },
+    "category": "storage-class",
+    "url": "https://aws.amazon.com/about-aws/whats-new/2010/05/19/announcing-amazon-s3-reduced-redundancy-storage/"
+  },
+  {
+    "date": "2010-11-10",
+    "title": {
+      "en": "Multipart Upload",
+      "ja": "マルチパートアップロード"
+    },
+    "description": {
+      "en": "Large objects can be uploaded as parallel parts, enabling objects up to 5 TB.",
+      "ja": "大きなオブジェクトをパートに分けて並列アップロードできるようになり、最大 5 TB のオブジェクトが可能に。"
+    },
+    "category": "performance",
+    "url": "https://aws.amazon.com/about-aws/whats-new/2010/11/10/Amazon-S3-Introducing-Multipart-Upload"
+  },
+  {
+    "date": "2011-02-17",
+    "title": {
+      "en": "Static website hosting",
+      "ja": "静的 Web サイトホスティング"
+    },
+    "description": {
+      "en": "Buckets can serve static websites with index and error documents.",
+      "ja": "index / error ドキュメントを指定してバケットから静的サイトを配信できるように。"
+    },
+    "category": "launch",
+    "url": "https://aws.amazon.com/blogs/aws/host-your-static-website-on-amazon-s3/"
+  },
+  {
+    "date": "2011-10-04",
+    "title": {
+      "en": "Server-side encryption (SSE-S3)",
+      "ja": "サーバー側暗号化 (SSE-S3)"
+    },
+    "description": {
+      "en": "S3 can encrypt data at rest with AES-256 using S3-managed keys.",
+      "ja": "S3 管理キーによる AES-256 の保存時暗号化をサポート。"
+    },
+    "category": "security",
+    "url": "https://aws.amazon.com/about-aws/whats-new/2011/10/04/amazon-s3-announces-server-side-encryption-support/"
+  },
+  {
+    "date": "2012-08-20",
+    "title": {
+      "en": "Amazon Glacier launches",
+      "ja": "Amazon Glacier ローンチ"
+    },
+    "description": {
+      "en": "A low-cost archival storage service with retrieval times of hours.",
+      "ja": "時間単位で取り出す低コストのアーカイブストレージサービスが登場。"
+    },
+    "category": "storage-class",
+    "url": "https://aws.amazon.com/about-aws/whats-new/2012/08/20/announcing-amazon-glacier/"
+  },
+  {
+    "date": "2012-11-13",
+    "title": {
+      "en": "Lifecycle archiving to Glacier",
+      "ja": "ライフサイクルによる Glacier へのアーカイブ"
+    },
+    "description": {
+      "en": "Lifecycle rules can automatically archive S3 objects to Glacier.",
+      "ja": "ライフサイクルルールで S3 オブジェクトを自動的に Glacier へアーカイブできるように。"
+    },
+    "category": "data",
+    "url": "https://aws.amazon.com/about-aws/whats-new/2012/11/13/amazon-s3-now-supports-archiving-data-to-amazon-glacier/"
+  },
+  {
+    "date": "2014-11-13",
+    "title": {
+      "en": "Event notifications",
+      "ja": "イベント通知"
+    },
+    "description": {
+      "en": "S3 can publish object events to SNS, SQS, and later Lambda, making it a starting point for event-driven architectures.",
+      "ja": "オブジェクトのイベントを SNS / SQS (のちに Lambda) に通知でき、イベント駆動アーキテクチャの起点に。"
+    },
+    "category": "data",
+    "url": "https://aws.amazon.com/about-aws/whats-new/2014/11/13/event-notification-feature-in-amazon-s3/"
+  },
+  {
+    "date": "2015-03-24",
+    "title": {
+      "en": "Cross-Region Replication",
+      "ja": "クロスリージョンレプリケーション"
+    },
+    "description": {
+      "en": "Objects can be replicated asynchronously to a bucket in another Region.",
+      "ja": "別リージョンのバケットへオブジェクトを非同期で自動複製できるように。"
+    },
+    "category": "data",
+    "url": "https://aws.amazon.com/blogs/aws/new-cross-region-replication-for-amazon-s3/"
+  },
+  {
+    "date": "2015-05-11",
+    "title": {
+      "en": "VPC endpoints for S3",
+      "ja": "S3 用 VPC エンドポイント"
+    },
+    "description": {
+      "en": "Gateway VPC endpoints let instances reach S3 privately without an internet or NAT gateway.",
+      "ja": "Gateway VPC エンドポイントで、インターネットゲートウェイや NAT なしにプライベートに S3 へ到達可能に。"
+    },
+    "category": "security",
+    "url": "https://aws.amazon.com/about-aws/whats-new/2015/05/introducing-amazon-vpc-endpoints-for-amazon-s3/"
+  },
+  {
+    "date": "2015-09-16",
+    "title": {
+      "en": "S3 Standard-IA",
+      "ja": "S3 Standard-IA"
+    },
+    "description": {
+      "en": "A new class for infrequently accessed data with millisecond access, alongside lower Glacier prices.",
+      "ja": "ミリ秒アクセス可能な低頻度アクセス用クラスが登場。同時に Glacier 値下げ。"
+    },
+    "category": "storage-class",
+    "url": "https://aws.amazon.com/about-aws/whats-new/2015/09/announcing-new-amazon-s3-storage-class-and-lower-glacier-prices/"
+  },
+  {
+    "date": "2016-04-19",
+    "title": {
+      "en": "Transfer Acceleration",
+      "ja": "Transfer Acceleration"
+    },
+    "description": {
+      "en": "Long-distance transfers are accelerated through CloudFront edge locations.",
+      "ja": "CloudFront のエッジロケーション経由で長距離転送を高速化。"
+    },
+    "category": "performance",
+    "url": "https://aws.amazon.com/about-aws/whats-new/2016/04/transfer-files-into-amazon-s3-up-to-300-percent-faster/"
+  },
+  {
+    "date": "2016-11-29",
+    "title": {
+      "en": "Object tagging, Inventory, Storage Class Analysis",
+      "ja": "オブジェクトタグ、Inventory、Storage Class Analysis"
+    },
+    "description": {
+      "en": "Four storage management features arrive: object tagging, S3 Inventory, Storage Class Analysis, and CloudWatch request metrics.",
+      "ja": "オブジェクトタグ、S3 Inventory、Storage Class Analysis、CloudWatch リクエストメトリクスの 4 機能が登場。"
+    },
+    "category": "data",
+    "url": "https://aws.amazon.com/about-aws/whats-new/2016/11/revolutionizing-s3-storage-management-with-4-new-features/"
+  },
+  {
+    "date": "2017-02-28",
+    "title": {
+      "en": "us-east-1 S3 service disruption",
+      "ja": "us-east-1 の S3 大規模障害"
+    },
+    "description": {
+      "en": "A mistyped command during debugging removed servers supporting the index and placement subsystems, causing hours of disruption in N. Virginia.",
+      "ja": "デバッグ中の入力ミスで index / placement サブシステムを支えるサーバーが削除され、バージニア北部で数時間の障害が発生。"
+    },
+    "category": "incident",
+    "url": "https://aws.amazon.com/message/41926/"
+  },
+  {
+    "date": "2018-04-04",
+    "title": {
+      "en": "S3 One Zone-IA",
+      "ja": "S3 One Zone-IA"
+    },
+    "description": {
+      "en": "A single-AZ infrequent access class at lower cost for re-creatable data.",
+      "ja": "再作成可能なデータ向けの単一 AZ・低頻度アクセスクラスが登場。"
+    },
+    "category": "storage-class",
+    "url": "https://aws.amazon.com/blogs/aws/amazon-s3-update-new-storage-class-general-availability-of-s3-select/"
+  },
+  {
+    "date": "2018-11-15",
+    "title": {
+      "en": "S3 Block Public Access",
+      "ja": "S3 ブロックパブリックアクセス"
+    },
+    "description": {
+      "en": "Account- and bucket-level controls block public access regardless of ACLs and policies.",
+      "ja": "ACL やポリシーに関係なくパブリックアクセスを遮断できるアカウント / バケット単位の設定が登場。"
+    },
+    "category": "security",
+    "url": "https://aws.amazon.com/about-aws/whats-new/2018/11/introducing-amazon-s3-block-public-access/"
+  },
+  {
+    "date": "2018-11-25",
+    "title": {
+      "en": "S3 Intelligent-Tiering",
+      "ja": "S3 Intelligent-Tiering"
+    },
+    "description": {
+      "en": "A class that automatically moves objects between access tiers based on access patterns.",
+      "ja": "アクセスパターンに応じてオブジェクトを自動的にアクセス層間で移動するクラスが登場。"
+    },
+    "category": "storage-class",
+    "url": "https://aws.amazon.com/about-aws/whats-new/2018/11/s3-intelligent-tiering/"
+  },
+  {
+    "date": "2018-11-26",
+    "title": {
+      "en": "S3 Object Lock",
+      "ja": "S3 オブジェクトロック"
+    },
+    "description": {
+      "en": "WORM protection with retention periods and legal holds.",
+      "ja": "保持期間とリーガルホールドによる WORM (追記不可) 保護。"
+    },
+    "category": "security",
+    "url": "https://aws.amazon.com/about-aws/whats-new/2018/11/s3-object-lock/"
+  },
+  {
+    "date": "2019-03-27",
+    "title": {
+      "en": "S3 Glacier Deep Archive",
+      "ja": "S3 Glacier Deep Archive"
+    },
+    "description": {
+      "en": "The lowest-cost storage class, at about $1 per TB-month, for long-term retention.",
+      "ja": "1 TB あたり月約 $1 の最安クラスが GA。長期保管・テープ置き換え向け。"
+    },
+    "category": "storage-class",
+    "url": "https://aws.amazon.com/about-aws/whats-new/2019/03/S3-glacier-deep-archive/"
+  },
+  {
+    "date": "2019-04-30",
+    "title": {
+      "en": "S3 Batch Operations GA",
+      "ja": "S3 Batch Operations GA"
+    },
+    "description": {
+      "en": "Run operations such as copy, tagging, restore, or Lambda invocation across billions of objects with one job.",
+      "ja": "1 つのジョブで数十億オブジェクトにコピー・タグ付け・復元・Lambda 実行などを適用できる機能が GA。"
+    },
+    "category": "data",
+    "url": "https://aws.amazon.com/blogs/aws/new-amazon-s3-batch-operations/"
+  },
+  {
+    "date": "2019-12-03",
+    "title": {
+      "en": "S3 Access Points",
+      "ja": "S3 アクセスポイント"
+    },
+    "description": {
+      "en": "Named network endpoints with dedicated policies simplify access to shared datasets.",
+      "ja": "専用ポリシーを持つ名前付きエンドポイントで共有データセットへのアクセス管理を簡素化。"
+    },
+    "category": "security",
+    "url": "https://aws.amazon.com/about-aws/whats-new/2019/12/amazon-s3-access-points-manage-data-access-at-scale-shared-data-sets/"
+  },
+  {
+    "date": "2020-11-09",
+    "title": {
+      "en": "Intelligent-Tiering archive access tiers",
+      "ja": "Intelligent-Tiering のアーカイブ層"
+    },
+    "description": {
+      "en": "Optional Archive Access and Deep Archive Access tiers are added to Intelligent-Tiering.",
+      "ja": "Intelligent-Tiering に任意の Archive Access / Deep Archive Access 層が追加。"
+    },
+    "category": "storage-class",
+    "url": "https://aws.amazon.com/about-aws/whats-new/2020/11/amazon-s3-intelligent-tiering-adds-archive-access-tiers/"
+  },
+  {
+    "date": "2020-11-18",
+    "title": {
+      "en": "S3 Storage Lens",
+      "ja": "S3 Storage Lens"
+    },
+    "description": {
+      "en": "Organization-wide visibility into storage usage and activity trends.",
+      "ja": "組織全体のストレージ使用量とアクティビティ傾向を可視化。"
+    },
+    "category": "data",
+    "url": "https://aws.amazon.com/about-aws/whats-new/2020/11/amazon-s3-storage-lens-delivers-organization-wide-visibility-into-object-storage-usage-and-activity-trends"
+  },
+  {
+    "date": "2020-12-01",
+    "title": {
+      "en": "Strong read-after-write consistency",
+      "ja": "強い read-after-write 一貫性"
+    },
+    "description": {
+      "en": "All GET, PUT, and LIST operations become strongly consistent in all Regions at no extra cost.",
+      "ja": "全リージョンで GET / PUT / LIST が追加料金なしに強い一貫性に。"
+    },
+    "category": "performance",
+    "url": "https://aws.amazon.com/about-aws/whats-new/2020/12/amazon-s3-now-delivers-strong-read-after-write-consistency-automatically-for-all-applications/"
+  },
+  {
+    "date": "2020-12-01",
+    "title": {
+      "en": "S3 Bucket Keys",
+      "ja": "S3 Bucket Keys"
+    },
+    "description": {
+      "en": "Bucket-level keys reduce SSE-KMS request costs by up to 99%.",
+      "ja": "バケット単位のキーで SSE-KMS の KMS リクエスト料金を最大 99% 削減。"
+    },
+    "category": "pricing",
+    "url": "https://aws.amazon.com/about-aws/whats-new/2020/12/amazon-s3-bucket-keys-reduce-the-costs-of-server-side-encryption-with-aws-key-management-service-sse-kms/"
+  },
+  {
+    "date": "2021-02-02",
+    "title": {
+      "en": "AWS PrivateLink for S3",
+      "ja": "S3 の AWS PrivateLink 対応"
+    },
+    "description": {
+      "en": "Interface VPC endpoints give private IP access to S3 from on-premises and other VPCs.",
+      "ja": "Interface VPC エンドポイントで、オンプレや他 VPC からプライベート IP で S3 に到達可能に。"
+    },
+    "category": "security",
+    "url": "https://aws.amazon.com/about-aws/whats-new/2021/02/amazon-s3-now-supports-aws-privatelink/"
+  },
+  {
+    "date": "2021-03-18",
+    "title": {
+      "en": "S3 Object Lambda",
+      "ja": "S3 Object Lambda"
+    },
+    "description": {
+      "en": "Your own code can transform data as it is returned by GET requests.",
+      "ja": "GET の応答時に独自コードでデータを加工できる機能。"
+    },
+    "category": "data",
+    "url": "https://aws.amazon.com/about-aws/whats-new/2021/03/s3-object-lambda-allows-you-to-add-your-own-code-to-s3-get-requests-to-modify-and-process-data-as-it-is-returned-to-an-application/"
+  },
+  {
+    "date": "2021-09-02",
+    "title": {
+      "en": "Multi-Region Access Points",
+      "ja": "マルチリージョンアクセスポイント"
+    },
+    "description": {
+      "en": "A single global endpoint routes requests to the nearest of several replicated buckets.",
+      "ja": "単一のグローバルエンドポイントで、複製された複数バケットのうち最寄りへルーティング。"
+    },
+    "category": "performance",
+    "url": "https://aws.amazon.com/about-aws/whats-new/2021/09/amazon-s3-multi-region-access-points-replicated-data-sets"
+  },
+  {
+    "date": "2021-09-02",
+    "title": {
+      "en": "Intelligent-Tiering drops minimum duration",
+      "ja": "Intelligent-Tiering の最低保存期間撤廃"
+    },
+    "description": {
+      "en": "The minimum storage duration and the monitoring fee for objects under 128 KB are removed.",
+      "ja": "最低保存期間と 128 KB 未満オブジェクトの監視料金が撤廃。"
+    },
+    "category": "pricing",
+    "url": "https://aws.amazon.com/about-aws/whats-new/2021/09/amazon-s3-intelligent-tiering-automates-storage-savings/"
+  },
+  {
+    "date": "2021-11-30",
+    "title": {
+      "en": "S3 Glacier Instant Retrieval",
+      "ja": "S3 Glacier Instant Retrieval"
+    },
+    "description": {
+      "en": "Archive-priced storage with millisecond retrieval; Intelligent-Tiering gains an Archive Instant Access tier the same day.",
+      "ja": "アーカイブ価格帯でミリ秒取り出しのクラスが登場。同日 Intelligent-Tiering に Archive Instant Access 層が追加。"
+    },
+    "category": "storage-class",
+    "url": "https://aws.amazon.com/about-aws/whats-new/2021/11/amazon-s3-glacier-instant-retrieval-storage-class"
+  },
+  {
+    "date": "2021-11-30",
+    "title": {
+      "en": "Object Ownership: ACLs disabled",
+      "ja": "Object Ownership で ACL 無効化"
+    },
+    "description": {
+      "en": "The 'bucket owner enforced' setting disables ACLs so access is governed only by policies.",
+      "ja": "「バケット所有者の強制」設定で ACL を無効化し、ポリシーのみでアクセス制御できるように。"
+    },
+    "category": "security",
+    "url": "https://aws.amazon.com/about-aws/whats-new/2021/11/amazon-s3-object-ownership-simplify-access-management-data-s3"
+  },
+  {
+    "date": "2021-12-01",
+    "title": {
+      "en": "100 GB/month free data transfer out",
+      "ja": "インターネット向け転送の無料枠が月 100 GB に"
+    },
+    "description": {
+      "en": "The AWS-wide free data transfer out to the internet increases to 100 GB per month (from 1 GB), announced 2021-11.",
+      "ja": "全 AWS 共通のインターネット向け転送無料枠が月 1 GB から 100 GB に拡大 (2021-11 発表)。"
+    },
+    "category": "pricing",
+    "url": "https://aws.amazon.com/about-aws/whats-new/2021/11/aws-price-reduction-data-transfers-internet/"
+  },
+  {
+    "date": "2023-01-05",
+    "title": {
+      "en": "Default encryption for all new objects",
+      "ja": "全新規オブジェクトの既定暗号化"
+    },
+    "description": {
+      "en": "All new objects are automatically encrypted with SSE-S3 at no cost.",
+      "ja": "すべての新規オブジェクトが追加料金なしに SSE-S3 で自動暗号化されるように。"
+    },
+    "category": "security",
+    "url": "https://aws.amazon.com/about-aws/whats-new/2023/01/amazon-s3-automatically-encrypts-new-objects"
+  },
+  {
+    "date": "2023-04-05",
+    "title": {
+      "en": "Block Public Access and ACLs off by default",
+      "ja": "新規バケットで BPA 有効・ACL 無効が既定に"
+    },
+    "description": {
+      "en": "New buckets get Block Public Access enabled and ACLs disabled by default; rollout completed by 2023-04-28.",
+      "ja": "新規バケットで Block Public Access 有効・ACL 無効が既定に。展開は 2023-04-28 に完了。"
+    },
+    "category": "security",
+    "url": "https://aws.amazon.com/about-aws/whats-new/2023/04/amazon-s3-security-best-practices-buckets-default"
+  },
+  {
+    "date": "2023-08-09",
+    "title": {
+      "en": "Mountpoint for Amazon S3 GA",
+      "ja": "Mountpoint for Amazon S3 GA"
+    },
+    "description": {
+      "en": "An open-source file client mounts S3 buckets as a local file system for high-throughput reads.",
+      "ja": "S3 バケットをローカルファイルシステムとしてマウントする OSS のファイルクライアントが GA。"
+    },
+    "category": "performance",
+    "url": "https://aws.amazon.com/about-aws/whats-new/2023/08/mountpoint-amazon-s3-generally-available/"
+  },
+  {
+    "date": "2023-11-26",
+    "title": {
+      "en": "S3 Access Grants",
+      "ja": "S3 Access Grants"
+    },
+    "description": {
+      "en": "Map identities from directories such as IAM Identity Center to S3 datasets.",
+      "ja": "IAM Identity Center などのディレクトリの ID を S3 データセットへの権限にマッピング。"
+    },
+    "category": "security",
+    "url": "https://aws.amazon.com/about-aws/whats-new/2023/11/amazon-s3-access-grants-data-lake-permissions/"
+  },
+  {
+    "date": "2023-11-28",
+    "title": {
+      "en": "S3 Express One Zone",
+      "ja": "S3 Express One Zone"
+    },
+    "description": {
+      "en": "A single-AZ, single-digit-millisecond storage class in new directory buckets.",
+      "ja": "新しい directory bucket に置く、単一 AZ・一桁ミリ秒の高性能ストレージクラスが登場。"
+    },
+    "category": "storage-class",
+    "url": "https://aws.amazon.com/about-aws/whats-new/2023/11/amazon-s3-express-one-zone-storage-class/"
+  },
+  {
+    "date": "2024-03-05",
+    "title": {
+      "en": "Free data transfer out when leaving AWS",
+      "ja": "AWS からの移行時の転送料金免除"
+    },
+    "description": {
+      "en": "Customers moving off AWS can request a waiver of internet data transfer charges through AWS Support.",
+      "ja": "AWS から他クラウドやオンプレへ移行する顧客は、サポート経由でインターネット向け転送料金の免除を申請可能に。"
+    },
+    "category": "pricing",
+    "url": "https://aws.amazon.com/blogs/aws/free-data-transfer-out-to-internet-when-moving-out-of-aws/"
+  },
+  {
+    "date": "2024-05-13",
+    "title": {
+      "en": "No charge for unauthorized 403 requests (announced)",
+      "ja": "不正な 403 リクエストの非課金化 (発表)"
+    },
+    "description": {
+      "en": "Requests denied with HTTP 403 that originate outside your account or Organization no longer incur request or bandwidth charges; fully rolled out by 2024-08-19.",
+      "ja": "アカウント / 組織外から来て 403 で拒否されたリクエストは、リクエスト料金・転送料金とも非課金に。2024-08-19 に全面適用。"
+    },
+    "category": "pricing",
+    "url": "https://aws.amazon.com/about-aws/whats-new/2024/05/amazon-s3-no-charge-http-error-codes/"
+  },
+  {
+    "date": "2024-08-20",
+    "title": {
+      "en": "Conditional writes (If-None-Match)",
+      "ja": "条件付き書き込み (If-None-Match)"
+    },
+    "description": {
+      "en": "PutObject and CompleteMultipartUpload can refuse to overwrite an existing key.",
+      "ja": "PutObject / CompleteMultipartUpload で、既存 key の上書きを拒否できるように。"
+    },
+    "category": "data",
+    "url": "https://aws.amazon.com/about-aws/whats-new/2024/08/amazon-s3-conditional-writes/"
+  },
+  {
+    "date": "2024-09",
+    "title": {
+      "en": "Lifecycle stops transitioning objects under 128 KB by default",
+      "ja": "128 KB 未満のオブジェクトは既定でライフサイクル遷移しないように"
+    },
+    "description": {
+      "en": "New and edited lifecycle configurations no longer transition objects smaller than 128 KB to any class unless a size filter is set (exact day unverified).",
+      "ja": "新規・編集したライフサイクル設定では、サイズフィルタを指定しない限り 128 KB 未満のオブジェクトはどのクラスにも遷移しない (日付の日は未確認)。"
+    },
+    "category": "storage-class",
+    "url": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/lifecycle-transition-general-considerations.html"
+  },
+  {
+    "date": "2024-11-14",
+    "title": {
+      "en": "Up to 1 million buckets per account",
+      "ja": "アカウントあたり最大 100 万バケット"
+    },
+    "description": {
+      "en": "The default general purpose bucket quota rises to 10,000 per account, with increases up to 1 million.",
+      "ja": "general purpose バケットの既定上限が 10,000 に拡大し、申請で最大 100 万まで。"
+    },
+    "category": "launch",
+    "url": "https://aws.amazon.com/about-aws/whats-new/2024/11/amazon-s3-up-1-million-buckets-per-aws-account/"
+  },
+  {
+    "date": "2024-11-25",
+    "title": {
+      "en": "Conditional writes (If-Match)",
+      "ja": "条件付き書き込み (If-Match)"
+    },
+    "description": {
+      "en": "Writes can check the ETag of the current object, enabling optimistic concurrency control.",
+      "ja": "現在のオブジェクトの ETag を条件に書き込めるようになり、楽観的排他制御が可能に。"
+    },
+    "category": "data",
+    "url": "https://aws.amazon.com/about-aws/whats-new/2024/11/amazon-s3-functionality-conditional-writes/"
+  },
+  {
+    "date": "2024-12-01",
+    "title": {
+      "en": "Default data integrity protections",
+      "ja": "既定のデータ整合性保護"
+    },
+    "description": {
+      "en": "Latest SDKs compute CRC checksums by default and S3 validates and stores them.",
+      "ja": "最新 SDK が既定で CRC チェックサムを計算・送信し、S3 が検証して保存するように。"
+    },
+    "category": "data",
+    "url": "https://aws.amazon.com/about-aws/whats-new/2024/12/amazon-s3-default-data-integrity-protections"
+  },
+  {
+    "date": "2024-12-03",
+    "title": {
+      "en": "S3 Tables",
+      "ja": "S3 Tables"
+    },
+    "description": {
+      "en": "Table buckets store Apache Iceberg tables with automatic maintenance such as compaction.",
+      "ja": "Apache Iceberg テーブルを格納し、コンパクションなどを自動で行う table bucket が登場。"
+    },
+    "category": "data",
+    "url": "https://aws.amazon.com/about-aws/whats-new/2024/12/amazon-s3-tables-apache-iceberg-tables-analytics-workloads/"
+  },
+  {
+    "date": "2024-12-03",
+    "title": {
+      "en": "S3 Metadata (preview)",
+      "ja": "S3 Metadata (プレビュー)"
+    },
+    "description": {
+      "en": "Object metadata is captured automatically into queryable Iceberg tables.",
+      "ja": "オブジェクトのメタデータを自動で取得し、クエリ可能な Iceberg テーブルに格納 (プレビュー)。"
+    },
+    "category": "data",
+    "url": "https://aws.amazon.com/about-aws/whats-new/2024/12/amazon-s3-metadata-preview/"
+  },
+  {
+    "date": "2025-01-27",
+    "title": {
+      "en": "S3 Metadata GA",
+      "ja": "S3 Metadata GA"
+    },
+    "description": {
+      "en": "S3 Metadata becomes generally available.",
+      "ja": "S3 Metadata が一般提供開始。"
+    },
+    "category": "data",
+    "url": "https://aws.amazon.com/about-aws/whats-new/2025/01/amazon-s3-metadata-generally-available/"
+  },
+  {
+    "date": "2025-04-10",
+    "title": {
+      "en": "Express One Zone price cuts",
+      "ja": "Express One Zone の大幅値下げ"
+    },
+    "description": {
+      "en": "Storage prices drop 31%, PUT 55%, and GET 85%; upload and retrieval fees fall 60% and apply to all bytes.",
+      "ja": "ストレージ 31%、PUT 55%、GET 85% 値下げ。upload / retrieval 料金も 60% 下がり、全バイト課金に。"
+    },
+    "category": "pricing",
+    "url": "https://aws.amazon.com/about-aws/whats-new/2025/04/amazon-s3-express-one-zone-reduces-storage-request-prices/"
+  },
+  {
+    "date": "2025-07-15",
+    "title": {
+      "en": "S3 Vectors (preview)",
+      "ja": "S3 Vectors (プレビュー)"
+    },
+    "description": {
+      "en": "Vector buckets store and query vector embeddings natively, with up to 90% lower costs.",
+      "ja": "ベクトル埋め込みをネイティブに保存・検索できる vector bucket が登場。コストを最大 90% 削減とうたう。"
+    },
+    "category": "ai",
+    "url": "https://aws.amazon.com/about-aws/whats-new/2025/07/amazon-s3-vectors-preview-native-support-storing-querying-vectors/"
+  },
+  {
+    "date": "2025-11-19",
+    "title": {
+      "en": "Bucket-level encryption type enforcement",
+      "ja": "バケット単位の暗号化方式の強制"
+    },
+    "description": {
+      "en": "A bucket setting can restrict writes to SSE-S3 or SSE-KMS and block SSE-C.",
+      "ja": "バケット設定で書き込みの暗号化方式を SSE-S3 / SSE-KMS に限定し、SSE-C を禁止できるように。"
+    },
+    "category": "security",
+    "url": "https://aws.amazon.com/about-aws/whats-new/2025/11/amazon-s3-bucket-level-standardize-encryption-types/"
+  },
+  {
+    "date": "2025-11-20",
+    "title": {
+      "en": "Attribute-based access control (ABAC)",
+      "ja": "属性ベースのアクセス制御 (ABAC)"
+    },
+    "description": {
+      "en": "Bucket tags can be used in policies for attribute-based access control.",
+      "ja": "バケットタグをポリシー条件に使った属性ベースのアクセス制御に対応。"
+    },
+    "category": "security",
+    "url": "https://aws.amazon.com/about-aws/whats-new/2025/11/amazon-s3-attribute-based-access-control"
+  },
+  {
+    "date": "2025-11-26",
+    "title": {
+      "en": "Organization-level Block Public Access",
+      "ja": "組織レベルの Block Public Access"
+    },
+    "description": {
+      "en": "Block Public Access can be enforced across an AWS Organization through policies.",
+      "ja": "AWS Organizations のポリシーで組織全体に Block Public Access を強制できるように。"
+    },
+    "category": "security",
+    "url": "https://aws.amazon.com/about-aws/whats-new/2025/11/amazon-s3-block-public-access-organization-level-enforcement"
+  },
+  {
+    "date": "2025-12-02",
+    "title": {
+      "en": "S3 Vectors GA",
+      "ja": "S3 Vectors GA"
+    },
+    "description": {
+      "en": "S3 Vectors becomes generally available with up to 2 billion vectors per index.",
+      "ja": "S3 Vectors が GA。インデックスあたり最大 20 億ベクトル。"
+    },
+    "category": "ai",
+    "url": "https://aws.amazon.com/about-aws/whats-new/2025/12/amazon-s3-vectors-generally-available/"
+  },
+  {
+    "date": "2025-12-02",
+    "title": {
+      "en": "Maximum object size increases to 50 TB",
+      "ja": "最大オブジェクトサイズが 50 TB に"
+    },
+    "description": {
+      "en": "The maximum object size grows tenfold from 5 TB to 50 TB in all Regions and storage classes.",
+      "ja": "最大オブジェクトサイズが 5 TB から 10 倍の 50 TB に。全リージョン・全ストレージクラス。"
+    },
+    "category": "performance",
+    "url": "https://aws.amazon.com/about-aws/whats-new/2025/12/amazon-s3-maximum-object-size-50-tb/"
+  },
+  {
+    "date": "2025-12-02",
+    "title": {
+      "en": "S3 Tables replication and Intelligent-Tiering",
+      "ja": "S3 Tables のレプリケーションと Intelligent-Tiering"
+    },
+    "description": {
+      "en": "Iceberg tables can be replicated across Regions and accounts, and stored in Intelligent-Tiering.",
+      "ja": "Iceberg テーブルをリージョン・アカウント間で複製でき、Intelligent-Tiering にも対応。"
+    },
+    "category": "data",
+    "url": "https://aws.amazon.com/about-aws/whats-new/2025/12/s3-tables-automatic-replication-apache-iceberg-tables"
+  },
+  {
+    "date": "2026-03-12",
+    "title": {
+      "en": "Account regional namespaces",
+      "ja": "アカウントリージョナル名前空間"
+    },
+    "description": {
+      "en": "General purpose buckets can be created in a namespace reserved for your account, avoiding global name collisions.",
+      "ja": "自アカウント専用の名前空間に general purpose バケットを作れるようになり、グローバルな名前衝突を回避可能に。"
+    },
+    "category": "launch",
+    "url": "https://aws.amazon.com/about-aws/whats-new/2026/03/amazon-s3-account-regional-namespaces"
+  },
+  {
+    "date": "2026-03-14",
+    "title": {
+      "en": "S3 turns 20",
+      "ja": "S3 20 周年"
+    },
+    "description": {
+      "en": "AWS reports over 500 trillion objects, over 200 million requests per second, and hundreds of exabytes (blog published 2026-03-13).",
+      "ja": "500 兆超のオブジェクト、毎秒 2 億超のリクエスト、数百 EB と公表 (記事は 2026-03-13 公開)。"
+    },
+    "category": "launch",
+    "url": "https://aws.amazon.com/blogs/aws/twenty-years-of-amazon-s3-and-building-whats-next/"
+  },
+  {
+    "date": "2026-04-06",
+    "title": {
+      "en": "SSE-C disabled by default",
+      "ja": "SSE-C を既定で無効化"
+    },
+    "description": {
+      "en": "S3 starts rolling out a default that disables SSE-C for new buckets and for existing buckets without SSE-C objects.",
+      "ja": "新規バケットと、SSE-C オブジェクトを持たない既存バケットで SSE-C を既定で無効化する展開を開始。"
+    },
+    "category": "security",
+    "url": "https://aws.amazon.com/about-aws/whats-new/2026/04/s3-default-bucket-security-setting"
+  },
+  {
+    "date": "2026-04-07",
+    "title": {
+      "en": "S3 Files",
+      "ja": "S3 Files"
+    },
+    "description": {
+      "en": "S3 buckets become accessible as fully managed POSIX file systems, built using Amazon EFS.",
+      "ja": "Amazon EFS をベースに、S3 バケットをフルマネージドの POSIX ファイルシステムとして利用できるサービスが GA。"
+    },
+    "category": "data",
+    "url": "https://aws.amazon.com/about-aws/whats-new/2026/04/amazon-s3-files/"
+  },
+  {
+    "date": "2026-04-23",
+    "title": {
+      "en": "Five more checksum algorithms",
+      "ja": "チェックサムアルゴリズムを 5 種追加"
+    },
+    "description": {
+      "en": "MD5, XXHash3, XXHash64, XXHash128, and SHA-512 are added, for ten supported algorithms.",
+      "ja": "MD5、XXHash3/64/128、SHA-512 が追加され、対応アルゴリズムが計 10 種に。"
+    },
+    "category": "data",
+    "url": "https://aws.amazon.com/about-aws/whats-new/2026/04/s3-five-additional-checksum-algorithms/"
+  },
+  {
+    "date": "2026-06-16",
+    "title": {
+      "en": "S3 annotations",
+      "ja": "S3 Annotations"
+    },
+    "description": {
+      "en": "Rich JSON, XML, or YAML context can be attached to objects and queried through S3 Metadata.",
+      "ja": "JSON / XML / YAML の文脈データをオブジェクトに付与し、S3 Metadata 経由でクエリできるように。"
+    },
+    "category": "ai",
+    "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/amazon-s3-annotations-business-context/"
+  },
+  {
+    "date": "2026-06-16",
+    "title": {
+      "en": "S3 Vectors query price cut for large indexes",
+      "ja": "S3 Vectors の大規模インデックス向けクエリ値下げ"
+    },
+    "description": {
+      "en": "Query charges drop by up to 80% for indexes with more than 10 million vectors.",
+      "ja": "1,000 万ベクトル超のインデックスでクエリ料金を最大 80% 値下げ。"
+    },
+    "category": "pricing",
+    "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/s3-vectors-reduces-query-charges-80-percent-large-indexes/"
+  },
+  {
+    "date": "2026-07-16",
+    "title": {
+      "en": "30-day minimum for IA transitions removed",
+      "ja": "IA への遷移の 30 日要件を撤廃"
+    },
+    "description": {
+      "en": "Lifecycle rules can transition objects to Standard-IA and One Zone-IA from the day they are created.",
+      "ja": "ライフサイクルで作成当日から Standard-IA / One Zone-IA へ遷移できるように。"
+    },
+    "category": "storage-class",
+    "url": "https://aws.amazon.com/about-aws/whats-new/2026/07/s3-removes-30-day-transitions-standard-ia-one-zone-ia/"
+  },
+  {
+    "date": "2026-09-08",
+    "title": {
+      "en": "Object Lock variable retention and event holds",
+      "ja": "Object Lock の可変保持期間とイベントホールド"
+    },
+    "description": {
+      "en": "Object Lock adds variable retention with event-based holds.",
+      "ja": "Object Lock に可変保持期間とイベントベースのホールドが追加。"
+    },
+    "category": "security",
+    "url": "https://aws.amazon.com/about-aws/whats-new/2026/09/amazon-s3-object-lock-variable-retention/"
+  },
+  {
+    "date": "2026-09-30",
+    "title": {
+      "en": "S3 Vectors metadata pre-filtering",
+      "ja": "S3 Vectors のメタデータ事前フィルタ"
+    },
+    "description": {
+      "en": "Filters are evaluated before similarity search, improving recall on filtered queries.",
+      "ja": "類似検索の前にフィルタを評価し、絞り込みクエリの再現率を改善。"
+    },
+    "category": "ai",
+    "url": "https://aws.amazon.com/about-aws/whats-new/2026/09/s3-vectors-introduces-metadata-pre-filtering/"
+  },
+  {
+    "date": "2026-09-30",
+    "title": {
+      "en": "S3 Tables support Apache Iceberg V3",
+      "ja": "S3 Tables が Apache Iceberg V3 に対応"
+    },
+    "description": {
+      "en": "S3 Tables support all Iceberg V3 data types plus default values, deletion vectors, and row lineage.",
+      "ja": "Iceberg V3 の全データ型、カラム既定値、deletion vectors、row lineage に対応。"
+    },
+    "category": "data",
+    "url": "https://aws.amazon.com/about-aws/whats-new/2026/09/amazon-s3-tables-iceberg-v3-data-types"
+  },
+  {
+    "date": "2026-10-01",
+    "title": {
+      "en": "100 table buckets per Region",
+      "ja": "リージョンあたり 100 テーブルバケット"
+    },
+    "description": {
+      "en": "The table bucket quota rises from 10 to 100 per Region per account.",
+      "ja": "テーブルバケットの上限がリージョン・アカウントあたり 10 から 100 に。"
+    },
+    "category": "data",
+    "url": "https://aws.amazon.com/about-aws/whats-new/2026/10/amazon-s3-tables-table-bucket-increase"
+  }
+]

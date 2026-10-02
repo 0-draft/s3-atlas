@@ -1,0 +1,1242 @@
+[
+  {
+    "id": "q01",
+    "question": {
+      "en": "You overwrite an existing object with a successful PUT and immediately issue a GET for the same key from another client. What does S3 return?",
+      "ja": "既存オブジェクトを PUT で上書きし成功した直後、別のクライアントから同じキーを GET した。S3 は何を返すか。"
+    },
+    "choices": {
+      "en": [
+        "The old data until replication across AZs completes",
+        "Either the old or new data (eventual consistency)",
+        "The new data (strong read-after-write consistency)",
+        "A 409 Conflict error"
+      ],
+      "ja": [
+        "AZ 間の複製が終わるまで古いデータ",
+        "古いデータか新しいデータのどちらか (結果整合性)",
+        "新しいデータ (強い read-after-write 整合性)",
+        "409 Conflict エラー"
+      ]
+    },
+    "answer": 2,
+    "explanation": {
+      "en": "Since December 2020, S3 provides strong read-after-write consistency for all PUT (new and overwrite), DELETE, GET, HEAD and LIST requests in all Regions at no extra cost.",
+      "ja": "2020 年 12 月以降、S3 は全リージョンで追加料金なしに、PUT (新規・上書き)、DELETE 後の GET、HEAD、LIST に対して強い read-after-write 整合性を提供している。"
+    },
+    "difficulty": "easy",
+    "topic": {
+      "en": "Consistency",
+      "ja": "整合性"
+    }
+  },
+  {
+    "id": "q02",
+    "question": {
+      "en": "As of 2026, what is the maximum size of a single S3 object?",
+      "ja": "2026 年時点で、S3 の 1 オブジェクトの最大サイズはどれか。"
+    },
+    "choices": {
+      "en": [
+        "50 TB",
+        "5 TB",
+        "5 GB",
+        "Unlimited"
+      ],
+      "ja": [
+        "50 TB",
+        "5 TB",
+        "5 GB",
+        "無制限"
+      ]
+    },
+    "answer": 0,
+    "explanation": {
+      "en": "In December 2025, S3 raised the maximum object size from 5 TB to 50 TB (listed as 48.8 TiB in the multipart upload limits table).",
+      "ja": "2025 年 12 月に最大オブジェクトサイズは 5 TB から 50 TB に引き上げられた (マルチパート制限表では 48.8 TiB と記載)。"
+    },
+    "difficulty": "easy",
+    "topic": {
+      "en": "Limits",
+      "ja": "制限値"
+    }
+  },
+  {
+    "id": "q03",
+    "question": {
+      "en": "What is the largest object you can upload with a single PutObject request?",
+      "ja": "1 回の PutObject リクエストでアップロードできる最大サイズはどれか。"
+    },
+    "choices": {
+      "en": [
+        "100 MB",
+        "50 TB",
+        "5 TB",
+        "5 GB"
+      ],
+      "ja": [
+        "100 MB",
+        "50 TB",
+        "5 TB",
+        "5 GB"
+      ]
+    },
+    "answer": 3,
+    "explanation": {
+      "en": "A single PUT is limited to 5 GB. Larger objects require multipart upload, which AWS recommends considering once objects reach about 100 MB.",
+      "ja": "単一 PUT は 5 GB まで。それより大きいオブジェクトはマルチパートアップロードが必要で、AWS は 100 MB 程度からマルチパートの利用を推奨している。"
+    },
+    "difficulty": "easy",
+    "topic": {
+      "en": "Limits",
+      "ja": "制限値"
+    }
+  },
+  {
+    "id": "q04",
+    "question": {
+      "en": "In a multipart upload, what is the minimum size of each part except the last one?",
+      "ja": "マルチパートアップロードで、最後以外の各パートの最小サイズはどれか。"
+    },
+    "choices": {
+      "en": [
+        "1 MiB",
+        "5 MiB",
+        "16 MiB",
+        "100 MiB"
+      ],
+      "ja": [
+        "1 MiB",
+        "5 MiB",
+        "16 MiB",
+        "100 MiB"
+      ]
+    },
+    "answer": 1,
+    "explanation": {
+      "en": "Parts must be 5 MiB to 5 GiB. There is no minimum size for the last part. Smaller non-final parts cause an EntityTooSmall error.",
+      "ja": "パートは 5 MiB〜5 GiB で、最後のパートには下限がない。最後以外が小さすぎると EntityTooSmall エラーになる。"
+    },
+    "difficulty": "easy",
+    "topic": {
+      "en": "Multipart upload",
+      "ja": "マルチパートアップロード"
+    }
+  },
+  {
+    "id": "q05",
+    "question": {
+      "en": "What is the maximum number of parts in a single multipart upload?",
+      "ja": "1 つのマルチパートアップロードの最大パート数はどれか。"
+    },
+    "choices": {
+      "en": [
+        "1,000",
+        "5,000",
+        "10,000",
+        "100,000"
+      ],
+      "ja": [
+        "1,000",
+        "5,000",
+        "10,000",
+        "100,000"
+      ]
+    },
+    "answer": 2,
+    "explanation": {
+      "en": "Part numbers range from 1 to 10,000 inclusive. ListParts returns at most 1,000 parts per request, so paginate when listing.",
+      "ja": "パート番号は 1〜10,000。なお ListParts は 1 リクエスト最大 1,000 件なのでページングが必要。"
+    },
+    "difficulty": "easy",
+    "topic": {
+      "en": "Multipart upload",
+      "ja": "マルチパートアップロード"
+    }
+  },
+  {
+    "id": "q06",
+    "question": {
+      "en": "At minimum, how many GET/HEAD requests per second does S3 support per partitioned prefix?",
+      "ja": "S3 がプレフィックスあたり最低限サポートする GET/HEAD リクエスト数 (毎秒) はどれか。"
+    },
+    "choices": {
+      "en": [
+        "5,500",
+        "3,500",
+        "100",
+        "55,000"
+      ],
+      "ja": [
+        "5,500",
+        "3,500",
+        "100",
+        "55,000"
+      ]
+    },
+    "answer": 0,
+    "explanation": {
+      "en": "S3 supports at least 3,500 PUT/COPY/POST/DELETE and 5,500 GET/HEAD requests per second per prefix, and there is no limit to the number of prefixes.",
+      "ja": "プレフィックスあたり少なくとも PUT/COPY/POST/DELETE が毎秒 3,500、GET/HEAD が毎秒 5,500。プレフィックス数に上限はない。"
+    },
+    "difficulty": "medium",
+    "topic": {
+      "en": "Performance",
+      "ja": "パフォーマンス"
+    }
+  },
+  {
+    "id": "q07",
+    "question": {
+      "en": "You upload a new object to a bucket without specifying any encryption settings. How is it stored?",
+      "ja": "暗号化を何も指定せずに新しいオブジェクトをアップロードした。どのように保存されるか。"
+    },
+    "choices": {
+      "en": [
+        "Unencrypted",
+        "Encrypted with SSE-C",
+        "Encrypted with SSE-KMS using aws/s3",
+        "Encrypted with SSE-S3"
+      ],
+      "ja": [
+        "暗号化されない",
+        "SSE-C で暗号化される",
+        "aws/s3 キーの SSE-KMS で暗号化される",
+        "SSE-S3 で暗号化される"
+      ]
+    },
+    "answer": 3,
+    "explanation": {
+      "en": "Since January 2023, all new objects are automatically encrypted with SSE-S3 (AES-256) at no additional cost unless another default encryption is configured.",
+      "ja": "2023 年 1 月以降、別の既定暗号化を設定していなければ、すべての新規オブジェクトは追加料金なしで SSE-S3 (AES-256) により自動暗号化される。"
+    },
+    "difficulty": "easy",
+    "topic": {
+      "en": "Encryption",
+      "ja": "暗号化"
+    }
+  },
+  {
+    "id": "q08",
+    "question": {
+      "en": "What is the default S3 Object Ownership setting for newly created general purpose buckets?",
+      "ja": "新規作成した汎用バケットの Object Ownership の既定値はどれか。"
+    },
+    "choices": {
+      "en": [
+        "Object writer",
+        "Bucket owner enforced (ACLs disabled)",
+        "Bucket owner preferred",
+        "No setting; ACLs are required"
+      ],
+      "ja": [
+        "Object writer",
+        "Bucket owner enforced (ACL 無効)",
+        "Bucket owner preferred",
+        "設定なし (ACL が必須)"
+      ]
+    },
+    "answer": 1,
+    "explanation": {
+      "en": "Since April 2023, new buckets default to Bucket owner enforced, which disables ACLs and makes the bucket owner own every object. Block Public Access is also enabled by default.",
+      "ja": "2023 年 4 月以降、新規バケットは Bucket owner enforced が既定で、ACL が無効になりすべてのオブジェクトをバケット所有者が所有する。Block Public Access も既定で有効。"
+    },
+    "difficulty": "easy",
+    "topic": {
+      "en": "Access control",
+      "ja": "アクセス制御"
+    }
+  },
+  {
+    "id": "q09",
+    "question": {
+      "en": "You want to serve a static website from S3 over HTTPS with a custom domain. What is the recommended approach?",
+      "ja": "独自ドメインかつ HTTPS で S3 の静的サイトを配信したい。推奨される方法はどれか。"
+    },
+    "choices": {
+      "en": [
+        "Enable HTTPS on the S3 website endpoint",
+        "Make the bucket public and use a path-style URL",
+        "Use CloudFront with Origin Access Control in front of the bucket's REST endpoint",
+        "Use Transfer Acceleration"
+      ],
+      "ja": [
+        "S3 website endpoint で HTTPS を有効にする",
+        "バケットを公開してパス形式 URL を使う",
+        "バケットの REST endpoint の前に CloudFront + Origin Access Control を置く",
+        "Transfer Acceleration を使う"
+      ]
+    },
+    "answer": 2,
+    "explanation": {
+      "en": "S3 website endpoints do not support HTTPS. CloudFront provides HTTPS with ACM certificates, and OAC lets the bucket stay private.",
+      "ja": "S3 website endpoint は HTTPS をサポートしない。CloudFront が ACM 証明書で HTTPS を提供し、OAC によってバケットは非公開のままにできる。"
+    },
+    "difficulty": "easy",
+    "topic": {
+      "en": "Architecture",
+      "ja": "アーキテクチャ"
+    }
+  },
+  {
+    "id": "q10",
+    "question": {
+      "en": "A user with s3:GetObject but without s3:ListBucket requests a key that does not exist. Which HTTP status is returned?",
+      "ja": "s3:GetObject はあるが s3:ListBucket がないユーザーが、存在しないキーを GET した。返る HTTP ステータスはどれか。"
+    },
+    "choices": {
+      "en": [
+        "403 Forbidden",
+        "200 with an empty body",
+        "404 Not Found",
+        "410 Gone"
+      ],
+      "ja": [
+        "403 Forbidden",
+        "200 (空のボディ)",
+        "404 Not Found",
+        "410 Gone"
+      ]
+    },
+    "answer": 0,
+    "explanation": {
+      "en": "Without s3:ListBucket, S3 returns 403 for missing keys so that it does not reveal whether a key exists. With s3:ListBucket, it returns 404 NoSuchKey.",
+      "ja": "s3:ListBucket がない場合、キーの存在有無を漏らさないため 403 が返る。s3:ListBucket があれば 404 NoSuchKey になる。"
+    },
+    "difficulty": "medium",
+    "topic": {
+      "en": "Troubleshooting",
+      "ja": "トラブルシューティング"
+    }
+  },
+  {
+    "id": "q11",
+    "question": {
+      "en": "A presigned URL is generated with a 7-day expiry using temporary role credentials that expire in 1 hour. What happens after 1 hour?",
+      "ja": "1 時間で失効するロールの一時クレデンシャルを使い、有効期限 7 日の Presigned URL を生成した。1 時間後はどうなるか。"
+    },
+    "choices": {
+      "en": [
+        "The URL keeps working for 7 days",
+        "The URL is converted to a CloudFront signed URL",
+        "S3 automatically refreshes the credentials",
+        "The URL stops working because the credentials expired"
+      ],
+      "ja": [
+        "URL は 7 日間有効なまま",
+        "URL が CloudFront 署名付き URL に変換される",
+        "S3 が自動的にクレデンシャルを更新する",
+        "クレデンシャルが失効したので URL も使えなくなる"
+      ]
+    },
+    "answer": 3,
+    "explanation": {
+      "en": "A presigned URL is only valid while the credentials used to sign it are valid. With temporary credentials, the URL expires when the session expires, even if a longer expiry was requested.",
+      "ja": "Presigned URL は署名に使ったクレデンシャルが有効な間だけ使える。一時クレデンシャルの場合、より長い有効期限を指定してもセッション失効時に URL も無効になる。"
+    },
+    "difficulty": "medium",
+    "topic": {
+      "en": "Presigned URLs",
+      "ja": "Presigned URL"
+    }
+  },
+  {
+    "id": "q12",
+    "question": {
+      "en": "In which case does S3 return only a generic 'Access Denied' message instead of the enhanced message that names the policy type?",
+      "ja": "S3 がポリシー種別を含む強化メッセージではなく、汎用の Access Denied メッセージだけを返すのはどれか。"
+    },
+    "choices": {
+      "en": [
+        "A same-account request denied by an identity-based policy",
+        "A cross-account request from outside the bucket owner's organization",
+        "A same-organization request denied by an SCP",
+        "A same-account request denied by a permissions boundary"
+      ],
+      "ja": [
+        "同一アカウントで IAM ポリシーに拒否されたリクエスト",
+        "バケット所有者の組織外からのクロスアカウントリクエスト",
+        "同一組織で SCP に拒否されたリクエスト",
+        "同一アカウントで Permissions boundary に拒否されたリクエスト"
+      ]
+    },
+    "answer": 1,
+    "explanation": {
+      "en": "Enhanced access denied messages are returned only for same-account or same-organization requests. Cross-account requests from outside the organization (and directory bucket requests) get a generic message.",
+      "ja": "強化された AccessDenied メッセージは同一アカウントまたは同一組織内のリクエストにのみ返る。組織外からのクロスアカウントリクエスト (およびディレクトリバケット) は汎用メッセージになる。"
+    },
+    "difficulty": "hard",
+    "topic": {
+      "en": "Troubleshooting",
+      "ja": "トラブルシューティング"
+    }
+  },
+  {
+    "id": "q13",
+    "question": {
+      "en": "Which KMS permission does a caller need to download an object encrypted with SSE-KMS?",
+      "ja": "SSE-KMS で暗号化されたオブジェクトをダウンロードするために、呼び出し元に必要な KMS 権限はどれか。"
+    },
+    "choices": {
+      "en": [
+        "kms:Encrypt",
+        "kms:CreateGrant",
+        "kms:Decrypt",
+        "kms:ScheduleKeyDeletion"
+      ],
+      "ja": [
+        "kms:Encrypt",
+        "kms:CreateGrant",
+        "kms:Decrypt",
+        "kms:ScheduleKeyDeletion"
+      ]
+    },
+    "answer": 2,
+    "explanation": {
+      "en": "Reading an SSE-KMS object requires kms:Decrypt on the key (allowed by both IAM and the key policy, as applicable). Uploading requires kms:GenerateDataKey.",
+      "ja": "SSE-KMS オブジェクトの読み取りにはキーに対する kms:Decrypt が必要 (IAM とキーポリシーの両面で許可)。アップロードには kms:GenerateDataKey が必要。"
+    },
+    "difficulty": "medium",
+    "topic": {
+      "en": "Encryption",
+      "ja": "暗号化"
+    }
+  },
+  {
+    "id": "q14",
+    "question": {
+      "en": "For a multipart upload of an SSE-KMS object, which pair of KMS permissions is required?",
+      "ja": "SSE-KMS オブジェクトをマルチパートアップロードする場合に必要な KMS 権限の組み合わせはどれか。"
+    },
+    "choices": {
+      "en": [
+        "kms:GenerateDataKey and kms:Decrypt",
+        "kms:Encrypt only",
+        "kms:Decrypt only",
+        "kms:DescribeKey and kms:ListKeys"
+      ],
+      "ja": [
+        "kms:GenerateDataKey と kms:Decrypt",
+        "kms:Encrypt のみ",
+        "kms:Decrypt のみ",
+        "kms:DescribeKey と kms:ListKeys"
+      ]
+    },
+    "answer": 0,
+    "explanation": {
+      "en": "Multipart uploads with SSE-KMS need kms:GenerateDataKey to encrypt parts and kms:Decrypt because S3 must decrypt and read the data key for the parts before completing the upload.",
+      "ja": "SSE-KMS のマルチパートアップロードでは、パート暗号化のための kms:GenerateDataKey に加え、完了前にデータキーを復号するため kms:Decrypt も必要。"
+    },
+    "difficulty": "hard",
+    "topic": {
+      "en": "Encryption",
+      "ja": "暗号化"
+    }
+  },
+  {
+    "id": "q15",
+    "question": {
+      "en": "What is the main benefit of enabling S3 Bucket Keys for SSE-KMS?",
+      "ja": "SSE-KMS で S3 Bucket Keys を有効にする主な利点はどれか。"
+    },
+    "choices": {
+      "en": [
+        "Objects become publicly readable",
+        "It enables cross-Region replication automatically",
+        "It replaces KMS with SSE-C",
+        "It reduces the number of requests from S3 to KMS, lowering cost"
+      ],
+      "ja": [
+        "オブジェクトが公開読み取り可能になる",
+        "クロスリージョンレプリケーションが自動で有効になる",
+        "KMS を SSE-C に置き換える",
+        "S3 から KMS へのリクエスト数が減り、コストが下がる"
+      ]
+    },
+    "answer": 3,
+    "explanation": {
+      "en": "Bucket Keys use a bucket-level key to generate data keys, reducing KMS request traffic (AWS says by up to 99%), which lowers KMS cost and throttling risk.",
+      "ja": "Bucket Keys はバケット単位のキーでデータキーを生成するため KMS へのリクエストを削減し (最大 99% とされる)、KMS 料金とスロットリングのリスクを下げる。"
+    },
+    "difficulty": "medium",
+    "topic": {
+      "en": "Encryption",
+      "ja": "暗号化"
+    }
+  },
+  {
+    "id": "q16",
+    "question": {
+      "en": "What does an AWS Organizations resource control policy (RCP) do for S3?",
+      "ja": "AWS Organizations のリソースコントロールポリシー (RCP) は S3 に対して何をするか。"
+    },
+    "choices": {
+      "en": [
+        "Grants permissions to IAM users in member accounts",
+        "Sets maximum permissions on resources such as S3 buckets across the organization, regardless of who calls",
+        "Encrypts all buckets with a shared key",
+        "Replaces bucket policies entirely"
+      ],
+      "ja": [
+        "メンバーアカウントの IAM ユーザーに権限を付与する",
+        "呼び出し元が誰であっても、組織内の S3 バケット等のリソースに対する最大権限を設定する",
+        "全バケットを共有キーで暗号化する",
+        "バケットポリシーを完全に置き換える"
+      ]
+    },
+    "answer": 1,
+    "explanation": {
+      "en": "RCPs, introduced in November 2024, are guardrails on resources. They never grant access; they restrict what any principal, including external ones, can do to resources in member accounts.",
+      "ja": "2024 年 11 月に導入された RCP はリソース側のガードレールで、権限を付与することはない。外部プリンシパルを含むあらゆる呼び出し元が、メンバーアカウントのリソースに対してできることを制限する。"
+    },
+    "difficulty": "medium",
+    "topic": {
+      "en": "Access control",
+      "ja": "アクセス制御"
+    }
+  },
+  {
+    "id": "q17",
+    "question": {
+      "en": "You send PutObject with the header If-None-Match: * and an object with that key already exists. What happens?",
+      "ja": "If-None-Match: * ヘッダー付きで PutObject を送ったが、同じキーのオブジェクトが既に存在した。どうなるか。"
+    },
+    "choices": {
+      "en": [
+        "The object is overwritten",
+        "A new version is created silently",
+        "The request fails with 412 Precondition Failed",
+        "The request fails with 404 Not Found"
+      ],
+      "ja": [
+        "上書きされる",
+        "黙って新しいバージョンが作られる",
+        "412 Precondition Failed で失敗する",
+        "404 Not Found で失敗する"
+      ]
+    },
+    "answer": 2,
+    "explanation": {
+      "en": "Conditional writes with If-None-Match fail with 412 Precondition Failed when an object with the same key exists (or, in versioned buckets, when the current version is not a delete marker).",
+      "ja": "If-None-Match による条件付き書き込みは、同じキーのオブジェクトが存在する場合 (バージョニング有効なら現行バージョンが削除マーカーでない場合) に 412 Precondition Failed で失敗する。"
+    },
+    "difficulty": "medium",
+    "topic": {
+      "en": "Conditional requests",
+      "ja": "条件付きリクエスト"
+    }
+  },
+  {
+    "id": "q18",
+    "question": {
+      "en": "A conditional CompleteMultipartUpload returns 409 Conflict because a concurrent delete succeeded first. What must you do?",
+      "ja": "並行する削除が先に成功したため、条件付き CompleteMultipartUpload が 409 Conflict を返した。どうすべきか。"
+    },
+    "choices": {
+      "en": [
+        "Re-initiate the upload with CreateMultipartUpload and upload the parts again",
+        "Simply retry CompleteMultipartUpload with the same UploadId",
+        "Call RestoreObject",
+        "Nothing; S3 retries automatically"
+      ],
+      "ja": [
+        "CreateMultipartUpload からやり直してパートを再アップロードする",
+        "同じ UploadId で CompleteMultipartUpload を再試行するだけでよい",
+        "RestoreObject を呼ぶ",
+        "何もしなくてよい (S3 が自動再試行する)"
+      ]
+    },
+    "answer": 0,
+    "explanation": {
+      "en": "For PutObject, the upload can be retried after a 409. For CompleteMultipartUpload, AWS documents that the entire multipart upload must be re-initiated with CreateMultipartUpload.",
+      "ja": "PutObject なら 409 の後に再試行できるが、CompleteMultipartUpload の場合は CreateMultipartUpload からマルチパートアップロード全体をやり直す必要があると公式に記載されている。"
+    },
+    "difficulty": "hard",
+    "topic": {
+      "en": "Conditional requests",
+      "ja": "条件付きリクエスト"
+    }
+  },
+  {
+    "id": "q19",
+    "question": {
+      "en": "What is the minimum storage duration charge for S3 Glacier Deep Archive?",
+      "ja": "S3 Glacier Deep Archive の最低保存期間 (課金) はどれか。"
+    },
+    "choices": {
+      "en": [
+        "30 days",
+        "90 days",
+        "365 days",
+        "180 days"
+      ],
+      "ja": [
+        "30 日",
+        "90 日",
+        "365 日",
+        "180 日"
+      ]
+    },
+    "answer": 3,
+    "explanation": {
+      "en": "Deep Archive has a 180-day minimum. Glacier Instant Retrieval and Flexible Retrieval have 90 days, and Standard-IA and One Zone-IA have 30 days. Early deletion is charged pro rata.",
+      "ja": "Deep Archive は 180 日。Glacier Instant Retrieval と Flexible Retrieval は 90 日、Standard-IA と One Zone-IA は 30 日。期間前の削除は日割りで課金される。"
+    },
+    "difficulty": "medium",
+    "topic": {
+      "en": "Storage classes",
+      "ja": "ストレージクラス"
+    }
+  },
+  {
+    "id": "q20",
+    "question": {
+      "en": "How are 40 KB objects stored in S3 Standard-IA billed?",
+      "ja": "S3 Standard-IA に保存した 40 KB のオブジェクトはどのように課金されるか。"
+    },
+    "choices": {
+      "en": [
+        "As 40 KB",
+        "As 128 KB (minimum billable object size)",
+        "Free, because they are small",
+        "As 1 MB"
+      ],
+      "ja": [
+        "40 KB として",
+        "128 KB として (最小課金サイズ)",
+        "小さいので無料",
+        "1 MB として"
+      ]
+    },
+    "answer": 1,
+    "explanation": {
+      "en": "Standard-IA and One Zone-IA have a minimum billable object size of 128 KB; smaller objects are charged as 128 KB (shown as SmObjects usage types).",
+      "ja": "Standard-IA と One Zone-IA には 128 KB の最小課金サイズがあり、それより小さいオブジェクトは 128 KB として課金される (Usage Type では SmObjects として表示)。"
+    },
+    "difficulty": "medium",
+    "topic": {
+      "en": "Cost",
+      "ja": "コスト"
+    }
+  },
+  {
+    "id": "q21",
+    "question": {
+      "en": "How does S3 Intelligent-Tiering handle objects smaller than 128 KB?",
+      "ja": "S3 Intelligent-Tiering は 128 KB 未満のオブジェクトをどう扱うか。"
+    },
+    "choices": {
+      "en": [
+        "They are moved to Deep Archive Access immediately",
+        "They are rejected on upload",
+        "They are not monitored and always stay in the Frequent Access tier",
+        "They are billed as 1 MB"
+      ],
+      "ja": [
+        "すぐに Deep Archive Access 層へ移される",
+        "アップロード時に拒否される",
+        "監視対象外で、常に Frequent Access 層に置かれる",
+        "1 MB として課金される"
+      ]
+    },
+    "answer": 2,
+    "explanation": {
+      "en": "Objects smaller than 128 KB are not eligible for auto-tiering and are always stored in the Frequent Access tier. They also incur no monitoring fee.",
+      "ja": "128 KB 未満のオブジェクトは自動階層化の対象外で、常に Frequent Access 層に保存される。監視料金もかからない。"
+    },
+    "difficulty": "medium",
+    "topic": {
+      "en": "Storage classes",
+      "ja": "ストレージクラス"
+    }
+  },
+  {
+    "id": "q22",
+    "question": {
+      "en": "A lifecycle rule transitions all objects to Glacier Flexible Retrieval after 30 days, but 50 KB objects created in 2026 are not transitioned. Why?",
+      "ja": "30 日後に全オブジェクトを Glacier Flexible Retrieval へ遷移するライフサイクルを設定したが、2026 年に作成した 50 KB のオブジェクトが遷移しない。なぜか。"
+    },
+    "choices": {
+      "en": [
+        "By default, objects smaller than 128 KB are not transitioned unless a size filter allows them",
+        "Lifecycle never works on Glacier",
+        "Versioning must be disabled",
+        "Lifecycle only runs once a month"
+      ],
+      "ja": [
+        "既定では 128 KB 未満のオブジェクトはサイズフィルタで許可しない限り遷移しない",
+        "ライフサイクルは Glacier に対応していない",
+        "バージョニングを無効にする必要がある",
+        "ライフサイクルは月 1 回しか実行されない"
+      ]
+    },
+    "answer": 0,
+    "explanation": {
+      "en": "Since September 2024, lifecycle does not transition objects smaller than 128 KB by default. You can add an ObjectSizeGreaterThan filter with a smaller value, but transition costs may outweigh savings.",
+      "ja": "2024 年 9 月以降、既定では 128 KB 未満のオブジェクトは遷移されない。ObjectSizeGreaterThan に小さい値を指定すれば遷移できるが、遷移コストが削減額を上回ることがある。"
+    },
+    "difficulty": "hard",
+    "topic": {
+      "en": "Lifecycle",
+      "ja": "ライフサイクル"
+    }
+  },
+  {
+    "id": "q23",
+    "question": {
+      "en": "You GET an object stored in Glacier Flexible Retrieval without restoring it first. Which error do you get?",
+      "ja": "Glacier Flexible Retrieval のオブジェクトを復元せずに GET した。返るエラーはどれか。"
+    },
+    "choices": {
+      "en": [
+        "NoSuchKey",
+        "EntityTooLarge",
+        "SlowDown",
+        "InvalidObjectState"
+      ],
+      "ja": [
+        "NoSuchKey",
+        "EntityTooLarge",
+        "SlowDown",
+        "InvalidObjectState"
+      ]
+    },
+    "answer": 3,
+    "explanation": {
+      "en": "Archived objects in Glacier Flexible Retrieval, Deep Archive, or Intelligent-Tiering archive tiers must be restored first; otherwise S3 returns InvalidObjectState (403).",
+      "ja": "Glacier Flexible Retrieval、Deep Archive、Intelligent-Tiering のアーカイブ層のオブジェクトは先に復元が必要で、そうしないと InvalidObjectState (403) が返る。"
+    },
+    "difficulty": "medium",
+    "topic": {
+      "en": "Storage classes",
+      "ja": "ストレージクラス"
+    }
+  },
+  {
+    "id": "q24",
+    "question": {
+      "en": "Which retrieval option is NOT available for S3 Glacier Deep Archive?",
+      "ja": "S3 Glacier Deep Archive で利用できない取り出しオプションはどれか。"
+    },
+    "choices": {
+      "en": [
+        "Standard",
+        "Expedited",
+        "Bulk",
+        "Restore via S3 Batch Operations"
+      ],
+      "ja": [
+        "Standard",
+        "Expedited",
+        "Bulk",
+        "S3 Batch Operations による復元"
+      ]
+    },
+    "answer": 1,
+    "explanation": {
+      "en": "Deep Archive offers Standard (typically within 12 hours) and Bulk (typically within 48 hours). Expedited is available only for Glacier Flexible Retrieval (and the Intelligent-Tiering Archive Access tier).",
+      "ja": "Deep Archive は Standard (通常 12 時間以内) と Bulk (通常 48 時間以内) のみ。Expedited は Glacier Flexible Retrieval (と Intelligent-Tiering の Archive Access 層) でのみ使える。"
+    },
+    "difficulty": "medium",
+    "topic": {
+      "en": "Storage classes",
+      "ja": "ストレージクラス"
+    }
+  },
+  {
+    "id": "q25",
+    "question": {
+      "en": "After enabling versioning on a bucket, which state changes are possible?",
+      "ja": "バケットのバージョニングを有効化した後、可能な状態変更はどれか。"
+    },
+    "choices": {
+      "en": [
+        "Only by deleting all objects first",
+        "Back to unversioned at any time",
+        "Only Suspended (it cannot return to unversioned)",
+        "No change is ever possible"
+      ],
+      "ja": [
+        "全オブジェクト削除後のみ未設定に戻せる",
+        "いつでも未設定に戻せる",
+        "停止 (Suspended) のみ (未設定には戻せない)",
+        "一切変更できない"
+      ]
+    },
+    "answer": 2,
+    "explanation": {
+      "en": "Once enabled, versioning can only be suspended. Existing versions remain and continue to be billed until you delete them, for example with NoncurrentVersionExpiration.",
+      "ja": "一度有効化したバージョニングは停止しかできない。既存のバージョンは残り、NoncurrentVersionExpiration などで削除するまで課金され続ける。"
+    },
+    "difficulty": "easy",
+    "topic": {
+      "en": "Versioning",
+      "ja": "バージョニング"
+    }
+  },
+  {
+    "id": "q26",
+    "question": {
+      "en": "In a versioning-enabled bucket, what does DeleteObject without a version ID do?",
+      "ja": "バージョニング有効バケットで、バージョン ID を指定せずに DeleteObject するとどうなるか。"
+    },
+    "choices": {
+      "en": [
+        "Inserts a delete marker; previous versions remain",
+        "Permanently deletes all versions",
+        "Returns an error",
+        "Moves the object to Glacier"
+      ],
+      "ja": [
+        "削除マーカーを挿入し、以前のバージョンは残る",
+        "全バージョンを完全削除する",
+        "エラーになる",
+        "オブジェクトを Glacier に移す"
+      ]
+    },
+    "answer": 0,
+    "explanation": {
+      "en": "A simple DELETE creates a delete marker that becomes the current version. The data is still stored as noncurrent versions and can be recovered by removing the marker.",
+      "ja": "単純な DELETE は削除マーカーを現行バージョンとして作る。データは非現行バージョンとして残り、マーカーを消せば復元できる。"
+    },
+    "difficulty": "easy",
+    "topic": {
+      "en": "Versioning",
+      "ja": "バージョニング"
+    }
+  },
+  {
+    "id": "q27",
+    "question": {
+      "en": "You add a replication rule to a bucket that already contains 10 million objects. How do you replicate those existing objects?",
+      "ja": "既に 1,000 万オブジェクトがあるバケットにレプリケーションルールを追加した。既存オブジェクトを複製するにはどうするか。"
+    },
+    "choices": {
+      "en": [
+        "They are replicated automatically",
+        "Disable and re-enable versioning",
+        "Enable Transfer Acceleration",
+        "Use S3 Batch Replication"
+      ],
+      "ja": [
+        "自動的に複製される",
+        "バージョニングを無効化して再有効化する",
+        "Transfer Acceleration を有効にする",
+        "S3 Batch Replication を使う"
+      ]
+    },
+    "answer": 3,
+    "explanation": {
+      "en": "Replication rules apply to new objects written after the rule is added. Existing objects and objects that previously failed to replicate are handled with S3 Batch Replication.",
+      "ja": "レプリケーションルールは追加後に書き込まれたオブジェクトが対象。既存オブジェクトや過去に失敗したものは S3 Batch Replication で複製する。"
+    },
+    "difficulty": "medium",
+    "topic": {
+      "en": "Replication",
+      "ja": "レプリケーション"
+    }
+  },
+  {
+    "id": "q28",
+    "question": {
+      "en": "Under Object Lock compliance mode, who can shorten the retention period of a locked object version?",
+      "ja": "Object Lock の Compliance モードでロックされたバージョンの保持期間を短縮できるのは誰か。"
+    },
+    "choices": {
+      "en": [
+        "The root user",
+        "No one",
+        "AWS Support on request",
+        "Users with s3:BypassGovernanceRetention"
+      ],
+      "ja": [
+        "root ユーザー",
+        "誰もできない",
+        "依頼すれば AWS サポート",
+        "s3:BypassGovernanceRetention を持つユーザー"
+      ]
+    },
+    "answer": 1,
+    "explanation": {
+      "en": "In compliance mode, no user, including the root user, can overwrite or delete the protected version or shorten its retention. Governance mode can be bypassed with special permission.",
+      "ja": "Compliance モードでは root を含め誰も保護されたバージョンを上書き・削除したり保持期間を短縮したりできない。Governance モードは特別な権限で回避できる。"
+    },
+    "difficulty": "medium",
+    "topic": {
+      "en": "Data protection",
+      "ja": "データ保護"
+    }
+  },
+  {
+    "id": "q29",
+    "question": {
+      "en": "With AWS Backup continuous backups for S3, how far back can you restore to any point in time?",
+      "ja": "AWS Backup の S3 継続バックアップでは、どこまで遡って任意の時点に復元できるか。"
+    },
+    "choices": {
+      "en": [
+        "24 hours",
+        "7 days",
+        "35 days",
+        "1 year"
+      ],
+      "ja": [
+        "24 時間",
+        "7 日",
+        "35 日",
+        "1 年"
+      ]
+    },
+    "answer": 2,
+    "explanation": {
+      "en": "Continuous backups support point-in-time restore within the last 35 days. Periodic backups can be retained longer. Versioning must be enabled on the bucket.",
+      "ja": "継続バックアップは過去 35 日以内の任意の時点に復元できる。定期バックアップはより長く保持できる。バケットのバージョニングが必須。"
+    },
+    "difficulty": "medium",
+    "topic": {
+      "en": "Data protection",
+      "ja": "データ保護"
+    }
+  },
+  {
+    "id": "q30",
+    "question": {
+      "en": "Which statement about MFA Delete is correct?",
+      "ja": "MFA Delete について正しい記述はどれか。"
+    },
+    "choices": {
+      "en": [
+        "It cannot be used together with lifecycle configurations",
+        "Any IAM administrator can enable it from the console",
+        "It encrypts objects with an MFA-derived key",
+        "It applies only to Glacier storage classes"
+      ],
+      "ja": [
+        "ライフサイクル設定と併用できない",
+        "IAM 管理者なら誰でもコンソールから有効化できる",
+        "MFA 由来の鍵でオブジェクトを暗号化する",
+        "Glacier 系ストレージクラスにのみ適用される"
+      ]
+    },
+    "answer": 0,
+    "explanation": {
+      "en": "MFA Delete can be enabled only by the bucket owner's root user (via API/CLI), and AWS documents that you can't use MFA Delete with lifecycle configurations.",
+      "ja": "MFA Delete はバケット所有者の root ユーザーのみが (API/CLI で) 有効化でき、ライフサイクル設定とは併用できないと公式に記載されている。"
+    },
+    "difficulty": "hard",
+    "topic": {
+      "en": "Versioning",
+      "ja": "バージョニング"
+    }
+  },
+  {
+    "id": "q31",
+    "question": {
+      "en": "Your application receives many 503 SlowDown errors. Which is the best response?",
+      "ja": "アプリケーションで 503 SlowDown が多発している。最適な対処はどれか。"
+    },
+    "choices": {
+      "en": [
+        "Open a support case to report an S3 outage",
+        "Disable encryption",
+        "Switch all objects to One Zone-IA",
+        "Retry with exponential backoff and spread requests across more prefixes"
+      ],
+      "ja": [
+        "S3 障害としてサポートに報告する",
+        "暗号化を無効にする",
+        "全オブジェクトを One Zone-IA に移す",
+        "指数バックオフでリトライし、リクエストを複数のプレフィックスに分散する"
+      ]
+    },
+    "answer": 3,
+    "explanation": {
+      "en": "SlowDown indicates the request rate is too high while S3 scales. Use exponential backoff (built into SDKs), distribute load across prefixes, and ramp up traffic gradually.",
+      "ja": "SlowDown は S3 のスケール中にリクエストレートが高すぎることを示す。指数バックオフ (SDK に内蔵)、プレフィックスへの分散、段階的なトラフィック増加で対処する。"
+    },
+    "difficulty": "easy",
+    "topic": {
+      "en": "Performance",
+      "ja": "パフォーマンス"
+    }
+  },
+  {
+    "id": "q32",
+    "question": {
+      "en": "Are bucket owners billed for requests that fail with HTTP 503 Slow Down?",
+      "ja": "HTTP 503 Slow Down で失敗したリクエストはバケット所有者に課金されるか。"
+    },
+    "choices": {
+      "en": [
+        "Yes, at the Tier1 rate",
+        "No, 5xx responses are not billed",
+        "Yes, at double the normal rate",
+        "Only if versioning is enabled"
+      ],
+      "ja": [
+        "はい、Tier1 料金で",
+        "いいえ、5xx レスポンスは課金されない",
+        "はい、通常の 2 倍で",
+        "バージョニング有効時のみ"
+      ]
+    },
+    "answer": 1,
+    "explanation": {
+      "en": "Bucket owners are generally billed for 200 and 4xx responses, but not for 5xx server errors such as 503 Slow Down.",
+      "ja": "バケット所有者は一般に 200 と 4xx レスポンスに課金されるが、503 Slow Down などの 5xx サーバーエラーには課金されない。"
+    },
+    "difficulty": "medium",
+    "topic": {
+      "en": "Cost",
+      "ja": "コスト"
+    }
+  },
+  {
+    "id": "q33",
+    "question": {
+      "en": "An unknown external account sends millions of unauthorized requests that receive 403 AccessDenied. Who pays for them?",
+      "ja": "見知らぬ外部アカウントから数百万件の未認可リクエストが来て 403 AccessDenied になった。料金は誰が払うか。"
+    },
+    "choices": {
+      "en": [
+        "The bucket owner pays Tier1 rates",
+        "The bucket owner pays Tier2 rates",
+        "The bucket owner is not charged for these 403s from outside its account or organization",
+        "AWS bills the requester's IP address"
+      ],
+      "ja": [
+        "バケット所有者が Tier1 料金を払う",
+        "バケット所有者が Tier2 料金を払う",
+        "アカウント外・組織外からの 403 はバケット所有者に課金されない",
+        "AWS がリクエスト元の IP に請求する"
+      ]
+    },
+    "answer": 2,
+    "explanation": {
+      "en": "For AccessDenied (403), S3 doesn't charge the bucket owner when the request is initiated outside the bucket owner's individual AWS account or AWS organization.",
+      "ja": "AccessDenied (403) について、バケット所有者の個別アカウントまたは組織の外から開始されたリクエストは、バケット所有者に課金されない。"
+    },
+    "difficulty": "hard",
+    "topic": {
+      "en": "Cost",
+      "ja": "コスト"
+    }
+  },
+  {
+    "id": "q34",
+    "question": {
+      "en": "In your bill, the usage type TimedStorage-ByteHrs suddenly increased. What does it measure?",
+      "ja": "請求で Usage Type「TimedStorage-ByteHrs」が急増した。これは何を表すか。"
+    },
+    "choices": {
+      "en": [
+        "GB-months of data stored in S3 Standard",
+        "Data transferred to the internet",
+        "Number of PUT requests",
+        "Glacier restore requests"
+      ],
+      "ja": [
+        "S3 Standard に保存されたデータの GB-月",
+        "インターネットへのデータ転送量",
+        "PUT リクエスト数",
+        "Glacier 復元リクエスト"
+      ]
+    },
+    "answer": 0,
+    "explanation": {
+      "en": "TimedStorage-ByteHrs is S3 Standard storage. Common causes of unexpected growth are accumulating noncurrent versions and incomplete multipart uploads.",
+      "ja": "TimedStorage-ByteHrs は S3 Standard の保存量。想定外の増加の典型原因は非現行バージョンの蓄積と未完了マルチパートアップロード。"
+    },
+    "difficulty": "medium",
+    "topic": {
+      "en": "Cost",
+      "ja": "コスト"
+    }
+  },
+  {
+    "id": "q35",
+    "question": {
+      "en": "Which requests are counted in the Requests-Tier1 usage type for S3 Standard?",
+      "ja": "S3 Standard の Usage Type「Requests-Tier1」に含まれるリクエストはどれか。"
+    },
+    "choices": {
+      "en": [
+        "GET and HEAD",
+        "Lifecycle transitions to Glacier",
+        "DELETE only",
+        "PUT, COPY, POST, and LIST"
+      ],
+      "ja": [
+        "GET と HEAD",
+        "Glacier へのライフサイクル遷移",
+        "DELETE のみ",
+        "PUT、COPY、POST、LIST"
+      ]
+    },
+    "answer": 3,
+    "explanation": {
+      "en": "Requests-Tier1 covers PUT, COPY, POST requests (plus tags) and LIST requests. GET and other requests are Requests-Tier2. LIST-heavy designs therefore pay the higher Tier1 rate.",
+      "ja": "Requests-Tier1 は PUT、COPY、POST (およびタグ) と LIST リクエスト。GET などは Requests-Tier2。LIST を多用する設計は高い Tier1 料金を払うことになる。"
+    },
+    "difficulty": "medium",
+    "topic": {
+      "en": "Cost",
+      "ja": "コスト"
+    }
+  },
+  {
+    "id": "q36",
+    "question": {
+      "en": "You want S3 Event Notifications delivered directly to an SQS FIFO queue. What happens?",
+      "ja": "S3 Event Notifications を SQS FIFO キューに直接送りたい。どうなるか。"
+    },
+    "choices": {
+      "en": [
+        "It works and guarantees ordering",
+        "FIFO queues are not supported as a direct destination; use EventBridge or a standard queue",
+        "It works only with SSE-C",
+        "It requires Transfer Acceleration"
+      ],
+      "ja": [
+        "動作し、順序も保証される",
+        "FIFO キューは直接の宛先としてサポートされない。EventBridge か標準キューを使う",
+        "SSE-C 使用時のみ動作する",
+        "Transfer Acceleration が必要"
+      ]
+    },
+    "answer": 1,
+    "explanation": {
+      "en": "S3 Event Notifications support SNS, standard SQS queues, and Lambda as destinations (plus EventBridge). FIFO queues are not supported directly; EventBridge can route to FIFO targets.",
+      "ja": "S3 Event Notifications の宛先は SNS、SQS 標準キュー、Lambda (と EventBridge)。FIFO キューは直接はサポートされず、EventBridge 経由なら FIFO ターゲットにルーティングできる。"
+    },
+    "difficulty": "hard",
+    "topic": {
+      "en": "Events",
+      "ja": "イベント"
+    }
+  },
+  {
+    "id": "q37",
+    "question": {
+      "en": "EC2 instances in a private subnet download terabytes from S3 in the same Region through a NAT gateway. What change reduces cost most simply?",
+      "ja": "プライベートサブネットの EC2 が、同一リージョンの S3 から NAT Gateway 経由で数 TB をダウンロードしている。最も簡単にコストを下げる変更はどれか。"
+    },
+    "choices": {
+      "en": [
+        "Use a Multi-Region Access Point",
+        "Enable Transfer Acceleration",
+        "Add an S3 gateway VPC endpoint",
+        "Enable Requester Pays"
+      ],
+      "ja": [
+        "Multi-Region Access Point を使う",
+        "Transfer Acceleration を有効にする",
+        "S3 の Gateway VPC エンドポイントを追加する",
+        "Requester Pays を有効にする"
+      ]
+    },
+    "answer": 2,
+    "explanation": {
+      "en": "Gateway endpoints for S3 have no additional charge and route traffic directly to S3, avoiding NAT gateway data processing charges.",
+      "ja": "S3 の Gateway エンドポイントは追加料金がかからず、トラフィックを直接 S3 へルーティングするため NAT Gateway のデータ処理料金を回避できる。"
+    },
+    "difficulty": "easy",
+    "topic": {
+      "en": "Networking",
+      "ja": "ネットワーク"
+    }
+  },
+  {
+    "id": "q38",
+    "question": {
+      "en": "An object was uploaded with multipart upload using SSE-S3. Its ETag looks like \"...-12\". What is true?",
+      "ja": "SSE-S3 でマルチパートアップロードしたオブジェクトの ETag が「...-12」の形式だった。正しいのはどれか。"
+    },
+    "choices": {
+      "en": [
+        "It is not the MD5 of the whole object; use additional checksums for integrity checks",
+        "It is the MD5 of the whole file",
+        "It means the object has 12 versions",
+        "It means 12 replication copies exist"
+      ],
+      "ja": [
+        "オブジェクト全体の MD5 ではない。完全性検証には追加チェックサムを使う",
+        "ファイル全体の MD5 である",
+        "12 個のバージョンがあることを示す",
+        "12 個のレプリカがあることを示す"
+      ]
+    },
+    "answer": 0,
+    "explanation": {
+      "en": "For multipart uploads, the ETag is derived from the parts and ends with the number of parts. It is not the MD5 of the full object. Use CRC64NVME, CRC32C, SHA-256 or similar checksums.",
+      "ja": "マルチパートアップロードの ETag はパートから算出され、末尾がパート数になる。オブジェクト全体の MD5 ではないので、CRC64NVME、CRC32C、SHA-256 などのチェックサムを使う。"
+    },
+    "difficulty": "medium",
+    "topic": {
+      "en": "Data integrity",
+      "ja": "データ完全性"
+    }
+  },
+  {
+    "id": "q39",
+    "question": {
+      "en": "With S3 account regional namespaces (introduced in 2026), what does a bucket name look like?",
+      "ja": "2026 年に導入された S3 のアカウントリージョナル名前空間では、バケット名はどのような形式になるか。"
+    },
+    "choices": {
+      "en": [
+        "mybucket.123456789012.s3",
+        "123456789012/mybucket",
+        "arn-mybucket-us-east-1",
+        "mybucket-123456789012-us-east-1-an"
+      ],
+      "ja": [
+        "mybucket.123456789012.s3",
+        "123456789012/mybucket",
+        "arn-mybucket-us-east-1",
+        "mybucket-123456789012-us-east-1-an"
+      ]
+    },
+    "answer": 3,
+    "explanation": {
+      "en": "You append your account regional suffix (-<account-id>-<region>-an) to a name prefix. Only your account can create buckets with that suffix, and the full name must still be 3 to 63 characters.",
+      "ja": "名前の接頭辞にアカウントリージョナルサフィックス (-<アカウントID>-<リージョン>-an) を付ける。そのサフィックスを使えるのは自アカウントのみで、全体で 3〜63 文字である必要がある。"
+    },
+    "difficulty": "hard",
+    "topic": {
+      "en": "Buckets",
+      "ja": "バケット"
+    }
+  },
+  {
+    "id": "q40",
+    "question": {
+      "en": "Which design is an S3 anti-pattern?",
+      "ja": "S3 のアンチパターンはどれか。"
+    },
+    "choices": {
+      "en": [
+        "Using CloudFront with OAC for public content",
+        "Polling a bucket with LIST to find new work items and deleting them as a job queue",
+        "Separating input and output buckets for event-driven processing",
+        "Configuring AbortIncompleteMultipartUpload in lifecycle"
+      ],
+      "ja": [
+        "公開コンテンツに CloudFront + OAC を使う",
+        "ジョブキューとしてバケットを LIST でポーリングし、新しい項目を見つけて削除する",
+        "イベント駆動処理で入力バケットと出力バケットを分ける",
+        "ライフサイクルで AbortIncompleteMultipartUpload を設定する"
+      ]
+    },
+    "answer": 1,
+    "explanation": {
+      "en": "Using S3 as a queue via LIST polling is costly (LIST is billed as Tier1), has no locking or ordering, and leads to duplicate processing. Use SQS or EventBridge and keep only payloads in S3.",
+      "ja": "LIST のポーリングで S3 をキュー代わりにすると高コスト (LIST は Tier1 課金) で、ロックも順序保証もなく重複処理を招く。SQS や EventBridge を使い、S3 にはペイロードだけを置く。"
+    },
+    "difficulty": "easy",
+    "topic": {
+      "en": "Architecture",
+      "ja": "アーキテクチャ"
+    }
+  }
+]

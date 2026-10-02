@@ -1,0 +1,772 @@
+[
+  {
+    "id": "athena",
+    "name": "Amazon Athena",
+    "group": "analytics",
+    "howItUsesS3": {
+      "en": "Serverless SQL over files in S3 via the Glue Data Catalog; query results are written back to S3.",
+      "ja": "Glue Data Catalog 経由で S3 上のファイルをサーバーレス SQL でクエリし、結果も S3 に書き出す。"
+    },
+    "url": "https://docs.aws.amazon.com/athena/latest/ug/what-is.html"
+  },
+  {
+    "id": "glue-data-catalog",
+    "name": "AWS Glue Data Catalog",
+    "group": "analytics",
+    "howItUsesS3": {
+      "en": "Stores table definitions (schema, partitions, location) that point at data in S3; also exposes an Iceberg REST endpoint.",
+      "ja": "S3 上のデータを指すテーブル定義 (スキーマ・パーティション・場所) を保持し、Iceberg REST エンドポイントも提供する。"
+    },
+    "url": "https://docs.aws.amazon.com/glue/latest/dg/catalog-and-crawler.html"
+  },
+  {
+    "id": "glue-crawler",
+    "name": "AWS Glue crawlers",
+    "group": "analytics",
+    "howItUsesS3": {
+      "en": "Scan S3 prefixes to infer schemas and register tables and partitions in the Data Catalog.",
+      "ja": "S3 prefix をスキャンしてスキーマを推定し、テーブルとパーティションを Data Catalog に登録する。"
+    },
+    "url": "https://docs.aws.amazon.com/glue/latest/dg/add-crawler.html"
+  },
+  {
+    "id": "glue-etl",
+    "name": "AWS Glue ETL",
+    "group": "analytics",
+    "howItUsesS3": {
+      "en": "Runs Spark jobs that read from and write to S3, with job bookmarks for incremental processing.",
+      "ja": "S3 を読み書きする Spark ジョブを実行し、job bookmark で増分処理する。"
+    },
+    "url": "https://docs.aws.amazon.com/glue/latest/dg/author-job-glue.html"
+  },
+  {
+    "id": "lake-formation",
+    "name": "AWS Lake Formation",
+    "group": "analytics",
+    "howItUsesS3": {
+      "en": "Registers S3 locations and enforces table, column, row and cell-level permissions on top of S3 data.",
+      "ja": "S3 の場所を登録し、その上にテーブル・列・行・セル単位の権限を適用する。"
+    },
+    "url": "https://docs.aws.amazon.com/lake-formation/latest/dg/what-is-lake-formation.html"
+  },
+  {
+    "id": "emr",
+    "name": "Amazon EMR",
+    "group": "analytics",
+    "howItUsesS3": {
+      "en": "Runs Spark, Hive, Trino and other engines that use S3 as the primary storage through EMRFS or S3A.",
+      "ja": "EMRFS / S3A 経由で S3 を主ストレージとして Spark・Hive・Trino 等を動かす。"
+    },
+    "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-what-is-emr.html"
+  },
+  {
+    "id": "redshift-spectrum",
+    "name": "Amazon Redshift Spectrum",
+    "group": "analytics",
+    "howItUsesS3": {
+      "en": "Queries S3 data in place through external schemas backed by the Glue Data Catalog.",
+      "ja": "Glue Data Catalog ベースの外部スキーマで S3 上のデータをその場でクエリする。"
+    },
+    "url": "https://docs.aws.amazon.com/redshift/latest/dg/c-using-spectrum.html"
+  },
+  {
+    "id": "redshift-copy-unload",
+    "name": "Amazon Redshift COPY and UNLOAD",
+    "group": "analytics",
+    "howItUsesS3": {
+      "en": "COPY bulk-loads files from S3 (including auto-copy jobs); UNLOAD exports query results to S3 as Parquet, CSV or JSON.",
+      "ja": "COPY で S3 からバルクロード (auto-copy 含む)、UNLOAD でクエリ結果を Parquet / CSV / JSON で S3 に書き出す。"
+    },
+    "url": "https://docs.aws.amazon.com/redshift/latest/dg/r_COPY.html"
+  },
+  {
+    "id": "sagemaker-lakehouse",
+    "name": "Lakehouse architecture of Amazon SageMaker",
+    "group": "analytics",
+    "howItUsesS3": {
+      "en": "Unifies S3 data lakes and Redshift in one Iceberg-compatible catalog with Lake Formation permissions.",
+      "ja": "S3 データレイクと Redshift を Iceberg 互換の単一カタログで統合し、Lake Formation で権限を管理する。"
+    },
+    "url": "https://docs.aws.amazon.com/sagemaker-lakehouse-architecture/latest/userguide/what-is-smlh.html"
+  },
+  {
+    "id": "sagemaker-unified-studio",
+    "name": "Amazon SageMaker Unified Studio",
+    "group": "analytics",
+    "howItUsesS3": {
+      "en": "Provides notebooks, SQL and governance over lakehouse data stored in S3.",
+      "ja": "S3 に置かれたレイクハウスのデータに対してノートブック・SQL・ガバナンスを提供する。"
+    },
+    "url": "https://docs.aws.amazon.com/sagemaker-unified-studio/latest/userguide/what-is-sagemaker-unified-studio.html"
+  },
+  {
+    "id": "amazon-quick",
+    "name": "Amazon Quick (formerly QuickSight)",
+    "group": "analytics",
+    "howItUsesS3": {
+      "en": "Uses S3 files, Athena and S3 table buckets as BI data sources for dashboards and natural-language Q&A.",
+      "ja": "S3 ファイル・Athena・S3 table bucket を BI のデータソースとしてダッシュボードや自然言語 Q&A に使う。"
+    },
+    "url": "https://aws.amazon.com/about-aws/whats-new/2026/05/quick-direct-query-s3-tables/"
+  },
+  {
+    "id": "opensearch-direct-query",
+    "name": "Amazon OpenSearch Service direct query",
+    "group": "analytics",
+    "howItUsesS3": {
+      "en": "Queries S3 data in place from OpenSearch Dashboards using Glue Data Catalog tables, without ingestion.",
+      "ja": "Glue Data Catalog のテーブルを使い、取り込みなしで S3 データを OpenSearch Dashboards からクエリする。"
+    },
+    "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/direct-query-s3-overview.html"
+  },
+  {
+    "id": "opensearch-ingestion",
+    "name": "Amazon OpenSearch Ingestion",
+    "group": "analytics",
+    "howItUsesS3": {
+      "en": "Pipelines read objects from S3 (via SQS notifications or scans) and index them into OpenSearch.",
+      "ja": "S3 のオブジェクトを (SQS 通知またはスキャンで) 読み取り、OpenSearch にインデックスするパイプライン。"
+    },
+    "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/ingestion.html"
+  },
+  {
+    "id": "data-firehose",
+    "name": "Amazon Data Firehose",
+    "group": "analytics",
+    "howItUsesS3": {
+      "en": "Buffers streaming records and delivers them to S3, optionally converting to Parquet/ORC, dynamic partitioning, or writing to Iceberg tables.",
+      "ja": "ストリームのレコードをバッファして S3 に配信する。Parquet/ORC 変換、動的パーティション、Iceberg 宛先に対応。"
+    },
+    "url": "https://docs.aws.amazon.com/firehose/latest/dev/what-is-this-service.html"
+  },
+  {
+    "id": "msk-connect",
+    "name": "Amazon MSK Connect",
+    "group": "analytics",
+    "howItUsesS3": {
+      "en": "Runs Kafka Connect S3 sink connectors that write topic data to S3.",
+      "ja": "Kafka Connect の S3 sink connector を動かし、topic のデータを S3 に書き出す。"
+    },
+    "url": "https://docs.aws.amazon.com/msk/latest/developerguide/mkc-S3sink-connector-example.html"
+  },
+  {
+    "id": "dms",
+    "name": "AWS Database Migration Service",
+    "group": "analytics",
+    "howItUsesS3": {
+      "en": "Writes full-load and CDC data from databases to S3 as CSV or Parquet.",
+      "ja": "データベースの full load と CDC を CSV / Parquet として S3 に書き出す。"
+    },
+    "url": "https://docs.aws.amazon.com/dms/latest/userguide/CHAP_Target.S3.html"
+  },
+  {
+    "id": "lambda",
+    "name": "AWS Lambda",
+    "group": "compute",
+    "howItUsesS3": {
+      "en": "Invoked by S3 event notifications to process objects; can also mount buckets as file systems with S3 Files.",
+      "ja": "S3 イベント通知で起動してオブジェクトを処理する。S3 Files でバケットをファイルシステムとしてマウントも可能。"
+    },
+    "url": "https://docs.aws.amazon.com/lambda/latest/dg/with-s3.html"
+  },
+  {
+    "id": "step-functions-distributed-map",
+    "name": "AWS Step Functions Distributed Map",
+    "group": "compute",
+    "howItUsesS3": {
+      "en": "Reads object listings, CSV, JSON, JSONL or S3 Inventory manifests from S3 and fans out child workflows; writes results to S3.",
+      "ja": "S3 の object 一覧・CSV・JSON・JSONL・Inventory manifest を読み、子ワークフローを大量並列実行して結果を S3 に書く。"
+    },
+    "url": "https://docs.aws.amazon.com/step-functions/latest/dg/input-output-itemreader.html"
+  },
+  {
+    "id": "eks-mountpoint-csi",
+    "name": "Mountpoint for Amazon S3 CSI driver",
+    "group": "compute",
+    "howItUsesS3": {
+      "en": "Mounts S3 buckets as Kubernetes persistent volumes for pods on EKS or self-managed Kubernetes.",
+      "ja": "EKS 等の Kubernetes で S3 バケットを PersistentVolume として Pod にマウントする。"
+    },
+    "url": "https://docs.aws.amazon.com/eks/latest/userguide/s3-csi.html"
+  },
+  {
+    "id": "ecs",
+    "name": "Amazon ECS",
+    "group": "compute",
+    "howItUsesS3": {
+      "en": "Tasks access S3 through SDKs using task IAM roles.",
+      "ja": "タスク IAM ロールを使い SDK 経由で S3 にアクセスする。"
+    },
+    "url": "https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-iam-roles.html"
+  },
+  {
+    "id": "ec2-instance-profile",
+    "name": "Amazon EC2 instance profiles",
+    "group": "compute",
+    "howItUsesS3": {
+      "en": "Provide temporary IAM credentials so applications on EC2 can call S3 without stored keys.",
+      "ja": "EC2 上のアプリが鍵を保持せずに S3 を呼べるよう一時的な IAM 認証情報を提供する。"
+    },
+    "url": "https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2_instance-profiles.html"
+  },
+  {
+    "id": "batch",
+    "name": "AWS Batch",
+    "group": "compute",
+    "howItUsesS3": {
+      "en": "Batch jobs read inputs from and write outputs to S3 using job roles.",
+      "ja": "ジョブロールで S3 から入力を読み、出力を S3 に書くバッチジョブを実行する。"
+    },
+    "url": "https://docs.aws.amazon.com/batch/latest/userguide/what-is-batch.html"
+  },
+  {
+    "id": "s3-files",
+    "name": "Amazon S3 Files",
+    "group": "compute",
+    "howItUsesS3": {
+      "en": "Exposes S3 buckets as EFS-based shared file systems with full file semantics.",
+      "ja": "S3 バケットを EFS ベースの共有ファイルシステムとして公開する。"
+    },
+    "url": "https://aws.amazon.com/about-aws/whats-new/2026/04/amazon-s3-files/"
+  },
+  {
+    "id": "mountpoint-s3",
+    "name": "Mountpoint for Amazon S3",
+    "group": "compute",
+    "howItUsesS3": {
+      "en": "Open-source FUSE client that mounts a bucket as a local file system optimized for high-throughput reads and sequential writes.",
+      "ja": "高スループット読み込みと逐次書き込みに最適化された、バケットをローカルにマウントする OSS の FUSE クライアント。"
+    },
+    "url": "https://github.com/awslabs/mountpoint-s3"
+  },
+  {
+    "id": "sagemaker-training",
+    "name": "Amazon SageMaker AI training",
+    "group": "ai",
+    "howItUsesS3": {
+      "en": "Reads training channels from S3 in File, FastFile or Pipe mode and saves model artifacts and checkpoints to S3.",
+      "ja": "File / FastFile / Pipe モードで S3 から学習チャネルを読み、モデル成果物とチェックポイントを S3 に保存する。"
+    },
+    "url": "https://docs.aws.amazon.com/sagemaker/latest/dg/model-access-training-data.html"
+  },
+  {
+    "id": "bedrock-knowledge-bases",
+    "name": "Amazon Bedrock Knowledge Bases",
+    "group": "ai",
+    "howItUsesS3": {
+      "en": "Uses S3 as a data source for RAG ingestion, with optional .metadata.json sidecar files for filtering.",
+      "ja": "S3 を RAG 取り込みのデータソースとして使い、.metadata.json サイドカーでフィルタ用メタデータを付与する。"
+    },
+    "url": "https://docs.aws.amazon.com/bedrock/latest/userguide/kb-metadata.html"
+  },
+  {
+    "id": "s3-vectors",
+    "name": "Amazon S3 Vectors",
+    "group": "ai",
+    "howItUsesS3": {
+      "en": "Stores embeddings in vector buckets and indexes with a dedicated query API for similarity search.",
+      "ja": "vector bucket と vector index に埋め込みを保存し、専用 API で類似検索する。"
+    },
+    "url": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-vectors.html"
+  },
+  {
+    "id": "bedrock-batch-inference",
+    "name": "Amazon Bedrock batch inference",
+    "group": "ai",
+    "howItUsesS3": {
+      "en": "Reads JSONL input records from S3 and writes model outputs back to S3.",
+      "ja": "S3 から JSONL の入力を読み、モデル出力を S3 に書き戻す。"
+    },
+    "url": "https://docs.aws.amazon.com/bedrock/latest/userguide/batch-inference.html"
+  },
+  {
+    "id": "amazon-q-business",
+    "name": "Amazon Q Business",
+    "group": "ai",
+    "howItUsesS3": {
+      "en": "Indexes documents from S3 through its S3 connector; moved to maintenance for new customers in 2026.",
+      "ja": "S3 コネクタでドキュメントをインデックスする。2026 年に新規顧客向けは maintenance に移行。"
+    },
+    "url": "https://docs.aws.amazon.com/amazonq/latest/qbusiness-ug/s3-connector.html"
+  },
+  {
+    "id": "cloudfront-oac",
+    "name": "Amazon CloudFront origin access control",
+    "group": "delivery",
+    "howItUsesS3": {
+      "en": "CloudFront signs origin requests with SigV4 so a private S3 bucket can be served only through the distribution.",
+      "ja": "CloudFront が SigV4 でオリジンリクエストに署名し、プライベートな S3 バケットをディストリビューション経由でのみ配信する。"
+    },
+    "url": "https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-restricting-access-to-s3.html"
+  },
+  {
+    "id": "cloudfront-signed",
+    "name": "CloudFront signed URLs and cookies",
+    "group": "delivery",
+    "howItUsesS3": {
+      "en": "Restrict access to private S3-backed content at the edge with time-limited signatures.",
+      "ja": "期限付き署名でエッジにおいて S3 由来のプライベートコンテンツへのアクセスを制限する。"
+    },
+    "url": "https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/PrivateContent.html"
+  },
+  {
+    "id": "lambda-edge",
+    "name": "Lambda@Edge",
+    "group": "delivery",
+    "howItUsesS3": {
+      "en": "Rewrites or transforms requests and responses for S3 origins at CloudFront edge locations.",
+      "ja": "CloudFront のエッジで S3 オリジン向けのリクエスト・レスポンスを書き換える。"
+    },
+    "url": "https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/lambda-at-the-edge.html"
+  },
+  {
+    "id": "s3-presigned-url",
+    "name": "S3 presigned URLs",
+    "group": "delivery",
+    "howItUsesS3": {
+      "en": "Grant time-limited GET or PUT access to specific objects directly from S3.",
+      "ja": "特定オブジェクトへの期限付き GET / PUT を S3 から直接許可する。"
+    },
+    "url": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-presigned-url.html"
+  },
+  {
+    "id": "gateway-endpoint",
+    "name": "VPC gateway endpoint for S3",
+    "group": "network",
+    "howItUsesS3": {
+      "en": "Routes in-VPC traffic to S3 through route tables at no additional charge.",
+      "ja": "VPC 内からの S3 トラフィックをルートテーブル経由で追加料金なしに通す。"
+    },
+    "url": "https://docs.aws.amazon.com/vpc/latest/privatelink/vpc-endpoints-s3.html"
+  },
+  {
+    "id": "interface-endpoint",
+    "name": "AWS PrivateLink for Amazon S3",
+    "group": "network",
+    "howItUsesS3": {
+      "en": "Interface endpoints give S3 private IP addresses reachable from VPCs, peered networks and on premises.",
+      "ja": "インターフェイスエンドポイントで S3 にプライベート IP を割り当て、VPC・ピア・オンプレから到達可能にする。"
+    },
+    "url": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/privatelink-interface-endpoints.html"
+  },
+  {
+    "id": "direct-connect",
+    "name": "AWS Direct Connect",
+    "group": "network",
+    "howItUsesS3": {
+      "en": "Carries on-premises traffic to S3 over a dedicated link to interface endpoints or public endpoints.",
+      "ja": "専用線でオンプレからのトラフィックを S3 のインターフェイスエンドポイントまたはパブリックエンドポイントへ運ぶ。"
+    },
+    "url": "https://docs.aws.amazon.com/directconnect/latest/UserGuide/Welcome.html"
+  },
+  {
+    "id": "route53-resolver",
+    "name": "Amazon Route 53 Resolver inbound endpoints",
+    "group": "network",
+    "howItUsesS3": {
+      "en": "Resolve S3 DNS names from on premises to interface endpoint private IPs.",
+      "ja": "オンプレから S3 の DNS 名をインターフェイスエンドポイントのプライベート IP に解決する。"
+    },
+    "url": "https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resolver.html"
+  },
+  {
+    "id": "organizations",
+    "name": "AWS Organizations",
+    "group": "governance",
+    "howItUsesS3": {
+      "en": "SCPs and RCPs set organization-wide guardrails on S3 actions and bucket access.",
+      "ja": "SCP / RCP で S3 操作とバケットアクセスに組織全体のガードレールをかける。"
+    },
+    "url": "https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_scps.html"
+  },
+  {
+    "id": "control-tower",
+    "name": "AWS Control Tower",
+    "group": "governance",
+    "howItUsesS3": {
+      "en": "Creates centralized logging buckets in the Log Archive account and provides S3-related controls.",
+      "ja": "Log Archive アカウントに集中ログバケットを作成し、S3 関連の controls を提供する。"
+    },
+    "url": "https://docs.aws.amazon.com/controltower/latest/userguide/what-is-control-tower.html"
+  },
+  {
+    "id": "config",
+    "name": "AWS Config",
+    "group": "governance",
+    "howItUsesS3": {
+      "en": "Records S3 bucket configurations and evaluates them with managed rules; delivers snapshots to S3.",
+      "ja": "S3 バケット設定を記録して managed rule で評価し、スナップショットを S3 に配信する。"
+    },
+    "url": "https://docs.aws.amazon.com/config/latest/developerguide/managed-rules-by-aws-config.html"
+  },
+  {
+    "id": "cloudtrail",
+    "name": "AWS CloudTrail",
+    "group": "governance",
+    "howItUsesS3": {
+      "en": "Logs S3 management and data events and delivers trail log files to an S3 bucket.",
+      "ja": "S3 の管理イベントとデータイベントを記録し、ログファイルを S3 バケットに配信する。"
+    },
+    "url": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/cloudtrail-logging.html"
+  },
+  {
+    "id": "cloudtrail-lake",
+    "name": "AWS CloudTrail Lake",
+    "group": "governance",
+    "howItUsesS3": {
+      "en": "Managed SQL event store for CloudTrail events including S3 data events; closed to new customers from 2026-05-31.",
+      "ja": "S3 データイベントを含む CloudTrail イベントのマネージド SQL ストア。2026-05-31 以降は新規顧客受付終了。"
+    },
+    "url": "https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-lake-service-availability-change.html"
+  },
+  {
+    "id": "security-lake",
+    "name": "Amazon Security Lake",
+    "group": "governance",
+    "howItUsesS3": {
+      "en": "Normalizes security logs to OCSF and stores them as Parquet with Iceberg in a per-Region S3 bucket in your account.",
+      "ja": "セキュリティログを OCSF に正規化し、自アカウントのリージョン別 S3 バケットに Parquet + Iceberg で保存する。"
+    },
+    "url": "https://docs.aws.amazon.com/security-lake/latest/userguide/open-cybersecurity-schema-framework.html"
+  },
+  {
+    "id": "backup",
+    "name": "AWS Backup",
+    "group": "governance",
+    "howItUsesS3": {
+      "en": "Provides continuous (35-day point-in-time) and periodic backups of S3 buckets.",
+      "ja": "S3 バケットの continuous (35 日 PITR) と periodic バックアップを提供する。"
+    },
+    "url": "https://docs.aws.amazon.com/aws-backup/latest/devguide/s3-backups.html"
+  },
+  {
+    "id": "macie",
+    "name": "Amazon Macie",
+    "group": "governance",
+    "howItUsesS3": {
+      "en": "Discovers sensitive data in S3 objects and evaluates bucket security posture.",
+      "ja": "S3 オブジェクト内の機密データを検出し、バケットのセキュリティ状態を評価する。"
+    },
+    "url": "https://docs.aws.amazon.com/macie/latest/user/what-is-macie.html"
+  },
+  {
+    "id": "guardduty-s3",
+    "name": "Amazon GuardDuty S3 Protection",
+    "group": "governance",
+    "howItUsesS3": {
+      "en": "Analyzes S3 data events for threats and can scan newly uploaded objects for malware.",
+      "ja": "S3 データイベントから脅威を検知し、新規アップロードオブジェクトのマルウェアスキャンも行う。"
+    },
+    "url": "https://docs.aws.amazon.com/guardduty/latest/ug/s3-protection.html"
+  },
+  {
+    "id": "access-analyzer",
+    "name": "IAM Access Analyzer for S3",
+    "group": "governance",
+    "howItUsesS3": {
+      "en": "Identifies buckets shared with principals outside your zone of trust.",
+      "ja": "信頼ゾーン外のプリンシパルと共有されているバケットを特定する。"
+    },
+    "url": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-analyzer.html"
+  },
+  {
+    "id": "datasync",
+    "name": "AWS DataSync",
+    "group": "migration",
+    "howItUsesS3": {
+      "en": "Transfers data online between on-premises or other clouds and S3, and between AWS storage services.",
+      "ja": "オンプレ・他クラウドと S3 の間、および AWS ストレージ間でオンライン転送する。"
+    },
+    "url": "https://docs.aws.amazon.com/datasync/latest/userguide/what-is-datasync.html"
+  },
+  {
+    "id": "transfer-family",
+    "name": "AWS Transfer Family",
+    "group": "migration",
+    "howItUsesS3": {
+      "en": "Managed SFTP, FTPS, FTP and AS2 servers that store files in S3.",
+      "ja": "S3 にファイルを保存するマネージド SFTP / FTPS / FTP / AS2 サーバー。"
+    },
+    "url": "https://docs.aws.amazon.com/transfer/latest/userguide/what-is-aws-transfer-family.html"
+  },
+  {
+    "id": "transfer-family-web-apps",
+    "name": "AWS Transfer Family web apps",
+    "group": "migration",
+    "howItUsesS3": {
+      "en": "Branded browser portal for users to browse, upload and download S3 data, authorized via S3 Access Grants.",
+      "ja": "S3 Access Grants で認可し、ブラウザから S3 を閲覧・アップロード・ダウンロードできるポータル。"
+    },
+    "url": "https://docs.aws.amazon.com/transfer/latest/userguide/web-app.html"
+  },
+  {
+    "id": "s3-file-gateway",
+    "name": "AWS Storage Gateway S3 File Gateway",
+    "group": "migration",
+    "howItUsesS3": {
+      "en": "Presents NFS/SMB shares whose files are stored as objects in S3, with a local cache.",
+      "ja": "ローカルキャッシュ付きで NFS / SMB 共有を提供し、ファイルを S3 オブジェクトとして保存する。"
+    },
+    "url": "https://docs.aws.amazon.com/filegateway/latest/files3/what-is-file-s3.html"
+  },
+  {
+    "id": "volume-gateway",
+    "name": "AWS Storage Gateway Volume Gateway",
+    "group": "migration",
+    "howItUsesS3": {
+      "en": "Provides iSCSI block volumes backed by AWS storage with EBS snapshot integration.",
+      "ja": "AWS 側ストレージを裏に持つ iSCSI ブロックボリュームを提供し、EBS スナップショットと連携する。"
+    },
+    "url": "https://docs.aws.amazon.com/storagegateway/latest/vgw/WhatIsStorageGateway.html"
+  },
+  {
+    "id": "tape-gateway",
+    "name": "AWS Storage Gateway Tape Gateway",
+    "group": "migration",
+    "howItUsesS3": {
+      "en": "Virtual tape library that stores virtual tapes in S3 and archives them to Glacier storage classes.",
+      "ja": "仮想テープを S3 に保存し、Glacier 系ストレージクラスにアーカイブする VTL。"
+    },
+    "url": "https://docs.aws.amazon.com/storagegateway/latest/tgw/WhatIsStorageGateway.html"
+  },
+  {
+    "id": "snowball-edge",
+    "name": "AWS Snowball Edge",
+    "group": "migration",
+    "howItUsesS3": {
+      "en": "Physical devices for offline import/export to S3; no longer available to new customers.",
+      "ja": "S3 へのオフライン転送用物理デバイス。新規顧客は利用不可。"
+    },
+    "url": "https://docs.aws.amazon.com/snowball/latest/developer-guide/snowball-edge-availability-change.html"
+  },
+  {
+    "id": "iceberg",
+    "name": "Apache Iceberg",
+    "group": "oss",
+    "howItUsesS3": {
+      "en": "Open table format that stores data and metadata files in S3 with atomic commits through a catalog.",
+      "ja": "データとメタデータを S3 に置き、カタログでアトミックにコミットするオープンテーブルフォーマット。"
+    },
+    "url": "https://iceberg.apache.org/docs/latest/aws/"
+  },
+  {
+    "id": "delta-lake",
+    "name": "Delta Lake",
+    "group": "oss",
+    "howItUsesS3": {
+      "en": "Stores Parquet data and a JSON transaction log in S3; multi-cluster writes use a DynamoDB-backed LogStore.",
+      "ja": "Parquet と JSON トランザクションログを S3 に保存する。複数クラスター書き込みは DynamoDB ベースの LogStore を使う。"
+    },
+    "url": "https://docs.delta.io/latest/delta-storage.html"
+  },
+  {
+    "id": "hudi",
+    "name": "Apache Hudi",
+    "group": "oss",
+    "howItUsesS3": {
+      "en": "Keeps a timeline and base/log files in S3 for upserts and incremental processing.",
+      "ja": "upsert と増分処理のため、タイムラインと base / log ファイルを S3 に保持する。"
+    },
+    "url": "https://hudi.apache.org/docs/s3_hoodie/"
+  },
+  {
+    "id": "spark-s3a",
+    "name": "Apache Spark with Hadoop S3A",
+    "group": "oss",
+    "howItUsesS3": {
+      "en": "Reads and writes s3a:// paths via the Hadoop S3A connector and S3A committers.",
+      "ja": "Hadoop S3A コネクタと S3A committer で s3a:// を読み書きする。"
+    },
+    "url": "https://hadoop.apache.org/docs/stable/hadoop-aws/tools/hadoop-aws/committers.html"
+  },
+  {
+    "id": "trino",
+    "name": "Trino",
+    "group": "oss",
+    "howItUsesS3": {
+      "en": "Queries Hive, Iceberg and Delta tables stored in S3 through its file system connectors.",
+      "ja": "S3 上の Hive / Iceberg / Delta テーブルをファイルシステムコネクタ経由でクエリする。"
+    },
+    "url": "https://trino.io/docs/current/object-storage/file-system-s3.html"
+  },
+  {
+    "id": "duckdb",
+    "name": "DuckDB",
+    "group": "oss",
+    "howItUsesS3": {
+      "en": "The httpfs extension reads and writes Parquet, CSV and JSON directly at s3:// URLs.",
+      "ja": "httpfs 拡張で s3:// の Parquet / CSV / JSON を直接読み書きする。"
+    },
+    "url": "https://duckdb.org/docs/current/core_extensions/httpfs/s3api"
+  },
+  {
+    "id": "polars",
+    "name": "Polars",
+    "group": "oss",
+    "howItUsesS3": {
+      "en": "Lazily scans Parquet and other files on S3 with predicate and projection pushdown.",
+      "ja": "S3 上の Parquet 等を遅延スキャンし、述語・列の pushdown を行う。"
+    },
+    "url": "https://docs.pola.rs/user-guide/io/cloud-storage/"
+  },
+  {
+    "id": "arrow",
+    "name": "Apache Arrow",
+    "group": "oss",
+    "howItUsesS3": {
+      "en": "PyArrow S3FileSystem and datasets read partitioned Parquet directly from S3.",
+      "ja": "PyArrow の S3FileSystem と dataset でパーティション化された Parquet を S3 から直接読む。"
+    },
+    "url": "https://arrow.apache.org/docs/python/filesystems.html"
+  },
+  {
+    "id": "parquet",
+    "name": "Apache Parquet",
+    "group": "oss",
+    "howItUsesS3": {
+      "en": "Columnar file format most commonly used for analytics data stored in S3.",
+      "ja": "S3 上の分析データで最も一般的に使われる列指向ファイルフォーマット。"
+    },
+    "url": "https://parquet.apache.org/docs/"
+  },
+  {
+    "id": "kafka-tiered-storage",
+    "name": "Apache Kafka tiered storage",
+    "group": "oss",
+    "howItUsesS3": {
+      "en": "Offloads closed log segments to remote storage such as S3 through a RemoteStorageManager plugin.",
+      "ja": "RemoteStorageManager プラグインで、確定済みログセグメントを S3 等のリモートストレージに退避する。"
+    },
+    "url": "https://cwiki.apache.org/confluence/spaces/KAFKA/pages/97554472/KIP-405+Kafka+Tiered+Storage"
+  },
+  {
+    "id": "clickhouse",
+    "name": "ClickHouse",
+    "group": "oss",
+    "howItUsesS3": {
+      "en": "s3 table function, S3 and S3Queue table engines, and S3-backed disks for MergeTree.",
+      "ja": "s3 テーブル関数、S3 / S3Queue テーブルエンジン、MergeTree の S3 ディスクで S3 を使う。"
+    },
+    "url": "https://clickhouse.com/docs/engines/table-engines/integrations/s3"
+  },
+  {
+    "id": "loki",
+    "name": "Grafana Loki",
+    "group": "oss",
+    "howItUsesS3": {
+      "en": "Stores log chunks and TSDB index files in S3.",
+      "ja": "ログ chunk と TSDB インデックスを S3 に保存する。"
+    },
+    "url": "https://grafana.com/docs/loki/latest/configure/storage/"
+  },
+  {
+    "id": "tempo",
+    "name": "Grafana Tempo",
+    "group": "oss",
+    "howItUsesS3": {
+      "en": "Stores trace blocks in S3 as its backend.",
+      "ja": "トレースブロックを S3 にバックエンドとして保存する。"
+    },
+    "url": "https://grafana.com/docs/tempo/latest/configuration/hosted-storage/s3/"
+  },
+  {
+    "id": "mimir",
+    "name": "Grafana Mimir",
+    "group": "oss",
+    "howItUsesS3": {
+      "en": "Stores Prometheus TSDB blocks, ruler and alertmanager state in S3.",
+      "ja": "Prometheus の TSDB block、ruler、alertmanager の状態を S3 に保存する。"
+    },
+    "url": "https://grafana.com/docs/mimir/latest/configure/configure-object-storage-backend/"
+  },
+  {
+    "id": "thanos",
+    "name": "Thanos",
+    "group": "oss",
+    "howItUsesS3": {
+      "en": "Sidecars upload Prometheus blocks to S3; store gateways and compactors read and compact them.",
+      "ja": "sidecar が Prometheus block を S3 にアップロードし、store gateway と compactor が読み出し・圧縮する。"
+    },
+    "url": "https://thanos.io/tip/thanos/storage.md/"
+  },
+  {
+    "id": "cortex",
+    "name": "Cortex",
+    "group": "oss",
+    "howItUsesS3": {
+      "en": "Uses S3 as blocks storage for long-term Prometheus metrics.",
+      "ja": "Prometheus メトリクスの長期保存用 blocks storage として S3 を使う。"
+    },
+    "url": "https://cortexmetrics.io/docs/blocks-storage/"
+  },
+  {
+    "id": "velero",
+    "name": "Velero",
+    "group": "oss",
+    "howItUsesS3": {
+      "en": "Backs up Kubernetes resources and volume data to S3 via the AWS plugin.",
+      "ja": "AWS プラグインで Kubernetes リソースとボリュームデータを S3 にバックアップする。"
+    },
+    "url": "https://github.com/vmware-tanzu/velero-plugin-for-aws"
+  },
+  {
+    "id": "restic",
+    "name": "restic",
+    "group": "oss",
+    "howItUsesS3": {
+      "en": "Stores encrypted, deduplicated backup repositories in S3.",
+      "ja": "暗号化・重複排除されたバックアップリポジトリを S3 に保存する。"
+    },
+    "url": "https://restic.readthedocs.io/en/stable/030_preparing_a_new_repo.html"
+  },
+  {
+    "id": "terraform-s3-backend",
+    "name": "Terraform S3 backend",
+    "group": "oss",
+    "howItUsesS3": {
+      "en": "Stores Terraform state in S3 and locks it with an S3 lock file when use_lockfile is enabled.",
+      "ja": "Terraform の state を S3 に保存し、use_lockfile 有効時は S3 のロックファイルでロックする。"
+    },
+    "url": "https://developer.hashicorp.com/terraform/language/backend/s3"
+  },
+  {
+    "id": "docker-registry",
+    "name": "CNCF Distribution (Docker registry)",
+    "group": "oss",
+    "howItUsesS3": {
+      "en": "The s3 storage driver stores image layers and manifests in an S3 bucket.",
+      "ja": "s3 storage driver でイメージの layer と manifest を S3 バケットに保存する。"
+    },
+    "url": "https://distribution.github.io/distribution/storage-drivers/s3/"
+  },
+  {
+    "id": "git-lfs",
+    "name": "Git LFS",
+    "group": "oss",
+    "howItUsesS3": {
+      "en": "LFS servers such as GitLab or Gitea can use S3 as the object store behind the LFS API.",
+      "ja": "GitLab や Gitea 等の LFS サーバーが LFS API の裏側のオブジェクトストアとして S3 を使う。"
+    },
+    "url": "https://git-lfs.com/"
+  },
+  {
+    "id": "mlflow",
+    "name": "MLflow",
+    "group": "oss",
+    "howItUsesS3": {
+      "en": "Uses S3 as the artifact store for models and run artifacts.",
+      "ja": "モデルや run の成果物の artifact store として S3 を使う。"
+    },
+    "url": "https://mlflow.org/docs/latest/self-hosting/architecture/artifact-store/"
+  },
+  {
+    "id": "dvc",
+    "name": "DVC",
+    "group": "oss",
+    "howItUsesS3": {
+      "en": "Uses an S3 remote to store content-addressed versions of data and models.",
+      "ja": "S3 リモートにデータとモデルのコンテンツアドレス型バージョンを保存する。"
+    },
+    "url": "https://doc.dvc.org/user-guide/data-management/remote-storage/amazon-s3"
+  }
+]

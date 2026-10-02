@@ -1,0 +1,57 @@
+{
+  "cloudShare": [
+    { "period": "2025-Q2", "aws": 30, "azure": 20, "gcp": 13, "others": 37, "marketSizeUSDBillions": 98.8, "source": "https://www.srgresearch.com/articles/q2-cloud-market-nears-100-billion-milestone-and-its-still-growing-by-25-year-over-year" },
+    { "period": "2025-Q3", "aws": 29, "azure": 20, "gcp": 13, "others": 38, "marketSizeUSDBillions": 106.9, "source": "https://www.srgresearch.com/articles/cloud-market-growth-rate-rises-again-in-q3-biggest-ever-sequential-increase" },
+    { "period": "2025-Q4", "aws": 28, "azure": 21, "gcp": 14, "others": 37, "marketSizeUSDBillions": 119.1, "source": "https://www.srgresearch.com/articles/genai-helps-drive-quarterly-cloud-revenues-to-119-billion-as-growth-rate-jumped-yet-again-in-q4" },
+    { "period": "2026-Q1", "aws": 28, "azure": 21, "gcp": 14, "others": 37, "marketSizeUSDBillions": 128.6, "source": "https://www.datacenterdynamics.com/en/news/synergy-research-cloud-spending-hits-129bn-in-q1-2026-ninth-consecutive-quarter-of-growth/" },
+    { "period": "2026-Q2", "aws": 28, "azure": 20, "gcp": 15, "others": 37, "marketSizeUSDBillions": 143, "source": "https://www.srgresearch.com/articles/q2-cloud-market-passes-143-billion-highest-growth-rate-in-eight-years" }
+  ],
+  "awsRevenue": [
+    { "period": "2025-Q2", "revenueUSDBillions": 30.9, "yoyGrowthPct": 17.5, "operatingIncomeUSDBillions": 10.2, "source": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results/" },
+    { "period": "2025-Q3", "revenueUSDBillions": 33.0, "yoyGrowthPct": 20, "operatingIncomeUSDBillions": null, "source": "https://www.aboutamazon.com/news/company-news/amazon-earnings-q4-2025-report" },
+    { "period": "2025-Q4", "revenueUSDBillions": 35.6, "yoyGrowthPct": 24, "operatingIncomeUSDBillions": 12.5, "source": "https://www.aboutamazon.com/news/company-news/amazon-earnings-q4-2025-report" },
+    { "period": "2026-Q1", "revenueUSDBillions": 37.6, "yoyGrowthPct": 28, "operatingIncomeUSDBillions": 14.2, "source": "https://www.aboutamazon.com/news/company-news/amazon-earnings-q1-2026-report" },
+    { "period": "2026-Q2", "revenueUSDBillions": 42.2, "yoyGrowthPct": 37, "operatingIncomeUSDBillions": 16.6, "source": "https://www.aboutamazon.com/news/company-news/amazon-earnings-q2-2026-report" }
+  ],
+  "s3Stats": [
+    { "label": { "en": "Objects stored", "ja": "保存オブジェクト数" }, "value": "500+ trillion", "year": 2026, "source": "https://aws.amazon.com/blogs/aws/twenty-years-of-amazon-s3-and-building-whats-next/" },
+    { "label": { "en": "Peak requests per second (global)", "ja": "毎秒リクエスト数 (全世界)" }, "value": "200+ million", "year": 2026, "source": "https://aws.amazon.com/blogs/aws/twenty-years-of-amazon-s3-and-building-whats-next/" },
+    { "label": { "en": "Data stored", "ja": "保存データ量" }, "value": "hundreds of exabytes", "year": 2026, "source": "https://aws.amazon.com/blogs/aws/twenty-years-of-amazon-s3-and-building-whats-next/" },
+    { "label": { "en": "Footprint", "ja": "提供範囲" }, "value": "123 AZs / 39 Regions", "year": 2026, "source": "https://aws.amazon.com/blogs/aws/twenty-years-of-amazon-s3-and-building-whats-next/" },
+    { "label": { "en": "Maximum object size", "ja": "最大オブジェクトサイズ" }, "value": "50 TB (was 5 GB at launch)", "year": 2025, "source": "https://blocksandfiles.com/2025/12/03/aws-s3/" },
+    { "label": { "en": "Storage price vs launch", "ja": "ローンチ時からの単価低下" }, "value": "$0.15/GB to just over $0.02/GB (about -85%)", "year": 2026, "source": "https://aws.amazon.com/blogs/aws/twenty-years-of-amazon-s3-and-building-whats-next/" },
+    { "label": { "en": "Capacity at launch", "ja": "ローンチ時の容量" }, "value": "~1 PB on ~400 nodes in 15 racks", "year": 2006, "source": "https://aws.amazon.com/blogs/aws/twenty-years-of-amazon-s3-and-building-whats-next/" },
+    { "label": { "en": "Customer savings from Intelligent-Tiering (cumulative)", "ja": "Intelligent-Tiering による累計削減額" }, "value": "$6+ billion", "year": 2026, "source": "https://aws.amazon.com/blogs/aws/twenty-years-of-amazon-s3-and-building-whats-next/" },
+    { "label": { "en": "S3 Vectors usage (Jul-Dec 2025)", "ja": "S3 Vectors 利用実績 (2025 年 7〜12 月)" }, "value": "250k+ indexes, 40B+ vectors, 1B+ queries", "year": 2025, "source": "https://aws.amazon.com/blogs/aws/twenty-years-of-amazon-s3-and-building-whats-next/" },
+    { "label": { "en": "AWS annualized revenue run rate", "ja": "AWS 年換算売上ランレート" }, "value": "$169 billion", "year": 2026, "source": "https://www.aboutamazon.com/news/company-news/amazon-earnings-q2-2026-report" }
+  ],
+  "objectStorageMarket": [
+    { "year": 2025, "valueUSDBillions": 9.44, "segment": "cloud object storage", "source": "https://www.researchandmarkets.com/report/global-cloud-oss-market", "isForecast": false },
+    { "year": 2026, "valueUSDBillions": 10.97, "segment": "cloud object storage", "source": "https://www.researchandmarkets.com/report/global-cloud-oss-market", "isForecast": true },
+    { "year": 2030, "valueUSDBillions": 18.79, "segment": "cloud object storage", "source": "https://www.researchandmarkets.com/report/global-cloud-oss-market", "isForecast": true },
+    { "year": 2024, "valueUSDBillions": 9.7, "segment": "object-based storage", "source": "https://www.strategicmarketresearch.com/market-report/object-based-storage-market", "isForecast": false },
+    { "year": 2030, "valueUSDBillions": 19.8, "segment": "object-based storage", "source": "https://www.strategicmarketresearch.com/market-report/object-based-storage-market", "isForecast": true },
+    { "year": 2025, "valueUSDBillions": 1.67, "segment": "object-based storage (software/systems, narrow)", "source": "https://www.mordorintelligence.com/industry-reports/object-based-storage-market", "isForecast": false },
+    { "year": 2030, "valueUSDBillions": 2.74, "segment": "object-based storage (software/systems, narrow)", "source": "https://www.mordorintelligence.com/industry-reports/object-based-storage-market", "isForecast": true }
+  ],
+  "notes": {
+    "en": [
+      "cloudShare is Synergy Research Group's cloud infrastructure services (IaaS + PaaS + hosted private cloud) share; it is not comparable to company-reported 'cloud' revenue.",
+      "2025-Q4 Google share is reported as 14% (Statista/DCD) or 15% (TechTarget); 14% is used here.",
+      "2025-Q2 per-vendor shares come from secondary reports citing Synergy.",
+      "objectStorageMarket values come from paid market-research reports with very different market definitions; do not chart different segments as one series. 2024/2025 values are the reports' estimates, not audited figures.",
+      "AWS does not disclose S3 revenue separately; S3 stats are AWS-stated figures.",
+      "In competitors.json, null means unverified or not applicable (e.g. self-hosted and on-prem have no list price per GB).",
+      "Hetzner USD per-GB figures are estimates derived from EUR hourly pricing; IBM COS and Alibaba OSS prices are third-party/estimated."
+    ],
+    "ja": [
+      "cloudShare は Synergy Research Group のクラウドインフラサービス (IaaS + PaaS + ホステッドプライベートクラウド) シェアで、各社決算の「クラウド」売上とは比較できない。",
+      "2025-Q4 の Google シェアは 14% (Statista/DCD) と 15% (TechTarget) で報道が割れている。ここでは 14% を採用。",
+      "2025-Q2 のベンダー別シェアは Synergy を引用した二次報道に基づく。",
+      "objectStorageMarket は市場定義が大きく異なる有料調査レポートの値。異なる segment を 1 本の系列として描画しないこと。2024/2025 年値もレポートの推定値で監査済みの数字ではない。",
+      "AWS は S3 単体の売上を開示していない。S3 の統計は AWS 自身の公表値。",
+      "competitors.json の null は未確認または該当なし (セルフホスト/オンプレは GB 単価の定価がない)。",
+      "Hetzner の USD/GB 値は EUR 時間課金からの推定、IBM COS と Alibaba OSS の価格は第三者情報/推定。"
+    ]
+  }
+}

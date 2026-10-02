@@ -1,0 +1,2280 @@
+[
+  {
+    "id": "ls-buckets",
+    "category": {
+      "en": "Basic operations",
+      "ja": "基本操作"
+    },
+    "title": {
+      "en": "List buckets",
+      "ja": "バケット一覧"
+    },
+    "command": "aws s3 ls",
+    "description": {
+      "en": "Lists the general purpose buckets in the account.",
+      "ja": "アカウント内の汎用バケットを一覧表示する。"
+    },
+    "danger": false
+  },
+  {
+    "id": "ls-prefix-recursive",
+    "category": {
+      "en": "Basic operations",
+      "ja": "基本操作"
+    },
+    "title": {
+      "en": "List a prefix recursively",
+      "ja": "プレフィックス配下を再帰的に一覧"
+    },
+    "command": "aws s3 ls s3://amzn-s3-demo-bucket/logs/ --recursive --human-readable --summarize",
+    "description": {
+      "en": "Lists every object under the prefix and prints the total count and size at the end.",
+      "ja": "プレフィックス配下の全オブジェクトを表示し、最後に合計件数とサイズを出す。"
+    },
+    "danger": false
+  },
+  {
+    "id": "cp-upload",
+    "category": {
+      "en": "Basic operations",
+      "ja": "基本操作"
+    },
+    "title": {
+      "en": "Upload a file",
+      "ja": "ファイルをアップロード"
+    },
+    "command": "aws s3 cp ./report.pdf s3://amzn-s3-demo-bucket/docs/report.pdf",
+    "description": {
+      "en": "Copies a local file to S3. Large files are uploaded with multipart automatically.",
+      "ja": "ローカルファイルを S3 にコピーする。大きいファイルは自動でマルチパートになる。"
+    },
+    "danger": false
+  },
+  {
+    "id": "cp-download",
+    "category": {
+      "en": "Basic operations",
+      "ja": "基本操作"
+    },
+    "title": {
+      "en": "Download a file",
+      "ja": "ファイルをダウンロード"
+    },
+    "command": "aws s3 cp s3://amzn-s3-demo-bucket/docs/report.pdf ./report.pdf",
+    "description": {
+      "en": "Copies an S3 object to the local file system.",
+      "ja": "S3 のオブジェクトをローカルにコピーする。"
+    },
+    "danger": false
+  },
+  {
+    "id": "cp-recursive",
+    "category": {
+      "en": "Basic operations",
+      "ja": "基本操作"
+    },
+    "title": {
+      "en": "Upload a directory",
+      "ja": "ディレクトリごとアップロード"
+    },
+    "command": "aws s3 cp ./site s3://amzn-s3-demo-bucket/site/ --recursive",
+    "description": {
+      "en": "Uploads everything under a directory recursively.",
+      "ja": "ディレクトリ配下を再帰的にアップロードする。"
+    },
+    "danger": false
+  },
+  {
+    "id": "cp-storage-class-kms",
+    "category": {
+      "en": "Basic operations",
+      "ja": "基本操作"
+    },
+    "title": {
+      "en": "Upload with storage class and KMS",
+      "ja": "ストレージクラスと KMS を指定してアップロード"
+    },
+    "command": "aws s3 cp big.iso s3://amzn-s3-demo-bucket/iso/ \\\n  --storage-class INTELLIGENT_TIERING \\\n  --sse aws:kms --sse-kms-key-id arn:aws:kms:us-east-1:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab \\\n  --checksum-algorithm CRC64NVME",
+    "description": {
+      "en": "Uploads with an explicit storage class, SSE-KMS key and checksum algorithm.",
+      "ja": "ストレージクラス、SSE-KMS キー、チェックサムアルゴリズムを指定してアップロードする。"
+    },
+    "danger": false
+  },
+  {
+    "id": "cp-stdin",
+    "category": {
+      "en": "Basic operations",
+      "ja": "基本操作"
+    },
+    "title": {
+      "en": "Stream upload from stdin",
+      "ja": "標準入力からストリームアップロード"
+    },
+    "command": "tar czf - ./data | aws s3 cp - s3://amzn-s3-demo-bucket/backup/data.tgz --expected-size 53687091200",
+    "description": {
+      "en": "Streams data from a pipe. For huge streams, --expected-size keeps the part count under 10,000.",
+      "ja": "パイプでストリームアップロードする。巨大ストリームは --expected-size でパート数超過を防ぐ。"
+    },
+    "danger": false
+  },
+  {
+    "id": "cp-no-overwrite",
+    "category": {
+      "en": "Basic operations",
+      "ja": "基本操作"
+    },
+    "title": {
+      "en": "Copy without overwriting",
+      "ja": "既存ファイルを上書きせずにコピー"
+    },
+    "command": "aws s3 cp ./data s3://amzn-s3-demo-bucket/data/ --recursive --no-overwrite",
+    "description": {
+      "en": "Transfers only files that do not already exist at the destination.",
+      "ja": "宛先に存在しないファイルだけを転送する。"
+    },
+    "danger": false
+  },
+  {
+    "id": "mv-object",
+    "category": {
+      "en": "Basic operations",
+      "ja": "基本操作"
+    },
+    "title": {
+      "en": "Move an object",
+      "ja": "オブジェクトを移動"
+    },
+    "command": "aws s3 mv s3://amzn-s3-demo-bucket/tmp/a.csv s3://amzn-s3-demo-bucket/archive/a.csv",
+    "description": {
+      "en": "Copies and then deletes the source. S3 has no native rename for general purpose buckets.",
+      "ja": "コピーしてから元を削除する。S3 に rename はない。"
+    },
+    "danger": true
+  },
+  {
+    "id": "rm-recursive",
+    "category": {
+      "en": "Basic operations",
+      "ja": "基本操作"
+    },
+    "title": {
+      "en": "Delete everything under a prefix",
+      "ja": "プレフィックス配下を削除"
+    },
+    "command": "aws s3 rm s3://amzn-s3-demo-bucket/tmp/ --recursive --dryrun\naws s3 rm s3://amzn-s3-demo-bucket/tmp/ --recursive",
+    "description": {
+      "en": "Preview with --dryrun first, then delete recursively. With versioning, only delete markers are added.",
+      "ja": "まず --dryrun で確認してから再帰削除する。バージョニング有効なら削除マーカーが付くだけ。"
+    },
+    "danger": true
+  },
+  {
+    "id": "mb",
+    "category": {
+      "en": "Basic operations",
+      "ja": "基本操作"
+    },
+    "title": {
+      "en": "Create a bucket (high-level)",
+      "ja": "バケット作成 (高レベル)"
+    },
+    "command": "aws s3 mb s3://amzn-s3-demo-bucket --region ap-northeast-1 --tags env dev",
+    "description": {
+      "en": "Creates a bucket. Repeat --tags with a key and a value separated by a space.",
+      "ja": "バケットを作る。--tags はキーと値をスペース区切りで繰り返し指定する。"
+    },
+    "danger": false
+  },
+  {
+    "id": "rb-force",
+    "category": {
+      "en": "Basic operations",
+      "ja": "基本操作"
+    },
+    "title": {
+      "en": "Delete a bucket with its contents",
+      "ja": "バケットを中身ごと削除"
+    },
+    "command": "aws s3 rb s3://amzn-s3-demo-bucket --force",
+    "description": {
+      "en": "Deletes all objects and then the bucket. Fails if noncurrent versions remain.",
+      "ja": "オブジェクトを全削除してからバケットを消す。旧バージョンが残っていると失敗する。"
+    },
+    "danger": true
+  },
+  {
+    "id": "presign-get",
+    "category": {
+      "en": "Basic operations",
+      "ja": "基本操作"
+    },
+    "title": {
+      "en": "Presigned download URL",
+      "ja": "ダウンロード用の署名付き URL"
+    },
+    "command": "aws s3 presign s3://amzn-s3-demo-bucket/docs/report.pdf --expires-in 900",
+    "description": {
+      "en": "Creates a time-limited GET URL. aws s3 presign only supports GET.",
+      "ja": "期限付きの GET 用 URL を作る。aws s3 presign は GET 専用。"
+    },
+    "danger": false
+  },
+  {
+    "id": "website",
+    "category": {
+      "en": "Basic operations",
+      "ja": "基本操作"
+    },
+    "title": {
+      "en": "Configure static website hosting",
+      "ja": "静的ウェブサイトホスティングを設定"
+    },
+    "command": "aws s3 website s3://amzn-s3-demo-bucket/ --index-document index.html --error-document error.html",
+    "description": {
+      "en": "Sets the index and error documents. Put CloudFront in front if you need HTTPS.",
+      "ja": "インデックスとエラードキュメントを設定する。HTTPS が必要なら CloudFront を前に置く。"
+    },
+    "danger": false
+  },
+  {
+    "id": "head-object",
+    "category": {
+      "en": "Basic operations",
+      "ja": "基本操作"
+    },
+    "title": {
+      "en": "Get object metadata",
+      "ja": "オブジェクトのメタデータ取得"
+    },
+    "command": "aws s3api head-object --bucket amzn-s3-demo-bucket --key docs/a.txt --checksum-mode ENABLED",
+    "description": {
+      "en": "Fetches size, ETag, checksums and storage class without downloading the body.",
+      "ja": "本体を取らずにサイズ、ETag、チェックサム、ストレージクラスなどを取得する。"
+    },
+    "danger": false
+  },
+  {
+    "id": "get-object-range",
+    "category": {
+      "en": "Basic operations",
+      "ja": "基本操作"
+    },
+    "title": {
+      "en": "Byte-range GET",
+      "ja": "バイト範囲を指定して取得"
+    },
+    "command": "aws s3api get-object --bucket amzn-s3-demo-bucket --key big.bin --range bytes=0-1048575 head.bin",
+    "description": {
+      "en": "Downloads only part of an object. Used for parallel downloads or reading Parquet footers.",
+      "ja": "オブジェクトの一部分だけを取得する。並列ダウンロードや Parquet のフッター読みに使う。"
+    },
+    "danger": false
+  },
+  {
+    "id": "get-object-part",
+    "category": {
+      "en": "Basic operations",
+      "ja": "基本操作"
+    },
+    "title": {
+      "en": "GET a single multipart part",
+      "ja": "マルチパートの特定パートを取得"
+    },
+    "command": "aws s3api get-object --bucket amzn-s3-demo-bucket --key big.bin --part-number 2 part2.bin",
+    "description": {
+      "en": "Downloads one part aligned to the original upload boundaries, which is the most efficient pattern.",
+      "ja": "アップロード時のパート境界にそろえて取得する。最も効率がよい。"
+    },
+    "danger": false
+  },
+  {
+    "id": "put-object-if-none-match",
+    "category": {
+      "en": "Basic operations",
+      "ja": "基本操作"
+    },
+    "title": {
+      "en": "Create-only conditional PUT",
+      "ja": "存在しない場合だけ書き込む"
+    },
+    "command": "aws s3api put-object --bucket amzn-s3-demo-bucket --key locks/job-42 --body owner.json --if-none-match '*'",
+    "description": {
+      "en": "Fails with 412 if the key already exists. Useful for locks and idempotent writes.",
+      "ja": "既に同じキーがあれば 412 で失敗する。分散ロックや冪等書き込みに使う。"
+    },
+    "danger": false
+  },
+  {
+    "id": "put-object-if-match",
+    "category": {
+      "en": "Basic operations",
+      "ja": "基本操作"
+    },
+    "title": {
+      "en": "Optimistic-lock conditional PUT",
+      "ja": "ETag が一致する場合だけ更新"
+    },
+    "command": "ETAG=$(aws s3api head-object --bucket amzn-s3-demo-bucket --key state.json --query ETag --output text)\naws s3api put-object --bucket amzn-s3-demo-bucket --key state.json --body state.json --if-match \"$ETAG\"",
+    "description": {
+      "en": "Overwrites only if the object has not changed since it was read (optimistic locking).",
+      "ja": "読み取り時から変更されていなければ上書きする楽観的ロック。"
+    },
+    "danger": false
+  },
+  {
+    "id": "copy-object-metadata",
+    "category": {
+      "en": "Basic operations",
+      "ja": "基本操作"
+    },
+    "title": {
+      "en": "Copy with replaced metadata",
+      "ja": "メタデータを置き換えてコピー"
+    },
+    "command": "aws s3api copy-object --bucket amzn-s3-demo-bucket --key docs/a.txt \\\n  --copy-source amzn-s3-demo-bucket/docs/a.txt \\\n  --metadata-directive REPLACE --content-type \"text/plain; charset=utf-8\" --metadata owner=team-a",
+    "description": {
+      "en": "Copies an object onto itself to update metadata or Content-Type.",
+      "ja": "自分自身にコピーしてメタデータや Content-Type を更新する。"
+    },
+    "danger": false
+  },
+  {
+    "id": "delete-objects-bulk",
+    "category": {
+      "en": "Basic operations",
+      "ja": "基本操作"
+    },
+    "title": {
+      "en": "Bulk delete up to 1,000 keys",
+      "ja": "最大 1,000 キーを一括削除"
+    },
+    "command": "aws s3api delete-objects --bucket amzn-s3-demo-bucket --delete file://delete.json",
+    "description": {
+      "en": "Deletes the keys (and version IDs) listed in a JSON file in one request.",
+      "ja": "JSON に列挙したキー (とバージョン ID) を 1 リクエストで削除する。"
+    },
+    "danger": true
+  },
+  {
+    "id": "object-tagging",
+    "category": {
+      "en": "Basic operations",
+      "ja": "基本操作"
+    },
+    "title": {
+      "en": "Tag an object",
+      "ja": "オブジェクトにタグを付ける"
+    },
+    "command": "aws s3api put-object-tagging --bucket amzn-s3-demo-bucket --key a.txt --tagging 'TagSet=[{Key=class,Value=confidential}]'",
+    "description": {
+      "en": "Replaces the tag set on an object. Tags can drive lifecycle rules and ABAC.",
+      "ja": "既存オブジェクトのタグを置き換える。ライフサイクルや ABAC の条件に使える。"
+    },
+    "danger": false
+  },
+  {
+    "id": "sync-up",
+    "category": {
+      "en": "Sync",
+      "ja": "同期"
+    },
+    "title": {
+      "en": "Sync local to S3",
+      "ja": "ローカルから S3 へ同期"
+    },
+    "command": "aws s3 sync ./site s3://amzn-s3-demo-bucket/site/",
+    "description": {
+      "en": "Uploads only new or changed files.",
+      "ja": "新規・更新されたファイルだけをアップロードする。"
+    },
+    "danger": false
+  },
+  {
+    "id": "sync-delete",
+    "category": {
+      "en": "Sync",
+      "ja": "同期"
+    },
+    "title": {
+      "en": "Mirror sync with delete",
+      "ja": "削除も含めてミラー同期"
+    },
+    "command": "aws s3 sync ./site s3://amzn-s3-demo-bucket/site/ --delete --dryrun\naws s3 sync ./site s3://amzn-s3-demo-bucket/site/ --delete",
+    "description": {
+      "en": "Deletes destination files that are not in the source. Always preview with --dryrun.",
+      "ja": "ソースにないファイルを宛先から削除する。必ず --dryrun で確認する。"
+    },
+    "danger": true
+  },
+  {
+    "id": "sync-include-exclude",
+    "category": {
+      "en": "Sync",
+      "ja": "同期"
+    },
+    "title": {
+      "en": "Sync with filters",
+      "ja": "フィルタ付き同期"
+    },
+    "command": "aws s3 sync ./logs s3://amzn-s3-demo-bucket/logs/ --exclude \"*\" --include \"*.gz\"",
+    "description": {
+      "en": "Excludes everything, then includes only .gz. Later filters take precedence.",
+      "ja": "全部除外してから .gz だけ戻す。フィルタは後に書いたものが優先する。"
+    },
+    "danger": false
+  },
+  {
+    "id": "sync-size-only",
+    "category": {
+      "en": "Sync",
+      "ja": "同期"
+    },
+    "title": {
+      "en": "Compare by size only",
+      "ja": "サイズだけで差分判定"
+    },
+    "command": "aws s3 sync s3://amzn-s3-demo-bucket/data ./data --size-only",
+    "description": {
+      "en": "Ignores timestamps and transfers only files whose size differs.",
+      "ja": "タイムスタンプを無視し、サイズが違うものだけ転送する。"
+    },
+    "danger": false
+  },
+  {
+    "id": "sync-exact-timestamps",
+    "category": {
+      "en": "Sync",
+      "ja": "同期"
+    },
+    "title": {
+      "en": "Sync with exact timestamps",
+      "ja": "タイムスタンプ厳密一致で同期"
+    },
+    "command": "aws s3 sync s3://amzn-s3-demo-bucket/data ./data --exact-timestamps",
+    "description": {
+      "en": "When syncing from S3 to local, re-downloads same-size files unless timestamps match exactly.",
+      "ja": "S3 からローカルへの同期で、同サイズでも時刻が完全一致しなければ再取得する。"
+    },
+    "danger": false
+  },
+  {
+    "id": "sync-bucket-to-bucket",
+    "category": {
+      "en": "Sync",
+      "ja": "同期"
+    },
+    "title": {
+      "en": "Sync between buckets",
+      "ja": "バケット間同期"
+    },
+    "command": "aws s3 sync s3://src-bucket/prefix s3://amzn-s3-demo-bucket/prefix --source-region us-west-2",
+    "description": {
+      "en": "Syncs between buckets with server-side copy. Add --source-region for cross-Region sources.",
+      "ja": "サーバーサイドコピーでバケット間を同期する。リージョンが違えば --source-region を付ける。"
+    },
+    "danger": false
+  },
+  {
+    "id": "create-bucket-us-east-1",
+    "category": {
+      "en": "Bucket configuration",
+      "ja": "バケット設定"
+    },
+    "title": {
+      "en": "Create a bucket in us-east-1",
+      "ja": "us-east-1 にバケット作成"
+    },
+    "command": "aws s3api create-bucket --bucket amzn-s3-demo-bucket --region us-east-1",
+    "description": {
+      "en": "In us-east-1, do not pass a LocationConstraint.",
+      "ja": "us-east-1 では LocationConstraint を指定しない。"
+    },
+    "danger": false
+  },
+  {
+    "id": "create-bucket-region",
+    "category": {
+      "en": "Bucket configuration",
+      "ja": "バケット設定"
+    },
+    "title": {
+      "en": "Create a bucket in another Region",
+      "ja": "他リージョンにバケット作成"
+    },
+    "command": "aws s3api create-bucket --bucket amzn-s3-demo-bucket --region ap-northeast-1 \\\n  --create-bucket-configuration LocationConstraint=ap-northeast-1",
+    "description": {
+      "en": "Outside us-east-1, LocationConstraint is required.",
+      "ja": "us-east-1 以外では LocationConstraint が必須。"
+    },
+    "danger": false
+  },
+  {
+    "id": "create-bucket-account-regional",
+    "category": {
+      "en": "Bucket configuration",
+      "ja": "バケット設定"
+    },
+    "title": {
+      "en": "Create a bucket in the account regional namespace",
+      "ja": "アカウントリージョナル名前空間にバケット作成"
+    },
+    "command": "aws s3api create-bucket --bucket logs-111122223333-ap-northeast-1-an \\\n  --region ap-northeast-1 \\\n  --create-bucket-configuration LocationConstraint=ap-northeast-1 \\\n  --bucket-namespace account-regional",
+    "description": {
+      "en": "Creates a bucket in a namespace only your account can use (since 2026-03). Names follow <prefix>-<accountId>-<region>-an.",
+      "ja": "自分のアカウントだけが作れる名前空間にバケットを作る (2026-03〜)。名前は <prefix>-<accountId>-<region>-an。"
+    },
+    "danger": false
+  },
+  {
+    "id": "get-bucket-location",
+    "category": {
+      "en": "Bucket configuration",
+      "ja": "バケット設定"
+    },
+    "title": {
+      "en": "Get bucket Region",
+      "ja": "バケットのリージョン確認"
+    },
+    "command": "aws s3api get-bucket-location --bucket amzn-s3-demo-bucket",
+    "description": {
+      "en": "Returns the bucket Region. us-east-1 is returned as null.",
+      "ja": "バケットのリージョンを返す。us-east-1 は null になる。"
+    },
+    "danger": false
+  },
+  {
+    "id": "put-bucket-cors",
+    "category": {
+      "en": "Bucket configuration",
+      "ja": "バケット設定"
+    },
+    "title": {
+      "en": "Configure CORS",
+      "ja": "CORS を設定"
+    },
+    "command": "aws s3api put-bucket-cors --bucket amzn-s3-demo-bucket --cors-configuration '{\"CORSRules\":[{\"AllowedOrigins\":[\"https://app.example.com\"],\"AllowedMethods\":[\"GET\",\"PUT\",\"POST\"],\"AllowedHeaders\":[\"*\"],\"ExposeHeaders\":[\"ETag\"],\"MaxAgeSeconds\":3000}]}'",
+    "description": {
+      "en": "Sets the origins and methods allowed for direct browser access.",
+      "ja": "ブラウザからの直接アクセスを許可するオリジンとメソッドを設定する。"
+    },
+    "danger": false
+  },
+  {
+    "id": "put-bucket-notification",
+    "category": {
+      "en": "Bucket configuration",
+      "ja": "バケット設定"
+    },
+    "title": {
+      "en": "Event notifications to SQS and EventBridge",
+      "ja": "イベント通知を SQS と EventBridge に"
+    },
+    "command": "aws s3api put-bucket-notification-configuration --bucket amzn-s3-demo-bucket --notification-configuration '{\"QueueConfigurations\":[{\"QueueArn\":\"arn:aws:sqs:us-east-1:111122223333:ingest\",\"Events\":[\"s3:ObjectCreated:*\"],\"Filter\":{\"Key\":{\"FilterRules\":[{\"Name\":\"prefix\",\"Value\":\"incoming/\"}]}}}],\"EventBridgeConfiguration\":{}}'",
+    "description": {
+      "en": "Sends object-created events to SQS and EventBridge. The call replaces the whole configuration.",
+      "ja": "オブジェクト作成イベントを SQS と EventBridge に送る。設定は全置換なので既存設定に注意。"
+    },
+    "danger": false
+  },
+  {
+    "id": "put-bucket-logging",
+    "category": {
+      "en": "Bucket configuration",
+      "ja": "バケット設定"
+    },
+    "title": {
+      "en": "Enable server access logging",
+      "ja": "サーバーアクセスログを有効化"
+    },
+    "command": "aws s3api put-bucket-logging --bucket amzn-s3-demo-bucket --bucket-logging-status '{\"LoggingEnabled\":{\"TargetBucket\":\"amzn-s3-demo-logs\",\"TargetPrefix\":\"s3-access/\",\"TargetObjectKeyFormat\":{\"PartitionedPrefix\":{\"PartitionDateSource\":\"EventTime\"}}}}'",
+    "description": {
+      "en": "Delivers access logs to another bucket using date-partitioned prefixes.",
+      "ja": "日付パーティション形式でアクセスログを別バケットに出力する。"
+    },
+    "danger": false
+  },
+  {
+    "id": "put-bucket-tagging",
+    "category": {
+      "en": "Bucket configuration",
+      "ja": "バケット設定"
+    },
+    "title": {
+      "en": "Tag a bucket",
+      "ja": "バケットにタグ付け"
+    },
+    "command": "aws s3api put-bucket-tagging --bucket amzn-s3-demo-bucket --tagging 'TagSet=[{Key=env,Value=prod},{Key=team,Value=data}]'",
+    "description": {
+      "en": "Sets tags for cost allocation or ABAC. Existing tags are replaced.",
+      "ja": "コスト配分や ABAC 用のタグを設定する。既存のタグは置き換えられる。"
+    },
+    "danger": false
+  },
+  {
+    "id": "put-bucket-accelerate",
+    "category": {
+      "en": "Bucket configuration",
+      "ja": "バケット設定"
+    },
+    "title": {
+      "en": "Enable Transfer Acceleration",
+      "ja": "Transfer Acceleration を有効化"
+    },
+    "command": "aws s3api put-bucket-accelerate-configuration --bucket amzn-s3-demo-bucket --accelerate-configuration Status=Enabled",
+    "description": {
+      "en": "Enables accelerated transfers through edge locations.",
+      "ja": "エッジロケーション経由の高速転送を有効にする。"
+    },
+    "danger": false
+  },
+  {
+    "id": "put-bucket-request-payment",
+    "category": {
+      "en": "Bucket configuration",
+      "ja": "バケット設定"
+    },
+    "title": {
+      "en": "Enable Requester Pays",
+      "ja": "リクエスタ支払いを有効化"
+    },
+    "command": "aws s3api put-bucket-request-payment --bucket amzn-s3-demo-bucket --request-payment-configuration Payer=Requester",
+    "description": {
+      "en": "Makes requesters pay for requests and data transfer.",
+      "ja": "リクエストとデータ転送の料金をリクエスタに負担させる。"
+    },
+    "danger": false
+  },
+  {
+    "id": "put-bucket-replication",
+    "category": {
+      "en": "Bucket configuration",
+      "ja": "バケット設定"
+    },
+    "title": {
+      "en": "Configure replication",
+      "ja": "レプリケーションを設定"
+    },
+    "command": "aws s3api put-bucket-replication --bucket amzn-s3-demo-bucket --replication-configuration file://replication.json",
+    "description": {
+      "en": "Configures automatic replication to another bucket. Versioning is required on both sides.",
+      "ja": "別バケット (別リージョン / 別アカウント) への自動複製を設定する。両側でバージョニングが必要。"
+    },
+    "danger": false
+  },
+  {
+    "id": "config-crt",
+    "category": {
+      "en": "Bucket configuration",
+      "ja": "バケット設定"
+    },
+    "title": {
+      "en": "Use the CRT transfer client in the CLI",
+      "ja": "CLI の転送クライアントを CRT に"
+    },
+    "command": "aws configure set default.s3.preferred_transfer_client crt\naws configure set default.s3.target_bandwidth 25Gb/s",
+    "description": {
+      "en": "Forces the C-based CRT transfer client and sets the target bandwidth.",
+      "ja": "C 実装の CRT 転送クライアントを強制し、目標帯域を指定する。"
+    },
+    "danger": false
+  },
+  {
+    "id": "config-concurrency",
+    "category": {
+      "en": "Bucket configuration",
+      "ja": "バケット設定"
+    },
+    "title": {
+      "en": "CLI concurrency and chunk size",
+      "ja": "CLI の並列度とチャンクサイズ"
+    },
+    "command": "aws configure set default.s3.max_concurrent_requests 64\naws configure set default.s3.multipart_threshold 64MB\naws configure set default.s3.multipart_chunksize 16MB",
+    "description": {
+      "en": "Tunes concurrency and multipart settings for the classic transfer client.",
+      "ja": "classic 転送クライアントの並列数とマルチパート設定を調整する。"
+    },
+    "danger": false
+  },
+  {
+    "id": "put-public-access-block",
+    "category": {
+      "en": "Security",
+      "ja": "セキュリティ"
+    },
+    "title": {
+      "en": "Enable Block Public Access",
+      "ja": "Block Public Access を有効化"
+    },
+    "command": "aws s3api put-public-access-block --bucket amzn-s3-demo-bucket \\\n  --public-access-block-configuration BlockPublicAcls=true,IgnorePublicAcls=true,BlockPublicPolicy=true,RestrictPublicBuckets=true",
+    "description": {
+      "en": "Blocks public access to the bucket with all four settings.",
+      "ja": "バケットのパブリックアクセスを 4 つの設定すべてでブロックする。"
+    },
+    "danger": false
+  },
+  {
+    "id": "account-public-access-block",
+    "category": {
+      "en": "Security",
+      "ja": "セキュリティ"
+    },
+    "title": {
+      "en": "Account-wide Block Public Access",
+      "ja": "アカウント全体の Block Public Access"
+    },
+    "command": "aws s3control put-public-access-block --account-id 111122223333 \\\n  --public-access-block-configuration BlockPublicAcls=true,IgnorePublicAcls=true,BlockPublicPolicy=true,RestrictPublicBuckets=true",
+    "description": {
+      "en": "Applies Block Public Access to every bucket in the account.",
+      "ja": "アカウント内の全バケットにパブリックアクセスブロックを適用する。"
+    },
+    "danger": false
+  },
+  {
+    "id": "ownership-enforced",
+    "category": {
+      "en": "Security",
+      "ja": "セキュリティ"
+    },
+    "title": {
+      "en": "Disable ACLs (BucketOwnerEnforced)",
+      "ja": "ACL を無効化 (BucketOwnerEnforced)"
+    },
+    "command": "aws s3api put-bucket-ownership-controls --bucket amzn-s3-demo-bucket --ownership-controls 'Rules=[{ObjectOwnership=BucketOwnerEnforced}]'",
+    "description": {
+      "en": "Makes the bucket owner own every object and disables ACLs.",
+      "ja": "バケット所有者が全オブジェクトを所有し、ACL を無効にする。"
+    },
+    "danger": false
+  },
+  {
+    "id": "put-bucket-encryption-kms",
+    "category": {
+      "en": "Security",
+      "ja": "セキュリティ"
+    },
+    "title": {
+      "en": "Default encryption with SSE-KMS",
+      "ja": "デフォルト暗号化を SSE-KMS に"
+    },
+    "command": "aws s3api put-bucket-encryption --bucket amzn-s3-demo-bucket --server-side-encryption-configuration '{\"Rules\":[{\"ApplyServerSideEncryptionByDefault\":{\"SSEAlgorithm\":\"aws:kms\",\"KMSMasterKeyID\":\"arn:aws:kms:us-east-1:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab\"},\"BucketKeyEnabled\":true}]}'",
+    "description": {
+      "en": "Encrypts new objects with SSE-KMS and uses a Bucket Key to reduce KMS calls.",
+      "ja": "新規オブジェクトを SSE-KMS で暗号化し、バケットキーで KMS 呼び出しを減らす。"
+    },
+    "danger": false
+  },
+  {
+    "id": "update-object-encryption",
+    "category": {
+      "en": "Security",
+      "ja": "セキュリティ"
+    },
+    "title": {
+      "en": "Change encryption of an existing object",
+      "ja": "既存オブジェクトの暗号化を変更"
+    },
+    "command": "aws s3api update-object-encryption --bucket amzn-s3-demo-bucket --key data/a.parquet \\\n  --object-encryption '{\"SSEKMS\":{\"KMSKeyArn\":\"arn:aws:kms:us-east-1:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab\",\"BucketKeyEnabled\":true}}'",
+    "description": {
+      "en": "Changes the encryption of an object (for example SSE-S3 to SSE-KMS) without copying data.",
+      "ja": "データをコピーせずに SSE-S3 から SSE-KMS などへ暗号化方式を変える。"
+    },
+    "danger": false
+  },
+  {
+    "id": "put-bucket-policy",
+    "category": {
+      "en": "Security",
+      "ja": "セキュリティ"
+    },
+    "title": {
+      "en": "Apply a bucket policy",
+      "ja": "バケットポリシーを適用"
+    },
+    "command": "aws s3api put-bucket-policy --bucket amzn-s3-demo-bucket --policy file://policy.json",
+    "description": {
+      "en": "Replaces the bucket policy. A careless Deny can lock you out.",
+      "ja": "バケットポリシーを置き換える。Deny の書き方次第で自分を締め出すので注意。"
+    },
+    "danger": true
+  },
+  {
+    "id": "delete-bucket-policy",
+    "category": {
+      "en": "Security",
+      "ja": "セキュリティ"
+    },
+    "title": {
+      "en": "Delete a bucket policy",
+      "ja": "バケットポリシーを削除"
+    },
+    "command": "aws s3api delete-bucket-policy --bucket amzn-s3-demo-bucket",
+    "description": {
+      "en": "Removes the bucket policy. If locked out, run this as the root user.",
+      "ja": "バケットポリシーを削除する。締め出された場合はルートユーザーで実行する。"
+    },
+    "danger": true
+  },
+  {
+    "id": "put-bucket-abac",
+    "category": {
+      "en": "Security",
+      "ja": "セキュリティ"
+    },
+    "title": {
+      "en": "Enable ABAC on a bucket",
+      "ja": "バケットの ABAC を有効化"
+    },
+    "command": "aws s3api put-bucket-abac --bucket amzn-s3-demo-bucket --abac-status Status=Enabled",
+    "description": {
+      "en": "Enables tag-based access control on the bucket (since 2025-11).",
+      "ja": "タグベースのアクセス制御を有効にする (2025-11〜)。"
+    },
+    "danger": false
+  },
+  {
+    "id": "create-access-point",
+    "category": {
+      "en": "Security",
+      "ja": "セキュリティ"
+    },
+    "title": {
+      "en": "Create a VPC-only access point",
+      "ja": "VPC 限定のアクセスポイント作成"
+    },
+    "command": "aws s3control create-access-point --account-id 111122223333 --name analytics-ro \\\n  --bucket amzn-s3-demo-bucket --vpc-configuration VpcId=vpc-0abc1234def567890",
+    "description": {
+      "en": "Creates an access point that can only be used from a specific VPC.",
+      "ja": "特定 VPC からのみ使えるアクセスポイントを作る。"
+    },
+    "danger": false
+  },
+  {
+    "id": "access-grants-grant",
+    "category": {
+      "en": "Security",
+      "ja": "セキュリティ"
+    },
+    "title": {
+      "en": "Grant read access with Access Grants",
+      "ja": "Access Grants で読み取り権限を付与"
+    },
+    "command": "aws s3control create-access-grant --account-id 111122223333 \\\n  --access-grants-location-id default \\\n  --access-grants-location-configuration 'S3SubPrefix=amzn-s3-demo-bucket/projects/atlas/*' \\\n  --grantee GranteeType=IAM,GranteeIdentifier=arn:aws:iam::111122223333:role/analyst \\\n  --permission READ",
+    "description": {
+      "en": "Grants prefix-level access to an IAM role or Identity Center identity.",
+      "ja": "プレフィックス単位で IAM ロールや Identity Center のユーザーに権限を付与する。"
+    },
+    "danger": false
+  },
+  {
+    "id": "access-grants-get-data-access",
+    "category": {
+      "en": "Security",
+      "ja": "セキュリティ"
+    },
+    "title": {
+      "en": "Get temporary credentials from Access Grants",
+      "ja": "Access Grants から一時クレデンシャル取得"
+    },
+    "command": "aws s3control get-data-access --account-id 111122223333 --target 's3://amzn-s3-demo-bucket/projects/atlas/*' --permission READ",
+    "description": {
+      "en": "Returns temporary credentials scoped to the granted location.",
+      "ja": "付与された範囲だけに効く一時クレデンシャルを受け取る。"
+    },
+    "danger": false
+  },
+  {
+    "id": "find-public-buckets",
+    "category": {
+      "en": "Security",
+      "ja": "セキュリティ"
+    },
+    "title": {
+      "en": "Find potentially public buckets",
+      "ja": "パブリックになりうるバケットを探す"
+    },
+    "command": "for b in $(aws s3api list-buckets --query 'Buckets[].Name' --output text); do\n  pub=$(aws s3api get-bucket-policy-status --bucket \"$b\" --query PolicyStatus.IsPublic --output text 2>/dev/null || echo no-policy)\n  echo -e \"$b\\tpublic=$pub\"\ndone",
+    "description": {
+      "en": "Checks the policy status of every bucket to find those where IsPublic is true.",
+      "ja": "全バケットのポリシー状態を調べ、IsPublic が true のものを洗い出す。"
+    },
+    "danger": false
+  },
+  {
+    "id": "object-lock-config",
+    "category": {
+      "en": "Security",
+      "ja": "セキュリティ"
+    },
+    "title": {
+      "en": "Object Lock default retention",
+      "ja": "Object Lock の既定保持期間"
+    },
+    "command": "aws s3api put-object-lock-configuration --bucket amzn-s3-demo-worm \\\n  --object-lock-configuration '{\"ObjectLockEnabled\":\"Enabled\",\"Rule\":{\"DefaultRetention\":{\"Mode\":\"GOVERNANCE\",\"Days\":30}}}'",
+    "description": {
+      "en": "Applies a 30-day GOVERNANCE retention to new objects by default.",
+      "ja": "新規オブジェクトに GOVERNANCE モードで 30 日の保持を自動適用する。"
+    },
+    "danger": false
+  },
+  {
+    "id": "object-retention-compliance",
+    "category": {
+      "en": "Security",
+      "ja": "セキュリティ"
+    },
+    "title": {
+      "en": "Retain in COMPLIANCE mode",
+      "ja": "COMPLIANCE モードで保持"
+    },
+    "command": "aws s3api put-object-retention --bucket amzn-s3-demo-worm --key ledger/2026-10.csv \\\n  --retention '{\"Mode\":\"COMPLIANCE\",\"RetainUntilDate\":\"2033-10-01T00:00:00Z\"}'",
+    "description": {
+      "en": "No one, not even root, can delete or shorten retention until the date. It cannot be undone.",
+      "ja": "期限まで誰も (ルートでも) 削除・短縮できなくなる。取り消せない。"
+    },
+    "danger": true
+  },
+  {
+    "id": "legal-hold",
+    "category": {
+      "en": "Security",
+      "ja": "セキュリティ"
+    },
+    "title": {
+      "en": "Place a legal hold",
+      "ja": "リーガルホールドを設定"
+    },
+    "command": "aws s3api put-object-legal-hold --bucket amzn-s3-demo-worm --key ledger/2026-10.csv --legal-hold Status=ON",
+    "description": {
+      "en": "Prevents deletion with no end date until the hold is removed.",
+      "ja": "期限なしで削除を禁止する。解除するまで有効。"
+    },
+    "danger": false
+  },
+  {
+    "id": "put-lifecycle",
+    "category": {
+      "en": "Lifecycle",
+      "ja": "ライフサイクル"
+    },
+    "title": {
+      "en": "Apply lifecycle rules",
+      "ja": "ライフサイクルルールを適用"
+    },
+    "command": "aws s3api put-bucket-lifecycle-configuration --bucket amzn-s3-demo-bucket --lifecycle-configuration file://lifecycle.json",
+    "description": {
+      "en": "Sets transition and expiration rules. Existing rules are fully replaced.",
+      "ja": "移行・期限切れルールを設定する。既存ルールは全置換される。"
+    },
+    "danger": false
+  },
+  {
+    "id": "lifecycle-abort-mpu",
+    "category": {
+      "en": "Lifecycle",
+      "ja": "ライフサイクル"
+    },
+    "title": {
+      "en": "Auto-abort incomplete multipart uploads",
+      "ja": "未完了マルチパートを自動中止"
+    },
+    "command": "aws s3api put-bucket-lifecycle-configuration --bucket amzn-s3-demo-bucket --lifecycle-configuration '{\"Rules\":[{\"ID\":\"abort-mpu\",\"Filter\":{},\"Status\":\"Enabled\",\"AbortIncompleteMultipartUpload\":{\"DaysAfterInitiation\":7}}]}'",
+    "description": {
+      "en": "Aborts multipart uploads left for 7 days so their parts stop incurring charges.",
+      "ja": "7 日以上放置されたマルチパートアップロードを中止し、パートの課金を止める。"
+    },
+    "danger": false
+  },
+  {
+    "id": "lifecycle-noncurrent",
+    "category": {
+      "en": "Lifecycle",
+      "ja": "ライフサイクル"
+    },
+    "title": {
+      "en": "Expire noncurrent versions",
+      "ja": "非現行バージョンの期限切れ"
+    },
+    "command": "aws s3api put-bucket-lifecycle-configuration --bucket amzn-s3-demo-bucket --lifecycle-configuration '{\"Rules\":[{\"ID\":\"noncurrent\",\"Filter\":{},\"Status\":\"Enabled\",\"NoncurrentVersionExpiration\":{\"NoncurrentDays\":90,\"NewerNoncurrentVersions\":3},\"Expiration\":{\"ExpiredObjectDeleteMarker\":true}}]}'",
+    "description": {
+      "en": "Deletes versions noncurrent for 90 days (keeping the newest 3) and cleans up expired delete markers.",
+      "ja": "90 日経過した旧バージョンを削除し (新しい 3 世代は保持)、不要な削除マーカーも掃除する。"
+    },
+    "danger": true
+  },
+  {
+    "id": "get-lifecycle",
+    "category": {
+      "en": "Lifecycle",
+      "ja": "ライフサイクル"
+    },
+    "title": {
+      "en": "Show lifecycle configuration",
+      "ja": "ライフサイクル設定を確認"
+    },
+    "command": "aws s3api get-bucket-lifecycle-configuration --bucket amzn-s3-demo-bucket",
+    "description": {
+      "en": "Shows the current lifecycle rules.",
+      "ja": "現在のライフサイクルルールを表示する。"
+    },
+    "danger": false
+  },
+  {
+    "id": "delete-lifecycle",
+    "category": {
+      "en": "Lifecycle",
+      "ja": "ライフサイクル"
+    },
+    "title": {
+      "en": "Delete lifecycle configuration",
+      "ja": "ライフサイクル設定を削除"
+    },
+    "command": "aws s3api delete-bucket-lifecycle --bucket amzn-s3-demo-bucket",
+    "description": {
+      "en": "Removes all lifecycle rules from the bucket.",
+      "ja": "バケットのライフサイクルルールをすべて削除する。"
+    },
+    "danger": true
+  },
+  {
+    "id": "mpu-create",
+    "category": {
+      "en": "Multipart upload",
+      "ja": "マルチパート"
+    },
+    "title": {
+      "en": "Start a multipart upload",
+      "ja": "マルチパートアップロード開始"
+    },
+    "command": "aws s3api create-multipart-upload --bucket amzn-s3-demo-bucket --key big.bin --checksum-algorithm CRC64NVME --checksum-type FULL_OBJECT",
+    "description": {
+      "en": "Returns an UploadId used for subsequent part uploads.",
+      "ja": "UploadId を取得する。以降のパートはこの ID で送る。"
+    },
+    "danger": false
+  },
+  {
+    "id": "mpu-upload-part",
+    "category": {
+      "en": "Multipart upload",
+      "ja": "マルチパート"
+    },
+    "title": {
+      "en": "Upload a part",
+      "ja": "パートをアップロード"
+    },
+    "command": "aws s3api upload-part --bucket amzn-s3-demo-bucket --key big.bin --upload-id \"$UPLOAD_ID\" --part-number 1 --body part-aa --checksum-algorithm CRC64NVME",
+    "description": {
+      "en": "Uploads each part (5 MiB to 5 GiB) with a part number from 1 to 10,000. Parts can be sent in parallel.",
+      "ja": "パート番号 1〜10,000 で各パート (5 MiB〜5 GiB) を送る。並列で送ってよい。"
+    },
+    "danger": false
+  },
+  {
+    "id": "mpu-list-parts",
+    "category": {
+      "en": "Multipart upload",
+      "ja": "マルチパート"
+    },
+    "title": {
+      "en": "List uploaded parts",
+      "ja": "アップロード済みパートを確認"
+    },
+    "command": "aws s3api list-parts --bucket amzn-s3-demo-bucket --key big.bin --upload-id \"$UPLOAD_ID\" --query 'Parts[].[PartNumber,Size,ETag]' --output table",
+    "description": {
+      "en": "Shows which parts have arrived before completing the upload.",
+      "ja": "完了前にどのパートが届いているかを確認する。"
+    },
+    "danger": false
+  },
+  {
+    "id": "mpu-complete",
+    "category": {
+      "en": "Multipart upload",
+      "ja": "マルチパート"
+    },
+    "title": {
+      "en": "Complete a multipart upload",
+      "ja": "マルチパートアップロード完了"
+    },
+    "command": "aws s3api complete-multipart-upload --bucket amzn-s3-demo-bucket --key big.bin --upload-id \"$UPLOAD_ID\" --multipart-upload file://parts.json",
+    "description": {
+      "en": "Finalizes the object from a list of part numbers, ETags and checksums.",
+      "ja": "パート番号と ETag (とチェックサム) の一覧を渡してオブジェクトを確定する。"
+    },
+    "danger": false
+  },
+  {
+    "id": "mpu-list-uploads",
+    "category": {
+      "en": "Multipart upload",
+      "ja": "マルチパート"
+    },
+    "title": {
+      "en": "List incomplete uploads",
+      "ja": "未完了のアップロード一覧"
+    },
+    "command": "aws s3api list-multipart-uploads --bucket amzn-s3-demo-bucket --query 'Uploads[].[Key,UploadId,Initiated]' --output table",
+    "description": {
+      "en": "Finds abandoned uploads that are still incurring storage charges.",
+      "ja": "放置されて課金され続けているアップロードを見つける。"
+    },
+    "danger": false
+  },
+  {
+    "id": "mpu-abort",
+    "category": {
+      "en": "Multipart upload",
+      "ja": "マルチパート"
+    },
+    "title": {
+      "en": "Abort a multipart upload",
+      "ja": "マルチパートアップロード中止"
+    },
+    "command": "aws s3api abort-multipart-upload --bucket amzn-s3-demo-bucket --key big.bin --upload-id \"$UPLOAD_ID\"",
+    "description": {
+      "en": "Aborts the upload and deletes any uploaded parts.",
+      "ja": "アップロードを中止し、送信済みパートを削除する。"
+    },
+    "danger": true
+  },
+  {
+    "id": "mpu-abort-all",
+    "category": {
+      "en": "Multipart upload",
+      "ja": "マルチパート"
+    },
+    "title": {
+      "en": "Abort all incomplete uploads",
+      "ja": "未完了アップロードを全中止"
+    },
+    "command": "aws s3api list-multipart-uploads --bucket amzn-s3-demo-bucket --query 'Uploads[].[Key,UploadId]' --output text |\nwhile read -r key id; do\n  aws s3api abort-multipart-upload --bucket amzn-s3-demo-bucket --key \"$key\" --upload-id \"$id\"\ndone",
+    "description": {
+      "en": "Aborts every incomplete multipart upload in the bucket.",
+      "ja": "バケット内の未完了マルチパートアップロードをすべて中止する。"
+    },
+    "danger": true
+  },
+  {
+    "id": "versioning-enable",
+    "category": {
+      "en": "Versioning",
+      "ja": "バージョニング"
+    },
+    "title": {
+      "en": "Enable versioning",
+      "ja": "バージョニングを有効化"
+    },
+    "command": "aws s3api put-bucket-versioning --bucket amzn-s3-demo-bucket --versioning-configuration Status=Enabled",
+    "description": {
+      "en": "Allows recovery from overwrites and deletes. Once enabled it can only be suspended.",
+      "ja": "上書き・削除から復旧できるようにする。一度有効にすると無効化はできず一時停止のみ。"
+    },
+    "danger": false
+  },
+  {
+    "id": "list-object-versions",
+    "category": {
+      "en": "Versioning",
+      "ja": "バージョニング"
+    },
+    "title": {
+      "en": "List object versions",
+      "ja": "オブジェクトのバージョン一覧"
+    },
+    "command": "aws s3api list-object-versions --bucket amzn-s3-demo-bucket --prefix docs/a.txt \\\n  --query '{V: Versions[].[VersionId,IsLatest,LastModified], D: DeleteMarkers[].[VersionId,IsLatest]}'",
+    "description": {
+      "en": "Lists versions and delete markers for a key.",
+      "ja": "バージョンと削除マーカーを一覧する。"
+    },
+    "danger": false
+  },
+  {
+    "id": "get-object-version",
+    "category": {
+      "en": "Versioning",
+      "ja": "バージョニング"
+    },
+    "title": {
+      "en": "Get a specific version",
+      "ja": "特定バージョンを取得"
+    },
+    "command": "aws s3api get-object --bucket amzn-s3-demo-bucket --key docs/a.txt --version-id 3HL4kqtJlcpXroDTDmJ.rmSpXd3dIbrHY a.old.txt",
+    "description": {
+      "en": "Downloads an older version by version ID.",
+      "ja": "バージョン ID を指定して旧バージョンをダウンロードする。"
+    },
+    "danger": false
+  },
+  {
+    "id": "undelete",
+    "category": {
+      "en": "Versioning",
+      "ja": "バージョニング"
+    },
+    "title": {
+      "en": "Undo a delete",
+      "ja": "削除を取り消す"
+    },
+    "command": "MARKER=$(aws s3api list-object-versions --bucket amzn-s3-demo-bucket --prefix docs/a.txt --query 'DeleteMarkers[?IsLatest].VersionId' --output text)\naws s3api delete-object --bucket amzn-s3-demo-bucket --key docs/a.txt --version-id \"$MARKER\"",
+    "description": {
+      "en": "Removing the latest delete marker makes the previous version current again.",
+      "ja": "最新の削除マーカーを消すと、直前のバージョンが再び最新になる。"
+    },
+    "danger": false
+  },
+  {
+    "id": "restore-old-version",
+    "category": {
+      "en": "Versioning",
+      "ja": "バージョニング"
+    },
+    "title": {
+      "en": "Promote an old version",
+      "ja": "旧バージョンを最新に戻す"
+    },
+    "command": "aws s3api copy-object --bucket amzn-s3-demo-bucket --key docs/a.txt --copy-source \"amzn-s3-demo-bucket/docs/a.txt?versionId=3HL4kqtJlcpXroDTDmJ.rmSpXd3dIbrHY\"",
+    "description": {
+      "en": "Copies an old version onto the same key so it becomes the new current version.",
+      "ja": "旧バージョンを同じキーにコピーして新しい最新バージョンにする。"
+    },
+    "danger": false
+  },
+  {
+    "id": "empty-all-versions",
+    "category": {
+      "en": "Versioning",
+      "ja": "バージョニング"
+    },
+    "title": {
+      "en": "Empty a bucket including all versions",
+      "ja": "全バージョンを削除してバケットを空にする"
+    },
+    "command": "while :; do\n  batch=$(aws s3api list-object-versions --bucket amzn-s3-demo-bucket --max-items 500 --output json \\\n    --query '{Objects: [Versions, DeleteMarkers][].{Key: Key, VersionId: VersionId}}')\n  [ \"$(echo \"$batch\" | jq '.Objects | length')\" -eq 0 ] && break\n  aws s3api delete-objects --bucket amzn-s3-demo-bucket --delete \"$batch\" > /dev/null\ndone",
+    "description": {
+      "en": "Repeatedly deletes versions and delete markers in batches of up to 1,000. Irreversible.",
+      "ja": "バージョンと削除マーカーを 1,000 件以下ずつ削除し続ける。取り消し不可。"
+    },
+    "danger": true
+  },
+  {
+    "id": "restore-object",
+    "category": {
+      "en": "Glacier",
+      "ja": "Glacier"
+    },
+    "title": {
+      "en": "Restore an archived object",
+      "ja": "Glacier からオブジェクトを復元"
+    },
+    "command": "aws s3api restore-object --bucket amzn-s3-demo-bucket --key archive/2019.tar \\\n  --restore-request '{\"Days\":7,\"GlacierJobParameters\":{\"Tier\":\"Standard\"}}'",
+    "description": {
+      "en": "Creates a temporary copy, valid for 7 days, of an object in Glacier Flexible Retrieval or Deep Archive.",
+      "ja": "Glacier Flexible Retrieval / Deep Archive から 7 日間有効な一時コピーを作る。"
+    },
+    "danger": false
+  },
+  {
+    "id": "restore-status",
+    "category": {
+      "en": "Glacier",
+      "ja": "Glacier"
+    },
+    "title": {
+      "en": "Check restore status",
+      "ja": "復元の進行状況を確認"
+    },
+    "command": "aws s3api head-object --bucket amzn-s3-demo-bucket --key archive/2019.tar --query Restore",
+    "description": {
+      "en": "Done when ongoing-request is false and an expiry-date is shown.",
+      "ja": "ongoing-request が false になり expiry-date が出れば完了。"
+    },
+    "danger": false
+  },
+  {
+    "id": "restore-permanent",
+    "category": {
+      "en": "Glacier",
+      "ja": "Glacier"
+    },
+    "title": {
+      "en": "Move a restored object to Standard permanently",
+      "ja": "復元後に Standard へ恒久移動"
+    },
+    "command": "aws s3 cp s3://amzn-s3-demo-bucket/archive/2019.tar s3://amzn-s3-demo-bucket/archive/2019.tar --storage-class STANDARD --force-glacier-transfer",
+    "description": {
+      "en": "Copies the restored object onto itself to change its storage class.",
+      "ja": "復元済みの一時コピーを自分自身にコピーしてストレージクラスを変える。"
+    },
+    "danger": false
+  },
+  {
+    "id": "batch-restore",
+    "category": {
+      "en": "Glacier",
+      "ja": "Glacier"
+    },
+    "title": {
+      "en": "Bulk restore with Batch Operations",
+      "ja": "Batch Operations で一括復元"
+    },
+    "command": "aws s3control create-job --account-id 111122223333 --no-confirmation-required --priority 10 \\\n  --role-arn arn:aws:iam::111122223333:role/s3-batch-role \\\n  --operation '{\"S3InitiateRestoreObject\":{\"ExpirationInDays\":7,\"GlacierJobTier\":\"BULK\"}}' \\\n  --manifest-generator '{\"S3JobManifestGenerator\":{\"SourceBucket\":\"arn:aws:s3:::amzn-s3-demo-bucket\",\"EnableManifestOutput\":false,\"Filter\":{\"MatchAnyStorageClass\":[\"DEEP_ARCHIVE\"]}}}' \\\n  --report '{\"Enabled\":false}'",
+    "description": {
+      "en": "Requests Bulk-tier restores for all Deep Archive objects in one job.",
+      "ja": "Deep Archive のオブジェクトをまとめて Bulk ティアで復元要求する。"
+    },
+    "danger": false
+  },
+  {
+    "id": "largest-objects",
+    "category": {
+      "en": "Analytics",
+      "ja": "分析"
+    },
+    "title": {
+      "en": "Top 10 largest objects",
+      "ja": "最大サイズのオブジェクト TOP 10"
+    },
+    "command": "aws s3api list-objects-v2 --bucket amzn-s3-demo-bucket --query 'reverse(sort_by(Contents, &Size))[:10].[Key,Size]' --output table",
+    "description": {
+      "en": "Sorts by size with JMESPath and shows the top 10.",
+      "ja": "JMESPath でサイズ降順に並べて上位 10 件を表示する。"
+    },
+    "danger": false
+  },
+  {
+    "id": "prefix-total-size",
+    "category": {
+      "en": "Analytics",
+      "ja": "分析"
+    },
+    "title": {
+      "en": "Total size and count for a prefix",
+      "ja": "プレフィックスの合計サイズと件数"
+    },
+    "command": "aws s3api list-objects-v2 --bucket amzn-s3-demo-bucket --prefix logs/ --query '{bytes: sum(Contents[].Size), count: length(Contents[])}'",
+    "description": {
+      "en": "Computes total bytes and object count under a prefix.",
+      "ja": "プレフィックス配下の合計バイト数とオブジェクト数を求める。"
+    },
+    "danger": false
+  },
+  {
+    "id": "bucket-size-cloudwatch",
+    "category": {
+      "en": "Analytics",
+      "ja": "分析"
+    },
+    "title": {
+      "en": "Bucket size from CloudWatch",
+      "ja": "CloudWatch でバケットサイズ"
+    },
+    "command": "aws cloudwatch get-metric-statistics --namespace AWS/S3 --metric-name BucketSizeBytes \\\n  --dimensions Name=BucketName,Value=amzn-s3-demo-bucket Name=StorageType,Value=StandardStorage \\\n  --start-time 2026-10-01T00:00:00Z --end-time 2026-10-03T00:00:00Z --period 86400 --statistics Average",
+    "description": {
+      "en": "Gets bucket size from the daily BucketSizeBytes metric without listing objects.",
+      "ja": "LIST せずに日次の BucketSizeBytes メトリクスでサイズを取る。"
+    },
+    "danger": false
+  },
+  {
+    "id": "modified-since",
+    "category": {
+      "en": "Analytics",
+      "ja": "分析"
+    },
+    "title": {
+      "en": "Objects modified since a date",
+      "ja": "指定日以降に更新されたオブジェクト"
+    },
+    "command": "aws s3api list-objects-v2 --bucket amzn-s3-demo-bucket --query \"Contents[?LastModified>='2026-10-01'].Key\" --output text",
+    "description": {
+      "en": "Filters objects by LastModified.",
+      "ja": "LastModified でフィルタする。"
+    },
+    "danger": false
+  },
+  {
+    "id": "common-prefixes",
+    "category": {
+      "en": "Analytics",
+      "ja": "分析"
+    },
+    "title": {
+      "en": "List first-level prefixes",
+      "ja": "1 階層下のプレフィックス一覧"
+    },
+    "command": "aws s3api list-objects-v2 --bucket amzn-s3-demo-bucket --prefix logs/ --delimiter / --query 'CommonPrefixes[].Prefix' --output text",
+    "description": {
+      "en": "Uses a delimiter to show one level, like folders.",
+      "ja": "区切り文字を使ってフォルダのように 1 階層だけ表示する。"
+    },
+    "danger": false
+  },
+  {
+    "id": "batch-tagging",
+    "category": {
+      "en": "Analytics",
+      "ja": "分析"
+    },
+    "title": {
+      "en": "Bulk tagging with Batch Operations",
+      "ja": "Batch Operations で一括タグ付け"
+    },
+    "command": "aws s3control create-job --account-id 111122223333 --no-confirmation-required --priority 10 \\\n  --role-arn arn:aws:iam::111122223333:role/s3-batch-role \\\n  --operation '{\"S3PutObjectTagging\":{\"TagSet\":[{\"Key\":\"tier\",\"Value\":\"cold\"}]}}' \\\n  --manifest-generator '{\"S3JobManifestGenerator\":{\"SourceBucket\":\"arn:aws:s3:::amzn-s3-demo-bucket\",\"EnableManifestOutput\":false,\"Filter\":{\"KeyNameConstraint\":{\"MatchAnyPrefix\":[\"logs/2024/\"]}}}}' \\\n  --report '{\"Bucket\":\"arn:aws:s3:::amzn-s3-demo-reports\",\"Format\":\"Report_CSV_20180820\",\"Enabled\":true,\"Prefix\":\"batch\",\"ReportScope\":\"FailedTasksOnly\"}'",
+    "description": {
+      "en": "Generates a manifest automatically and tags every object under a prefix.",
+      "ja": "マニフェストを自動生成し、プレフィックス配下の全オブジェクトにタグを付ける。"
+    },
+    "danger": false
+  },
+  {
+    "id": "batch-checksum",
+    "category": {
+      "en": "Analytics",
+      "ja": "分析"
+    },
+    "title": {
+      "en": "Verify checksums with Batch Operations",
+      "ja": "Batch Operations でチェックサム検証"
+    },
+    "command": "aws s3control create-job --account-id 111122223333 --no-confirmation-required --priority 10 \\\n  --role-arn arn:aws:iam::111122223333:role/s3-batch-role \\\n  --operation '{\"S3ComputeObjectChecksum\":{\"ChecksumAlgorithm\":\"CRC64NVME\",\"ChecksumType\":\"FULL_OBJECT\"}}' \\\n  --manifest-generator '{\"S3JobManifestGenerator\":{\"SourceBucket\":\"arn:aws:s3:::amzn-s3-demo-bucket\",\"EnableManifestOutput\":false}}' \\\n  --report '{\"Bucket\":\"arn:aws:s3:::amzn-s3-demo-reports\",\"Format\":\"Report_CSV_20180820\",\"Enabled\":true,\"Prefix\":\"checksums\",\"ReportScope\":\"AllTasks\"}'",
+    "description": {
+      "en": "Computes checksums of stored objects without restoring or downloading them and writes a report.",
+      "ja": "保存済みオブジェクトのチェックサムを復元・ダウンロードなしで計算しレポートに出す。"
+    },
+    "danger": false
+  },
+  {
+    "id": "batch-list-jobs",
+    "category": {
+      "en": "Analytics",
+      "ja": "分析"
+    },
+    "title": {
+      "en": "List and describe Batch jobs",
+      "ja": "Batch ジョブの一覧と詳細"
+    },
+    "command": "aws s3control list-jobs --account-id 111122223333 --job-statuses Active Complete Failed\naws s3control describe-job --account-id 111122223333 --job-id 00e123a4-c0d8-41f4-a0eb-b46f9ba5b07c",
+    "description": {
+      "en": "Shows job status and progress.",
+      "ja": "ジョブの状態と進捗を確認する。"
+    },
+    "danger": false
+  },
+  {
+    "id": "storage-lens",
+    "category": {
+      "en": "Analytics",
+      "ja": "分析"
+    },
+    "title": {
+      "en": "Create a Storage Lens dashboard",
+      "ja": "Storage Lens ダッシュボードを作成"
+    },
+    "command": "aws s3control put-storage-lens-configuration --account-id 111122223333 --config-id org-dashboard --storage-lens-configuration file://lens.json",
+    "description": {
+      "en": "Creates a configuration that collects usage metrics by account, bucket and prefix.",
+      "ja": "アカウントやバケット、プレフィックス単位の利用状況メトリクスを集める設定を作る。"
+    },
+    "danger": false
+  },
+  {
+    "id": "metadata-config",
+    "category": {
+      "en": "Analytics",
+      "ja": "分析"
+    },
+    "title": {
+      "en": "Enable S3 Metadata tables",
+      "ja": "S3 Metadata テーブルを有効化"
+    },
+    "command": "aws s3api create-bucket-metadata-configuration --bucket amzn-s3-demo-bucket \\\n  --metadata-configuration '{\"JournalTableConfiguration\":{\"RecordExpiration\":{\"Expiration\":\"ENABLED\",\"Days\":30}},\"InventoryTableConfiguration\":{\"ConfigurationState\":\"ENABLED\"}}'",
+    "description": {
+      "en": "Creates journal and live inventory tables so you can query bucket contents with SQL.",
+      "ja": "ジャーナルテーブルとライブインベントリテーブルを作り、SQL でバケットの中身を調べられるようにする。"
+    },
+    "danger": false
+  },
+  {
+    "id": "put-annotation",
+    "category": {
+      "en": "Analytics",
+      "ja": "分析"
+    },
+    "title": {
+      "en": "Attach an annotation to an object",
+      "ja": "オブジェクトにアノテーションを付ける"
+    },
+    "command": "aws s3api put-object-annotation --bucket amzn-s3-demo-bucket --key data/claims.parquet \\\n  --annotation-name catalog --annotation-payload catalog.json",
+    "description": {
+      "en": "Attaches business context (up to 1 GB) for AI agents and analytics tools to an object (since 2026-06).",
+      "ja": "AI エージェントや分析ツール向けのビジネス文脈 (最大 1 GB) をオブジェクトに付ける (2026-06〜)。"
+    },
+    "danger": false
+  },
+  {
+    "id": "xz-create",
+    "category": {
+      "en": "Express One Zone",
+      "ja": "Express One Zone"
+    },
+    "title": {
+      "en": "Create a directory bucket",
+      "ja": "ディレクトリバケットを作成"
+    },
+    "command": "aws s3api create-bucket --bucket amzn-s3-demo-bucket--usw2-az1--x-s3 --region us-west-2 \\\n  --create-bucket-configuration 'Location={Type=AvailabilityZone,Name=usw2-az1},Bucket={DataRedundancy=SingleAvailabilityZone,Type=Directory}'",
+    "description": {
+      "en": "Creates an S3 Express One Zone directory bucket in a specific AZ. Names end with --<az-id>--x-s3.",
+      "ja": "AZ ID を指定して S3 Express One Zone のディレクトリバケットを作る。名前は --<azid>--x-s3 で終わる。"
+    },
+    "danger": false
+  },
+  {
+    "id": "xz-list",
+    "category": {
+      "en": "Express One Zone",
+      "ja": "Express One Zone"
+    },
+    "title": {
+      "en": "List directory buckets",
+      "ja": "ディレクトリバケット一覧"
+    },
+    "command": "aws s3api list-directory-buckets --region us-west-2",
+    "description": {
+      "en": "Lists directory buckets in the Region.",
+      "ja": "リージョン内のディレクトリバケットを一覧する。"
+    },
+    "danger": false
+  },
+  {
+    "id": "xz-session",
+    "category": {
+      "en": "Express One Zone",
+      "ja": "Express One Zone"
+    },
+    "title": {
+      "en": "Create a session",
+      "ja": "セッションを作成"
+    },
+    "command": "aws s3api create-session --bucket amzn-s3-demo-bucket--usw2-az1--x-s3",
+    "description": {
+      "en": "Gets session credentials valid for 5 minutes. The CLI and SDKs normally do this for you.",
+      "ja": "5 分有効なセッションクレデンシャルを取得する。通常は CLI / SDK が自動で行う。"
+    },
+    "danger": false
+  },
+  {
+    "id": "xz-append",
+    "category": {
+      "en": "Express One Zone",
+      "ja": "Express One Zone"
+    },
+    "title": {
+      "en": "Append to an existing object",
+      "ja": "既存オブジェクトに追記"
+    },
+    "command": "SIZE=$(aws s3api head-object --bucket amzn-s3-demo-bucket--usw2-az1--x-s3 --key logs/app.log --query ContentLength --output text)\naws s3api put-object --bucket amzn-s3-demo-bucket--usw2-az1--x-s3 --key logs/app.log --body more.log --write-offset-bytes \"$SIZE\"",
+    "description": {
+      "en": "Appends data at the end by using the current size as the write offset.",
+      "ja": "現在のサイズをオフセットにして末尾にデータを追加する。"
+    },
+    "danger": false
+  },
+  {
+    "id": "xz-rename",
+    "category": {
+      "en": "Express One Zone",
+      "ja": "Express One Zone"
+    },
+    "title": {
+      "en": "Atomically rename an object",
+      "ja": "オブジェクトを原子的に rename"
+    },
+    "command": "aws s3api rename-object --bucket amzn-s3-demo-bucket--usw2-az1--x-s3 --key logs/app-2026-10-03.log --rename-source logs/app.log",
+    "description": {
+      "en": "Renames a key inside a directory bucket without moving data.",
+      "ja": "データを動かさずにディレクトリバケット内でキー名を変える。"
+    },
+    "danger": false
+  },
+  {
+    "id": "az-ids",
+    "category": {
+      "en": "Express One Zone",
+      "ja": "Express One Zone"
+    },
+    "title": {
+      "en": "Map AZ names to AZ IDs",
+      "ja": "AZ 名と AZ ID の対応を確認"
+    },
+    "command": "aws ec2 describe-availability-zones --region us-west-2 --query 'AvailabilityZones[].[ZoneName,ZoneId]' --output table",
+    "description": {
+      "en": "Directory buckets use AZ IDs, so check how your account's AZ names map to them.",
+      "ja": "ディレクトリバケットは AZ ID で指定するため、アカウントごとの対応を確認する。"
+    },
+    "danger": false
+  },
+  {
+    "id": "tables-create-bucket",
+    "category": {
+      "en": "S3 Tables",
+      "ja": "S3 Tables"
+    },
+    "title": {
+      "en": "Create a table bucket",
+      "ja": "テーブルバケットを作成"
+    },
+    "command": "aws s3tables create-table-bucket --name analytics --region us-east-1",
+    "description": {
+      "en": "Creates a table bucket for Apache Iceberg tables.",
+      "ja": "Iceberg テーブル用のテーブルバケットを作る。"
+    },
+    "danger": false
+  },
+  {
+    "id": "tables-create-namespace",
+    "category": {
+      "en": "S3 Tables",
+      "ja": "S3 Tables"
+    },
+    "title": {
+      "en": "Create a namespace",
+      "ja": "名前空間を作成"
+    },
+    "command": "aws s3tables create-namespace --table-bucket-arn arn:aws:s3tables:us-east-1:111122223333:bucket/analytics --namespace sales",
+    "description": {
+      "en": "Creates a namespace that groups tables.",
+      "ja": "テーブルをまとめる名前空間を作る。"
+    },
+    "danger": false
+  },
+  {
+    "id": "tables-create-table",
+    "category": {
+      "en": "S3 Tables",
+      "ja": "S3 Tables"
+    },
+    "title": {
+      "en": "Create an Iceberg table",
+      "ja": "Iceberg テーブルを作成"
+    },
+    "command": "aws s3tables create-table --table-bucket-arn arn:aws:s3tables:us-east-1:111122223333:bucket/analytics --namespace sales --name orders --format ICEBERG \\\n  --metadata '{\"iceberg\":{\"schema\":{\"fields\":[{\"name\":\"order_id\",\"type\":\"long\",\"required\":true},{\"name\":\"amount\",\"type\":\"double\"},{\"name\":\"ts\",\"type\":\"timestamp\"}]}}}'",
+    "description": {
+      "en": "Creates a table with an explicit schema.",
+      "ja": "スキーマを指定してテーブルを作る。"
+    },
+    "danger": false
+  },
+  {
+    "id": "tables-list",
+    "category": {
+      "en": "S3 Tables",
+      "ja": "S3 Tables"
+    },
+    "title": {
+      "en": "List tables",
+      "ja": "テーブル一覧"
+    },
+    "command": "aws s3tables list-tables --table-bucket-arn arn:aws:s3tables:us-east-1:111122223333:bucket/analytics --namespace sales",
+    "description": {
+      "en": "Lists tables in a namespace.",
+      "ja": "名前空間内のテーブルを一覧する。"
+    },
+    "danger": false
+  },
+  {
+    "id": "tables-metadata-location",
+    "category": {
+      "en": "S3 Tables",
+      "ja": "S3 Tables"
+    },
+    "title": {
+      "en": "Get table metadata location",
+      "ja": "テーブルのメタデータの場所を取得"
+    },
+    "command": "aws s3tables get-table-metadata-location --table-bucket-arn arn:aws:s3tables:us-east-1:111122223333:bucket/analytics --namespace sales --name orders",
+    "description": {
+      "en": "Returns the current Iceberg metadata.json location and the warehouse location.",
+      "ja": "現在の Iceberg metadata.json の場所と warehouse の場所を返す。"
+    },
+    "danger": false
+  },
+  {
+    "id": "tables-compaction",
+    "category": {
+      "en": "S3 Tables",
+      "ja": "S3 Tables"
+    },
+    "title": {
+      "en": "Configure compaction",
+      "ja": "コンパクション戦略を設定"
+    },
+    "command": "aws s3tables put-table-maintenance-configuration --table-bucket-arn arn:aws:s3tables:us-east-1:111122223333:bucket/analytics --namespace sales --name orders \\\n  --type icebergCompaction \\\n  --value '{\"status\":\"enabled\",\"settings\":{\"icebergCompaction\":{\"targetFileSizeMB\":512,\"strategy\":\"sort\"}}}'",
+    "description": {
+      "en": "Sets the target file size and strategy (auto, binpack, sort or z-order).",
+      "ja": "目標ファイルサイズと戦略 (auto / binpack / sort / z-order) を指定する。"
+    },
+    "danger": false
+  },
+  {
+    "id": "tables-snapshots",
+    "category": {
+      "en": "S3 Tables",
+      "ja": "S3 Tables"
+    },
+    "title": {
+      "en": "Configure snapshot retention",
+      "ja": "スナップショット保持を設定"
+    },
+    "command": "aws s3tables put-table-maintenance-configuration --table-bucket-arn arn:aws:s3tables:us-east-1:111122223333:bucket/analytics --namespace sales --name orders \\\n  --type icebergSnapshotManagement \\\n  --value '{\"status\":\"enabled\",\"settings\":{\"icebergSnapshotManagement\":{\"minSnapshotsToKeep\":5,\"maxSnapshotAgeHours\":168}}}'",
+    "description": {
+      "en": "Controls snapshot expiration with a minimum count and maximum age.",
+      "ja": "最低保持数と最大経過時間でスナップショットの期限切れを制御する。"
+    },
+    "danger": false
+  },
+  {
+    "id": "tables-intelligent-tiering",
+    "category": {
+      "en": "S3 Tables",
+      "ja": "S3 Tables"
+    },
+    "title": {
+      "en": "Set Intelligent-Tiering on a table bucket",
+      "ja": "テーブルバケットを Intelligent-Tiering に"
+    },
+    "command": "aws s3tables put-table-bucket-storage-class --table-bucket-arn arn:aws:s3tables:us-east-1:111122223333:bucket/analytics --storage-class-configuration storageClass=INTELLIGENT_TIERING",
+    "description": {
+      "en": "Makes Intelligent-Tiering the default storage class for new tables (since 2025-12).",
+      "ja": "新規テーブルの既定ストレージクラスを Intelligent-Tiering にする (2025-12〜)。"
+    },
+    "danger": false
+  },
+  {
+    "id": "tables-delete-table",
+    "category": {
+      "en": "S3 Tables",
+      "ja": "S3 Tables"
+    },
+    "title": {
+      "en": "Delete a table",
+      "ja": "テーブルを削除"
+    },
+    "command": "aws s3tables delete-table --table-bucket-arn arn:aws:s3tables:us-east-1:111122223333:bucket/analytics --namespace sales --name orders",
+    "description": {
+      "en": "Deletes a table and its data.",
+      "ja": "テーブルとそのデータを削除する。"
+    },
+    "danger": true
+  },
+  {
+    "id": "tables-pyiceberg",
+    "category": {
+      "en": "S3 Tables",
+      "ja": "S3 Tables"
+    },
+    "title": {
+      "en": "Connect from PyIceberg via Iceberg REST",
+      "ja": "PyIceberg から Iceberg REST で接続"
+    },
+    "command": "python3 - <<'EOF'\nfrom pyiceberg.catalog import load_catalog\ncat = load_catalog(\"s3tables\", **{\n  \"type\": \"rest\",\n  \"warehouse\": \"arn:aws:s3tables:us-east-1:111122223333:bucket/analytics\",\n  \"uri\": \"https://s3tables.us-east-1.amazonaws.com/iceberg\",\n  \"rest.sigv4-enabled\": \"true\",\n  \"rest.signing-name\": \"s3tables\",\n  \"rest.signing-region\": \"us-east-1\"})\nprint(cat.list_tables(\"sales\"))\nEOF",
+    "description": {
+      "en": "Connects to the S3 Tables Iceberg REST endpoint with SigV4 using the signing name s3tables.",
+      "ja": "S3 Tables の Iceberg REST エンドポイントに SigV4 (署名名 s3tables) で接続する。"
+    },
+    "danger": false
+  },
+  {
+    "id": "vectors-create-bucket",
+    "category": {
+      "en": "S3 Vectors",
+      "ja": "S3 Vectors"
+    },
+    "title": {
+      "en": "Create a vector bucket",
+      "ja": "ベクトルバケットを作成"
+    },
+    "command": "aws s3vectors create-vector-bucket --vector-bucket-name kb-vectors",
+    "description": {
+      "en": "Creates a bucket for storing vectors.",
+      "ja": "ベクトル保存用のバケットを作る。"
+    },
+    "danger": false
+  },
+  {
+    "id": "vectors-create-index",
+    "category": {
+      "en": "S3 Vectors",
+      "ja": "S3 Vectors"
+    },
+    "title": {
+      "en": "Create a vector index",
+      "ja": "ベクトルインデックスを作成"
+    },
+    "command": "aws s3vectors create-index --vector-bucket-name kb-vectors --index-name docs \\\n  --data-type float32 --dimension 1024 --distance-metric cosine \\\n  --metadata-configuration nonFilterableMetadataKeys=source_text",
+    "description": {
+      "en": "Creates an index with a dimension and distance metric. Non-filterable keys cannot be changed later.",
+      "ja": "次元数と距離関数を指定してインデックスを作る。フィルタ不可キーは後から変えられない。"
+    },
+    "danger": false
+  },
+  {
+    "id": "vectors-put",
+    "category": {
+      "en": "S3 Vectors",
+      "ja": "S3 Vectors"
+    },
+    "title": {
+      "en": "Put vectors",
+      "ja": "ベクトルを書き込む"
+    },
+    "command": "aws s3vectors put-vectors --vector-bucket-name kb-vectors --index-name docs --vectors file://vectors.json",
+    "description": {
+      "en": "Writes up to 500 vectors with metadata per call.",
+      "ja": "1 回に最大 500 件のベクトルとメタデータを書き込む。"
+    },
+    "danger": false
+  },
+  {
+    "id": "vectors-query",
+    "category": {
+      "en": "S3 Vectors",
+      "ja": "S3 Vectors"
+    },
+    "title": {
+      "en": "Query similar vectors",
+      "ja": "類似ベクトルを検索"
+    },
+    "command": "aws s3vectors query-vectors --vector-bucket-name kb-vectors --index-name docs \\\n  --query-vector file://q.json --top-k 10 \\\n  --filter '{\"lang\":{\"$eq\":\"ja\"}}' --return-metadata --return-distance",
+    "description": {
+      "en": "Runs a nearest-neighbor search with a metadata filter. topK can be up to 10,000.",
+      "ja": "メタデータフィルタ付きで近傍検索する。topK は最大 10,000。"
+    },
+    "danger": false
+  },
+  {
+    "id": "vectors-enhanced",
+    "category": {
+      "en": "S3 Vectors",
+      "ja": "S3 Vectors"
+    },
+    "title": {
+      "en": "Switch an index to ENHANCED mode",
+      "ja": "インデックスを ENHANCED モードに"
+    },
+    "command": "aws s3vectors update-index-mode --vector-bucket-name kb-vectors --index-name docs --index-mode ENHANCED",
+    "description": {
+      "en": "Switches to pre-filtering so metadata filters apply before search, improving recall for selective filters (since 2026-09).",
+      "ja": "メタデータを検索前に適用する事前フィルタに切り替え、選択的なフィルタでの recall を上げる (2026-09〜)。"
+    },
+    "danger": false
+  },
+  {
+    "id": "vectors-get",
+    "category": {
+      "en": "S3 Vectors",
+      "ja": "S3 Vectors"
+    },
+    "title": {
+      "en": "Get vectors by key",
+      "ja": "キーを指定してベクトル取得"
+    },
+    "command": "aws s3vectors get-vectors --vector-bucket-name kb-vectors --index-name docs --keys doc-1#0 doc-1#1 --return-metadata",
+    "description": {
+      "en": "Fetches up to 100 vectors by key in one call.",
+      "ja": "1 回に最大 100 件をキーで取得する。"
+    },
+    "danger": false
+  },
+  {
+    "id": "vectors-delete-index",
+    "category": {
+      "en": "S3 Vectors",
+      "ja": "S3 Vectors"
+    },
+    "title": {
+      "en": "Delete a vector index",
+      "ja": "インデックスを削除"
+    },
+    "command": "aws s3vectors delete-index --vector-bucket-name kb-vectors --index-name docs",
+    "description": {
+      "en": "Deletes the index and every vector in it.",
+      "ja": "インデックスと中のベクトルをすべて削除する。"
+    },
+    "danger": true
+  },
+  {
+    "id": "boto3-upload-crt",
+    "category": {
+      "en": "SDK",
+      "ja": "SDK"
+    },
+    "title": {
+      "en": "Upload with boto3 using CRT",
+      "ja": "boto3 で CRT を使ってアップロード"
+    },
+    "command": "pip install \"boto3[crt]\"\npython3 -c 'import boto3; from boto3.s3.transfer import TransferConfig; boto3.client(\"s3\").upload_file(\"big.bin\", \"amzn-s3-demo-bucket\", \"big.bin\", Config=TransferConfig(preferred_transfer_client=\"crt\"))'",
+    "description": {
+      "en": "Installs awscrt and uploads quickly with the CRT transfer manager.",
+      "ja": "awscrt を入れて CRT 転送マネージャで高速にアップロードする。"
+    },
+    "danger": false
+  },
+  {
+    "id": "boto3-presign-put",
+    "category": {
+      "en": "SDK",
+      "ja": "SDK"
+    },
+    "title": {
+      "en": "Presigned upload URL with boto3",
+      "ja": "boto3 でアップロード用署名付き URL"
+    },
+    "command": "python3 -c 'import boto3;print(boto3.client(\"s3\").generate_presigned_url(\"put_object\",Params={\"Bucket\":\"amzn-s3-demo-bucket\",\"Key\":\"uploads/a.png\",\"ContentType\":\"image/png\"},ExpiresIn=600))'",
+    "description": {
+      "en": "Creates a presigned PUT URL. Send the same Content-Type when uploading.",
+      "ja": "PUT 用の署名付き URL を作る。アップロード時は同じ Content-Type を送る。"
+    },
+    "danger": false
+  },
+  {
+    "id": "boto3-presigned-post",
+    "category": {
+      "en": "SDK",
+      "ja": "SDK"
+    },
+    "title": {
+      "en": "Presigned POST with boto3",
+      "ja": "boto3 で署名付き POST"
+    },
+    "command": "python3 - <<'EOF'\nimport boto3\npost = boto3.client(\"s3\").generate_presigned_post(\n    Bucket=\"amzn-s3-demo-bucket\", Key=\"uploads/${filename}\",\n    Conditions=[[\"content-length-range\", 1, 10485760], [\"starts-with\", \"$key\", \"uploads/\"]],\n    ExpiresIn=600)\nprint(post)\nEOF",
+    "description": {
+      "en": "Lets a browser form upload directly, with conditions on size and key.",
+      "ja": "ブラウザのフォームから直接アップロードさせる。サイズやキーの条件を付けられる。"
+    },
+    "danger": false
+  },
+  {
+    "id": "boto3-paginator",
+    "category": {
+      "en": "SDK",
+      "ja": "SDK"
+    },
+    "title": {
+      "en": "Iterate all objects with a boto3 paginator",
+      "ja": "boto3 のページネータで全件処理"
+    },
+    "command": "python3 - <<'EOF'\nimport boto3\np = boto3.client(\"s3\").get_paginator(\"list_objects_v2\")\nprint(sum(o[\"Size\"] for page in p.paginate(Bucket=\"amzn-s3-demo-bucket\") for o in page.get(\"Contents\", [])))\nEOF",
+    "description": {
+      "en": "Processes every object without handling 1,000-key pages yourself.",
+      "ja": "1,000 件ごとのページングを意識せずに全オブジェクトを処理する。"
+    },
+    "danger": false
+  },
+  {
+    "id": "js-upload-lib-storage",
+    "category": {
+      "en": "SDK",
+      "ja": "SDK"
+    },
+    "title": {
+      "en": "Large upload with JS v3 lib-storage",
+      "ja": "JS v3 の lib-storage で大容量アップロード"
+    },
+    "command": "import { S3Client } from \"@aws-sdk/client-s3\";\nimport { Upload } from \"@aws-sdk/lib-storage\";\nimport { createReadStream } from \"node:fs\";\nawait new Upload({ client: new S3Client({}), params: { Bucket: \"amzn-s3-demo-bucket\", Key: \"big.bin\", Body: createReadStream(\"big.bin\") }, queueSize: 8, partSize: 16 * 1024 * 1024 }).done();",
+    "description": {
+      "en": "Uploads a stream with automatic parallel multipart.",
+      "ja": "ストリームを自動でマルチパート並列アップロードする。"
+    },
+    "danger": false
+  },
+  {
+    "id": "js-get-signed-url",
+    "category": {
+      "en": "SDK",
+      "ja": "SDK"
+    },
+    "title": {
+      "en": "Presigned URL with JS v3",
+      "ja": "JS v3 で署名付き URL"
+    },
+    "command": "import { S3Client, GetObjectCommand } from \"@aws-sdk/client-s3\";\nimport { getSignedUrl } from \"@aws-sdk/s3-request-presigner\";\nconst url = await getSignedUrl(new S3Client({}), new GetObjectCommand({ Bucket: \"amzn-s3-demo-bucket\", Key: \"docs/a.pdf\" }), { expiresIn: 900 });",
+    "description": {
+      "en": "Creates a presigned URL from a command using @aws-sdk/s3-request-presigner.",
+      "ja": "@aws-sdk/s3-request-presigner でコマンドから署名付き URL を作る。"
+    },
+    "danger": false
+  },
+  {
+    "id": "go-transfermanager",
+    "category": {
+      "en": "SDK",
+      "ja": "SDK"
+    },
+    "title": {
+      "en": "Upload with Go v2 transfermanager",
+      "ja": "Go v2 の transfermanager でアップロード"
+    },
+    "command": "tm := transfermanager.New(s3.NewFromConfig(cfg))\n_, err := tm.UploadObject(ctx, &transfermanager.UploadObjectInput{\n    Bucket: aws.String(\"amzn-s3-demo-bucket\"), Key: aws.String(\"big.bin\"), Body: f,\n})",
+    "description": {
+      "en": "Uses feature/s3/transfermanager, GA since 2026-01. The old feature/s3/manager is deprecated.",
+      "ja": "2026-01 に GA した feature/s3/transfermanager を使う。旧 feature/s3/manager は deprecated。"
+    },
+    "danger": false
+  },
+  {
+    "id": "s5cmd-cp",
+    "category": {
+      "en": "Third-party tools",
+      "ja": "サードパーティ"
+    },
+    "title": {
+      "en": "Parallel copy with s5cmd",
+      "ja": "s5cmd で並列コピー"
+    },
+    "command": "s5cmd --numworkers 256 cp 's3://amzn-s3-demo-bucket/train/*' /mnt/nvme/train/",
+    "description": {
+      "en": "Copies wildcard-matched objects quickly with many workers.",
+      "ja": "多数のワーカーでワイルドカード指定のオブジェクトを高速にコピーする。"
+    },
+    "danger": false
+  },
+  {
+    "id": "s5cmd-rm",
+    "category": {
+      "en": "Third-party tools",
+      "ja": "サードパーティ"
+    },
+    "title": {
+      "en": "Wildcard delete with s5cmd",
+      "ja": "s5cmd でワイルドカード削除"
+    },
+    "command": "s5cmd rm 's3://amzn-s3-demo-bucket/tmp/*'",
+    "description": {
+      "en": "Deletes matching objects in batches.",
+      "ja": "マッチしたオブジェクトをバッチ削除する。"
+    },
+    "danger": true
+  },
+  {
+    "id": "rclone-copy",
+    "category": {
+      "en": "Third-party tools",
+      "ja": "サードパーティ"
+    },
+    "title": {
+      "en": "Copy with rclone",
+      "ja": "rclone でコピー"
+    },
+    "command": "rclone config create aws s3 provider AWS env_auth true region us-east-1\nrclone copy ./data aws:amzn-s3-demo-bucket/data --transfers 32 --s3-chunk-size 64M --progress",
+    "description": {
+      "en": "Creates an rclone remote that uses environment credentials and copies data.",
+      "ja": "環境のクレデンシャルを使う rclone リモートを作ってコピーする。"
+    },
+    "danger": false
+  },
+  {
+    "id": "mc-mirror",
+    "category": {
+      "en": "Third-party tools",
+      "ja": "サードパーティ"
+    },
+    "title": {
+      "en": "Mirror with MinIO Client",
+      "ja": "MinIO Client でミラー"
+    },
+    "command": "mc alias set aws https://s3.amazonaws.com \"$AWS_ACCESS_KEY_ID\" \"$AWS_SECRET_ACCESS_KEY\"\nmc mirror --overwrite ./site aws/amzn-s3-demo-bucket/site",
+    "description": {
+      "en": "Mirrors a local directory to S3.",
+      "ja": "ローカルディレクトリを S3 にミラーする。"
+    },
+    "danger": false
+  },
+  {
+    "id": "s3cmd-sync",
+    "category": {
+      "en": "Third-party tools",
+      "ja": "サードパーティ"
+    },
+    "title": {
+      "en": "Sync with delete using s3cmd",
+      "ja": "s3cmd で削除付き同期"
+    },
+    "command": "s3cmd sync ./site/ s3://amzn-s3-demo-bucket/site/ --delete-removed",
+    "description": {
+      "en": "Removes files from S3 that were deleted locally.",
+      "ja": "ローカルで消したファイルを S3 からも消す。"
+    },
+    "danger": true
+  },
+  {
+    "id": "mount-s3",
+    "category": {
+      "en": "Third-party tools",
+      "ja": "サードパーティ"
+    },
+    "title": {
+      "en": "Mount a bucket with Mountpoint",
+      "ja": "Mountpoint でバケットをマウント"
+    },
+    "command": "mount-s3 amzn-s3-demo-bucket ~/mnt --cache /mnt/nvme/cache --metadata-ttl 300\numount ~/mnt",
+    "description": {
+      "en": "Mounts a bucket as a local directory with a local cache.",
+      "ja": "バケットをローカルディレクトリとしてマウントし、ローカルキャッシュを使う。"
+    },
+    "danger": false
+  },
+  {
+    "id": "mount-s3-write",
+    "category": {
+      "en": "Third-party tools",
+      "ja": "サードパーティ"
+    },
+    "title": {
+      "en": "Allow delete and overwrite in Mountpoint",
+      "ja": "Mountpoint で削除と上書きを許可"
+    },
+    "command": "mount-s3 amzn-s3-demo-bucket ~/mnt --allow-delete --allow-overwrite",
+    "description": {
+      "en": "Enables deletes and overwrites, which are disabled by default.",
+      "ja": "既定では禁止されている削除と上書きを有効にする。"
+    },
+    "danger": false
+  },
+  {
+    "id": "sts-whoami",
+    "category": {
+      "en": "Troubleshooting",
+      "ja": "トラブルシュート"
+    },
+    "title": {
+      "en": "Check the caller identity",
+      "ja": "自分が誰として呼んでいるか確認"
+    },
+    "command": "aws sts get-caller-identity",
+    "description": {
+      "en": "Start every 403 investigation here to confirm the role and account.",
+      "ja": "403 の調査はまずこれ。想定したロールやアカウントかを確認する。"
+    },
+    "danger": false
+  },
+  {
+    "id": "iam-simulate",
+    "category": {
+      "en": "Troubleshooting",
+      "ja": "トラブルシュート"
+    },
+    "title": {
+      "en": "IAM policy simulator",
+      "ja": "IAM ポリシーシミュレーター"
+    },
+    "command": "aws iam simulate-principal-policy \\\n  --policy-source-arn arn:aws:iam::111122223333:role/app-role \\\n  --action-names s3:GetObject s3:PutObject \\\n  --resource-arns arn:aws:s3:::amzn-s3-demo-bucket/data/a.txt \\\n  --query 'EvaluationResults[].[EvalActionName,EvalDecision]' --output table",
+    "description": {
+      "en": "Evaluates whether IAM policies allow the actions. Add --resource-policy to include a bucket policy.",
+      "ja": "IAM ポリシーで操作が許可されるかを評価する。--resource-policy でバケットポリシーも含められる。"
+    },
+    "danger": false
+  },
+  {
+    "id": "get-bucket-policy-pretty",
+    "category": {
+      "en": "Troubleshooting",
+      "ja": "トラブルシュート"
+    },
+    "title": {
+      "en": "Pretty-print the bucket policy",
+      "ja": "バケットポリシーを整形表示"
+    },
+    "command": "aws s3api get-bucket-policy --bucket amzn-s3-demo-bucket --query Policy --output text | jq .",
+    "description": {
+      "en": "Shows explicit Deny statements and condition keys.",
+      "ja": "明示的 Deny や条件キーを確認する。"
+    },
+    "danger": false
+  },
+  {
+    "id": "get-ownership-controls",
+    "category": {
+      "en": "Troubleshooting",
+      "ja": "トラブルシュート"
+    },
+    "title": {
+      "en": "Check object ownership settings",
+      "ja": "オブジェクト所有権の設定を確認"
+    },
+    "command": "aws s3api get-bucket-ownership-controls --bucket amzn-s3-demo-bucket",
+    "description": {
+      "en": "Check this when objects written by another account cannot be read.",
+      "ja": "クロスアカウントで書かれたオブジェクトが読めない場合に確認する。"
+    },
+    "danger": false
+  },
+  {
+    "id": "request-ids",
+    "category": {
+      "en": "Troubleshooting",
+      "ja": "トラブルシュート"
+    },
+    "title": {
+      "en": "Capture request IDs",
+      "ja": "リクエスト ID を取得"
+    },
+    "command": "aws s3api head-object --bucket amzn-s3-demo-bucket --key a.txt --debug 2>&1 | grep -iE 'x-amz-request-id|x-amz-id-2'",
+    "description": {
+      "en": "Captures x-amz-request-id and x-amz-id-2 to give to AWS Support.",
+      "ja": "AWS サポートに渡す x-amz-request-id と x-amz-id-2 を取る。"
+    },
+    "danger": false
+  },
+  {
+    "id": "configure-list",
+    "category": {
+      "en": "Troubleshooting",
+      "ja": "トラブルシュート"
+    },
+    "title": {
+      "en": "Show where settings come from",
+      "ja": "設定の出どころを確認"
+    },
+    "command": "aws configure list\naws configure list-profiles",
+    "description": {
+      "en": "Shows whether credentials and Region come from env vars, files or SSO.",
+      "ja": "クレデンシャルとリージョンがどこ (環境変数 / ファイル / SSO) から来ているかを表示する。"
+    },
+    "danger": false
+  },
+  {
+    "id": "sso-login",
+    "category": {
+      "en": "Troubleshooting",
+      "ja": "トラブルシュート"
+    },
+    "title": {
+      "en": "Refresh the SSO session",
+      "ja": "SSO セッションを更新"
+    },
+    "command": "aws sso login --profile dev-admin",
+    "description": {
+      "en": "Log in again when you see ExpiredToken errors.",
+      "ja": "ExpiredToken エラーが出たら SSO にログインし直す。"
+    },
+    "danger": false
+  },
+  {
+    "id": "head-bucket",
+    "category": {
+      "en": "Troubleshooting",
+      "ja": "トラブルシュート"
+    },
+    "title": {
+      "en": "Check bucket existence and access",
+      "ja": "バケットの存在と権限を確認"
+    },
+    "command": "aws s3api head-bucket --bucket amzn-s3-demo-bucket",
+    "description": {
+      "en": "Checks whether the bucket exists, whether you can access it and which Region it is in.",
+      "ja": "存在するか、アクセスできるか、どのリージョンかを確認する。"
+    },
+    "danger": false
+  }
+]

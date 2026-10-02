@@ -1,0 +1,3092 @@
+[
+  {
+    "name": "AbortMultipartUpload",
+    "service": "s3",
+    "category": "Multipart upload",
+    "method": "DELETE",
+    "description": {
+      "en": "Aborts a multipart upload and frees the storage consumed by its uploaded parts.",
+      "ja": "マルチパートアップロードを中止し、アップロード済みパートを破棄する"
+    }
+  },
+  {
+    "name": "CompleteMultipartUpload",
+    "service": "s3",
+    "category": "Multipart upload",
+    "method": "POST",
+    "description": {
+      "en": "Completes a multipart upload by assembling previously uploaded parts.",
+      "ja": "パート一覧を渡してオブジェクトを組み立て、アップロードを完了する"
+    }
+  },
+  {
+    "name": "CopyObject",
+    "service": "s3",
+    "category": "Object",
+    "method": "PUT",
+    "description": {
+      "en": "Creates a copy of an object that is already stored in Amazon S3.",
+      "ja": "S3 内でオブジェクトをサーバーサイドコピーする (単発は 5 GB まで)"
+    }
+  },
+  {
+    "name": "CreateBucket",
+    "service": "s3",
+    "category": "Bucket",
+    "method": "PUT",
+    "description": {
+      "en": "Creates a new S3 bucket.",
+      "ja": "バケットを作成する (汎用バケット / ディレクトリバケット)"
+    }
+  },
+  {
+    "name": "CreateBucketMetadataConfiguration",
+    "service": "s3",
+    "category": "S3 Metadata",
+    "method": "POST",
+    "description": {
+      "en": "Creates an S3 Metadata V2 metadata configuration for a general purpose bucket.",
+      "ja": "S3 Metadata V2 設定 (ジャーナルテーブル + ライブインベントリテーブル) を作成する"
+    }
+  },
+  {
+    "name": "CreateBucketMetadataTableConfiguration",
+    "service": "s3",
+    "category": "S3 Metadata",
+    "method": "POST",
+    "description": {
+      "en": "Creates a V1 S3 Metadata configuration for a general purpose bucket.",
+      "ja": "V1 S3 Metadata 設定を作成する (非推奨。V2 を使う)"
+    }
+  },
+  {
+    "name": "CreateMultipartUpload",
+    "service": "s3",
+    "category": "Multipart upload",
+    "method": "POST",
+    "description": {
+      "en": "Initiates a multipart upload and returns an upload ID.",
+      "ja": "マルチパートアップロードを開始し UploadId を受け取る"
+    }
+  },
+  {
+    "name": "CreateSession",
+    "service": "s3",
+    "category": "Directory buckets",
+    "method": "GET",
+    "description": {
+      "en": "Creates a session that establishes temporary security credentials to support fast authentication and authorization for the Zonal endpoint API operations on directory buckets.",
+      "ja": "ディレクトリバケットの Zonal エンドポイント用に短命のセッション認証情報を発行する"
+    }
+  },
+  {
+    "name": "DeleteBucket",
+    "service": "s3",
+    "category": "Bucket",
+    "method": "DELETE",
+    "description": {
+      "en": "Deletes the S3 bucket.",
+      "ja": "空のバケットを削除する"
+    }
+  },
+  {
+    "name": "DeleteBucketAnalyticsConfiguration",
+    "service": "s3",
+    "category": "Analytics, inventory & metrics",
+    "method": "DELETE",
+    "description": {
+      "en": "Deletes an analytics configuration for the bucket (specified by the analytics configuration ID).",
+      "ja": "Storage Class Analysis 設定を削除する"
+    }
+  },
+  {
+    "name": "DeleteBucketCors",
+    "service": "s3",
+    "category": "CORS",
+    "method": "DELETE",
+    "description": {
+      "en": "Deletes the cors configuration information set for the bucket.",
+      "ja": "CORS ルールを削除する"
+    }
+  },
+  {
+    "name": "DeleteBucketEncryption",
+    "service": "s3",
+    "category": "Encryption",
+    "method": "DELETE",
+    "description": {
+      "en": "Resets the default encryption for the bucket to SSE-S3.",
+      "ja": "デフォルト暗号化を SSE-S3 にリセットする"
+    }
+  },
+  {
+    "name": "DeleteBucketIntelligentTieringConfiguration",
+    "service": "s3",
+    "category": "Intelligent-Tiering",
+    "method": "DELETE",
+    "description": {
+      "en": "Deletes the S3 Intelligent-Tiering configuration from the specified bucket.",
+      "ja": "Intelligent-Tiering 設定を削除する"
+    }
+  },
+  {
+    "name": "DeleteBucketInventoryConfiguration",
+    "service": "s3",
+    "category": "Analytics, inventory & metrics",
+    "method": "DELETE",
+    "description": {
+      "en": "Deletes an S3 Inventory configuration (identified by the inventory ID) from the bucket.",
+      "ja": "S3 Inventory 設定を削除する"
+    }
+  },
+  {
+    "name": "DeleteBucketLifecycle",
+    "service": "s3",
+    "category": "Lifecycle",
+    "method": "DELETE",
+    "description": {
+      "en": "Deletes the lifecycle configuration from the specified bucket.",
+      "ja": "ライフサイクル設定を削除する"
+    }
+  },
+  {
+    "name": "DeleteBucketMetadataConfiguration",
+    "service": "s3",
+    "category": "S3 Metadata",
+    "method": "DELETE",
+    "description": {
+      "en": "Deletes an S3 Metadata configuration from a general purpose bucket.",
+      "ja": "S3 Metadata 設定を削除する (V1 / V2 両方に使える)"
+    }
+  },
+  {
+    "name": "DeleteBucketMetadataTableConfiguration",
+    "service": "s3",
+    "category": "S3 Metadata",
+    "method": "DELETE",
+    "description": {
+      "en": "Deletes a V1 S3 Metadata configuration from a general purpose bucket.",
+      "ja": "V1 S3 Metadata 設定を削除する (非推奨)"
+    }
+  },
+  {
+    "name": "DeleteBucketMetricsConfiguration",
+    "service": "s3",
+    "category": "Analytics, inventory & metrics",
+    "method": "DELETE",
+    "description": {
+      "en": "Deletes a metrics configuration for the Amazon CloudWatch request metrics (specified by the metrics configuration ID) from the bucket.",
+      "ja": "リクエストメトリクス設定を削除する"
+    }
+  },
+  {
+    "name": "DeleteBucketOwnershipControls",
+    "service": "s3",
+    "category": "Access control",
+    "method": "DELETE",
+    "description": {
+      "en": "Removes OwnershipControls for an Amazon S3 bucket.",
+      "ja": "Object Ownership 設定を削除する"
+    }
+  },
+  {
+    "name": "DeleteBucketPolicy",
+    "service": "s3",
+    "category": "Access control",
+    "method": "DELETE",
+    "description": {
+      "en": "Deletes the policy of a specified bucket.",
+      "ja": "バケットポリシーを削除する"
+    }
+  },
+  {
+    "name": "DeleteBucketReplication",
+    "service": "s3",
+    "category": "Replication",
+    "method": "DELETE",
+    "description": {
+      "en": "Deletes the replication configuration from the bucket.",
+      "ja": "レプリケーション設定を削除する"
+    }
+  },
+  {
+    "name": "DeleteBucketTagging",
+    "service": "s3",
+    "category": "Tagging",
+    "method": "DELETE",
+    "description": {
+      "en": "Deletes tags from the general purpose bucket if attribute based access control (ABAC) is not enabled for the bucket.",
+      "ja": "バケットタグを削除する (ABAC 有効時は UntagResource を使う)"
+    }
+  },
+  {
+    "name": "DeleteBucketWebsite",
+    "service": "s3",
+    "category": "Static website",
+    "method": "DELETE",
+    "description": {
+      "en": "Removes the website configuration for a bucket.",
+      "ja": "ウェブサイト設定を削除する"
+    }
+  },
+  {
+    "name": "DeleteObject",
+    "service": "s3",
+    "category": "Object",
+    "method": "DELETE",
+    "description": {
+      "en": "Removes an object from a bucket.",
+      "ja": "オブジェクトを削除する。バージョニング有効時は削除マーカーを作る (versionId 指定で物理削除)"
+    }
+  },
+  {
+    "name": "DeleteObjectAnnotation",
+    "service": "s3",
+    "category": "Object annotations",
+    "method": "DELETE",
+    "description": {
+      "en": "Deletes a specific annotation from an Amazon S3 object.",
+      "ja": "オブジェクトのアノテーションを 1 件削除する (x-amz-object-if-match で条件付き削除可)"
+    }
+  },
+  {
+    "name": "DeleteObjectTagging",
+    "service": "s3",
+    "category": "Tagging",
+    "method": "DELETE",
+    "description": {
+      "en": "Removes the entire tag set from the specified object.",
+      "ja": "オブジェクトのタグセットを全削除する"
+    }
+  },
+  {
+    "name": "DeleteObjects",
+    "service": "s3",
+    "category": "Object",
+    "method": "POST",
+    "description": {
+      "en": "Deletes up to 1,000 objects from a bucket in a single request.",
+      "ja": "1 リクエストで最大 1,000 キーを一括削除する"
+    }
+  },
+  {
+    "name": "DeletePublicAccessBlock",
+    "service": "s3",
+    "category": "Access control",
+    "method": "DELETE",
+    "description": {
+      "en": "Removes the PublicAccessBlock configuration for an Amazon S3 bucket.",
+      "ja": "バケット単位のブロックパブリックアクセス設定を削除する"
+    }
+  },
+  {
+    "name": "GetBucketAbac",
+    "service": "s3",
+    "category": "Access control",
+    "method": "GET",
+    "description": {
+      "en": "Returns the attribute-based access control (ABAC) property of the general purpose bucket.",
+      "ja": "汎用バケットの ABAC 状態を取得する"
+    }
+  },
+  {
+    "name": "GetBucketAccelerateConfiguration",
+    "service": "s3",
+    "category": "Transfer Acceleration",
+    "method": "GET",
+    "description": {
+      "en": "Returns the Transfer Acceleration state of a bucket (Enabled or Suspended).",
+      "ja": "Transfer Acceleration の状態を取得する"
+    }
+  },
+  {
+    "name": "GetBucketAcl",
+    "service": "s3",
+    "category": "Access control",
+    "method": "GET",
+    "description": {
+      "en": "Returns the access control list (ACL) of a bucket.",
+      "ja": "バケット ACL を取得する"
+    }
+  },
+  {
+    "name": "GetBucketAnalyticsConfiguration",
+    "service": "s3",
+    "category": "Analytics, inventory & metrics",
+    "method": "GET",
+    "description": {
+      "en": "Returns an analytics configuration (identified by ID) from the bucket.",
+      "ja": "Storage Class Analysis 設定を ID 指定で取得する"
+    }
+  },
+  {
+    "name": "GetBucketCors",
+    "service": "s3",
+    "category": "CORS",
+    "method": "GET",
+    "description": {
+      "en": "Returns the Cross-Origin Resource Sharing (CORS) configuration information set for the bucket.",
+      "ja": "CORS ルールを取得する"
+    }
+  },
+  {
+    "name": "GetBucketEncryption",
+    "service": "s3",
+    "category": "Encryption",
+    "method": "GET",
+    "description": {
+      "en": "Returns the default encryption configuration for an Amazon S3 bucket.",
+      "ja": "デフォルト暗号化設定を取得する"
+    }
+  },
+  {
+    "name": "GetBucketIntelligentTieringConfiguration",
+    "service": "s3",
+    "category": "Intelligent-Tiering",
+    "method": "GET",
+    "description": {
+      "en": "Gets the S3 Intelligent-Tiering configuration from the specified bucket.",
+      "ja": "Intelligent-Tiering 設定を ID 指定で取得する"
+    }
+  },
+  {
+    "name": "GetBucketInventoryConfiguration",
+    "service": "s3",
+    "category": "Analytics, inventory & metrics",
+    "method": "GET",
+    "description": {
+      "en": "Returns an S3 Inventory configuration (identified by the inventory configuration ID) from the bucket.",
+      "ja": "S3 Inventory 設定を ID 指定で取得する"
+    }
+  },
+  {
+    "name": "GetBucketLifecycle",
+    "service": "s3",
+    "category": "Lifecycle",
+    "method": "GET",
+    "description": {
+      "en": "Deprecated. Returns the lifecycle configuration; use GetBucketLifecycleConfiguration.",
+      "ja": "旧 API のライフサイクル取得 (非推奨。GetBucketLifecycleConfiguration を使う)"
+    }
+  },
+  {
+    "name": "GetBucketLifecycleConfiguration",
+    "service": "s3",
+    "category": "Lifecycle",
+    "method": "GET",
+    "description": {
+      "en": "Returns the lifecycle configuration information set on the bucket.",
+      "ja": "ライフサイクル設定を取得する"
+    }
+  },
+  {
+    "name": "GetBucketLocation",
+    "service": "s3",
+    "category": "Bucket",
+    "method": "GET",
+    "description": {
+      "en": "Returns the Region the bucket resides in.",
+      "ja": "バケットの Region を返す (新規実装では HeadBucket 推奨)"
+    }
+  },
+  {
+    "name": "GetBucketLogging",
+    "service": "s3",
+    "category": "Logging",
+    "method": "GET",
+    "description": {
+      "en": "Returns the logging status of a bucket and the permissions users have to view and modify that status.",
+      "ja": "サーバーアクセスログ設定を取得する"
+    }
+  },
+  {
+    "name": "GetBucketMetadataConfiguration",
+    "service": "s3",
+    "category": "S3 Metadata",
+    "method": "GET",
+    "description": {
+      "en": "Retrieves the S3 Metadata configuration for a general purpose bucket.",
+      "ja": "S3 Metadata V2 設定を取得する"
+    }
+  },
+  {
+    "name": "GetBucketMetadataTableConfiguration",
+    "service": "s3",
+    "category": "S3 Metadata",
+    "method": "GET",
+    "description": {
+      "en": "Retrieves the V1 S3 Metadata configuration for a general purpose bucket.",
+      "ja": "V1 S3 Metadata 設定を取得する (非推奨)"
+    }
+  },
+  {
+    "name": "GetBucketMetricsConfiguration",
+    "service": "s3",
+    "category": "Analytics, inventory & metrics",
+    "method": "GET",
+    "description": {
+      "en": "Gets a metrics configuration (specified by the metrics configuration ID) from the bucket.",
+      "ja": "リクエストメトリクス設定を ID 指定で取得する"
+    }
+  },
+  {
+    "name": "GetBucketNotification",
+    "service": "s3",
+    "category": "Event notifications",
+    "method": "GET",
+    "description": {
+      "en": "Deprecated. Use GetBucketNotificationConfiguration.",
+      "ja": "旧 API の通知設定取得 (非推奨)"
+    }
+  },
+  {
+    "name": "GetBucketNotificationConfiguration",
+    "service": "s3",
+    "category": "Event notifications",
+    "method": "GET",
+    "description": {
+      "en": "Returns the notification configuration of a bucket.",
+      "ja": "イベント通知設定を取得する"
+    }
+  },
+  {
+    "name": "GetBucketOwnershipControls",
+    "service": "s3",
+    "category": "Access control",
+    "method": "GET",
+    "description": {
+      "en": "Retrieves OwnershipControls for an Amazon S3 bucket.",
+      "ja": "Object Ownership 設定を取得する"
+    }
+  },
+  {
+    "name": "GetBucketPolicy",
+    "service": "s3",
+    "category": "Access control",
+    "method": "GET",
+    "description": {
+      "en": "Returns the policy of a specified bucket.",
+      "ja": "バケットポリシーを取得する"
+    }
+  },
+  {
+    "name": "GetBucketPolicyStatus",
+    "service": "s3",
+    "category": "Access control",
+    "method": "GET",
+    "description": {
+      "en": "Retrieves the policy status for an Amazon S3 bucket, indicating whether the bucket is public.",
+      "ja": "バケットポリシーがパブリック扱いかどうかを返す"
+    }
+  },
+  {
+    "name": "GetBucketReplication",
+    "service": "s3",
+    "category": "Replication",
+    "method": "GET",
+    "description": {
+      "en": "Returns the replication configuration of a bucket.",
+      "ja": "レプリケーション設定を取得する"
+    }
+  },
+  {
+    "name": "GetBucketRequestPayment",
+    "service": "s3",
+    "category": "Requester Pays",
+    "method": "GET",
+    "description": {
+      "en": "Returns the request payment configuration of a bucket.",
+      "ja": "リクエスタ支払い設定を取得する"
+    }
+  },
+  {
+    "name": "GetBucketTagging",
+    "service": "s3",
+    "category": "Tagging",
+    "method": "GET",
+    "description": {
+      "en": "Returns the tag set associated with the general purpose bucket.",
+      "ja": "バケットタグを取得する"
+    }
+  },
+  {
+    "name": "GetBucketVersioning",
+    "service": "s3",
+    "category": "Versioning",
+    "method": "GET",
+    "description": {
+      "en": "Returns the versioning state of a bucket.",
+      "ja": "バージョニング状態と MFA Delete 状態を取得する"
+    }
+  },
+  {
+    "name": "GetBucketWebsite",
+    "service": "s3",
+    "category": "Static website",
+    "method": "GET",
+    "description": {
+      "en": "Returns the website configuration for a bucket.",
+      "ja": "ウェブサイト設定を取得する"
+    }
+  },
+  {
+    "name": "GetObject",
+    "service": "s3",
+    "category": "Object",
+    "method": "GET",
+    "description": {
+      "en": "Retrieves an object from Amazon S3.",
+      "ja": "オブジェクト本体とメタデータを取得する。Range / 条件付き GET 対応"
+    }
+  },
+  {
+    "name": "GetObjectAcl",
+    "service": "s3",
+    "category": "Access control",
+    "method": "GET",
+    "description": {
+      "en": "Returns the access control list (ACL) of an object.",
+      "ja": "オブジェクト ACL を取得する"
+    }
+  },
+  {
+    "name": "GetObjectAnnotation",
+    "service": "s3",
+    "category": "Object annotations",
+    "method": "GET",
+    "description": {
+      "en": "Retrieves an annotation from an Amazon S3 object.",
+      "ja": "オブジェクトのアノテーションを 1 件取得する"
+    }
+  },
+  {
+    "name": "GetObjectAttributes",
+    "service": "s3",
+    "category": "Object",
+    "method": "GET",
+    "description": {
+      "en": "Retrieves all of the metadata from an object without returning the object itself.",
+      "ja": "本体を返さずに ETag・チェックサム・パーツ情報・サイズ・ストレージクラスなどを取得する"
+    }
+  },
+  {
+    "name": "GetObjectLegalHold",
+    "service": "s3",
+    "category": "Object Lock",
+    "method": "GET",
+    "description": {
+      "en": "Gets an object's current legal hold status.",
+      "ja": "リーガルホールド状態を取得する"
+    }
+  },
+  {
+    "name": "GetObjectLockConfiguration",
+    "service": "s3",
+    "category": "Object Lock",
+    "method": "GET",
+    "description": {
+      "en": "Gets the Object Lock configuration for a bucket.",
+      "ja": "Object Lock 設定を取得する"
+    }
+  },
+  {
+    "name": "GetObjectRetention",
+    "service": "s3",
+    "category": "Object Lock",
+    "method": "GET",
+    "description": {
+      "en": "Retrieves an object's retention settings.",
+      "ja": "オブジェクトバージョンの保持設定を取得する"
+    }
+  },
+  {
+    "name": "GetObjectTagging",
+    "service": "s3",
+    "category": "Tagging",
+    "method": "GET",
+    "description": {
+      "en": "Returns the tag-set of an object.",
+      "ja": "オブジェクトのタグセットを取得する"
+    }
+  },
+  {
+    "name": "GetObjectTorrent",
+    "service": "s3",
+    "category": "Object",
+    "method": "GET",
+    "description": {
+      "en": "Returns torrent files from a bucket.",
+      "ja": "オブジェクトの BitTorrent ファイルを返す (レガシー機能)"
+    }
+  },
+  {
+    "name": "GetPublicAccessBlock",
+    "service": "s3",
+    "category": "Access control",
+    "method": "GET",
+    "description": {
+      "en": "Retrieves the PublicAccessBlock configuration for an Amazon S3 bucket.",
+      "ja": "バケット単位のブロックパブリックアクセス設定を取得する"
+    }
+  },
+  {
+    "name": "HeadBucket",
+    "service": "s3",
+    "category": "Bucket",
+    "method": "HEAD",
+    "description": {
+      "en": "Determines whether a bucket exists and whether you have permission to access it.",
+      "ja": "バケットの存在とアクセス権を確認する (Region も x-amz-bucket-region で返る)"
+    }
+  },
+  {
+    "name": "HeadObject",
+    "service": "s3",
+    "category": "Object",
+    "method": "HEAD",
+    "description": {
+      "en": "Retrieves metadata from an object without returning the object itself.",
+      "ja": "本体を返さずにオブジェクトのメタデータだけ取得する"
+    }
+  },
+  {
+    "name": "ListBucketAnalyticsConfigurations",
+    "service": "s3",
+    "category": "Analytics, inventory & metrics",
+    "method": "GET",
+    "description": {
+      "en": "Lists the analytics configurations for the bucket.",
+      "ja": "Storage Class Analysis 設定を列挙する"
+    }
+  },
+  {
+    "name": "ListBucketIntelligentTieringConfigurations",
+    "service": "s3",
+    "category": "Intelligent-Tiering",
+    "method": "GET",
+    "description": {
+      "en": "Lists the S3 Intelligent-Tiering configuration from the specified bucket.",
+      "ja": "Intelligent-Tiering 設定を列挙する"
+    }
+  },
+  {
+    "name": "ListBucketInventoryConfigurations",
+    "service": "s3",
+    "category": "Analytics, inventory & metrics",
+    "method": "GET",
+    "description": {
+      "en": "Returns a list of S3 Inventory configurations for the bucket.",
+      "ja": "S3 Inventory 設定を列挙する"
+    }
+  },
+  {
+    "name": "ListBucketMetricsConfigurations",
+    "service": "s3",
+    "category": "Analytics, inventory & metrics",
+    "method": "GET",
+    "description": {
+      "en": "Lists the metrics configurations for the bucket.",
+      "ja": "リクエストメトリクス設定を列挙する"
+    }
+  },
+  {
+    "name": "ListBuckets",
+    "service": "s3",
+    "category": "Bucket",
+    "method": "GET",
+    "description": {
+      "en": "Returns a list of all buckets owned by the authenticated sender of the request.",
+      "ja": "呼び出し元が所有する汎用バケットを列挙する"
+    }
+  },
+  {
+    "name": "ListDirectoryBuckets",
+    "service": "s3",
+    "category": "Directory buckets",
+    "method": "GET",
+    "description": {
+      "en": "Returns a list of all Amazon S3 directory buckets owned by the authenticated sender of the request.",
+      "ja": "呼び出し元が所有するディレクトリバケットを列挙する"
+    }
+  },
+  {
+    "name": "ListMultipartUploads",
+    "service": "s3",
+    "category": "Multipart upload",
+    "method": "GET",
+    "description": {
+      "en": "Lists in-progress multipart uploads in a bucket.",
+      "ja": "進行中 (未完了) のマルチパートアップロードを列挙する"
+    }
+  },
+  {
+    "name": "ListObjectAnnotations",
+    "service": "s3",
+    "category": "Object annotations",
+    "method": "GET",
+    "description": {
+      "en": "Lists the annotations attached to an Amazon S3 object.",
+      "ja": "オブジェクトに付いたアノテーションを列挙する (prefix で絞り込み可)"
+    }
+  },
+  {
+    "name": "ListObjectVersions",
+    "service": "s3",
+    "category": "Versioning",
+    "method": "GET",
+    "description": {
+      "en": "Returns metadata about all versions of the objects in a bucket.",
+      "ja": "すべてのバージョンと削除マーカーを列挙する"
+    }
+  },
+  {
+    "name": "ListObjects",
+    "service": "s3",
+    "category": "Object",
+    "method": "GET",
+    "description": {
+      "en": "Returns some or all (up to 1,000) of the objects in a bucket.",
+      "ja": "バケット内オブジェクトを最大 1,000 件列挙する (旧版。新規は V2 を使う)"
+    }
+  },
+  {
+    "name": "ListObjectsV2",
+    "service": "s3",
+    "category": "Object",
+    "method": "GET",
+    "description": {
+      "en": "Returns some or all (up to 1,000) of the objects in a bucket with each request.",
+      "ja": "バケット内オブジェクトを最大 1,000 件ずつ列挙する (continuation-token でページング)"
+    }
+  },
+  {
+    "name": "ListParts",
+    "service": "s3",
+    "category": "Multipart upload",
+    "method": "GET",
+    "description": {
+      "en": "Lists the parts that have been uploaded for a specific multipart upload.",
+      "ja": "特定 UploadId のアップロード済みパートを列挙する"
+    }
+  },
+  {
+    "name": "PutBucketAbac",
+    "service": "s3",
+    "category": "Access control",
+    "method": "PUT",
+    "description": {
+      "en": "Sets the attribute-based access control (ABAC) property of the general purpose bucket.",
+      "ja": "汎用バケットの ABAC (タグベースのアクセス制御) を Enabled / Disabled にする"
+    }
+  },
+  {
+    "name": "PutBucketAccelerateConfiguration",
+    "service": "s3",
+    "category": "Transfer Acceleration",
+    "method": "PUT",
+    "description": {
+      "en": "Sets the accelerate configuration of an existing bucket.",
+      "ja": "Transfer Acceleration を Enabled / Suspended にする"
+    }
+  },
+  {
+    "name": "PutBucketAcl",
+    "service": "s3",
+    "category": "Access control",
+    "method": "PUT",
+    "description": {
+      "en": "Sets the permissions on an existing bucket using access control lists (ACL).",
+      "ja": "バケット ACL を設定する (Object Ownership が BucketOwnerEnforced だと不可)"
+    }
+  },
+  {
+    "name": "PutBucketAnalyticsConfiguration",
+    "service": "s3",
+    "category": "Analytics, inventory & metrics",
+    "method": "PUT",
+    "description": {
+      "en": "Sets an analytics configuration for the bucket (specified by the analytics configuration ID).",
+      "ja": "Storage Class Analysis の設定を追加 / 置換する"
+    }
+  },
+  {
+    "name": "PutBucketCors",
+    "service": "s3",
+    "category": "CORS",
+    "method": "PUT",
+    "description": {
+      "en": "Sets the cors configuration for your bucket.",
+      "ja": "CORS ルールを設定する"
+    }
+  },
+  {
+    "name": "PutBucketEncryption",
+    "service": "s3",
+    "category": "Encryption",
+    "method": "PUT",
+    "description": {
+      "en": "Configures default encryption and S3 Bucket Keys for an existing bucket.",
+      "ja": "デフォルト暗号化 (SSE-S3 / SSE-KMS / DSSE-KMS) と S3 Bucket Key を設定する。暗号化タイプのブロックも可"
+    }
+  },
+  {
+    "name": "PutBucketIntelligentTieringConfiguration",
+    "service": "s3",
+    "category": "Intelligent-Tiering",
+    "method": "PUT",
+    "description": {
+      "en": "Puts a S3 Intelligent-Tiering configuration to the specified bucket.",
+      "ja": "Intelligent-Tiering の Archive / Deep Archive 層への自動移行を設定する"
+    }
+  },
+  {
+    "name": "PutBucketInventoryConfiguration",
+    "service": "s3",
+    "category": "Analytics, inventory & metrics",
+    "method": "PUT",
+    "description": {
+      "en": "Adds an S3 Inventory configuration (identified by ID) to the bucket.",
+      "ja": "S3 Inventory レポート設定を追加 / 置換する"
+    }
+  },
+  {
+    "name": "PutBucketLifecycle",
+    "service": "s3",
+    "category": "Lifecycle",
+    "method": "PUT",
+    "description": {
+      "en": "Deprecated. Creates or replaces a lifecycle configuration; use PutBucketLifecycleConfiguration.",
+      "ja": "旧 API のライフサイクル設定 (非推奨。PutBucketLifecycleConfiguration を使う)"
+    }
+  },
+  {
+    "name": "PutBucketLifecycleConfiguration",
+    "service": "s3",
+    "category": "Lifecycle",
+    "method": "PUT",
+    "description": {
+      "en": "Creates a new lifecycle configuration for the bucket or replaces an existing lifecycle configuration.",
+      "ja": "ライフサイクルルール (移行・失効・未完了 MPU 削除など) を設定 / 置換する"
+    }
+  },
+  {
+    "name": "PutBucketLogging",
+    "service": "s3",
+    "category": "Logging",
+    "method": "PUT",
+    "description": {
+      "en": "Sets the server access logging parameters for a bucket.",
+      "ja": "サーバーアクセスログの出力先・プレフィックスを設定する"
+    }
+  },
+  {
+    "name": "PutBucketMetricsConfiguration",
+    "service": "s3",
+    "category": "Analytics, inventory & metrics",
+    "method": "PUT",
+    "description": {
+      "en": "Sets a metrics configuration (specified by the metrics configuration ID) for the bucket.",
+      "ja": "CloudWatch リクエストメトリクスのフィルタ設定を追加 / 置換する"
+    }
+  },
+  {
+    "name": "PutBucketNotification",
+    "service": "s3",
+    "category": "Event notifications",
+    "method": "PUT",
+    "description": {
+      "en": "Deprecated. Use PutBucketNotificationConfiguration.",
+      "ja": "旧 API の通知設定 (非推奨)"
+    }
+  },
+  {
+    "name": "PutBucketNotificationConfiguration",
+    "service": "s3",
+    "category": "Event notifications",
+    "method": "PUT",
+    "description": {
+      "en": "Enables notifications of specified events for a bucket.",
+      "ja": "イベント通知 (SNS / SQS / Lambda / EventBridge) を設定する"
+    }
+  },
+  {
+    "name": "PutBucketOwnershipControls",
+    "service": "s3",
+    "category": "Access control",
+    "method": "PUT",
+    "description": {
+      "en": "Creates or modifies OwnershipControls for an Amazon S3 bucket.",
+      "ja": "Object Ownership (BucketOwnerEnforced 等) を設定する"
+    }
+  },
+  {
+    "name": "PutBucketPolicy",
+    "service": "s3",
+    "category": "Access control",
+    "method": "PUT",
+    "description": {
+      "en": "Applies an Amazon S3 bucket policy to an Amazon S3 bucket.",
+      "ja": "バケットポリシー (JSON) を設定する"
+    }
+  },
+  {
+    "name": "PutBucketReplication",
+    "service": "s3",
+    "category": "Replication",
+    "method": "PUT",
+    "description": {
+      "en": "Creates a replication configuration or replaces an existing one.",
+      "ja": "レプリケーション設定 (CRR / SRR、RTC、削除マーカー複製など) を作成 / 置換する"
+    }
+  },
+  {
+    "name": "PutBucketRequestPayment",
+    "service": "s3",
+    "category": "Requester Pays",
+    "method": "PUT",
+    "description": {
+      "en": "Sets the request payment configuration for a bucket.",
+      "ja": "リクエスタ支払い (Requester Pays) を設定する"
+    }
+  },
+  {
+    "name": "PutBucketTagging",
+    "service": "s3",
+    "category": "Tagging",
+    "method": "PUT",
+    "description": {
+      "en": "Sets the tags for a general purpose bucket if attribute based access control (ABAC) is not enabled for the bucket.",
+      "ja": "バケットタグを設定する (ABAC 有効時は TagResource を使う)"
+    }
+  },
+  {
+    "name": "PutBucketVersioning",
+    "service": "s3",
+    "category": "Versioning",
+    "method": "PUT",
+    "description": {
+      "en": "Sets the versioning state of an existing bucket.",
+      "ja": "バージョニングを Enabled / Suspended にする (MFA Delete もここ)"
+    }
+  },
+  {
+    "name": "PutBucketWebsite",
+    "service": "s3",
+    "category": "Static website",
+    "method": "PUT",
+    "description": {
+      "en": "Sets the configuration of the website that is specified in the website subresource.",
+      "ja": "静的ウェブサイトホスティング (index / error / リダイレクトルール) を設定する"
+    }
+  },
+  {
+    "name": "PutObject",
+    "service": "s3",
+    "category": "Object",
+    "method": "PUT",
+    "description": {
+      "en": "Adds an object to a bucket.",
+      "ja": "オブジェクトをバケットに書き込む (単発 PUT は最大 5 GB。100 MB 超ならマルチパート推奨)"
+    }
+  },
+  {
+    "name": "PutObjectAcl",
+    "service": "s3",
+    "category": "Access control",
+    "method": "PUT",
+    "description": {
+      "en": "Uses the acl subresource to set the access control list (ACL) permissions for a new or existing object in an S3 bucket.",
+      "ja": "オブジェクト ACL を設定する"
+    }
+  },
+  {
+    "name": "PutObjectAnnotation",
+    "service": "s3",
+    "category": "Object annotations",
+    "method": "PUT",
+    "description": {
+      "en": "Attaches an annotation to an Amazon S3 object.",
+      "ja": "オブジェクト (またはバージョン) に 1 B〜1 MiB の名前付きアノテーションを付ける (1 オブジェクト最大 1,000 個)"
+    }
+  },
+  {
+    "name": "PutObjectLegalHold",
+    "service": "s3",
+    "category": "Object Lock",
+    "method": "PUT",
+    "description": {
+      "en": "Applies a legal hold configuration to the specified object.",
+      "ja": "オブジェクトバージョンのリーガルホールドを ON / OFF する"
+    }
+  },
+  {
+    "name": "PutObjectLockConfiguration",
+    "service": "s3",
+    "category": "Object Lock",
+    "method": "PUT",
+    "description": {
+      "en": "Places an Object Lock configuration on the specified bucket.",
+      "ja": "バケットの Object Lock とデフォルト保持 (GOVERNANCE / COMPLIANCE) を設定する"
+    }
+  },
+  {
+    "name": "PutObjectRetention",
+    "service": "s3",
+    "category": "Object Lock",
+    "method": "PUT",
+    "description": {
+      "en": "Places an Object Retention configuration on an object.",
+      "ja": "オブジェクトバージョンに保持期限 (Retain Until Date) を設定する"
+    }
+  },
+  {
+    "name": "PutObjectTagging",
+    "service": "s3",
+    "category": "Tagging",
+    "method": "PUT",
+    "description": {
+      "en": "Sets the supplied tag-set to an object that already exists in a bucket.",
+      "ja": "オブジェクトのタグセット (最大 10 個) を置換する"
+    }
+  },
+  {
+    "name": "PutPublicAccessBlock",
+    "service": "s3",
+    "category": "Access control",
+    "method": "PUT",
+    "description": {
+      "en": "Creates or modifies the PublicAccessBlock configuration for an Amazon S3 bucket.",
+      "ja": "バケット単位のブロックパブリックアクセス 4 設定を作成 / 変更する"
+    }
+  },
+  {
+    "name": "RenameObject",
+    "service": "s3",
+    "category": "Object",
+    "method": "PUT",
+    "description": {
+      "en": "Renames an existing object in a directory bucket that uses the S3 Express One Zone storage class.",
+      "ja": "S3 Express One Zone のディレクトリバケット内でオブジェクトをアトミックにリネームする"
+    }
+  },
+  {
+    "name": "RestoreObject",
+    "service": "s3",
+    "category": "Object",
+    "method": "POST",
+    "description": {
+      "en": "Restores a temporary copy of an archived object.",
+      "ja": "Glacier 系にアーカイブされたオブジェクトの一時コピーを復元する"
+    }
+  },
+  {
+    "name": "SelectObjectContent",
+    "service": "s3",
+    "category": "Object",
+    "method": "POST",
+    "description": {
+      "en": "Filters the contents of an object using a simple SQL statement (no longer available to new customers).",
+      "ja": "CSV / JSON / Parquet オブジェクトに SQL を投げてサーバー側でフィルタする (新規顧客には提供終了)"
+    }
+  },
+  {
+    "name": "UpdateBucketMetadataAnnotationTableConfiguration",
+    "service": "s3",
+    "category": "S3 Metadata",
+    "method": "PUT",
+    "description": {
+      "en": "Updates the annotation table configuration for an Amazon S3 bucket's metadata configuration.",
+      "ja": "アノテーションテーブル (アノテーションの Iceberg テーブル) を有効 / 無効化、IAM ロールを更新する"
+    }
+  },
+  {
+    "name": "UpdateBucketMetadataInventoryTableConfiguration",
+    "service": "s3",
+    "category": "S3 Metadata",
+    "method": "PUT",
+    "description": {
+      "en": "Enables or disables a live inventory table for an S3 Metadata configuration on a general purpose bucket.",
+      "ja": "ライブインベントリテーブルを有効 / 無効化する"
+    }
+  },
+  {
+    "name": "UpdateBucketMetadataJournalTableConfiguration",
+    "service": "s3",
+    "category": "S3 Metadata",
+    "method": "PUT",
+    "description": {
+      "en": "Enables or disables journal table record expiration for an S3 Metadata configuration on a general purpose bucket.",
+      "ja": "ジャーナルテーブルのレコード失効を有効 / 無効化する"
+    }
+  },
+  {
+    "name": "UpdateObjectEncryption",
+    "service": "s3",
+    "category": "Encryption",
+    "method": "PUT",
+    "description": {
+      "en": "Updates the server-side encryption type of an existing encrypted object in a general purpose bucket.",
+      "ja": "既存オブジェクトの SSE 種別 (SSE-S3 → SSE-KMS、KMS キー変更、Bucket Key 適用) をデータ移動なしで更新する"
+    }
+  },
+  {
+    "name": "UploadPart",
+    "service": "s3",
+    "category": "Multipart upload",
+    "method": "PUT",
+    "description": {
+      "en": "Uploads a part in a multipart upload.",
+      "ja": "パート (5 MiB〜5 GiB、最終パートのみ小さくて可) を 1 つアップロードする"
+    }
+  },
+  {
+    "name": "UploadPartCopy",
+    "service": "s3",
+    "category": "Multipart upload",
+    "method": "PUT",
+    "description": {
+      "en": "Uploads a part by copying data from an existing object as data source.",
+      "ja": "既存オブジェクトのバイト範囲をパートとしてコピーする"
+    }
+  },
+  {
+    "name": "WriteGetObjectResponse",
+    "service": "s3",
+    "category": "Object Lambda",
+    "method": "POST",
+    "description": {
+      "en": "Passes transformed objects to a GetObject operation when using Object Lambda access points.",
+      "ja": "Object Lambda の関数から、変換済みのレスポンスを GetObject の呼び出し元に返す"
+    }
+  },
+  {
+    "name": "AssociateAccessGrantsIdentityCenter",
+    "service": "s3control",
+    "category": "Access Grants",
+    "method": "POST",
+    "description": {
+      "en": "Associate your S3 Access Grants instance with an Amazon Web Services IAM Identity Center instance.",
+      "ja": "Access Grants インスタンスを IAM Identity Center と関連付ける"
+    }
+  },
+  {
+    "name": "CreateAccessGrant",
+    "service": "s3control",
+    "category": "Access Grants",
+    "method": "POST",
+    "description": {
+      "en": "Creates an access grant that gives a grantee access to your S3 data.",
+      "ja": "グランティー (IAM / Identity Center のユーザー・グループ) に READ / WRITE / READWRITE を付与する"
+    }
+  },
+  {
+    "name": "CreateAccessGrantsInstance",
+    "service": "s3control",
+    "category": "Access Grants",
+    "method": "POST",
+    "description": {
+      "en": "Creates an S3 Access Grants instance, which serves as a logical grouping for access grants.",
+      "ja": "S3 Access Grants インスタンスを作成する"
+    }
+  },
+  {
+    "name": "CreateAccessGrantsLocation",
+    "service": "s3control",
+    "category": "Access Grants",
+    "method": "POST",
+    "description": {
+      "en": "Registers an S3 data location in your S3 Access Grants instance.",
+      "ja": "S3 のロケーション (バケット / プレフィックス) を IAM ロール付きで登録する"
+    }
+  },
+  {
+    "name": "CreateAccessPoint",
+    "service": "s3control",
+    "category": "Access points",
+    "method": "PUT",
+    "description": {
+      "en": "Creates an access point and associates it to a specified bucket.",
+      "ja": "アクセスポイントを作成しバケットに紐付ける (汎用 / ディレクトリバケット)"
+    }
+  },
+  {
+    "name": "CreateAccessPointForObjectLambda",
+    "service": "s3control",
+    "category": "Object Lambda",
+    "method": "PUT",
+    "description": {
+      "en": "Creates an Object Lambda Access Point.",
+      "ja": "Object Lambda アクセスポイントを作成する"
+    }
+  },
+  {
+    "name": "CreateBucket",
+    "service": "s3control",
+    "category": "S3 on Outposts buckets",
+    "method": "PUT",
+    "description": {
+      "en": "Creates a new Outposts bucket.",
+      "ja": "Outposts バケットを作成する"
+    }
+  },
+  {
+    "name": "CreateJob",
+    "service": "s3control",
+    "category": "Batch Operations",
+    "method": "POST",
+    "description": {
+      "en": "Creates an S3 Batch Operations job.",
+      "ja": "S3 Batch Operations ジョブを作成する"
+    }
+  },
+  {
+    "name": "CreateMultiRegionAccessPoint",
+    "service": "s3control",
+    "category": "Multi-Region Access Points",
+    "method": "POST",
+    "description": {
+      "en": "Creates a Multi-Region Access Point and associates it with the specified buckets.",
+      "ja": "Multi-Region Access Point を作成する (非同期)"
+    }
+  },
+  {
+    "name": "CreateStorageLensGroup",
+    "service": "s3control",
+    "category": "Storage Lens",
+    "method": "POST",
+    "description": {
+      "en": "Creates a new S3 Storage Lens group.",
+      "ja": "Storage Lens グループ (プレフィックス / タグ / サイズ等でまとめたオブジェクト群) を作成する"
+    }
+  },
+  {
+    "name": "DeleteAccessGrant",
+    "service": "s3control",
+    "category": "Access Grants",
+    "method": "DELETE",
+    "description": {
+      "en": "Deletes the access grant from the S3 Access Grants instance.",
+      "ja": "アクセスグラントを削除する"
+    }
+  },
+  {
+    "name": "DeleteAccessGrantsInstance",
+    "service": "s3control",
+    "category": "Access Grants",
+    "method": "DELETE",
+    "description": {
+      "en": "Deletes your S3 Access Grants instance.",
+      "ja": "Access Grants インスタンスを削除する"
+    }
+  },
+  {
+    "name": "DeleteAccessGrantsInstanceResourcePolicy",
+    "service": "s3control",
+    "category": "Access Grants",
+    "method": "DELETE",
+    "description": {
+      "en": "Deletes the resource policy of the S3 Access Grants instance.",
+      "ja": "Access Grants インスタンスのリソースポリシーを削除する"
+    }
+  },
+  {
+    "name": "DeleteAccessGrantsLocation",
+    "service": "s3control",
+    "category": "Access Grants",
+    "method": "DELETE",
+    "description": {
+      "en": "Deregisters a location from your S3 Access Grants instance.",
+      "ja": "登録ロケーションを解除する"
+    }
+  },
+  {
+    "name": "DeleteAccessPoint",
+    "service": "s3control",
+    "category": "Access points",
+    "method": "DELETE",
+    "description": {
+      "en": "Deletes the specified access point.",
+      "ja": "アクセスポイントを削除する"
+    }
+  },
+  {
+    "name": "DeleteAccessPointForObjectLambda",
+    "service": "s3control",
+    "category": "Object Lambda",
+    "method": "DELETE",
+    "description": {
+      "en": "Deletes the specified Object Lambda Access Point.",
+      "ja": "Object Lambda アクセスポイントを削除する"
+    }
+  },
+  {
+    "name": "DeleteAccessPointPolicy",
+    "service": "s3control",
+    "category": "Access points",
+    "method": "DELETE",
+    "description": {
+      "en": "Deletes the access point policy for the specified access point.",
+      "ja": "アクセスポイントポリシーを削除する"
+    }
+  },
+  {
+    "name": "DeleteAccessPointPolicyForObjectLambda",
+    "service": "s3control",
+    "category": "Object Lambda",
+    "method": "DELETE",
+    "description": {
+      "en": "Removes the resource policy for an Object Lambda Access Point.",
+      "ja": "Object Lambda アクセスポイントのポリシーを削除する"
+    }
+  },
+  {
+    "name": "DeleteAccessPointScope",
+    "service": "s3control",
+    "category": "Access points",
+    "method": "DELETE",
+    "description": {
+      "en": "Deletes an existing access point scope for a directory bucket.",
+      "ja": "ディレクトリバケット用アクセスポイントのスコープを削除する"
+    }
+  },
+  {
+    "name": "DeleteBucket",
+    "service": "s3control",
+    "category": "S3 on Outposts buckets",
+    "method": "DELETE",
+    "description": {
+      "en": "Deletes the Amazon S3 on Outposts bucket.",
+      "ja": "Outposts バケットを削除する"
+    }
+  },
+  {
+    "name": "DeleteBucketLifecycleConfiguration",
+    "service": "s3control",
+    "category": "S3 on Outposts buckets",
+    "method": "DELETE",
+    "description": {
+      "en": "Deletes the lifecycle configuration from the specified Outposts bucket.",
+      "ja": "Outposts バケットのライフサイクルを削除する"
+    }
+  },
+  {
+    "name": "DeleteBucketPolicy",
+    "service": "s3control",
+    "category": "S3 on Outposts buckets",
+    "method": "DELETE",
+    "description": {
+      "en": "Deletes the policy of an S3 on Outposts bucket.",
+      "ja": "Outposts バケットのポリシーを削除する"
+    }
+  },
+  {
+    "name": "DeleteBucketReplication",
+    "service": "s3control",
+    "category": "S3 on Outposts buckets",
+    "method": "DELETE",
+    "description": {
+      "en": "Deletes the replication configuration from the specified S3 on Outposts bucket.",
+      "ja": "Outposts バケットのレプリケーションを削除する"
+    }
+  },
+  {
+    "name": "DeleteBucketTagging",
+    "service": "s3control",
+    "category": "S3 on Outposts buckets",
+    "method": "DELETE",
+    "description": {
+      "en": "Deletes the tags from the Outposts bucket.",
+      "ja": "Outposts バケットのタグを削除する"
+    }
+  },
+  {
+    "name": "DeleteJobTagging",
+    "service": "s3control",
+    "category": "Batch Operations",
+    "method": "DELETE",
+    "description": {
+      "en": "Removes the entire tag set from the specified S3 Batch Operations job.",
+      "ja": "ジョブのタグを削除する"
+    }
+  },
+  {
+    "name": "DeleteMultiRegionAccessPoint",
+    "service": "s3control",
+    "category": "Multi-Region Access Points",
+    "method": "POST",
+    "description": {
+      "en": "Deletes a Multi-Region Access Point.",
+      "ja": "Multi-Region Access Point を削除する (非同期)"
+    }
+  },
+  {
+    "name": "DeletePublicAccessBlock",
+    "service": "s3control",
+    "category": "Account settings",
+    "method": "DELETE",
+    "description": {
+      "en": "Removes the PublicAccessBlock configuration for an Amazon Web Services account.",
+      "ja": "アカウント単位のブロックパブリックアクセスを削除する"
+    }
+  },
+  {
+    "name": "DeleteStorageLensConfiguration",
+    "service": "s3control",
+    "category": "Storage Lens",
+    "method": "DELETE",
+    "description": {
+      "en": "Deletes the Amazon S3 Storage Lens configuration.",
+      "ja": "Storage Lens 設定を削除する"
+    }
+  },
+  {
+    "name": "DeleteStorageLensConfigurationTagging",
+    "service": "s3control",
+    "category": "Storage Lens",
+    "method": "DELETE",
+    "description": {
+      "en": "Deletes the Amazon S3 Storage Lens configuration tags.",
+      "ja": "Storage Lens 設定のタグを削除する"
+    }
+  },
+  {
+    "name": "DeleteStorageLensGroup",
+    "service": "s3control",
+    "category": "Storage Lens",
+    "method": "DELETE",
+    "description": {
+      "en": "Deletes an existing S3 Storage Lens group.",
+      "ja": "Storage Lens グループを削除する"
+    }
+  },
+  {
+    "name": "DescribeJob",
+    "service": "s3control",
+    "category": "Batch Operations",
+    "method": "GET",
+    "description": {
+      "en": "Retrieves the configuration parameters and status for a Batch Operations job.",
+      "ja": "ジョブの設定と状態を取得する"
+    }
+  },
+  {
+    "name": "DescribeMultiRegionAccessPointOperation",
+    "service": "s3control",
+    "category": "Multi-Region Access Points",
+    "method": "GET",
+    "description": {
+      "en": "Retrieves the status of an asynchronous request to manage a Multi-Region Access Point.",
+      "ja": "MRAP の非同期操作の状態を取得する"
+    }
+  },
+  {
+    "name": "DissociateAccessGrantsIdentityCenter",
+    "service": "s3control",
+    "category": "Access Grants",
+    "method": "DELETE",
+    "description": {
+      "en": "Dissociates the Amazon Web Services IAM Identity Center instance from the S3 Access Grants instance.",
+      "ja": "IAM Identity Center との関連付けを解除する"
+    }
+  },
+  {
+    "name": "GetAccessGrant",
+    "service": "s3control",
+    "category": "Access Grants",
+    "method": "GET",
+    "description": {
+      "en": "Get the details of an access grant from your S3 Access Grants instance.",
+      "ja": "アクセスグラントの詳細を取得する"
+    }
+  },
+  {
+    "name": "GetAccessGrantsInstance",
+    "service": "s3control",
+    "category": "Access Grants",
+    "method": "GET",
+    "description": {
+      "en": "Retrieves the S3 Access Grants instance for a Region in your account.",
+      "ja": "Region の Access Grants インスタンスを取得する"
+    }
+  },
+  {
+    "name": "GetAccessGrantsInstanceForPrefix",
+    "service": "s3control",
+    "category": "Access Grants",
+    "method": "GET",
+    "description": {
+      "en": "Retrieve the S3 Access Grants instance that contains a particular prefix.",
+      "ja": "指定プレフィックスを含む Access Grants インスタンスを取得する"
+    }
+  },
+  {
+    "name": "GetAccessGrantsInstanceResourcePolicy",
+    "service": "s3control",
+    "category": "Access Grants",
+    "method": "GET",
+    "description": {
+      "en": "Returns the resource policy of the S3 Access Grants instance.",
+      "ja": "Access Grants インスタンスのリソースポリシーを取得する"
+    }
+  },
+  {
+    "name": "GetAccessGrantsLocation",
+    "service": "s3control",
+    "category": "Access Grants",
+    "method": "GET",
+    "description": {
+      "en": "Retrieves the details of a particular location registered in your S3 Access Grants instance.",
+      "ja": "登録ロケーションの詳細を取得する"
+    }
+  },
+  {
+    "name": "GetAccessPoint",
+    "service": "s3control",
+    "category": "Access points",
+    "method": "GET",
+    "description": {
+      "en": "Returns configuration information about the specified access point.",
+      "ja": "アクセスポイントの設定を取得する"
+    }
+  },
+  {
+    "name": "GetAccessPointConfigurationForObjectLambda",
+    "service": "s3control",
+    "category": "Object Lambda",
+    "method": "GET",
+    "description": {
+      "en": "Returns configuration for an Object Lambda Access Point.",
+      "ja": "Object Lambda アクセスポイントの変換設定を取得する"
+    }
+  },
+  {
+    "name": "GetAccessPointForObjectLambda",
+    "service": "s3control",
+    "category": "Object Lambda",
+    "method": "GET",
+    "description": {
+      "en": "Returns configuration information about the specified Object Lambda Access Point.",
+      "ja": "Object Lambda アクセスポイント情報を取得する"
+    }
+  },
+  {
+    "name": "GetAccessPointPolicy",
+    "service": "s3control",
+    "category": "Access points",
+    "method": "GET",
+    "description": {
+      "en": "Returns the access point policy associated with the specified access point.",
+      "ja": "アクセスポイントポリシーを取得する"
+    }
+  },
+  {
+    "name": "GetAccessPointPolicyForObjectLambda",
+    "service": "s3control",
+    "category": "Object Lambda",
+    "method": "GET",
+    "description": {
+      "en": "Returns the resource policy for an Object Lambda Access Point.",
+      "ja": "Object Lambda アクセスポイントのポリシーを取得する"
+    }
+  },
+  {
+    "name": "GetAccessPointPolicyStatus",
+    "service": "s3control",
+    "category": "Access points",
+    "method": "GET",
+    "description": {
+      "en": "Indicates whether the specified access point currently has a policy that allows public access.",
+      "ja": "アクセスポイントポリシーがパブリックか判定する"
+    }
+  },
+  {
+    "name": "GetAccessPointPolicyStatusForObjectLambda",
+    "service": "s3control",
+    "category": "Object Lambda",
+    "method": "GET",
+    "description": {
+      "en": "Returns the status of the resource policy associated with an Object Lambda Access Point.",
+      "ja": "Object Lambda アクセスポイントポリシーのパブリック判定を取得する"
+    }
+  },
+  {
+    "name": "GetAccessPointScope",
+    "service": "s3control",
+    "category": "Access points",
+    "method": "GET",
+    "description": {
+      "en": "Returns the access point scope for a directory bucket.",
+      "ja": "ディレクトリバケット用アクセスポイントのスコープを取得する"
+    }
+  },
+  {
+    "name": "GetBucket",
+    "service": "s3control",
+    "category": "S3 on Outposts buckets",
+    "method": "GET",
+    "description": {
+      "en": "Gets an Amazon S3 on Outposts bucket.",
+      "ja": "Outposts バケットを取得する"
+    }
+  },
+  {
+    "name": "GetBucketLifecycleConfiguration",
+    "service": "s3control",
+    "category": "S3 on Outposts buckets",
+    "method": "GET",
+    "description": {
+      "en": "Returns the lifecycle configuration information set on the Outposts bucket.",
+      "ja": "Outposts バケットのライフサイクルを取得する"
+    }
+  },
+  {
+    "name": "GetBucketPolicy",
+    "service": "s3control",
+    "category": "S3 on Outposts buckets",
+    "method": "GET",
+    "description": {
+      "en": "Returns the policy of a specified Outposts bucket.",
+      "ja": "Outposts バケットのポリシーを取得する"
+    }
+  },
+  {
+    "name": "GetBucketReplication",
+    "service": "s3control",
+    "category": "S3 on Outposts buckets",
+    "method": "GET",
+    "description": {
+      "en": "Returns the replication configuration of an S3 on Outposts bucket.",
+      "ja": "Outposts バケットのレプリケーションを取得する"
+    }
+  },
+  {
+    "name": "GetBucketTagging",
+    "service": "s3control",
+    "category": "S3 on Outposts buckets",
+    "method": "GET",
+    "description": {
+      "en": "Returns the tag set associated with the Outposts bucket.",
+      "ja": "Outposts バケットのタグを取得する"
+    }
+  },
+  {
+    "name": "GetBucketVersioning",
+    "service": "s3control",
+    "category": "S3 on Outposts buckets",
+    "method": "GET",
+    "description": {
+      "en": "Returns the versioning state for an S3 on Outposts bucket.",
+      "ja": "Outposts バケットのバージョニング状態を取得する"
+    }
+  },
+  {
+    "name": "GetDataAccess",
+    "service": "s3control",
+    "category": "Access Grants",
+    "method": "GET",
+    "description": {
+      "en": "Returns a temporary access credential from S3 Access Grants to the grantee or client application.",
+      "ja": "グラントに基づく一時認証情報 (STS トークン) を払い出す"
+    }
+  },
+  {
+    "name": "GetJobTagging",
+    "service": "s3control",
+    "category": "Batch Operations",
+    "method": "GET",
+    "description": {
+      "en": "Returns the tags on an S3 Batch Operations job.",
+      "ja": "ジョブのタグを取得する"
+    }
+  },
+  {
+    "name": "GetMultiRegionAccessPoint",
+    "service": "s3control",
+    "category": "Multi-Region Access Points",
+    "method": "GET",
+    "description": {
+      "en": "Returns configuration information about the specified Multi-Region Access Point.",
+      "ja": "MRAP の設定を取得する"
+    }
+  },
+  {
+    "name": "GetMultiRegionAccessPointPolicy",
+    "service": "s3control",
+    "category": "Multi-Region Access Points",
+    "method": "GET",
+    "description": {
+      "en": "Returns the access control policy of the specified Multi-Region Access Point.",
+      "ja": "MRAP のポリシーを取得する"
+    }
+  },
+  {
+    "name": "GetMultiRegionAccessPointPolicyStatus",
+    "service": "s3control",
+    "category": "Multi-Region Access Points",
+    "method": "GET",
+    "description": {
+      "en": "Indicates whether the specified Multi-Region Access Point has an access control policy that allows public access.",
+      "ja": "MRAP ポリシーのパブリック判定を取得する"
+    }
+  },
+  {
+    "name": "GetMultiRegionAccessPointRoutes",
+    "service": "s3control",
+    "category": "Multi-Region Access Points",
+    "method": "GET",
+    "description": {
+      "en": "Returns the routing configuration for a Multi-Region Access Point, indicating which Regions are active or passive.",
+      "ja": "MRAP のルーティング (どの Region が active / passive か) を取得する"
+    }
+  },
+  {
+    "name": "GetPublicAccessBlock",
+    "service": "s3control",
+    "category": "Account settings",
+    "method": "GET",
+    "description": {
+      "en": "Retrieves the PublicAccessBlock configuration for an Amazon Web Services account.",
+      "ja": "アカウント単位のブロックパブリックアクセスを取得する"
+    }
+  },
+  {
+    "name": "GetStorageLensConfiguration",
+    "service": "s3control",
+    "category": "Storage Lens",
+    "method": "GET",
+    "description": {
+      "en": "Gets the Amazon S3 Storage Lens configuration.",
+      "ja": "Storage Lens 設定を取得する"
+    }
+  },
+  {
+    "name": "GetStorageLensConfigurationTagging",
+    "service": "s3control",
+    "category": "Storage Lens",
+    "method": "GET",
+    "description": {
+      "en": "Gets the tags of Amazon S3 Storage Lens configuration.",
+      "ja": "Storage Lens 設定のタグを取得する"
+    }
+  },
+  {
+    "name": "GetStorageLensGroup",
+    "service": "s3control",
+    "category": "Storage Lens",
+    "method": "GET",
+    "description": {
+      "en": "Retrieves the Storage Lens group configuration details.",
+      "ja": "Storage Lens グループを取得する"
+    }
+  },
+  {
+    "name": "ListAccessGrants",
+    "service": "s3control",
+    "category": "Access Grants",
+    "method": "GET",
+    "description": {
+      "en": "Returns the list of access grants in your S3 Access Grants instance.",
+      "ja": "アクセスグラントを列挙する"
+    }
+  },
+  {
+    "name": "ListAccessGrantsInstances",
+    "service": "s3control",
+    "category": "Access Grants",
+    "method": "GET",
+    "description": {
+      "en": "Returns a list of S3 Access Grants instances.",
+      "ja": "Access Grants インスタンスを列挙する"
+    }
+  },
+  {
+    "name": "ListAccessGrantsLocations",
+    "service": "s3control",
+    "category": "Access Grants",
+    "method": "GET",
+    "description": {
+      "en": "Returns a list of the locations registered in your S3 Access Grants instance.",
+      "ja": "登録ロケーションを列挙する"
+    }
+  },
+  {
+    "name": "ListAccessPoints",
+    "service": "s3control",
+    "category": "Access points",
+    "method": "GET",
+    "description": {
+      "en": "Returns a list of the access points.",
+      "ja": "汎用バケットのアクセスポイントを列挙する"
+    }
+  },
+  {
+    "name": "ListAccessPointsForDirectoryBuckets",
+    "service": "s3control",
+    "category": "Access points",
+    "method": "GET",
+    "description": {
+      "en": "Returns the access points associated with the specified directory bucket.",
+      "ja": "ディレクトリバケットのアクセスポイントを列挙する"
+    }
+  },
+  {
+    "name": "ListAccessPointsForObjectLambda",
+    "service": "s3control",
+    "category": "Object Lambda",
+    "method": "GET",
+    "description": {
+      "en": "Returns some or all (up to 1,000) access points associated with the Object Lambda Access Point per call.",
+      "ja": "Object Lambda アクセスポイントを列挙する"
+    }
+  },
+  {
+    "name": "ListCallerAccessGrants",
+    "service": "s3control",
+    "category": "Access Grants",
+    "method": "GET",
+    "description": {
+      "en": "Lists the access grants that grant the caller access to S3 data through S3 Access Grants.",
+      "ja": "呼び出し元に効いているアクセスグラントを列挙する"
+    }
+  },
+  {
+    "name": "ListJobs",
+    "service": "s3control",
+    "category": "Batch Operations",
+    "method": "GET",
+    "description": {
+      "en": "Lists current S3 Batch Operations jobs and jobs that ended within the last 90 days.",
+      "ja": "ジョブを列挙する (終了後 90 日以内のものを含む)"
+    }
+  },
+  {
+    "name": "ListMultiRegionAccessPoints",
+    "service": "s3control",
+    "category": "Multi-Region Access Points",
+    "method": "GET",
+    "description": {
+      "en": "Returns a list of the Multi-Region Access Points currently associated with the specified Amazon Web Services account.",
+      "ja": "MRAP を列挙する"
+    }
+  },
+  {
+    "name": "ListRegionalBuckets",
+    "service": "s3control",
+    "category": "S3 on Outposts buckets",
+    "method": "GET",
+    "description": {
+      "en": "Returns a list of all Outposts buckets in an Outpost that are owned by the authenticated sender of the request.",
+      "ja": "Outpost 上のバケットを列挙する"
+    }
+  },
+  {
+    "name": "ListStorageLensConfigurations",
+    "service": "s3control",
+    "category": "Storage Lens",
+    "method": "GET",
+    "description": {
+      "en": "Gets a list of Amazon S3 Storage Lens configurations.",
+      "ja": "Storage Lens 設定を列挙する"
+    }
+  },
+  {
+    "name": "ListStorageLensGroups",
+    "service": "s3control",
+    "category": "Storage Lens",
+    "method": "GET",
+    "description": {
+      "en": "Lists all the Storage Lens groups in the specified home Region.",
+      "ja": "Storage Lens グループを列挙する"
+    }
+  },
+  {
+    "name": "ListTagsForResource",
+    "service": "s3control",
+    "category": "Tagging",
+    "method": "GET",
+    "description": {
+      "en": "Lists all of the tags for a specified resource.",
+      "ja": "S3 リソースのタグを列挙する"
+    }
+  },
+  {
+    "name": "PutAccessGrantsInstanceResourcePolicy",
+    "service": "s3control",
+    "category": "Access Grants",
+    "method": "PUT",
+    "description": {
+      "en": "Updates the resource policy of the S3 Access Grants instance.",
+      "ja": "Access Grants インスタンスのリソースポリシーを設定する"
+    }
+  },
+  {
+    "name": "PutAccessPointConfigurationForObjectLambda",
+    "service": "s3control",
+    "category": "Object Lambda",
+    "method": "PUT",
+    "description": {
+      "en": "Replaces configuration for an Object Lambda Access Point.",
+      "ja": "Object Lambda アクセスポイントの変換設定を置換する"
+    }
+  },
+  {
+    "name": "PutAccessPointPolicy",
+    "service": "s3control",
+    "category": "Access points",
+    "method": "PUT",
+    "description": {
+      "en": "Associates an access policy with the specified access point.",
+      "ja": "アクセスポイントポリシーを設定する"
+    }
+  },
+  {
+    "name": "PutAccessPointPolicyForObjectLambda",
+    "service": "s3control",
+    "category": "Object Lambda",
+    "method": "PUT",
+    "description": {
+      "en": "Creates or replaces resource policy for an Object Lambda Access Point.",
+      "ja": "Object Lambda アクセスポイントのポリシーを設定する"
+    }
+  },
+  {
+    "name": "PutAccessPointScope",
+    "service": "s3control",
+    "category": "Access points",
+    "method": "PUT",
+    "description": {
+      "en": "Creates or replaces the access point scope for a directory bucket.",
+      "ja": "ディレクトリバケット用アクセスポイントのスコープ (プレフィックス / 許可 API) を設定する"
+    }
+  },
+  {
+    "name": "PutBucketLifecycleConfiguration",
+    "service": "s3control",
+    "category": "S3 on Outposts buckets",
+    "method": "PUT",
+    "description": {
+      "en": "Creates a new lifecycle configuration for the S3 on Outposts bucket or replaces an existing lifecycle configuration.",
+      "ja": "Outposts バケットのライフサイクルを設定する"
+    }
+  },
+  {
+    "name": "PutBucketPolicy",
+    "service": "s3control",
+    "category": "S3 on Outposts buckets",
+    "method": "PUT",
+    "description": {
+      "en": "Applies an Amazon S3 bucket policy to an Outposts bucket.",
+      "ja": "Outposts バケットのポリシーを設定する"
+    }
+  },
+  {
+    "name": "PutBucketReplication",
+    "service": "s3control",
+    "category": "S3 on Outposts buckets",
+    "method": "PUT",
+    "description": {
+      "en": "Creates a replication configuration or replaces an existing one.",
+      "ja": "Outposts バケットのレプリケーションを設定する"
+    }
+  },
+  {
+    "name": "PutBucketTagging",
+    "service": "s3control",
+    "category": "S3 on Outposts buckets",
+    "method": "PUT",
+    "description": {
+      "en": "Sets the tags for an S3 on Outposts bucket.",
+      "ja": "Outposts バケットのタグを設定する"
+    }
+  },
+  {
+    "name": "PutBucketVersioning",
+    "service": "s3control",
+    "category": "S3 on Outposts buckets",
+    "method": "PUT",
+    "description": {
+      "en": "Sets the versioning state for an S3 on Outposts bucket.",
+      "ja": "Outposts バケットのバージョニングを設定する"
+    }
+  },
+  {
+    "name": "PutJobTagging",
+    "service": "s3control",
+    "category": "Batch Operations",
+    "method": "PUT",
+    "description": {
+      "en": "Sets the supplied tag-set on an S3 Batch Operations job.",
+      "ja": "ジョブのタグを設定する"
+    }
+  },
+  {
+    "name": "PutMultiRegionAccessPointPolicy",
+    "service": "s3control",
+    "category": "Multi-Region Access Points",
+    "method": "POST",
+    "description": {
+      "en": "Associates an access control policy with the specified Multi-Region Access Point.",
+      "ja": "MRAP のポリシーを設定する (非同期)"
+    }
+  },
+  {
+    "name": "PutPublicAccessBlock",
+    "service": "s3control",
+    "category": "Account settings",
+    "method": "PUT",
+    "description": {
+      "en": "Creates or modifies the PublicAccessBlock configuration for an Amazon Web Services account.",
+      "ja": "アカウント単位のブロックパブリックアクセスを設定する"
+    }
+  },
+  {
+    "name": "PutStorageLensConfiguration",
+    "service": "s3control",
+    "category": "Storage Lens",
+    "method": "PUT",
+    "description": {
+      "en": "Puts an Amazon S3 Storage Lens configuration.",
+      "ja": "Storage Lens ダッシュボード設定を作成 / 置換する"
+    }
+  },
+  {
+    "name": "PutStorageLensConfigurationTagging",
+    "service": "s3control",
+    "category": "Storage Lens",
+    "method": "PUT",
+    "description": {
+      "en": "Put or replace tags on an existing Amazon S3 Storage Lens configuration.",
+      "ja": "Storage Lens 設定のタグを設定する"
+    }
+  },
+  {
+    "name": "SubmitMultiRegionAccessPointRoutes",
+    "service": "s3control",
+    "category": "Multi-Region Access Points",
+    "method": "PATCH",
+    "description": {
+      "en": "Submits an updated route configuration for a Multi-Region Access Point.",
+      "ja": "MRAP のルーティングを更新する (フェイルオーバー)"
+    }
+  },
+  {
+    "name": "TagResource",
+    "service": "s3control",
+    "category": "Tagging",
+    "method": "POST",
+    "description": {
+      "en": "Creates a new user-defined tag or updates an existing tag on an S3 resource.",
+      "ja": "S3 リソース (汎用バケット、Storage Lens グループ、Access Grants 等) にタグを付ける"
+    }
+  },
+  {
+    "name": "UntagResource",
+    "service": "s3control",
+    "category": "Tagging",
+    "method": "DELETE",
+    "description": {
+      "en": "Removes the specified user-defined tags from an S3 resource.",
+      "ja": "S3 リソースからタグを外す"
+    }
+  },
+  {
+    "name": "UpdateAccessGrantsLocation",
+    "service": "s3control",
+    "category": "Access Grants",
+    "method": "PUT",
+    "description": {
+      "en": "Updates the IAM role of a registered location in your S3 Access Grants instance.",
+      "ja": "登録ロケーションの IAM ロールを変更する"
+    }
+  },
+  {
+    "name": "UpdateJobPriority",
+    "service": "s3control",
+    "category": "Batch Operations",
+    "method": "POST",
+    "description": {
+      "en": "Updates an existing S3 Batch Operations job's priority.",
+      "ja": "ジョブの優先度を変更する"
+    }
+  },
+  {
+    "name": "UpdateJobStatus",
+    "service": "s3control",
+    "category": "Batch Operations",
+    "method": "POST",
+    "description": {
+      "en": "Updates the status for the specified job.",
+      "ja": "ジョブを確認 (Ready) / キャンセルする"
+    }
+  },
+  {
+    "name": "UpdateStorageLensGroup",
+    "service": "s3control",
+    "category": "Storage Lens",
+    "method": "PUT",
+    "description": {
+      "en": "Updates the existing Storage Lens group.",
+      "ja": "Storage Lens グループを更新する"
+    }
+  },
+  {
+    "name": "CreateNamespace",
+    "service": "s3tables",
+    "category": "Namespaces",
+    "method": "PUT",
+    "description": {
+      "en": "Creates a namespace.",
+      "ja": "テーブルバケット内に名前空間 (テーブルの論理グループ) を作る"
+    }
+  },
+  {
+    "name": "CreateTable",
+    "service": "s3tables",
+    "category": "Tables",
+    "method": "PUT",
+    "description": {
+      "en": "Creates a new table associated with the given namespace in a table bucket.",
+      "ja": "名前空間に Iceberg テーブルを作成する"
+    }
+  },
+  {
+    "name": "CreateTableBucket",
+    "service": "s3tables",
+    "category": "Table buckets",
+    "method": "PUT",
+    "description": {
+      "en": "Creates a table bucket.",
+      "ja": "テーブルバケットを作成する"
+    }
+  },
+  {
+    "name": "DeleteNamespace",
+    "service": "s3tables",
+    "category": "Namespaces",
+    "method": "DELETE",
+    "description": {
+      "en": "Deletes a namespace.",
+      "ja": "名前空間を削除する"
+    }
+  },
+  {
+    "name": "DeleteTable",
+    "service": "s3tables",
+    "category": "Tables",
+    "method": "DELETE",
+    "description": {
+      "en": "Deletes a table.",
+      "ja": "テーブルを削除する"
+    }
+  },
+  {
+    "name": "DeleteTableBucket",
+    "service": "s3tables",
+    "category": "Table buckets",
+    "method": "DELETE",
+    "description": {
+      "en": "Deletes a table bucket.",
+      "ja": "テーブルバケットを削除する"
+    }
+  },
+  {
+    "name": "DeleteTableBucketEncryption",
+    "service": "s3tables",
+    "category": "Encryption",
+    "method": "DELETE",
+    "description": {
+      "en": "Deletes the encryption configuration for a table bucket.",
+      "ja": "テーブルバケットの暗号化設定を削除する"
+    }
+  },
+  {
+    "name": "DeleteTableBucketMetricsConfiguration",
+    "service": "s3tables",
+    "category": "Metrics",
+    "method": "DELETE",
+    "description": {
+      "en": "Deletes the metrics configuration for a table bucket.",
+      "ja": "テーブルバケットのメトリクス設定を削除する"
+    }
+  },
+  {
+    "name": "DeleteTableBucketPolicy",
+    "service": "s3tables",
+    "category": "Table buckets",
+    "method": "DELETE",
+    "description": {
+      "en": "Deletes a table bucket policy.",
+      "ja": "テーブルバケットポリシーを削除する"
+    }
+  },
+  {
+    "name": "DeleteTableBucketReplication",
+    "service": "s3tables",
+    "category": "Replication",
+    "method": "DELETE",
+    "description": {
+      "en": "Deletes the replication configuration for a table bucket.",
+      "ja": "テーブルバケットのレプリケーション設定を削除する"
+    }
+  },
+  {
+    "name": "DeleteTablePolicy",
+    "service": "s3tables",
+    "category": "Tables",
+    "method": "DELETE",
+    "description": {
+      "en": "Deletes a table policy.",
+      "ja": "テーブルポリシーを削除する"
+    }
+  },
+  {
+    "name": "DeleteTableReplication",
+    "service": "s3tables",
+    "category": "Replication",
+    "method": "DELETE",
+    "description": {
+      "en": "Deletes the replication configuration for a specific table.",
+      "ja": "テーブル単位のレプリケーション設定を削除する"
+    }
+  },
+  {
+    "name": "GetNamespace",
+    "service": "s3tables",
+    "category": "Namespaces",
+    "method": "GET",
+    "description": {
+      "en": "Gets details about a namespace.",
+      "ja": "名前空間の詳細を取得する"
+    }
+  },
+  {
+    "name": "GetTable",
+    "service": "s3tables",
+    "category": "Tables",
+    "method": "GET",
+    "description": {
+      "en": "Gets details about a table.",
+      "ja": "テーブルの詳細を取得する"
+    }
+  },
+  {
+    "name": "GetTableBucket",
+    "service": "s3tables",
+    "category": "Table buckets",
+    "method": "GET",
+    "description": {
+      "en": "Gets details on a table bucket.",
+      "ja": "テーブルバケットの詳細を取得する"
+    }
+  },
+  {
+    "name": "GetTableBucketEncryption",
+    "service": "s3tables",
+    "category": "Encryption",
+    "method": "GET",
+    "description": {
+      "en": "Gets the encryption configuration for a table bucket.",
+      "ja": "テーブルバケットの暗号化設定を取得する"
+    }
+  },
+  {
+    "name": "GetTableBucketMaintenanceConfiguration",
+    "service": "s3tables",
+    "category": "Maintenance",
+    "method": "GET",
+    "description": {
+      "en": "Gets details about a maintenance configuration for a given table bucket.",
+      "ja": "テーブルバケットのメンテナンス設定を取得する"
+    }
+  },
+  {
+    "name": "GetTableBucketMetricsConfiguration",
+    "service": "s3tables",
+    "category": "Metrics",
+    "method": "GET",
+    "description": {
+      "en": "Gets the metrics configuration for a table bucket.",
+      "ja": "テーブルバケットのメトリクス設定を取得する"
+    }
+  },
+  {
+    "name": "GetTableBucketPolicy",
+    "service": "s3tables",
+    "category": "Table buckets",
+    "method": "GET",
+    "description": {
+      "en": "Gets details about a table bucket policy.",
+      "ja": "テーブルバケットポリシーを取得する"
+    }
+  },
+  {
+    "name": "GetTableBucketReplication",
+    "service": "s3tables",
+    "category": "Replication",
+    "method": "GET",
+    "description": {
+      "en": "Retrieves the replication configuration for a table bucket.",
+      "ja": "テーブルバケットのレプリケーション設定を取得する"
+    }
+  },
+  {
+    "name": "GetTableBucketStorageClass",
+    "service": "s3tables",
+    "category": "Storage class",
+    "method": "GET",
+    "description": {
+      "en": "Retrieves the storage class configuration for a table bucket.",
+      "ja": "テーブルバケットのストレージクラス設定を取得する"
+    }
+  },
+  {
+    "name": "GetTableEncryption",
+    "service": "s3tables",
+    "category": "Encryption",
+    "method": "GET",
+    "description": {
+      "en": "Gets the encryption configuration for a table.",
+      "ja": "テーブルの暗号化設定を取得する"
+    }
+  },
+  {
+    "name": "GetTableMaintenanceConfiguration",
+    "service": "s3tables",
+    "category": "Maintenance",
+    "method": "GET",
+    "description": {
+      "en": "Gets details about the maintenance configuration of a table.",
+      "ja": "テーブルのメンテナンス設定を取得する"
+    }
+  },
+  {
+    "name": "GetTableMaintenanceJobStatus",
+    "service": "s3tables",
+    "category": "Maintenance",
+    "method": "GET",
+    "description": {
+      "en": "Gets the status of a maintenance job for a table.",
+      "ja": "テーブルのメンテナンスジョブの状態を取得する"
+    }
+  },
+  {
+    "name": "GetTableMetadataLocation",
+    "service": "s3tables",
+    "category": "Tables",
+    "method": "GET",
+    "description": {
+      "en": "Gets the location of the table metadata.",
+      "ja": "テーブルの現在の Iceberg メタデータファイルの場所を取得する"
+    }
+  },
+  {
+    "name": "GetTablePolicy",
+    "service": "s3tables",
+    "category": "Tables",
+    "method": "GET",
+    "description": {
+      "en": "Gets details about a table policy.",
+      "ja": "テーブルポリシーを取得する"
+    }
+  },
+  {
+    "name": "GetTableRecordExpirationConfiguration",
+    "service": "s3tables",
+    "category": "Record expiration",
+    "method": "GET",
+    "description": {
+      "en": "Retrieves the expiration configuration settings for records in a table, and the status of the configuration.",
+      "ja": "テーブルのレコード失効設定を取得する"
+    }
+  },
+  {
+    "name": "GetTableRecordExpirationJobStatus",
+    "service": "s3tables",
+    "category": "Record expiration",
+    "method": "GET",
+    "description": {
+      "en": "Retrieves the status, metrics, and details of the latest record expiration job for a table.",
+      "ja": "直近のレコード失効ジョブの状態と統計を取得する"
+    }
+  },
+  {
+    "name": "GetTableReplication",
+    "service": "s3tables",
+    "category": "Replication",
+    "method": "GET",
+    "description": {
+      "en": "Retrieves the replication configuration for a specific table.",
+      "ja": "テーブル単位のレプリケーション設定を取得する"
+    }
+  },
+  {
+    "name": "GetTableReplicationStatus",
+    "service": "s3tables",
+    "category": "Replication",
+    "method": "GET",
+    "description": {
+      "en": "Retrieves the replication status for a table, including the status of replication to each destination.",
+      "ja": "テーブルの宛先ごとのレプリケーション状態を取得する"
+    }
+  },
+  {
+    "name": "GetTableStorageClass",
+    "service": "s3tables",
+    "category": "Storage class",
+    "method": "GET",
+    "description": {
+      "en": "Retrieves the storage class configuration for a specific table.",
+      "ja": "テーブルのストレージクラス設定を取得する"
+    }
+  },
+  {
+    "name": "ListNamespaces",
+    "service": "s3tables",
+    "category": "Namespaces",
+    "method": "GET",
+    "description": {
+      "en": "Lists the namespaces within a table bucket.",
+      "ja": "名前空間を列挙する"
+    }
+  },
+  {
+    "name": "ListTableBuckets",
+    "service": "s3tables",
+    "category": "Table buckets",
+    "method": "GET",
+    "description": {
+      "en": "Lists table buckets for your account.",
+      "ja": "テーブルバケットを列挙する"
+    }
+  },
+  {
+    "name": "ListTables",
+    "service": "s3tables",
+    "category": "Tables",
+    "method": "GET",
+    "description": {
+      "en": "List tables in the given table bucket.",
+      "ja": "テーブルを列挙する"
+    }
+  },
+  {
+    "name": "ListTagsForResource",
+    "service": "s3tables",
+    "category": "Tagging",
+    "method": "GET",
+    "description": {
+      "en": "Lists all of the tags applied to a specified Amazon S3 Tables resource.",
+      "ja": "S3 Tables リソースのタグを列挙する"
+    }
+  },
+  {
+    "name": "PutTableBucketEncryption",
+    "service": "s3tables",
+    "category": "Encryption",
+    "method": "PUT",
+    "description": {
+      "en": "Sets the encryption configuration for a table bucket.",
+      "ja": "テーブルバケットのデフォルト暗号化 (SSE-S3 / SSE-KMS) を設定する"
+    }
+  },
+  {
+    "name": "PutTableBucketMaintenanceConfiguration",
+    "service": "s3tables",
+    "category": "Maintenance",
+    "method": "PUT",
+    "description": {
+      "en": "Creates a new maintenance configuration or replaces an existing maintenance configuration for a table bucket.",
+      "ja": "テーブルバケットのメンテナンス (未参照ファイル削除など) を設定する"
+    }
+  },
+  {
+    "name": "PutTableBucketMetricsConfiguration",
+    "service": "s3tables",
+    "category": "Metrics",
+    "method": "PUT",
+    "description": {
+      "en": "Sets the metrics configuration for a table bucket.",
+      "ja": "テーブルバケットのメトリクス設定を行う"
+    }
+  },
+  {
+    "name": "PutTableBucketPolicy",
+    "service": "s3tables",
+    "category": "Table buckets",
+    "method": "PUT",
+    "description": {
+      "en": "Creates a new table bucket policy or replaces an existing table bucket policy for a table bucket.",
+      "ja": "テーブルバケットポリシーを設定する"
+    }
+  },
+  {
+    "name": "PutTableBucketReplication",
+    "service": "s3tables",
+    "category": "Replication",
+    "method": "PUT",
+    "description": {
+      "en": "Creates or updates the replication configuration for a table bucket.",
+      "ja": "テーブルバケット単位のレプリケーションを設定する"
+    }
+  },
+  {
+    "name": "PutTableBucketStorageClass",
+    "service": "s3tables",
+    "category": "Storage class",
+    "method": "PUT",
+    "description": {
+      "en": "Sets or updates the storage class configuration for a table bucket.",
+      "ja": "テーブルバケットのデフォルトストレージクラスを設定する (新規テーブルに適用)"
+    }
+  },
+  {
+    "name": "PutTableMaintenanceConfiguration",
+    "service": "s3tables",
+    "category": "Maintenance",
+    "method": "PUT",
+    "description": {
+      "en": "Creates a new maintenance configuration or replaces an existing maintenance configuration for a table.",
+      "ja": "テーブルのメンテナンス (コンパクション / スナップショット管理) を設定する"
+    }
+  },
+  {
+    "name": "PutTablePolicy",
+    "service": "s3tables",
+    "category": "Tables",
+    "method": "PUT",
+    "description": {
+      "en": "Creates a new table policy or replaces an existing table policy for a table.",
+      "ja": "テーブルポリシーを設定する"
+    }
+  },
+  {
+    "name": "PutTableRecordExpirationConfiguration",
+    "service": "s3tables",
+    "category": "Record expiration",
+    "method": "PUT",
+    "description": {
+      "en": "Creates or updates the expiration configuration settings for records in a table, including the status of the configuration.",
+      "ja": "テーブルのレコード失効 (N 日後に自動削除) を設定する"
+    }
+  },
+  {
+    "name": "PutTableReplication",
+    "service": "s3tables",
+    "category": "Replication",
+    "method": "PUT",
+    "description": {
+      "en": "Creates or updates the replication configuration for a specific table.",
+      "ja": "テーブル単位のレプリケーションを設定する"
+    }
+  },
+  {
+    "name": "RenameTable",
+    "service": "s3tables",
+    "category": "Tables",
+    "method": "PUT",
+    "description": {
+      "en": "Renames a table or a namespace.",
+      "ja": "テーブル名を変更する / 別の名前空間へ移す"
+    }
+  },
+  {
+    "name": "TagResource",
+    "service": "s3tables",
+    "category": "Tagging",
+    "method": "POST",
+    "description": {
+      "en": "Applies one or more user-defined tags to an Amazon S3 Tables resource or updates existing tags.",
+      "ja": "S3 Tables リソースにタグを付ける"
+    }
+  },
+  {
+    "name": "UntagResource",
+    "service": "s3tables",
+    "category": "Tagging",
+    "method": "DELETE",
+    "description": {
+      "en": "Removes the specified user-defined tags from an Amazon S3 Tables resource.",
+      "ja": "S3 Tables リソースからタグを外す"
+    }
+  },
+  {
+    "name": "UpdateTableMetadataLocation",
+    "service": "s3tables",
+    "category": "Tables",
+    "method": "PUT",
+    "description": {
+      "en": "Updates the metadata location for a table.",
+      "ja": "Iceberg メタデータファイルの場所を更新する (コミット)"
+    }
+  },
+  {
+    "name": "CreateIndex",
+    "service": "s3vectors",
+    "category": "Vector indexes",
+    "method": "POST",
+    "description": {
+      "en": "Creates a vector index within a vector bucket.",
+      "ja": "ベクトルインデックス (次元数・距離関数 cosine / euclidean) を作成する"
+    }
+  },
+  {
+    "name": "CreateVectorBucket",
+    "service": "s3vectors",
+    "category": "Vector buckets",
+    "method": "POST",
+    "description": {
+      "en": "Creates a vector bucket in the Amazon Web Services Region that you want your bucket to be in.",
+      "ja": "ベクトルバケットを作成する"
+    }
+  },
+  {
+    "name": "DeleteIndex",
+    "service": "s3vectors",
+    "category": "Vector indexes",
+    "method": "POST",
+    "description": {
+      "en": "Deletes a vector index.",
+      "ja": "ベクトルインデックスを削除する"
+    }
+  },
+  {
+    "name": "DeleteVectorBucket",
+    "service": "s3vectors",
+    "category": "Vector buckets",
+    "method": "POST",
+    "description": {
+      "en": "Deletes a vector bucket.",
+      "ja": "ベクトルバケットを削除する (空である必要あり)"
+    }
+  },
+  {
+    "name": "DeleteVectorBucketPolicy",
+    "service": "s3vectors",
+    "category": "Vector buckets",
+    "method": "POST",
+    "description": {
+      "en": "Deletes a vector bucket policy.",
+      "ja": "ベクトルバケットポリシーを削除する"
+    }
+  },
+  {
+    "name": "DeleteVectors",
+    "service": "s3vectors",
+    "category": "Vectors",
+    "method": "POST",
+    "description": {
+      "en": "Deletes one or more vectors in a vector index.",
+      "ja": "キー指定でベクトルを削除する"
+    }
+  },
+  {
+    "name": "GetIndex",
+    "service": "s3vectors",
+    "category": "Vector indexes",
+    "method": "POST",
+    "description": {
+      "en": "Returns vector index attributes.",
+      "ja": "インデックスの属性を取得する"
+    }
+  },
+  {
+    "name": "GetVectorBucket",
+    "service": "s3vectors",
+    "category": "Vector buckets",
+    "method": "POST",
+    "description": {
+      "en": "Returns vector bucket attributes.",
+      "ja": "ベクトルバケットの属性を取得する"
+    }
+  },
+  {
+    "name": "GetVectorBucketPolicy",
+    "service": "s3vectors",
+    "category": "Vector buckets",
+    "method": "POST",
+    "description": {
+      "en": "Gets details about a vector bucket policy.",
+      "ja": "ベクトルバケットポリシーを取得する"
+    }
+  },
+  {
+    "name": "GetVectors",
+    "service": "s3vectors",
+    "category": "Vectors",
+    "method": "POST",
+    "description": {
+      "en": "Returns vector attributes.",
+      "ja": "キー指定でベクトルを取得する"
+    }
+  },
+  {
+    "name": "ListIndexes",
+    "service": "s3vectors",
+    "category": "Vector indexes",
+    "method": "POST",
+    "description": {
+      "en": "Returns a list of all the vector indexes within the specified vector bucket.",
+      "ja": "インデックスを列挙する"
+    }
+  },
+  {
+    "name": "ListTagsForResource",
+    "service": "s3vectors",
+    "category": "Tagging",
+    "method": "GET",
+    "description": {
+      "en": "Lists all of the tags applied to a specified Amazon S3 Vectors resource.",
+      "ja": "S3 Vectors リソースのタグを列挙する"
+    }
+  },
+  {
+    "name": "ListVectorBuckets",
+    "service": "s3vectors",
+    "category": "Vector buckets",
+    "method": "POST",
+    "description": {
+      "en": "Returns a list of all the vector buckets that are owned by the authenticated sender of the request.",
+      "ja": "ベクトルバケットを列挙する"
+    }
+  },
+  {
+    "name": "ListVectors",
+    "service": "s3vectors",
+    "category": "Vectors",
+    "method": "POST",
+    "description": {
+      "en": "List vectors in the specified vector index.",
+      "ja": "インデックス内のベクトルを列挙する (segment 指定で並列化可)"
+    }
+  },
+  {
+    "name": "PutVectorBucketDefaultIndexMode",
+    "service": "s3vectors",
+    "category": "Vector buckets",
+    "method": "POST",
+    "description": {
+      "en": "Updates the default index mode for a vector bucket.",
+      "ja": "以後作るインデックスのデフォルトモード (CLASSIC / ENHANCED) を設定する"
+    }
+  },
+  {
+    "name": "PutVectorBucketPolicy",
+    "service": "s3vectors",
+    "category": "Vector buckets",
+    "method": "POST",
+    "description": {
+      "en": "Creates a bucket policy for a vector bucket.",
+      "ja": "ベクトルバケットポリシーを設定する"
+    }
+  },
+  {
+    "name": "PutVectors",
+    "service": "s3vectors",
+    "category": "Vectors",
+    "method": "POST",
+    "description": {
+      "en": "Adds one or more vectors to a vector index.",
+      "ja": "ベクトル (key + float32 配列 + メタデータ) を最大 500 件書き込む"
+    }
+  },
+  {
+    "name": "QueryVectors",
+    "service": "s3vectors",
+    "category": "Vectors",
+    "method": "POST",
+    "description": {
+      "en": "Performs an approximate nearest neighbor search query in a vector index using a query vector.",
+      "ja": "クエリベクトルで近似最近傍 (ANN) 検索する。メタデータフィルタ可"
+    }
+  },
+  {
+    "name": "TagResource",
+    "service": "s3vectors",
+    "category": "Tagging",
+    "method": "POST",
+    "description": {
+      "en": "Applies one or more user-defined tags to an Amazon S3 Vectors resource or updates existing tags.",
+      "ja": "S3 Vectors リソースにタグを付ける"
+    }
+  },
+  {
+    "name": "UntagResource",
+    "service": "s3vectors",
+    "category": "Tagging",
+    "method": "DELETE",
+    "description": {
+      "en": "Removes the specified user-defined tags from an Amazon S3 Vectors resource.",
+      "ja": "S3 Vectors リソースからタグを外す"
+    }
+  },
+  {
+    "name": "UpdateIndexMode",
+    "service": "s3vectors",
+    "category": "Vector indexes",
+    "method": "POST",
+    "description": {
+      "en": "Updates the mode for an existing vector index.",
+      "ja": "既存インデックスのモードを変更する (ENHANCED = フィルタを検索前に適用)"
+    }
+  },
+  {
+    "name": "CreateEndpoint",
+    "service": "s3outposts",
+    "category": "Endpoints",
+    "method": "POST",
+    "description": {
+      "en": "Creates an endpoint and associates it with the specified Outpost.",
+      "ja": "Outpost にエンドポイント (VPC からのアクセス口) を作る"
+    }
+  },
+  {
+    "name": "DeleteEndpoint",
+    "service": "s3outposts",
+    "category": "Endpoints",
+    "method": "DELETE",
+    "description": {
+      "en": "Deletes an endpoint.",
+      "ja": "エンドポイントを削除する"
+    }
+  },
+  {
+    "name": "ListEndpoints",
+    "service": "s3outposts",
+    "category": "Endpoints",
+    "method": "GET",
+    "description": {
+      "en": "Lists endpoints associated with the specified Outpost.",
+      "ja": "Outpost のエンドポイントを列挙する"
+    }
+  },
+  {
+    "name": "ListOutpostsWithS3",
+    "service": "s3outposts",
+    "category": "Endpoints",
+    "method": "GET",
+    "description": {
+      "en": "Lists the Outposts with S3 on Outposts capacity for your account.",
+      "ja": "S3 on Outposts 容量を持つ Outpost を列挙する"
+    }
+  },
+  {
+    "name": "ListSharedEndpoints",
+    "service": "s3outposts",
+    "category": "Endpoints",
+    "method": "GET",
+    "description": {
+      "en": "Lists all endpoints associated with an Outpost that has been shared by AWS Resource Access Manager (RAM).",
+      "ja": "RAM で共有された Outpost のエンドポイントを列挙する"
+    }
+  },
+  {
+    "name": "CreateAccessPoint",
+    "service": "s3files",
+    "category": "Access points",
+    "method": "PUT",
+    "description": {
+      "en": "Creates an S3 File System Access Point for application-specific access with POSIX user identity and root directory enforcement.",
+      "ja": "POSIX ユーザー / ルートディレクトリを強制するファイルシステムアクセスポイントを作る"
+    }
+  },
+  {
+    "name": "CreateFileSystem",
+    "service": "s3files",
+    "category": "File systems",
+    "method": "PUT",
+    "description": {
+      "en": "Creates an S3 File System resource scoped to a bucket or prefix within a bucket, enabling file system access to S3 data.",
+      "ja": "バケット (またはプレフィックス) をスコープにした S3 ファイルシステムを作成する"
+    }
+  },
+  {
+    "name": "CreateMountTarget",
+    "service": "s3files",
+    "category": "Mount targets",
+    "method": "PUT",
+    "description": {
+      "en": "Creates a mount target resource as an endpoint for mounting the S3 File System from compute resources in a specific Availability Zone and VPC. Mount targets provide network access to the file system.",
+      "ja": "AZ / VPC にマウントターゲット (NFS マウント口) を作る"
+    }
+  },
+  {
+    "name": "DeleteAccessPoint",
+    "service": "s3files",
+    "category": "Access points",
+    "method": "DELETE",
+    "description": {
+      "en": "Deletes an S3 File System Access Point.",
+      "ja": "ファイルシステムアクセスポイントを削除する"
+    }
+  },
+  {
+    "name": "DeleteFileSystem",
+    "service": "s3files",
+    "category": "File systems",
+    "method": "DELETE",
+    "description": {
+      "en": "Deletes an S3 File System.",
+      "ja": "S3 ファイルシステムを削除する"
+    }
+  },
+  {
+    "name": "DeleteFileSystemPolicy",
+    "service": "s3files",
+    "category": "File system policies",
+    "method": "DELETE",
+    "description": {
+      "en": "Deletes the IAM resource policy of an S3 File System.",
+      "ja": "ファイルシステムのリソースポリシーを削除する"
+    }
+  },
+  {
+    "name": "DeleteMountTarget",
+    "service": "s3files",
+    "category": "Mount targets",
+    "method": "DELETE",
+    "description": {
+      "en": "Deletes the specified mount target.",
+      "ja": "マウントターゲットを削除する"
+    }
+  },
+  {
+    "name": "GetAccessPoint",
+    "service": "s3files",
+    "category": "Access points",
+    "method": "GET",
+    "description": {
+      "en": "Returns resource information for an S3 File System Access Point.",
+      "ja": "ファイルシステムアクセスポイントを取得する"
+    }
+  },
+  {
+    "name": "GetFileSystem",
+    "service": "s3files",
+    "category": "File systems",
+    "method": "GET",
+    "description": {
+      "en": "Returns resource information for the specified S3 File System including status, configuration, and metadata.",
+      "ja": "S3 ファイルシステムの状態・設定を取得する"
+    }
+  },
+  {
+    "name": "GetFileSystemPolicy",
+    "service": "s3files",
+    "category": "File system policies",
+    "method": "GET",
+    "description": {
+      "en": "Returns the IAM resource policy of an S3 File System.",
+      "ja": "ファイルシステムのリソースポリシーを取得する"
+    }
+  },
+  {
+    "name": "GetMountTarget",
+    "service": "s3files",
+    "category": "Mount targets",
+    "method": "GET",
+    "description": {
+      "en": "Returns detailed resource information for the specified mount target including network configuration.",
+      "ja": "マウントターゲットの詳細を取得する"
+    }
+  },
+  {
+    "name": "GetSynchronizationConfiguration",
+    "service": "s3files",
+    "category": "Synchronization",
+    "method": "GET",
+    "description": {
+      "en": "Returns the synchronization configuration for the specified S3 File System, including import data rules and expiration data rules.",
+      "ja": "同期設定を取得する"
+    }
+  },
+  {
+    "name": "ListAccessPoints",
+    "service": "s3files",
+    "category": "Access points",
+    "method": "GET",
+    "description": {
+      "en": "Returns resource information for all S3 File System Access Points associated with the specified S3 File System.",
+      "ja": "ファイルシステムアクセスポイントを列挙する"
+    }
+  },
+  {
+    "name": "ListFileSystems",
+    "service": "s3files",
+    "category": "File systems",
+    "method": "GET",
+    "description": {
+      "en": "Returns a list of all S3 File Systems owned by the account with optional filtering by bucket.",
+      "ja": "S3 ファイルシステムを列挙する"
+    }
+  },
+  {
+    "name": "ListMountTargets",
+    "service": "s3files",
+    "category": "Mount targets",
+    "method": "GET",
+    "description": {
+      "en": "Returns resource information for all mount targets with optional filtering by file system, access point, and VPC.",
+      "ja": "マウントターゲットを列挙する"
+    }
+  },
+  {
+    "name": "ListTagsForResource",
+    "service": "s3files",
+    "category": "Tagging",
+    "method": "GET",
+    "description": {
+      "en": "Lists all tags for S3 Files resources.",
+      "ja": "S3 Files リソースのタグを列挙する"
+    }
+  },
+  {
+    "name": "PutFileSystemPolicy",
+    "service": "s3files",
+    "category": "File system policies",
+    "method": "PUT",
+    "description": {
+      "en": "Creates or replaces the IAM resource policy for an S3 File System to control access permissions.",
+      "ja": "ファイルシステムの IAM リソースポリシーを設定する"
+    }
+  },
+  {
+    "name": "PutSynchronizationConfiguration",
+    "service": "s3files",
+    "category": "Synchronization",
+    "method": "PUT",
+    "description": {
+      "en": "Creates or updates the synchronization configuration for the specified S3 File System, including import data rules and expiration data rules.",
+      "ja": "S3 との同期設定 (インポート / 失効ルール) を作成 / 更新する"
+    }
+  },
+  {
+    "name": "TagResource",
+    "service": "s3files",
+    "category": "Tagging",
+    "method": "POST",
+    "description": {
+      "en": "Creates tags for S3 Files resources using standard Amazon Web Services tagging APIs.",
+      "ja": "S3 Files リソースにタグを付ける"
+    }
+  },
+  {
+    "name": "UntagResource",
+    "service": "s3files",
+    "category": "Tagging",
+    "method": "DELETE",
+    "description": {
+      "en": "Removes tags from S3 Files resources.",
+      "ja": "S3 Files リソースからタグを外す"
+    }
+  },
+  {
+    "name": "UpdateMountTarget",
+    "service": "s3files",
+    "category": "Mount targets",
+    "method": "PUT",
+    "description": {
+      "en": "Updates the mount target resource, specifically security group configurations.",
+      "ja": "マウントターゲットのセキュリティグループを更新する"
+    }
+  }
+]
