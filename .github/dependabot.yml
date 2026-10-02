@@ -1,0 +1,31 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 10
+    groups:
+      react:
+        patterns: ['react', 'react-dom', '@types/react', '@types/react-dom', 'react-router*']
+      lint:
+        patterns: ['eslint*', '@eslint/*', 'typescript-eslint', 'prettier', 'markdownlint-cli2', 'globals']
+      test:
+        patterns: ['vitest', '@vitest/*', '@testing-library/*', 'jsdom']
+      build:
+        patterns: ['vite', '@vitejs/*', 'typescript']
+      markdown:
+        patterns: ['react-markdown', 'remark-*', 'rehype-*', 'highlight.js', 'mermaid']
+    commit-message:
+      prefix: 'chore(deps)'
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    groups:
+      actions:
+        patterns: ['*']
+    commit-message:
+      prefix: 'chore(ci)'
