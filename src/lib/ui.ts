@@ -1,0 +1,51 @@
+import type { L } from './i18n';
+
+// UI copy. Every string has both languages; tests enforce it.
+export const UI = {
+  navHome: { en: 'Atlas', ja: 'トップ' },
+  navDocs: { en: 'Chapters', ja: '章一覧' },
+  navClasses: { en: 'Classes', ja: 'クラス' },
+  navCalc: { en: 'Calculator', ja: '試算' },
+  navCompare: { en: 'Compare', ja: '競合' },
+  navMarket: { en: 'Market', ja: '市場' },
+  navCases: { en: 'Cases', ja: '事例' },
+  navTimeline: { en: 'Timeline', ja: '年表' },
+  navCommands: { en: 'Commands', ja: 'コマンド' },
+  navApi: { en: 'API', ja: 'API' },
+  navEcosystem: { en: 'Ecosystem', ja: '連携' },
+  navQuiz: { en: 'Quiz', ja: 'クイズ' },
+  menu: { en: 'Menu', ja: 'メニュー' },
+  skip: { en: 'Skip to content', ja: '本文へスキップ' },
+  language: { en: 'Language', ja: '言語' },
+  copy: { en: 'Copy', ja: 'コピー' },
+  copied: { en: 'Copied', ja: 'コピー済み' },
+  onThisPage: { en: 'On this page', ja: 'このページの内容' },
+  loading: { en: 'Loading…', ja: '読み込み中…' },
+  notFound: { en: 'This page is not in the atlas.', ja: 'このページはアトラスにありません。' },
+  backHome: { en: 'Back to the atlas', ja: 'トップへ戻る' },
+  fallbackNotice: {
+    en: 'This chapter is not translated yet, so you are reading the Japanese original.',
+    ja: 'この章は翻訳中のため、英語版を表示しています。',
+  },
+  prev: { en: 'Previous', ja: '前の章' },
+  next: { en: 'Next', ja: '次の章' },
+  search: { en: 'Search', ja: '検索' },
+  all: { en: 'All', ja: 'すべて' },
+  noResults: {
+    en: 'Nothing matches. Try a shorter search or clear the filters.',
+    ja: '該当なし。検索語を短くするかフィルタを解除してください。',
+  },
+  destructive: { en: 'Destructive', ja: '破壊的操作' },
+  sources: { en: 'Source', ja: '出典' },
+  readChapter: { en: 'Read the chapter', ja: '章を読む' },
+  footerNote: {
+    en: 'Independent study guide. Not affiliated with or endorsed by Amazon Web Services. Prices are us-east-1 list prices at the verification date; always confirm on the official pricing page.',
+    ja: '個人による学習ガイドです。AWS とは無関係で、承認も受けていません。価格は検証日時点の us-east-1 定価です。必ず公式料金ページで確認してください。',
+  },
+  pageFailed: {
+    en: 'This page failed to load. Reloading usually fixes it.',
+    ja: 'ページを読み込めませんでした。再読み込みで解決することがほとんどです。',
+  },
+  reload: { en: 'Reload', ja: '再読み込み' },
+  verified: { en: 'Verified', ja: '最終確認' },
+} satisfies Record<string, L>;
