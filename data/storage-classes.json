@@ -562,8 +562,8 @@
       ]
     },
     "notes": {
-      "en": "AWS recommends against using RRS; S3 Standard is cheaper. Price shown is the first 1 TB tier. Lost objects return HTTP 405. Cannot be a lifecycle transition target. putPer1k/getPer1k assumed equal to Standard (not separately listed; unverified).",
-      "ja": "AWS 自身が非推奨と明記。Standard の方が安い。価格は最初の 1 TB の段階。失われたオブジェクトへのリクエストは 405 を返す。ライフサイクルの遷移先にできない。putPer1k/getPer1k は Standard と同額と仮定 (個別の記載なし、未確認)。"
+      "en": "AWS recommends against using RRS; S3 Standard is cheaper. Price shown is the first 1 TB tier. Lost objects return HTTP 405. Cannot be a lifecycle transition target. putPer1k/getPer1k match Standard: the Price List API (us-east-1, published 2026-09-28) has no RRS-specific request SKU, only the generic Requests-Tier1 ($0.005/1k) and Requests-Tier2 ($0.0004/1k) that Standard also uses.",
+      "ja": "AWS 自身が非推奨と明記。Standard の方が安い。価格は最初の 1 TB の段階。失われたオブジェクトへのリクエストは 405 を返す。ライフサイクルの遷移先にできない。putPer1k/getPer1k は Standard と同額。Price List API (us-east-1、2026-09-28 公開分) に RRS 専用のリクエスト SKU は無く、Standard と共通の Requests-Tier1 ($0.005/1k) / Requests-Tier2 ($0.0004/1k) だけがある。"
     }
   },
   {
@@ -574,9 +574,9 @@
     },
     "tier": "hot",
     "pricePerGBMonth": null,
-    "durability": "Not published as a fixed figure (unverified)",
-    "availabilityDesign": "Depends on Outposts deployment (unverified)",
-    "availabilitySLA": "Not covered by the S3 Region SLA (unverified)",
+    "durability": "No numeric figure published; AWS says it is designed to durably and redundantly store data across multiple devices and servers on the Outpost",
+    "availabilityDesign": "Not published (no figure on the S3 storage classes page or S3 on Outposts FAQ)",
+    "availabilitySLA": "Not stated: the S3 SLA does not mention S3 on Outposts and the AWS SLA index lists no Outposts SLA (unverified)",
     "azs": "on-premises (Outposts rack)",
     "minDurationDays": 0,
     "minBillableKB": null,

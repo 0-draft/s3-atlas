@@ -951,7 +951,7 @@ aws s3control put-storage-lens-configuration --account-id $ACCOUNT \
 aws s3control list-storage-lens-configurations --account-id $ACCOUNT
 ```
 
-(Check the configuration keys for the performance metrics and S3 Tables export added in 2025-12 in the console or in the output of `get-storage-lens-configuration`. The key names are unverified in this book.)
+The configuration keys for the features added in 2025-12 are documented in `put-storage-lens-configuration help` (CLI v2.37.7) and the API reference. Performance metrics are `AccountLevel.AdvancedPerformanceMetrics.IsEnabled` (per bucket: `AccountLevel.BucketLevel.AdvancedPerformanceMetrics.IsEnabled`), and export to S3 Tables is `DataExport.StorageLensTableDestination` (`IsEnabled` plus optional `Encryption`). The expanded prefixes report is configured separately in `ExpandedPrefixesDataExport` (`S3BucketDestination` / `StorageLensTableDestination`).
 
 ### 13.5 Access Grants
 
@@ -1733,6 +1733,8 @@ aws s3api put-object --generate-cli-skeleton  # input JSON template
 
 - Local help for AWS CLI v2.37.7 (`aws s3 help`, `aws s3api <cmd> help`, `aws s3control <cmd> help`, `aws s3tables help`, `aws s3vectors help`, `aws help s3-config`)
 - [AWS CLI Command Reference: s3](https://docs.aws.amazon.com/cli/latest/reference/s3/)
+- [StorageLensConfiguration (Amazon S3 API Reference)](https://docs.aws.amazon.com/AmazonS3/latest/API/API_control_StorageLensConfiguration.html)
+- [StorageLensDataExport (Amazon S3 API Reference)](https://docs.aws.amazon.com/AmazonS3/latest/API/API_control_StorageLensDataExport.html)
 - [AWS CLI Command Reference: s3api](https://docs.aws.amazon.com/cli/latest/reference/s3api/)
 - [AWS CLI Command Reference: s3control](https://docs.aws.amazon.com/cli/latest/reference/s3control/)
 - [AWS CLI Command Reference: s3tables](https://docs.aws.amazon.com/cli/latest/reference/s3tables/)

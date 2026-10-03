@@ -533,17 +533,17 @@
     "url": "https://aws.amazon.com/about-aws/whats-new/2024/08/amazon-s3-conditional-writes/"
   },
   {
-    "date": "2024-09",
+    "date": "2024-09-24",
     "title": {
       "en": "Lifecycle stops transitioning objects under 128 KB by default",
       "ja": "128 KB 未満のオブジェクトは既定でライフサイクル遷移しないように"
     },
     "description": {
-      "en": "New and edited lifecycle configurations no longer transition objects smaller than 128 KB to any class unless a size filter is set (exact day unverified).",
-      "ja": "新規・編集したライフサイクル設定では、サイズフィルタを指定しない限り 128 KB 未満のオブジェクトはどのクラスにも遷移しない (日付の日は未確認)。"
+      "en": "New and edited lifecycle configurations no longer transition objects smaller than 128 KB to any class unless a size filter is set. Announced 2024-09-24, with AWS saying deployment to all Regions would complete in the following days.",
+      "ja": "新規・編集したライフサイクル設定では、サイズフィルタを指定しない限り 128 KB 未満のオブジェクトはどのクラスにも遷移しない。2024-09-24 に発表 (全リージョンへの展開は数日以内に完了予定とされた)。"
     },
     "category": "storage-class",
-    "url": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/lifecycle-transition-general-considerations.html"
+    "url": "https://aws.amazon.com/about-aws/whats-new/2024/09/amazon-s3-default-minimum-object-size-lifecycle-transition-rules/"
   },
   {
     "date": "2024-11-14",

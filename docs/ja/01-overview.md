@@ -622,14 +622,15 @@ S3 の規模は AWS が節目ごとに公表している。年と出典を必ず
 | --- | --- | --- | --- | --- |
 | 2006 (ローンチ) | — | — | 約 1 PB の総容量 | AWS News Blog 20 周年記事 (2026-03-13) |
 | 2022-03 | 200 兆超 | 平均 1 億 req/s 超 | — | AWS News Blog (Pi Day 2022) |
-| 2023-07 | 100 兆超 (記事中の表現) | 1 億 req/s 超 | 数百万台のドライブ | Werner Vogels, All Things Distributed (Warfield 寄稿, 2023-07-27) |
+| 2023-07 | 280 兆超 | 平均 1 億 req/s 超 | 数百万台のドライブ | Werner Vogels, All Things Distributed (Warfield 寄稿, 2023-07-27) |
 | 2025 | 500 兆超 | 数億 TPS (hundreds of millions) | 数百 EB | Pragmatic Engineer の Mai-Lan Tomsen Bukovec インタビュー (二次情報) |
 | 2026-03 | **500 兆超** | **2 億 req/s 超** | **数百 EB** | AWS News Blog 20 周年記事 |
 
 補足:
 
-- 2023 年の All Things Distributed 記事の「100 兆」は 2022 年の「200 兆」より小さいが、記事中の表現をそのまま載せている (表現の粒度の違いと思われる。どちらが厳密かは未確認)
-- 「ピーク約 1 PB/s の帯域」「数千万台の HDD」は re:Invent 2024 の Andy Warfield の講演内容として二次情報 (ブログ・ニュースレター) で広く引用されているが、AWS 公式の文書としては本調査で確認できていない (未確認)
+- 2023-07 の行は All Things Distributed 記事内の表画像「S3 by the numbers」(2023-07-24 時点) による。表には「280 兆超のオブジェクト、平均 1 億 req/s 超」とあり、AWS News Blog の Pi Day 2023 記事 (2023-03-14) も同じ数字を載せている
+- 「数千万台の HDD」は AWS News Blog 20 周年記事 (2026-03) に「S3 の数千万台のハードドライブを積み重ねると国際宇宙ステーションに届いてほぼ戻ってくる」と明記されている
+- 「ピーク約 1 PB/s の帯域」は re:Invent での S3 セッションの発言として二次情報 (ブログ・ニュースレター) で広く引用されているが、AWS の文書 (ドキュメント / News Blog / What's New / All Things Distributed) には本調査で見つからなかった。一次情報は講演動画のみと思われ、本書では文字起こしで確認できていない (未確認)
 - S3 Vectors は GA までの 5 か月 (2025-07〜12) で 25 万超のインデックス、400 億超のベクトル取り込み、10 億超のクエリ (20 周年記事)
 
 ## 12. 内部アーキテクチャ (公開情報ベース)
@@ -772,6 +773,7 @@ PUT の場合は逆向きで、
 - [Building and operating a pretty big storage system called S3 (All Things Distributed, 2023-07-27)](https://www.allthingsdistributed.com/2023/07/building-and-operating-a-pretty-big-storage-system.html)
 - [Using Lightweight Formal Methods to Validate a Key-Value Storage Node in Amazon S3 (SOSP 2021)](https://www.amazon.science/publications/using-lightweight-formal-methods-to-validate-a-key-value-storage-node-in-amazon-s3)
 - [Twenty years of Amazon S3 and building what's next (AWS News Blog, 2026-03)](https://aws.amazon.com/blogs/aws/twenty-years-of-amazon-s3-and-building-whats-next/)
+- [Celebrate Amazon S3's 17th birthday at AWS Pi Day 2023 (AWS News Blog, 2023-03-14)](https://aws.amazon.com/blogs/aws/celebrate-amazon-s3s-17th-birthday-at-aws-pi-day-2023/)
 - [Summary of the Amazon S3 Service Disruption in US-EAST-1 (2017)](https://aws.amazon.com/message/41926/)
 - [Amazon S3 increases the maximum object size to 50 TB (What's New, 2025-12)](https://aws.amazon.com/about-aws/whats-new/2025/12/amazon-s3-maximum-object-size-50-tb/)
 - [Amazon S3 Vectors is now generally available (What's New, 2025-12)](https://aws.amazon.com/about-aws/whats-new/2025/12/amazon-s3-vectors-generally-available/)

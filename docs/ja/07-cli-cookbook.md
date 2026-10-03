@@ -951,7 +951,7 @@ aws s3control put-storage-lens-configuration --account-id $ACCOUNT \
 aws s3control list-storage-lens-configurations --account-id $ACCOUNT
 ```
 
-(2025-12 追加のパフォーマンスメトリクスや S3 Tables エクスポートの設定キーはコンソールまたは `get-storage-lens-configuration` の出力で確認すること。本書ではキー名を未確認。)
+2025-12 追加の機能の設定キーは、CLI v2.37.7 の `put-storage-lens-configuration help` と API リファレンスで確認できる。パフォーマンスメトリクスは `AccountLevel.AdvancedPerformanceMetrics.IsEnabled` (バケット単位は `AccountLevel.BucketLevel.AdvancedPerformanceMetrics.IsEnabled`)、S3 Tables へのエクスポートは `DataExport.StorageLensTableDestination` (`IsEnabled` と任意の `Encryption`)。拡張プレフィックスのレポートは別の `ExpandedPrefixesDataExport` (`S3BucketDestination` / `StorageLensTableDestination`) で設定する。
 
 ### 13.5 Access Grants
 
@@ -1733,6 +1733,8 @@ aws s3api put-object --generate-cli-skeleton  # 入力 JSON の雛形
 
 - AWS CLI v2.37.7 のローカルヘルプ (`aws s3 help`、`aws s3api <cmd> help`、`aws s3control <cmd> help`、`aws s3tables help`、`aws s3vectors help`、`aws help s3-config`)
 - [AWS CLI Command Reference: s3](https://docs.aws.amazon.com/cli/latest/reference/s3/)
+- [StorageLensConfiguration (Amazon S3 API Reference)](https://docs.aws.amazon.com/AmazonS3/latest/API/API_control_StorageLensConfiguration.html)
+- [StorageLensDataExport (Amazon S3 API Reference)](https://docs.aws.amazon.com/AmazonS3/latest/API/API_control_StorageLensDataExport.html)
 - [AWS CLI Command Reference: s3api](https://docs.aws.amazon.com/cli/latest/reference/s3api/)
 - [AWS CLI Command Reference: s3control](https://docs.aws.amazon.com/cli/latest/reference/s3control/)
 - [AWS CLI Command Reference: s3tables](https://docs.aws.amazon.com/cli/latest/reference/s3tables/)

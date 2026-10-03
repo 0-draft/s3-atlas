@@ -311,7 +311,7 @@ The AWS Free Tier changed significantly on 2025-07-15.
 | Accounts created on or after 2025-07-15 (new model) | $100 in credits at sign-up, plus up to another $100 for using services such as EC2 and Bedrock (up to $200 total). The "free plan" lasts 6 months or until the credits run out, after which you must upgrade to a paid plan |
 | Common | Internet egress is free up to 100 GB/month across all services (a permanent allowance separate from the Free Tier) |
 
-For new-model accounts, this research could not confirm in official documentation whether the S3-specific "5 GB / 20,000 GET / 2,000 PUT" allowance still exists separately from the credits (unverified). The S3 pricing page states "new customers get up to $200 in Free Tier credits (6 months)".
+The S3 FAQ describes the S3-specific "5 GB / 20,000 GET / 2,000 PUT" allowance as lasting "for one year", which makes it a 12-months-free offer. The AWS Free Tier page says 12-months-free offers "are only available to Legacy Free Tier AWS customers", and the Legacy Free Tier FAQ defines Legacy as accounts created before 2025-07-15. So new-model accounts do not get this S3 allowance, and their S3 usage is paid from credits. The S3 pricing page says new customers get up to $200 in Free Tier credits, the free plan lasts 6 months after account creation, and all credits must be used within 12 months of account creation.
 
 ## 10. Cost estimate examples
 
@@ -489,6 +489,8 @@ Assumptions: CRR of 10 TB of new data per month from us-east-1 to us-west-2. Des
 - [AWS Global Network FAQs](https://aws.amazon.com/about-aws/global-infrastructure/global-network/faqs/)
 - [AWS price reduction for data transfers out to the internet (What's New, 2021-11)](https://aws.amazon.com/about-aws/whats-new/2021/11/aws-price-reduction-data-transfers-internet/)
 - [AWS Free Tier now offers $200 in credits and 6-month free plan (What's New, 2025-07)](https://aws.amazon.com/about-aws/whats-new/2025/07/aws-free-tier-credits-month-free-plan/)
+- [AWS Free Tier](https://aws.amazon.com/free/)
+- [Legacy AWS Free Tier FAQs](https://aws.amazon.com/free/legacy/free-tier-faqs/)
 - [Reducing the cost of SSE-KMS with Amazon S3 Bucket Keys](https://docs.aws.amazon.com/AmazonS3/latest/userguide/bucket-key.html)
 - [Amazon S3 Transfer Acceleration](https://aws.amazon.com/s3/transfer-acceleration/)
 - [Querying data in place with Amazon S3 Select](https://docs.aws.amazon.com/AmazonS3/latest/userguide/selecting-content-from-objects.html)

@@ -311,7 +311,7 @@ AWS Free Tier は 2025-07-15 に大きく変わった。
 | 2025-07-15 以降に作成したアカウント (新方式) | サインアップ時に $100 のクレジット、EC2 や Bedrock などの利用で最大さらに $100 (合計最大 $200)。「無料プラン」は 6 か月またはクレジットを使い切るまで。期間後は有料プランへのアップグレードが必要 |
 | 共通 | インターネット向け転送は全サービス合計で月 100 GB まで無料 (これは Free Tier とは別の恒常的な枠) |
 
-新方式のアカウントで、S3 固有の「5 GB / 20,000 GET / 2,000 PUT」の枠がクレジットとは別に残っているかどうかは、本調査では公式文書で確認できなかった (未確認)。S3 料金ページには「新規顧客は最大 $200 の Free Tier クレジット (6 か月)」と記載されている。
+S3 固有の「5 GB / 20,000 GET / 2,000 PUT」は S3 FAQ で「1 年間」の枠、つまり 12 か月無料の特典として説明されている。AWS Free Tier ページは 12 か月無料の特典を「Legacy Free Tier の顧客のみ」とし、Legacy Free Tier FAQ は Legacy を 2025-07-15 より前に作成したアカウント向けと定義している。したがって新方式のアカウントにはこの S3 の枠は無く、S3 の利用はクレジットから充当される。S3 料金ページの記載は「新規顧客は最大 $200 の Free Tier クレジット。無料プランはアカウント作成から 6 か月、クレジットは作成から 12 か月以内に使い切る必要がある」。
 
 ## 10. 試算例
 
@@ -489,6 +489,8 @@ S3 本体の料金は同じでも、経路だけで月 $494 の差が出る。
 - [AWS Global Network FAQs](https://aws.amazon.com/about-aws/global-infrastructure/global-network/faqs/)
 - [AWS price reduction for data transfers out to the internet (What's New, 2021-11)](https://aws.amazon.com/about-aws/whats-new/2021/11/aws-price-reduction-data-transfers-internet/)
 - [AWS Free Tier now offers $200 in credits and 6-month free plan (What's New, 2025-07)](https://aws.amazon.com/about-aws/whats-new/2025/07/aws-free-tier-credits-month-free-plan/)
+- [AWS Free Tier](https://aws.amazon.com/free/)
+- [Legacy AWS Free Tier FAQs](https://aws.amazon.com/free/legacy/free-tier-faqs/)
 - [Reducing the cost of SSE-KMS with Amazon S3 Bucket Keys](https://docs.aws.amazon.com/AmazonS3/latest/userguide/bucket-key.html)
 - [Amazon S3 Transfer Acceleration](https://aws.amazon.com/s3/transfer-acceleration/)
 - [Querying data in place with Amazon S3 Select](https://docs.aws.amazon.com/AmazonS3/latest/userguide/selecting-content-from-objects.html)

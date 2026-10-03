@@ -276,7 +276,7 @@ aws organizations create-policy \
   --description "Block all public access org-wide"
 ```
 
-The policy type name `S3_POLICY` follows the S3 policies chapter of the Organizations User Guide. Check the exact enum value for your CLI version with `aws organizations enable-policy-type help` (this guide did not run these commands, so parts are unverified).
+`S3_POLICY` is listed as an accepted enum value for both `enable-policy-type --policy-type` and `create-policy --type` in the AWS CLI v2 help (`aws organizations enable-policy-type help` / `create-policy help`, checked on 2.37.7) and in the CLI reference. Older CLI versions may not include it; if you get an error, update the CLI.
 
 ## 5. Encryption
 
@@ -377,7 +377,7 @@ aws s3api put-bucket-encryption \
   }'
 ```
 
-For background: SSE-C had been flagged as exploitable for a type of ransomware in which an attacker with stolen keys re-encrypts data in the victim's bucket with the attacker's own key and demands a ransom (reported by security vendors in early 2025). Whether AWS officially cites this as the reason for the change is unverified; AWS's official explanation is that "SSE-KMS is more flexible, and SSE-C offers no practical security advantage."
+For background: in 2025-01 the AWS Security Blog reported an increase in activity where valid stolen credentials were used to run large numbers of SSE-C `CopyObject` calls that re-encrypted customer data under the attacker's key, and recommended blocking SSE-C unless an application needs it (Halcyon reported the same technique at the same time; see 11.4). However, the AWS Storage Blog notice of the 2026-04 default change (2025-11-19), the What's New post, and the FAQ do not mention this attack. The reasons AWS gives are that "there was no longer a practical security benefit to use SSE-C" after AWS KMS launched, that most modern workloads do not use SSE-C "because it lacks the flexibility of SSE-KMS", and "to streamline the encryption options that customers need to consider".
 
 ### 5.7 Changing the encryption type after the fact: UpdateObjectEncryption (2026-01)
 
@@ -607,7 +607,7 @@ aws s3api put-bucket-versioning \
 | Pricing | Free | Hourly charge + data processing charge |
 | From on-premises / other VPCs | Not usable (VPC only) | Usable over Direct Connect / VPN / peering |
 | DNS | Keeps the public DNS names | Endpoint-specific DNS, or enable private DNS |
-| Region | Same Region only | Same Region (S3 support for cross-Region PrivateLink is unverified) |
+| Region | Same Region only | Same Region, and since 2025-11 also S3 in another Region of the same partition via cross-Region PrivateLink (requires the `vpce:AllowMultiRegion` permission) |
 | Policy | Endpoint policy supported | Endpoint policy supported |
 | Condition keys | `aws:SourceVpce`, `aws:SourceVpc` | `aws:SourceVpce`, `aws:SourceVpc` |
 
@@ -825,7 +825,7 @@ aws s3api create-bucket \
 
 ### 11.4 Ransomware abusing SSE-C
 
-In early 2025, a security vendor (Halcyon) reported a technique in which attackers used leaked long-term access keys to re-encrypt victims' objects with their own SSE-C key (CopyObject), set a Lifecycle rule for quick deletion, and demanded a ransom. S3 does not store the attacker's key, so AWS cannot decrypt the data either. Mitigations: block SSE-C (the default since 2026-04), retire long-term access keys, use versioning + Object Lock, and restrict dangerous operations such as `s3:PutLifecycleConfiguration` with SCPs. The vendor name and details are based on secondary sources, so treat the primary source as unverified.
+On 2025-01-13, the security vendor Halcyon reported on its blog a technique by a threat actor it named "Codefinger": using publicly disclosed or compromised AWS keys to encrypt victims' objects with the attacker's SSE-C key, setting a Lifecycle rule to delete the files within 7 days, and demanding a ransom. S3 does not store SSE-C keys and CloudTrail records only an HMAC of the key, so the data cannot be decrypted without the attacker's key. AWS itself confirmed the activity in the AWS Security Blog on 2025-01-15: its CIRT had detected an increase in SSE-C `CopyObject` calls re-encrypting customer data, and it stressed that this was misuse of valid credentials, not a vulnerability in an AWS service. Mitigations (matching the AWS Security Blog recommendations): block SSE-C (the default since 2026-04), retire long-term access keys in favor of short-term credentials, keep data recovery options such as versioning, and monitor with CloudTrail and similar tools. Object Lock and SCP restrictions on dangerous operations such as `s3:PutLifecycleConfiguration` also help.
 
 ### 11.5 Other common patterns
 
@@ -1159,7 +1159,7 @@ This means: "For requests through access points owned by this account, leave the
 }
 ```
 
-The condition key name is based on the AWS News Blog (2026-03). The evaluation when the header is omitted (if the key is absent, `StringNotEquals` evaluates to true and the request is denied) is derived from general IAM behavior and is unverified on a real environment.
+The condition key name, and the fact that this policy denies any CreateBucket request whose `x-amz-bucket-namespace` header is not `account-regional` or is missing, are stated in the policy examples in the S3 User Guide (Namespaces for general purpose buckets).
 
 ### 12.13 Restrict presigned URL signature age and method
 
@@ -1355,6 +1355,7 @@ In RCPs, `Principal` must be `"*"`, and `Effect` is normally Deny (you cannot wr
 - [Amazon S3 Block Public Access feature page](https://aws.amazon.com/s3/features/block-public-access/)
 - [Amazon S3 Block Public Access now supports organization-level enforcement (2025-11)](https://aws.amazon.com/about-aws/whats-new/2025/11/amazon-s3-block-public-access-organization-level-enforcement/)
 - [Amazon S3 policy syntax and examples - AWS Organizations](https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_s3_syntax.html)
+- [aws organizations enable-policy-type (AWS CLI Command Reference)](https://docs.aws.amazon.com/cli/latest/reference/organizations/enable-policy-type.html)
 - [Protecting data with encryption](https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingEncryption.html)
 - [Reducing the cost of SSE-KMS with Amazon S3 Bucket Keys](https://docs.aws.amazon.com/AmazonS3/latest/userguide/bucket-key.html)
 - [Using dual-layer server-side encryption with AWS KMS keys (DSSE-KMS)](https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingDSSEncryption.html)
@@ -1362,6 +1363,8 @@ In RCPs, `Principal` must be `"*"`, and `Effect` is normally Deny (you cannot wr
 - [Default SSE-C setting for new buckets FAQ](https://docs.aws.amazon.com/AmazonS3/latest/userguide/default-s3-c-encryption-setting-faq.html)
 - [Blocking or unblocking SSE-C for a general purpose bucket](https://docs.aws.amazon.com/AmazonS3/latest/userguide/blocking-unblocking-s3-c-encryption-gpb.html)
 - [Advanced notice: Amazon S3 to disable the use of SSE-C encryption by default (AWS Storage Blog)](https://aws.amazon.com/blogs/storage/advanced-notice-amazon-s3-to-disable-the-use-of-sse-c-encryption-by-default-for-all-new-buckets-and-select-existing-buckets-in-april-2026/)
+- [Preventing unintended encryption of Amazon S3 objects (AWS Security Blog, 2025-01-15)](https://aws.amazon.com/blogs/security/preventing-unintended-encryption-of-amazon-s3-objects/)
+- [Abusing AWS Native Services: Ransomware Encrypting S3 Buckets with SSE-C (Halcyon, 2025-01-13)](https://www.halcyon.ai/blog/abusing-aws-native-services-ransomware-encrypting-s3-buckets-with-sse-c)
 - [Amazon S3 starts rolling out new security best practice (2026-04)](https://aws.amazon.com/about-aws/whats-new/2026/04/s3-default-bucket-security-setting/)
 - [Change the server-side encryption type of Amazon S3 objects (2026-01)](https://aws.amazon.com/about-aws/whats-new/2026/01/change-the-server-side-encryption-type-of-s3-objects/)
 - [Update object encryption (Batch Operations)](https://docs.aws.amazon.com/AmazonS3/latest/userguide/batch-ops-update-encryption.html)
@@ -1380,6 +1383,8 @@ In RCPs, `Principal` must be `"*"`, and `Effect` is normally Deny (you cannot wr
 - [Configuring MFA delete](https://docs.aws.amazon.com/AmazonS3/latest/userguide/MultiFactorAuthenticationDelete.html)
 - [Gateway endpoints for Amazon S3](https://docs.aws.amazon.com/vpc/latest/privatelink/vpc-endpoints-s3.html)
 - [AWS PrivateLink for Amazon S3](https://docs.aws.amazon.com/AmazonS3/latest/userguide/privatelink-interface-endpoints.html)
+- [AWS PrivateLink now supports cross-region connectivity for AWS Services (What's New, 2025-11-19)](https://aws.amazon.com/about-aws/whats-new/2025/11/aws-privatelink-cross-region-connectivity-aws-services/)
+- [Cross-region enabled AWS services (AWS PrivateLink Guide)](https://docs.aws.amazon.com/vpc/latest/privatelink/aws-services-cross-region-privatelink-support.html)
 - [Building a data perimeter on AWS (whitepaper)](https://docs.aws.amazon.com/whitepapers/latest/building-a-data-perimeter-on-aws/perimeter-overview.html)
 - [Logging options for Amazon S3](https://docs.aws.amazon.com/AmazonS3/latest/userguide/logging-with-S3.html)
 - [GuardDuty S3 Protection](https://docs.aws.amazon.com/guardduty/latest/ug/s3-protection.html)

@@ -524,7 +524,7 @@ S3A is Apache Hadoop's S3 connector (`s3a://`). On EMR, EMRFS (`s3://`) is the d
 
 Because rename on S3 is copy + delete, Hadoop's traditional "write to a temporary directory and commit by rename" is slow and unsafe. Use the **S3A committers** (or a table format such as Iceberg).
 
-In December 2024, AWS announced the **Analytics Accelerator Library for Amazon S3** (a Java library that optimizes prefetching and caching for Parquet reads), and integration into S3A is in progress (check the Hadoop release notes for the latest integration status; unverified in this guide).
+In December 2024, AWS announced the **Analytics Accelerator Library for Amazon S3** (a Java library that optimizes prefetching and caching for Parquet reads). Initial S3A integration shipped in Hadoop 3.4.2 (released 2025-08-29; HADOOP-19348) and is enabled with `fs.s3a.input.stream.type=analytics`. The default is still `classic`; the Hadoop documentation describes `analytics` as "in stabilization" and notes that it requires an extra library.
 
 ### 8.4 Two different things called s3fs
 
@@ -798,6 +798,10 @@ A large gap between `FirstByteLatency` (from S3 receiving the request to returni
 - [Configuring and using Mountpoint](https://docs.aws.amazon.com/AmazonS3/latest/userguide/mountpoint-usage.html)
 - [Amazon S3 Connector for PyTorch (GitHub)](https://github.com/awslabs/s3-connector-for-pytorch)
 - [Hadoop-AWS module: Integration with Amazon Web Services (S3A)](https://hadoop.apache.org/docs/stable/hadoop-aws/tools/hadoop-aws/index.html)
+- [Hadoop 3.4.2 S3A: Reading data from S3 (input stream types)](https://hadoop.apache.org/docs/r3.4.2/hadoop-aws/tools/hadoop-aws/reading.html)
+- [Apache Hadoop 3.4.2 release (2025-08-29)](https://hadoop.apache.org/release/3.4.2.html)
+- [HADOOP-19348: S3A: Add initial support for analytics-accelerator-s3 (ASF Jira)](https://issues.apache.org/jira/browse/HADOOP-19348)
+- [Analytics Accelerator Library for Amazon S3 (GitHub)](https://github.com/awslabs/analytics-accelerator-s3)
 - [Configuring fast, secure file transfers using Amazon S3 Transfer Acceleration](https://docs.aws.amazon.com/AmazonS3/latest/userguide/transfer-acceleration.html)
 - [Restricting access to an Amazon S3 origin (CloudFront OAC)](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-restricting-access-to-s3.html)
 - [Optimizing S3 Express One Zone performance](https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-express-performance.html)

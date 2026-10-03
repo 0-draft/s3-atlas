@@ -622,14 +622,15 @@ AWS publishes S3's scale at milestones. Always pair a figure with its year and s
 | --- | --- | --- | --- | --- |
 | 2006 (launch) | — | — | About 1 PB of total capacity | AWS News Blog 20th-anniversary post (2026-03-13) |
 | 2022-03 | Over 200 trillion | Over 100 million req/s on average | — | AWS News Blog (Pi Day 2022) |
-| 2023-07 | Over 100 trillion (as worded in the article) | Over 100 million req/s | Millions of drives | Werner Vogels, All Things Distributed (guest post by Warfield, 2023-07-27) |
+| 2023-07 | Over 280 trillion | Over 100 million req/s on average | Millions of drives | Werner Vogels, All Things Distributed (guest post by Warfield, 2023-07-27) |
 | 2025 | Over 500 trillion | Hundreds of millions of TPS | Hundreds of EB | The Pragmatic Engineer interview with Mai-Lan Tomsen Bukovec (secondary source) |
 | 2026-03 | **Over 500 trillion** | **Over 200 million req/s** | **Hundreds of EB** | AWS News Blog 20th-anniversary post |
 
 Notes:
 
-- The "100 trillion" in the 2023 All Things Distributed article is smaller than the "200 trillion" from 2022, but the article's wording is reproduced as is (probably a difference in granularity of expression; which is more precise is unverified)
-- "Peak bandwidth of about 1 PB/s" and "tens of millions of HDDs" are widely quoted in secondary sources (blogs, newsletters) as coming from Andy Warfield's re:Invent 2024 talk, but this research could not confirm them in an official AWS document (unverified)
+- The 2023-07 row comes from the "S3 by the numbers" table image in the All Things Distributed article (as of 2023-07-24), which says "more than 280 trillion objects and averages over 100 million requests per second"; the AWS News Blog Pi Day 2023 post (2023-03-14) gives the same figures
+- "Tens of millions of HDDs" is stated in the AWS News Blog 20th-anniversary post (2026-03): "If you stacked all of the tens of millions S3 hard drives on top of each other, they would reach the International Space Station and almost back"
+- "Peak bandwidth of about 1 PB/s" is widely quoted in secondary sources (blogs, newsletters) as something said in re:Invent S3 sessions, but this research found it in no AWS document (documentation, News Blog, What's New, or All Things Distributed). The only primary source appears to be the talk videos, which this guide has not checked against a transcript (unverified)
 - In the 5 months to GA (2025-07 to 12), S3 Vectors saw over 250,000 indexes, over 40 billion vectors ingested, and over 1 billion queries (20th-anniversary post)
 
 ## 12. Internal architecture (based on public information)
@@ -773,6 +774,7 @@ A PUT goes the other way:
 - [Building and operating a pretty big storage system called S3 (All Things Distributed, 2023-07-27)](https://www.allthingsdistributed.com/2023/07/building-and-operating-a-pretty-big-storage-system.html)
 - [Using Lightweight Formal Methods to Validate a Key-Value Storage Node in Amazon S3 (SOSP 2021)](https://www.amazon.science/publications/using-lightweight-formal-methods-to-validate-a-key-value-storage-node-in-amazon-s3)
 - [Twenty years of Amazon S3 and building what's next (AWS News Blog, 2026-03)](https://aws.amazon.com/blogs/aws/twenty-years-of-amazon-s3-and-building-whats-next/)
+- [Celebrate Amazon S3's 17th birthday at AWS Pi Day 2023 (AWS News Blog, 2023-03-14)](https://aws.amazon.com/blogs/aws/celebrate-amazon-s3s-17th-birthday-at-aws-pi-day-2023/)
 - [Summary of the Amazon S3 Service Disruption in US-EAST-1 (2017)](https://aws.amazon.com/message/41926/)
 - [Amazon S3 increases the maximum object size to 50 TB (What's New, 2025-12)](https://aws.amazon.com/about-aws/whats-new/2025/12/amazon-s3-maximum-object-size-50-tb/)
 - [Amazon S3 Vectors is now generally available (What's New, 2025-12)](https://aws.amazon.com/about-aws/whats-new/2025/12/amazon-s3-vectors-generally-available/)

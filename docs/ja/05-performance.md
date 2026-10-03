@@ -524,7 +524,7 @@ S3A は Apache Hadoop の S3 コネクタ (`s3a://`)。EMR では EMRFS (`s3://`
 
 S3 の「rename は copy + delete」という性質のため、Hadoop の昔ながらの「一時ディレクトリに書いて rename でコミット」は遅く危険。**S3A コミッタ** (または Iceberg のようなテーブルフォーマット) を使う。
 
-AWS は 2024 年 12 月に **Analytics Accelerator Library for Amazon S3** (Parquet 読み取りの先読み・キャッシュ最適化を行う Java ライブラリ) を発表し、S3A にも統合が進んでいる (統合状況の最新は Hadoop のリリースノートで要確認。本書では未確認)。
+AWS は 2024 年 12 月に **Analytics Accelerator Library for Amazon S3** (Parquet 読み取りの先読み・キャッシュ最適化を行う Java ライブラリ) を発表した。S3A への初期統合は Hadoop 3.4.2 (2025-08-29 リリース) に入っており (HADOOP-19348)、`fs.s3a.input.stream.type=analytics` で有効化する。既定値は `classic` のままで、Hadoop のドキュメントでは `analytics` は「stabilization」段階と位置づけられ、追加ライブラリが必要。
 
 ### 8.4 s3fs という名前の 2 つのもの
 
@@ -798,6 +798,10 @@ s5cmd run cmds.txt
 - [Configuring and using Mountpoint](https://docs.aws.amazon.com/AmazonS3/latest/userguide/mountpoint-usage.html)
 - [Amazon S3 Connector for PyTorch (GitHub)](https://github.com/awslabs/s3-connector-for-pytorch)
 - [Hadoop-AWS module: Integration with Amazon Web Services (S3A)](https://hadoop.apache.org/docs/stable/hadoop-aws/tools/hadoop-aws/index.html)
+- [Hadoop 3.4.2 S3A: Reading data from S3 (input stream types)](https://hadoop.apache.org/docs/r3.4.2/hadoop-aws/tools/hadoop-aws/reading.html)
+- [Apache Hadoop 3.4.2 release (2025-08-29)](https://hadoop.apache.org/release/3.4.2.html)
+- [HADOOP-19348: S3A: Add initial support for analytics-accelerator-s3 (ASF Jira)](https://issues.apache.org/jira/browse/HADOOP-19348)
+- [Analytics Accelerator Library for Amazon S3 (GitHub)](https://github.com/awslabs/analytics-accelerator-s3)
 - [Configuring fast, secure file transfers using Amazon S3 Transfer Acceleration](https://docs.aws.amazon.com/AmazonS3/latest/userguide/transfer-acceleration.html)
 - [Restricting access to an Amazon S3 origin (CloudFront OAC)](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-restricting-access-to-s3.html)
 - [Optimizing S3 Express One Zone performance](https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-express-performance.html)
