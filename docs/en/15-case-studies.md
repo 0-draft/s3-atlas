@@ -13,7 +13,7 @@ This chapter organizes, by industry, public case studies from real companies tha
   - **adopter**: uses S3 as storage for its own systems
   - **built-on-s3**: builds the product or service itself on top of S3
   - **migrated-away**: moved from S3 to self-managed storage (counterexamples)
-- A machine-readable version is in `data/cases.json` (English and Japanese). The JSON `year` field is the source's publication year. Where the page itself shows no date, the year comes from the PDF version's copyright and metadata (Ancestry 2023, TV Tokyo 2020), from AWS's case study index (Bynder 2024), or from a dated AWS post that cites it (BMLL 2025). BMW Group's page shows no date, so its `year` is the year it was checked (2026)
+- A machine-readable version is in `data/cases.json` (English and Japanese). The JSON `year` field is the source's publication year. Where the page itself shows no date, the year comes from the PDF version's copyright and metadata (Ancestry 2023, TV Tokyo 2020), from AWS's case study index (Bynder 2024), or from a dated AWS post that cites it (BMLL 2025). BMW Group's AWS innovators page (the source of its 20 PB figure) shows no date, so its `year` is the year it was checked (2026)
 
 ## Background: the scale of S3 in 2026
 
@@ -29,14 +29,14 @@ Media companies share one access pattern: content is viewed heavily right after 
 
 - **Industry**: Video streaming
 - **What is stored**: Table data for the analytics data warehouse / data lake
-- **Scale**: The AWS re:Invent 2023 talk (NFX306) describes it as an "exabyte-scale data warehouse". The talk abstract says about 300 PB was still in the legacy Apache Hive table format at the time of the migration
+- **Scale**: The AWS re:Invent 2023 talk (NFX306) describes it as an "exabyte-scale data warehouse". The talk's description on the official AWS Events YouTube upload says Netflix operates a data lake of "approximately one exabyte", and that about 300 PB of it remained in the legacy Apache Hive table format
 - **Architecture**:
   - Data on S3 is managed with **Apache Iceberg**, the table format Netflix itself created
   - To move from Hive to an "Iceberg-only" setup, Netflix built its own migration tools, secure Iceberg tables, and an Iceberg REST catalog
   - The approach minimized physical data movement and impact on users
-- **Results**: ACID transactions, a rich metadata layer, and better query performance (from the talk summary). The talk description gives no cost or savings figures
+- **Results**: ACID transactions, a rich metadata layer, and better query performance (from the talk summary on the AWS video page). Neither description gives cost or savings figures
 - **Lessons**: S3 is "the place to put files"; the table format handles table-level consistency and schema evolution. Netflix created Iceberg and started the trend that led to "managed Iceberg" offerings such as S3 Tables (announced 2024)
-- **Source**: [AWS re:Invent 2023 NFX306](https://aws.amazon.com/video/watch/3db41488539/)
+- **Sources**: [AWS re:Invent 2023 NFX306 (YouTube, AWS Events)](https://www.youtube.com/watch?v=jMFMEk8jFu8), [AWS re:Invent 2023 NFX306 (AWS video page)](https://aws.amazon.com/video/watch/3db41488539/)
 
 ### 1.2 Snap — 2 EB moved to Glacier IR in 3 months
 
@@ -47,7 +47,7 @@ Media companies share one access pattern: content is viewed heavily right after 
   - Saved media originally lived in S3 Standard-IA
   - To match the pattern "viewed for a few days, then not viewed for months or years", Snap moved all existing content to Glacier IR between March and June 2022, and started storing new content in Glacier IR as well
 - **Results**: Storage savings of "**tens of millions of dollars**". Download latency improved 20–30% in some Regions, with availability above 99.99%
-- **Lessons**: Glacier IR returns data in milliseconds, so you can drop to a cheaper class without changing the user experience. A Snap engineer said that "none of our customers noticed this massive migration, which was a big win"
+- **Lessons**: Glacier IR returns data in milliseconds, so you can drop to a cheaper class without changing the user experience. A Snap engineer said that "the fact that no customer noticed this major migration to Amazon S3 Glacier Instant Retrieval was a big win for us"
 - **Source**: [AWS case study: Snap](https://aws.amazon.com/solutions/case-studies/snap-case-study/)
 
 ### 1.3 Canva — 130 PB of 230 PB moved to Glacier IR, saving $3.6M a year
@@ -213,17 +213,17 @@ Finance needs to keep all trade data for a long time and still query it at any m
 
 ## 4. Automotive and manufacturing
 
-### 4.1 BMW Group — Cloud Data Hub (20 PB, 110 TB per day)
+### 4.1 BMW Group — Cloud Data Hub (more than 20 PB)
 
 - **Industry**: Automotive
 - **What is stored**: Data from development, production, sales, and vehicle operation
-- **Scale**: "Several PB" at launch in 2020. An AWS blog post at the end of 2024 cited more than 10 PB, 1,500 data assets, and more than 9,000 users. The AWS case study page, as checked in 2026, says **20 PB**, an average of **110 TB/day** ingested, and data from more than 20 million connected cars
+- **Scale**: The AWS case study says BMW Group processes **10 TB of data daily from 1.2 million vehicles** (the page is undated). An AWS Big Data Blog post from October 2024 cited more than 10 PB, 1,500 data assets, and more than 9,000 users, and says the CDH was built with AWS starting in 2020. BMW's AWS innovators page, as checked in 2026, says the Cloud Data Hub can handle **more than 20 PB** and takes data from **more than 20 million connected vehicles**
 - **Architecture**:
-  - "Cloud Data Hub (CDH)", a company-wide data lake on S3. Now run as a data lakehouse
+  - "Cloud Data Hub (CDH)", a company-wide data lake on S3
   - AWS Glue for the technical metadata catalog, Athena for exploration, QuickSight for BI
   - At first, access control was only coarse, per data asset, so BMW adopted AWS Lake Formation and moved to fine-grained access control
 - **Lessons**: With a data lake, the problem that shows up later is not "storing" but "who gets to see what". Build fine-grained access control into the design from the start
-- **Sources**: [AWS case study: BMW Group](https://aws.amazon.com/solutions/case-studies/bmw-group-case-study/), [AWS Big Data Blog: BMW and Lake Formation](https://aws.amazon.com/blogs/big-data/how-bmw-streamlined-data-access-using-aws-lake-formation-fine-grained-access-control/)
+- **Sources**: [AWS case study: BMW Group](https://aws.amazon.com/solutions/case-studies/bmw-group-case-study/) (10 TB/day, 1.2 million vehicles), [AWS innovators: BMW Group](https://aws.amazon.com/solutions/case-studies/innovators/bmw/) (20 PB, 20 million vehicles), [AWS Big Data Blog: BMW and Lake Formation](https://aws.amazon.com/blogs/big-data/how-bmw-streamlined-data-access-using-aws-lake-formation-fine-grained-access-control/)
 
 ### 4.2 Toyota Connected — the small-Parquet problem across millions of partitions
 
@@ -268,7 +268,7 @@ Finance needs to keep all trade data for a long time and still query it at any m
 - **Architecture**: Moved to AWS to fix the scaling problems and slow retrieval of the on-premises data lake. S3 + EMR, with Intelligent-Tiering as the storage class
 - **Results**: **Millions of dollars** saved per year, plus better data lake performance and elasticity
 - **Lessons**: Log analytics data follows a "recent data is hot, old data is read occasionally" pattern, but which data gets read is hard to predict. Intelligent-Tiering is the choice here too
-- **Source**: [AWS case study: Salesforce and S3 Intelligent-Tiering (archived copy; the original URL now redirects to the AWS case study index)](https://web.archive.org/web/2024/https://aws.amazon.com/solutions/case-studies/salesforce-amazons3-intelligent-tiering-case-study/)
+- **Source**: [AWS case study: Salesforce and S3 Intelligent-Tiering (Wayback Machine snapshot of 2024-06-18; the original URL now redirects to the AWS case study index)](https://web.archive.org/web/20240618113547/https://aws.amazon.com/solutions/case-studies/salesforce-amazons3-intelligent-tiering-case-study/)
 
 ### 5.4 Indeed — a 101 PB Hive data lake moved to S3 Tables
 
@@ -314,7 +314,7 @@ Finance needs to keep all trade data for a long time and still query it at any m
 
 - **Industry**: AI platform (hosting models / datasets)
 - **What is stored**: Model weights, datasets
-- **Scale**: **45 PB** total on S3 behind the Git LFS backend (as of the Hub storage documentation). In the 6 months up to July 2025, **500,000 repositories / 20 PB** were migrated to Xet
+- **Scale**: In the 6 months up to July 2025, **500,000 repositories / 20 PB** were migrated to Xet. The largest single users moved 6.1 PB (42,000 repos) and 1.7 PB (25,000 repos). The total size of the S3-backed Git LFS store is **unverified** (the Hub storage docs give no figure)
 - **Architecture**:
   - Previously, Git LFS stored files in S3 keyed by their SHA hash
   - Xet splits files into chunks with content-defined chunking and stores the chunks in S3 through a content addressed store (CAS). On download, the client fetches the needed chunk ranges from S3 and reassembles the file
@@ -421,11 +421,12 @@ From here on are products that do not just "use S3" but "could not exist without
 - **How it uses S3**: Stateless agents compatible with the Kafka protocol write data received from producers directly to S3, and read from S3 to serve consumers. There are no local disks, no broker rebalancing, and no ZooKeeper
 - **Vendor claims (WarpStream's own numbers)**:
   - Standard Kafka generates cross-AZ traffic for replication, and in high-throughput clusters 70–90% of the cost is cross-AZ bandwidth charges
-  - Claims to be 87% cheaper than MSK at 1 GiB/s with 7-day retention (comparison as of April 2026)
+  - Claims a 5–10x lower total cost of ownership than self-hosted Kafka for typical workloads (2023 launch post)
+  - Claims to be 87% cheaper than MSK at 1 GiB/s with 7-day retention and 8,192 partitions (about $25,966 vs. $205,502 per month, WarpStream's AI info page as checked in October 2026)
   - Keeping S3 API charges down requires combining buffers from multiple agents
-- **Trade-offs**: Not suited for use cases that need latency under 10 ms. The low-latency option, Lightning Topics, uses S3 Express One Zone
+- **Trade-offs**: The default settings favor throughput and cost, at a produce latency of about p50 250 ms / p99 500 ms (2023 posts: P99 write latency of about 400 ms). Combining S3 Express One Zone with Lightning Topics brings it down to p50 under 35 ms / p99 under 50 ms (WarpStream docs), at the cost of relaxed consistency guarantees
 - **Lessons**: Treating S3's 3-AZ redundancy as "free replication" structurally eliminates cloud cross-AZ transfer charges. In exchange, the design has to absorb latency and request charges
-- **Sources**: [WarpStream Blog: Kafka Is Dead, Long Live Kafka](https://www.warpstream.com/blog/kafka-is-dead-long-live-kafka), [WarpStream Blog: Minimizing S3 API Costs with Distributed mmap](https://www.warpstream.com/blog/minimizing-s3-api-costs-with-distributed-mmap)
+- **Sources**: [WarpStream Blog: Kafka Is Dead, Long Live Kafka (2023-07-25)](https://www.warpstream.com/blog/kafka-is-dead-long-live-kafka), [WarpStream Blog: Minimizing S3 API Costs with Distributed mmap (2023-10-09)](https://www.warpstream.com/blog/minimizing-s3-api-costs-with-distributed-mmap), [WarpStream: AI info page (MSK comparison)](https://www.warpstream.com/ai-info), [WarpStream Docs: Low latency clusters](https://docs.warpstream.com/warpstream/kafka/advanced-agent-deployment-options/low-latency-clusters)
 
 ### 8.4 turbopuffer — a vector / full-text search DB with S3 as the source of truth
 
@@ -465,9 +466,9 @@ Counterexamples matter just as much. In both cases, the premise was not that "S3
 - **Scale and cost** (from DHH's blog):
   - S3 cost just under $1.5 million per year (at this price under a 4-year contract)
   - The destination is **18 PB** of Pure Storage in total across two data centers (replicated about 1,600 km apart). About $1.5 million in hardware, and just under $1 million for 5 years of support
-  - **About 6 PB** had to be moved out of S3. DHH later posted that about **5 billion objects** were moved
-  - Under its policy for departing customers, AWS waived about $250,000 in egress fees
-- **Results**: Expected savings of almost $5 million over 5 years (blog). Numbers vary: press coverage said $1.3 million per year, and a later DHH post said close to $1 million per year
+  - **About 6 PB** had to be moved out of S3. A later DHH post is said to put the move at about 5 billion objects (**unverified**: not in the linked sources)
+  - Under its policy for departing customers (a free 60-day egress window, per DHH), AWS waived about $250,000 in egress fees (The Register)
+- **Results**: Expected savings of almost $5 million over 5 years (blog). Numbers vary: press coverage said $1.3 million per year, and a later DHH post is said to put it at close to $1 million per year (**unverified**: not in the linked sources)
 - **Caveat**: Press coverage (DCD) points out that the comparison focuses on upfront hardware cost and may not include operational staffing costs
 - **Lessons**:
   - Pure Storage has an S3-compatible API, so the apps needed almost no changes. **The S3 API is the de facto standard**, and that also makes it easier to leave
@@ -484,7 +485,7 @@ Counterexamples matter just as much. In both cases, the premise was not that "S3
 | Finance and regulation | Long-term retention of all trade data plus audit queries | Data lake, Glacier, Object Lock, Intelligent-Tiering | FINRA, Nasdaq, BMLL, Capital One |
 | Public sector and science | Open data; unpredictable readers | Intelligent-Tiering, Open Data | NASA |
 | Life sciences | Research and real-world data, read in bulk occasionally | Data lake, Glacier | Moderna, Ancestry |
-| Automotive and manufacturing | Vehicle telemetry, around 100 TB per day | Data lake + Glue/Athena/Lake Formation | BMW, Toyota Connected |
+| Automotive and manufacturing | Vehicle telemetry, 10 TB per day or more | Data lake + Glue/Athena/Lake Formation | BMW, Toyota Connected |
 | E-commerce and SaaS | Logs and customer assets | Intelligent-Tiering, Iceberg / S3 Tables | Zalando, Bynder, Salesforce, Indeed, Grab |
 | AI | Training data, model weights, vectors | Storage Lens, Intelligent-Tiering, Express One Zone, S3 Vectors | Anthropic, Hugging Face, Pinterest, March Networks |
 | Data platform products | The product's own storage layer | Standard S3, conditional writes, Express One Zone | Snowflake, Databricks, WarpStream, turbopuffer, Neon |
@@ -642,7 +643,7 @@ Put the other way, if any of these three is missing, staying on S3 is usually th
 
 | Company | Industry | Type | Scale (year) | Main features | Results |
 | --- | --- | --- | --- | --- | --- |
-| Netflix | Video streaming | adopter | Exabyte-scale DWH (2023) | Iceberg, data lake | About 300 PB moved from Hive to Iceberg |
+| Netflix | Video streaming | adopter | About 1 EB data lake (2023) | Iceberg, data lake | About 300 PB still in Hive, migrated to Iceberg |
 | Snap | Social media | adopter | 2 EB / 1.5 trillion files (2022) | Glacier IR | Tens of millions of dollars saved |
 | Canva | Design SaaS | adopter | 230 PB / 300 billion objects (2023) | Glacier IR, lifecycle, Storage Class Analysis | $3.6M saved per year |
 | Pinterest | Social media | adopter | About 1 EB (2021) | Deep Archive, Storage Lens, Inventory, Batch Operations | Millions of dollars saved per year |
@@ -658,7 +659,7 @@ Put the other way, if any of these three is missing, staying on S3 is usually th
 | NASA Earthdata | Public sector and science | adopter | More than 170 PB (2026) | Intelligent-Tiering, Open Data | Estimated 60% saved |
 | Moderna | Biotech | adopter | Not disclosed (2023) | Data lake | Extraction and analysis 70% faster |
 | Ancestry | Genealogy | adopter | Hundreds of TB (2023) | Glacier | Restores went from days to hours |
-| BMW Group | Automotive | adopter | 20 PB, 110 TB per day (2026) | Data lake, Lake Formation | Company-wide data platform |
+| BMW Group | Automotive | adopter | More than 20 PB, 20M+ vehicles (2026) | Data lake, Lake Formation | Company-wide data platform |
 | Toyota Connected | Automotive | adopter | PB scale (2022) | Data lake, EMR, Athena | Processing from 27 minutes to 30 seconds |
 | Zalando | E-commerce | adopter | 15 PB (2020) | Intelligent-Tiering, versioning | 37% saved per year |
 | Bynder | SaaS | adopter | 18 PB / 175 million assets (2024) | Intelligent-Tiering | 65% saved |
@@ -666,7 +667,7 @@ Put the other way, if any of these three is missing, staying on S3 is usually th
 | Indeed | HR tech | adopter | 101 PB (2026) | S3 Tables, Replication, Intelligent-Tiering | 10% saved, more than 1,000 hours per year |
 | Grab | Super app | adopter | PB scale / billions of objects (2026) | Iceberg | S3 API cost cut by up to 95% |
 | Anthropic | AI | adopter | Hundreds of PB (2023) | Storage Lens, Intelligent-Tiering | Not given in the talk description |
-| Hugging Face | AI | adopter | 45 PB (LFS), 20 PB moved to Xet (2025) | S3 Standard, presigned URLs | Chunk-level deduplication |
+| Hugging Face | AI | adopter | 20 PB / 500,000 repos moved to Xet (2025) | S3 Standard, presigned URLs | Chunk-level deduplication |
 | March Networks | Video surveillance | adopter | Billions of vectors (2025) | S3 Vectors, Glacier | Up to 80% saved (5 years) |
 | TV Tokyo | Broadcasting | adopter | 13 PB (2020) | S3, Glacier, lifecycle, Direct Connect | Tens of millions of yen saved per year |
 | NTT DOCOMO | Telecommunications | adopter | About 90 million members (2023) | Data lake | 13x more user accounts |
@@ -675,11 +676,11 @@ Put the other way, if any of these three is missing, staying on S3 is usually th
 | NAVITIME JAPAN | Navigation | adopter | Not disclosed (2023) | Deep Archive | Cost rose more than ¥1M per month (cautionary tale) |
 | Snowflake | Data platform product | built-on-s3 | — (2016 paper) | S3 Standard | Storage and compute separation |
 | Databricks | Data platform product | built-on-s3 | — (2026) | S3 Standard, IAM | Data kept in customer buckets |
-| WarpStream | Streaming | built-on-s3 | — (2026) | S3 Standard, Express One Zone | 87% cheaper than MSK (vendor claim) |
+| WarpStream | Streaming | built-on-s3 | — (2023) | S3 Standard, Express One Zone | 5–10x cheaper than self-hosted Kafka (vendor claim) |
 | turbopuffer | Search DB | built-on-s3 | — (2025) | S3 Standard | p50 14 ms when cached |
 | Neon | Serverless Postgres | built-on-s3 | — (2023) | S3 Standard | Scale-to-zero, branching |
 | Dropbox | Cloud storage | migrated-away | 500 PB (2016) | — | More than 90% moved to in-house infrastructure |
-| 37signals | SaaS | migrated-away | About 6 PB / 5 billion objects (2025) | — | About $5M expected savings over 5 years |
+| 37signals | SaaS | migrated-away | About 6 PB moved (2025) | — | About $5M expected savings over 5 years |
 
 ## 12. Companies researched but not included
 
@@ -703,7 +704,7 @@ All checked on 2026-10-03.
 
 1. [AWS News Blog: Twenty years of Amazon S3 and building what's next (2026)](https://aws.amazon.com/blogs/aws/twenty-years-of-amazon-s3-and-building-whats-next/)
 2. [Amazon S3 customers](https://aws.amazon.com/s3/customers/)
-3. [AWS re:Invent 2023 NFX306: Netflix's journey to an Apache Iceberg-only data lake](https://aws.amazon.com/video/watch/3db41488539/)
+3. [AWS re:Invent 2023 NFX306: Netflix's journey to an Apache Iceberg-only data lake](https://aws.amazon.com/video/watch/3db41488539/) ([YouTube](https://www.youtube.com/watch?v=jMFMEk8jFu8))
 4. [AWS case study: Snap](https://aws.amazon.com/solutions/case-studies/snap-case-study/)
 5. [Canva Engineering Blog: How Canva saves millions annually in Amazon S3 costs (2023)](https://www.canva.dev/blog/engineering/optimising-s3-savings/)
 6. [Amazon S3 Glacier Instant Retrieval](https://aws.amazon.com/s3/storage-classes/glacier/instant-retrieval/)
@@ -725,12 +726,12 @@ All checked on 2026-10-03.
 22. [AWS case study: Moderna](https://aws.amazon.com/solutions/case-studies/moderna-case-study/)
 23. [AWS: Ancestry uses Amazon S3 Glacier (PDF)](https://d1.awsstatic.com/AWS%20Cloud%20Storage/Ancestry-uses-Amazon-S3-Glacier-to-restore-terabytes-of-images-in-mere-hours-instead-of-days.pdf)
 24. [AWS What's New: Amazon S3 Glacier improves restore throughput by up to 10x (2022)](https://aws.amazon.com/about-aws/whats-new/2022/11/amazon-s3-glacier-restore-throughput-10x-large-volumes-archived-data)
-25. [AWS case study: BMW Group](https://aws.amazon.com/solutions/case-studies/bmw-group-case-study/)
+25. [AWS case study: BMW Group](https://aws.amazon.com/solutions/case-studies/bmw-group-case-study/) ([innovators page](https://aws.amazon.com/solutions/case-studies/innovators/bmw/))
 26. [AWS Big Data Blog: How BMW streamlined data access using AWS Lake Formation](https://aws.amazon.com/blogs/big-data/how-bmw-streamlined-data-access-using-aws-lake-formation-fine-grained-access-control/)
 27. [AWS for Industries Blog: Toyota Connected optimizes EMR costs (2022)](https://aws.amazon.com/blogs/industries/toyota-connected-optimizes-emr-costs-and-improves-resiliency-of-batch-jobs/)
 28. [AWS Storage Blog: How Zalando built its data lake on Amazon S3 (2020)](https://aws.amazon.com/blogs/storage/how-zalando-built-its-data-lake-on-amazon-s3/)
 29. [AWS case study: Bynder](https://aws.amazon.com/solutions/case-studies/bynder-amazon-s3-case-study/)
-30. [AWS case study: Salesforce and S3 Intelligent-Tiering (archived copy)](https://web.archive.org/web/2024/https://aws.amazon.com/solutions/case-studies/salesforce-amazons3-intelligent-tiering-case-study/)
+30. [AWS case study: Salesforce and S3 Intelligent-Tiering (Wayback Machine, 2024-06-18)](https://web.archive.org/web/20240618113547/https://aws.amazon.com/solutions/case-studies/salesforce-amazons3-intelligent-tiering-case-study/)
 31. [AWS case study: Indeed and Amazon S3 Tables](https://aws.amazon.com/solutions/case-studies/indeed-s3-tables-case-study/)
 32. [Amazon S3 Tables](https://aws.amazon.com/s3/features/tables/)
 33. [Grab Engineering: Scaling Grab's Data Lake: Our journey to Apache Iceberg adoption (2026)](https://engineering.grab.com/our-journey-to-apache-iceberg-adoption)
@@ -750,7 +751,7 @@ All checked on 2026-10-03.
 47. [Databricks Blog: Your data, your storage, your rules (2026)](https://www.databricks.com/blog/your-data-your-storage-your-rules-2026-guide-storing-unity-catalog-managed-tables)
 48. [Databricks Docs: Delta Lake limitations on S3](https://docs.databricks.com/aws/en/delta/s3-limitations)
 49. [WarpStream Blog: Kafka Is Dead, Long Live Kafka](https://www.warpstream.com/blog/kafka-is-dead-long-live-kafka)
-50. [WarpStream Blog: Minimizing S3 API Costs with Distributed mmap](https://www.warpstream.com/blog/minimizing-s3-api-costs-with-distributed-mmap)
+50. [WarpStream Blog: Minimizing S3 API Costs with Distributed mmap](https://www.warpstream.com/blog/minimizing-s3-api-costs-with-distributed-mmap) (see also [AI info page](https://www.warpstream.com/ai-info), [low latency clusters](https://docs.warpstream.com/warpstream/kafka/advanced-agent-deployment-options/low-latency-clusters))
 51. [turbopuffer Docs: Architecture](https://turbopuffer.com/docs/architecture)
 52. [Jason Liu: TurboPuffer: Object Storage-First Vector Database Architecture (2025)](https://jxnl.co/writing/2025/09/11/turbopuffer-object-storage-first-vector-database-architecture/)
 53. [GitHub: neondatabase/neon](https://github.com/neondatabase/neon)

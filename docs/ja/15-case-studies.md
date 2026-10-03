@@ -13,7 +13,7 @@ _最終確認: 2026-10-03_
   - **adopter**: S3 を自社システムのストレージとして使う
   - **built-on-s3**: S3 を土台に製品・サービスそのものを作っている
   - **migrated-away**: S3 から自前ストレージへ移った (反例)
-- 機械可読版は `data/cases.json` にある (英日併記)。JSON の `year` は出典の公開年。ページに日付がない事例は、PDF 版の著作権表記とメタデータ (Ancestry 2023、テレビ東京 2020)、AWS の事例インデックス (Bynder 2024)、その事例を引用した日付付きの AWS 記事 (BMLL 2025) から年を決めた。BMW Group はページに日付がないため、`year` は確認年の 2026
+- 機械可読版は `data/cases.json` にある (英日併記)。JSON の `year` は出典の公開年。ページに日付がない事例は、PDF 版の著作権表記とメタデータ (Ancestry 2023、テレビ東京 2020)、AWS の事例インデックス (Bynder 2024)、その事例を引用した日付付きの AWS 記事 (BMLL 2025) から年を決めた。BMW Group は 20 PB の出典である AWS innovators ページに日付がないため、`year` は確認年の 2026
 
 ## 前提: 2026 年時点の S3 の規模
 
@@ -29,14 +29,14 @@ S3 20 周年の AWS News Blog (2026-03-13) によると、S3 は **500 兆を超
 
 - **業種**: 動画配信
 - **保存対象**: 分析用データウェアハウス / データレイクのテーブルデータ
-- **規模**: AWS re:Invent 2023 の講演 (NFX306) で「exabyte-scale data warehouse」と説明されている。講演紹介では、移行時点で約 300 PB が旧来の Apache Hive テーブル形式のまま残っていた
+- **規模**: AWS re:Invent 2023 の講演 (NFX306) で「exabyte-scale data warehouse」と説明されている。AWS Events 公式 YouTube の講演説明文では、Netflix のデータレイクは「約 1 エクサバイト」で、そのうち約 300 PB が旧来の Apache Hive テーブル形式のまま残っていた
 - **アーキテクチャ**:
   - S3 上のデータを、Netflix 自身が生み出したテーブルフォーマット **Apache Iceberg** で管理する
   - Hive から「Iceberg のみ」の構成へ移行するために、独自の移行ツール、secure Iceberg tables、Iceberg REST catalog を作った
   - データの物理的な移動とユーザーへの影響を最小限にする方針をとった
-- **成果**: ACID トランザクション、リッチなメタデータ層、クエリ性能の向上 (講演の要約より)。削減額などの数値は講演の紹介文には書かれていない
+- **成果**: ACID トランザクション、リッチなメタデータ層、クエリ性能の向上 (AWS 動画ページの講演要約より)。削減額などの数値はどちらの紹介文にも書かれていない
 - **教訓**: S3 は「ファイルを置く場所」で、テーブルとしての整合性やスキーマ進化はテーブルフォーマットが担う。Netflix は Iceberg の生みの親であり、S3 Tables (2024 年発表) のような「マネージド Iceberg」が登場する流れの起点になった
-- **出典**: [AWS re:Invent 2023 NFX306](https://aws.amazon.com/video/watch/3db41488539/)
+- **出典**: [AWS re:Invent 2023 NFX306 (YouTube、AWS Events)](https://www.youtube.com/watch?v=jMFMEk8jFu8), [AWS re:Invent 2023 NFX306 (AWS 動画ページ)](https://aws.amazon.com/video/watch/3db41488539/)
 
 ### 1.2 Snap — 2 EB を 3 か月で Glacier IR へ
 
@@ -213,17 +213,17 @@ S3 20 周年の AWS News Blog (2026-03-13) によると、S3 は **500 兆を超
 
 ## 4. 自動車・製造
 
-### 4.1 BMW Group — Cloud Data Hub (20 PB、日次 110 TB)
+### 4.1 BMW Group — Cloud Data Hub (20 PB 超)
 
 - **業種**: 自動車
 - **保存対象**: 開発・生産・販売・車両稼働データ
-- **規模**: 2020 年のローンチ時は「数 PB」。2024 年末の AWS ブログで 10 PB 超・1,500 データアセット・9,000 人超のユーザー。2026 年確認時点の AWS 事例ページでは **20 PB**、平均 **110 TB/日** を取り込み、2,000 万台超のコネクテッドカーからのデータを扱う
+- **規模**: AWS 事例ページ (日付なし) では **120 万台の車両から日次 10 TB** のデータを処理。2024 年 10 月の AWS Big Data Blog で 10 PB 超・1,500 データアセット・9,000 人超のユーザー (CDH は 2020 年に AWS と構築開始)。2026 年確認時点の BMW の AWS innovators ページでは、Cloud Data Hub は **20 PB 超** を扱え、**2,000 万台超** のコネクテッドカーからデータを受ける
 - **アーキテクチャ**:
-  - S3 上の全社データレイク「Cloud Data Hub (CDH)」。現在は Data Lakehouse として運用
+  - S3 上の全社データレイク「Cloud Data Hub (CDH)」
   - 技術メタデータカタログに AWS Glue、探索に Athena、BI に QuickSight
   - 当初はデータアセット単位の粗いアクセス制御しかなかったため、AWS Lake Formation を導入して細粒度アクセス制御に移行
 - **教訓**: データレイクは「置く」より「誰に何を見せるか」が後から問題になる。粒度の細かいアクセス制御は最初から設計に入れたほうがいい
-- **出典**: [AWS case study: BMW Group](https://aws.amazon.com/solutions/case-studies/bmw-group-case-study/), [AWS Big Data Blog: BMW と Lake Formation](https://aws.amazon.com/blogs/big-data/how-bmw-streamlined-data-access-using-aws-lake-formation-fine-grained-access-control/)
+- **出典**: [AWS case study: BMW Group](https://aws.amazon.com/solutions/case-studies/bmw-group-case-study/) (日次 10 TB、120 万台), [AWS innovators: BMW Group](https://aws.amazon.com/solutions/case-studies/innovators/bmw/) (20 PB、2,000 万台), [AWS Big Data Blog: BMW と Lake Formation](https://aws.amazon.com/blogs/big-data/how-bmw-streamlined-data-access-using-aws-lake-formation-fine-grained-access-control/)
 
 ### 4.2 Toyota Connected — 数百万パーティションの小さな Parquet 問題
 
@@ -268,7 +268,7 @@ S3 20 周年の AWS News Blog (2026-03-13) によると、S3 は **500 兆を超
 - **アーキテクチャ**: オンプレミスのデータレイクのスケール問題と取り出しの遅さを解消するため AWS へ移行。S3 + EMR、ストレージクラスに Intelligent-Tiering
 - **成果**: 年間 **数百万ドル** の削減と、データレイクの性能・弾力性の向上
 - **教訓**: ログの分析データは「直近は熱く、古いものはたまに読む」パターンだが、どれが読まれるかは予測しにくい。ここでも Intelligent-Tiering が選ばれている
-- **出典**: [AWS case study: Salesforce と S3 Intelligent-Tiering (アーカイブ。元の URL は現在 AWS の事例一覧にリダイレクトされる)](https://web.archive.org/web/2024/https://aws.amazon.com/solutions/case-studies/salesforce-amazons3-intelligent-tiering-case-study/)
+- **出典**: [AWS case study: Salesforce と S3 Intelligent-Tiering (Wayback Machine の 2024-06-18 スナップショット。元の URL は現在 AWS の事例一覧にリダイレクトされる)](https://web.archive.org/web/20240618113547/https://aws.amazon.com/solutions/case-studies/salesforce-amazons3-intelligent-tiering-case-study/)
 
 ### 5.4 Indeed — 101 PB の Hive データレイクを S3 Tables へ
 
@@ -314,7 +314,7 @@ S3 20 周年の AWS News Blog (2026-03-13) によると、S3 は **500 兆を超
 
 - **業種**: AI プラットフォーム (モデル / データセットのホスティング)
 - **保存対象**: モデル重み、データセット
-- **規模**: Git LFS バックエンドの S3 に合計 **45 PB** (Hub のストレージドキュメントの記載時点)。2025 年 7 月までの 6 か月で **50 万リポジトリ / 20 PB** を Xet に移行
+- **規模**: 2025 年 7 月までの 6 か月で **50 万リポジトリ / 20 PB** を Xet に移行。最大のユーザーは 6.1 PB (42,000 リポジトリ) と 1.7 PB (25,000 リポジトリ) を移した。S3 上の Git LFS ストア全体の容量は **未確認** (Hub のストレージドキュメントに数字がない)
 - **アーキテクチャ**:
   - 以前は Git LFS がファイルの SHA ハッシュをキーに S3 に保存していた
   - Xet は content-defined chunking でファイルをチャンクに分け、content addressed store (CAS) 経由でチャンクを S3 に保存する。ダウンロード時はクライアントが必要なチャンク範囲を S3 から取得して再構成する
@@ -421,11 +421,12 @@ S3 20 周年の AWS News Blog (2026-03-13) によると、S3 は **500 兆を超
 - **S3 の使い方**: Kafka プロトコル互換のステートレスなエージェントが、プロデューサーから受けたデータを直接 S3 に書き、コンシューマーには S3 から読んで返す。ローカルディスク、ブローカーのリバランス、ZooKeeper がない
 - **ベンダーの主張 (WarpStream 自身の数字)**:
   - 通常の Kafka はレプリケーションのために AZ 間通信が発生し、スループットの大きいクラスタでは費用の 70〜90% が AZ 間の帯域料金になる
-  - 1 GiB/s・保持 7 日の条件で、MSK 比 87% 安いと主張 (2026 年 4 月時点の比較)
+  - 一般的なワークロードで、自前運用の Kafka より TCO が 5〜10 分の 1 になると主張 (2023 年の発表記事)
+  - 1 GiB/s・保持 7 日・8,192 パーティションの条件で、MSK 比 87% 安い (月約 25,966 ドル対 205,502 ドル) と主張 (WarpStream の AI info ページ、2026 年 10 月確認)
   - S3 の API 料金を抑えるため、複数エージェントのバッファをまとめる工夫が必要
-- **トレードオフ**: 10 ms 未満のレイテンシが必要な用途には向かない。低レイテンシ版の Lightning Topics は S3 Express One Zone を使う
+- **トレードオフ**: 既定の設定はスループットとコスト優先で、produce レイテンシは p50 約 250 ms / p99 約 500 ms (2023 年の記事では P99 書き込みレイテンシ約 400 ms)。S3 Express One Zone と Lightning Topics を組み合わせると p50 35 ms 未満 / p99 50 ms 未満まで下がる (WarpStream ドキュメント) が、整合性の保証は緩くなる
 - **教訓**: S3 の 3 AZ 冗長を「タダで使えるレプリケーション」とみなすと、クラウドの AZ 間転送料金を構造的に消せる。代わりにレイテンシとリクエスト料金を設計で吸収する
-- **出典**: [WarpStream Blog: Kafka Is Dead, Long Live Kafka](https://www.warpstream.com/blog/kafka-is-dead-long-live-kafka), [WarpStream Blog: Minimizing S3 API Costs with Distributed mmap](https://www.warpstream.com/blog/minimizing-s3-api-costs-with-distributed-mmap)
+- **出典**: [WarpStream Blog: Kafka Is Dead, Long Live Kafka (2023-07-25)](https://www.warpstream.com/blog/kafka-is-dead-long-live-kafka), [WarpStream Blog: Minimizing S3 API Costs with Distributed mmap (2023-10-09)](https://www.warpstream.com/blog/minimizing-s3-api-costs-with-distributed-mmap), [WarpStream: AI info ページ (MSK 比較)](https://www.warpstream.com/ai-info), [WarpStream Docs: Low latency clusters](https://docs.warpstream.com/warpstream/kafka/advanced-agent-deployment-options/low-latency-clusters)
 
 ### 8.4 turbopuffer — S3 を正とするベクトル / 全文検索 DB
 
@@ -465,9 +466,9 @@ S3 20 周年の AWS News Blog (2026-03-13) によると、S3 は **500 兆を超
 - **規模とコスト** (DHH のブログより):
   - S3 の費用は年 150 万ドル弱 (4 年契約でこの価格)
   - 移行先は 2 つのデータセンターに置いた合計 **18 PB** の Pure Storage (約 1,600 km 離してレプリケーション)。ハードウェア約 150 万ドル、5 年間の保守が 100 万ドル弱
-  - S3 から移す必要があったのは **約 6 PB**。後に DHH は約 **50 億オブジェクト** を移したと投稿
-  - AWS は退出顧客向けの方針に沿って、約 25 万ドルの egress 料金を免除した
-- **成果**: 5 年でほぼ 500 万ドルの節約見込み (ブログ)。報道では年 130 万ドル、DHH の後の投稿では年 100 万ドル近く、など数字には揺れがある
+  - S3 から移す必要があったのは **約 6 PB**。後の DHH の投稿では約 50 億オブジェクトを移したとされる (**未確認**: リンク先の出典にはない)
+  - AWS は退出顧客向けの方針 (DHH によれば 60 日間の無料 egress 枠) に沿って、約 25 万ドルの egress 料金を免除した (The Register)
+- **成果**: 5 年でほぼ 500 万ドルの節約見込み (ブログ)。報道では年 130 万ドル、DHH の後の投稿では年 100 万ドル近くとされる (**未確認**: リンク先の出典にはない) など、数字には揺れがある
 - **注意**: 報道 (DCD) は、比較がハードウェアの初期費用中心で、運用人件費などを含んでいない可能性を指摘している
 - **教訓**:
   - Pure Storage が S3 互換 API を持っていたので、アプリ側の変更はほぼ不要だった。**S3 API は事実上の標準** になっていて、それが「離れやすさ」も生んでいる
@@ -484,7 +485,7 @@ S3 20 周年の AWS News Blog (2026-03-13) によると、S3 は **500 兆を超
 | 金融・規制 | 全取引データの長期保持と監査クエリ | データレイク、Glacier、Object Lock、Intelligent-Tiering | FINRA、Nasdaq、BMLL、Capital One |
 | 公共・科学 | 公開データ、誰が読むか予測不能 | Intelligent-Tiering、Open Data | NASA |
 | ライフサイエンス | 研究・実データ、たまに一括で読む | データレイク、Glacier | Moderna、Ancestry |
-| 自動車・製造 | 車両テレメトリ、日次 100 TB 級 | データレイク + Glue/Athena/Lake Formation | BMW、Toyota Connected |
+| 自動車・製造 | 車両テレメトリ、日次 10 TB 以上 | データレイク + Glue/Athena/Lake Formation | BMW、Toyota Connected |
 | EC・SaaS | ログと顧客アセット | Intelligent-Tiering、Iceberg / S3 Tables | Zalando、Bynder、Salesforce、Indeed、Grab |
 | AI | 学習データ、モデル重み、ベクトル | Storage Lens、Intelligent-Tiering、Express One Zone、S3 Vectors | Anthropic、Hugging Face、Pinterest、March Networks |
 | データ基盤製品 | 製品そのもののストレージ層 | 標準 S3、conditional write、Express One Zone | Snowflake、Databricks、WarpStream、turbopuffer、Neon |
@@ -642,7 +643,7 @@ Dropbox と 37signals に共通する条件は次の 3 つ。
 
 | 企業 | 業種 | 種別 | 規模 (年) | 主な機能 | 成果 |
 | --- | --- | --- | --- | --- | --- |
-| Netflix | 動画配信 | adopter | エクサバイト級 DWH (2023) | Iceberg、データレイク | Hive から約 300 PB を Iceberg へ |
+| Netflix | 動画配信 | adopter | 約 1 EB のデータレイク (2023) | Iceberg、データレイク | Hive に残っていた約 300 PB を Iceberg へ |
 | Snap | SNS | adopter | 2 EB / 1.5 兆ファイル (2022) | Glacier IR | 数千万ドル削減 |
 | Canva | デザイン SaaS | adopter | 230 PB / 3,000 億オブジェクト (2023) | Glacier IR、lifecycle、Storage Class Analysis | 年 360 万ドル削減 |
 | Pinterest | SNS | adopter | 約 1 EB (2021) | Deep Archive、Storage Lens、Inventory、Batch Operations | 年数百万ドル削減 |
@@ -658,7 +659,7 @@ Dropbox と 37signals に共通する条件は次の 3 つ。
 | NASA Earthdata | 公共・科学 | adopter | 170 PB 超 (2026) | Intelligent-Tiering、Open Data | 推定 60% 削減 |
 | Moderna | バイオ | adopter | 非公開 (2023) | データレイク | 抽出・分析 70% 高速化 |
 | Ancestry | 系図 | adopter | 数百 TB (2023) | Glacier | restore が日から時間へ |
-| BMW Group | 自動車 | adopter | 20 PB、日次 110 TB (2026) | データレイク、Lake Formation | 全社データ基盤 |
+| BMW Group | 自動車 | adopter | 20 PB 超、2,000 万台超 (2026) | データレイク、Lake Formation | 全社データ基盤 |
 | Toyota Connected | 自動車 | adopter | PB 級 (2022) | データレイク、EMR、Athena | 処理 27 分から 30 秒 |
 | Zalando | EC | adopter | 15 PB (2020) | Intelligent-Tiering、バージョニング | 年 37% 削減 |
 | Bynder | SaaS | adopter | 18 PB / 1.75 億アセット (2024) | Intelligent-Tiering | 65% 削減 |
@@ -666,7 +667,7 @@ Dropbox と 37signals に共通する条件は次の 3 つ。
 | Indeed | HR テック | adopter | 101 PB (2026) | S3 Tables、Replication、Intelligent-Tiering | 10% 削減、年 1,000 時間超 |
 | Grab | スーパーアプリ | adopter | PB 級 / 数十億オブジェクト (2026) | Iceberg | S3 API コスト最大 95% 削減 |
 | Anthropic | AI | adopter | 数百 PB (2023) | Storage Lens、Intelligent-Tiering | 講演紹介文に記載なし |
-| Hugging Face | AI | adopter | 45 PB (LFS)、Xet へ 20 PB (2025) | S3 Standard、presigned URL | チャンク単位の重複排除 |
+| Hugging Face | AI | adopter | Xet へ 20 PB / 50 万リポジトリ (2025) | S3 Standard、presigned URL | チャンク単位の重複排除 |
 | March Networks | 映像監視 | adopter | 数十億ベクトル (2025) | S3 Vectors、Glacier | 最大 80% 削減 (5 年) |
 | テレビ東京 | 放送 | adopter | 13 PB (2020) | S3、Glacier、lifecycle、Direct Connect | 年数千万円削減 |
 | NTT ドコモ | 通信 | adopter | 約 9,000 万会員 (2023) | データレイク | 利用アカウント 13 倍 |
@@ -675,11 +676,11 @@ Dropbox と 37signals に共通する条件は次の 3 つ。
 | ナビタイムジャパン | ナビ | adopter | 非公開 (2023) | Deep Archive | 月 100 万円超のコスト増 (反面教師) |
 | Snowflake | データ基盤製品 | built-on-s3 | — (2016 論文) | S3 Standard | ストレージ・コンピュート分離 |
 | Databricks | データ基盤製品 | built-on-s3 | — (2026) | S3 Standard、IAM | 顧客バケットにデータを保持 |
-| WarpStream | ストリーミング | built-on-s3 | — (2026) | S3 Standard、Express One Zone | MSK 比 87% 安い (ベンダー主張) |
+| WarpStream | ストリーミング | built-on-s3 | — (2023) | S3 Standard、Express One Zone | 自前 Kafka の 5〜10 分の 1 のコスト (ベンダー主張) |
 | turbopuffer | 検索 DB | built-on-s3 | — (2025) | S3 Standard | キャッシュ時 p50 14 ms |
 | Neon | サーバーレス Postgres | built-on-s3 | — (2023) | S3 Standard | scale-to-zero、ブランチ |
 | Dropbox | クラウドストレージ | migrated-away | 500 PB (2016) | — | 90% 超を自社基盤へ |
-| 37signals | SaaS | migrated-away | 約 6 PB / 50 億オブジェクト (2025) | — | 5 年で約 500 万ドル節約見込み |
+| 37signals | SaaS | migrated-away | 約 6 PB を移行 (2025) | — | 5 年で約 500 万ドル節約見込み |
 
 ## 12. 調査したが掲載を見送った企業
 
@@ -703,7 +704,7 @@ Dropbox と 37signals に共通する条件は次の 3 つ。
 
 1. [AWS News Blog: Twenty years of Amazon S3 and building what's next (2026)](https://aws.amazon.com/blogs/aws/twenty-years-of-amazon-s3-and-building-whats-next/)
 2. [Amazon S3 customers](https://aws.amazon.com/s3/customers/)
-3. [AWS re:Invent 2023 NFX306: Netflix's journey to an Apache Iceberg-only data lake](https://aws.amazon.com/video/watch/3db41488539/)
+3. [AWS re:Invent 2023 NFX306: Netflix's journey to an Apache Iceberg-only data lake](https://aws.amazon.com/video/watch/3db41488539/) ([YouTube](https://www.youtube.com/watch?v=jMFMEk8jFu8))
 4. [AWS case study: Snap](https://aws.amazon.com/solutions/case-studies/snap-case-study/)
 5. [Canva Engineering Blog: How Canva saves millions annually in Amazon S3 costs (2023)](https://www.canva.dev/blog/engineering/optimising-s3-savings/)
 6. [Amazon S3 Glacier Instant Retrieval](https://aws.amazon.com/s3/storage-classes/glacier/instant-retrieval/)
@@ -725,12 +726,12 @@ Dropbox と 37signals に共通する条件は次の 3 つ。
 22. [AWS case study: Moderna](https://aws.amazon.com/solutions/case-studies/moderna-case-study/)
 23. [AWS: Ancestry uses Amazon S3 Glacier (PDF)](https://d1.awsstatic.com/AWS%20Cloud%20Storage/Ancestry-uses-Amazon-S3-Glacier-to-restore-terabytes-of-images-in-mere-hours-instead-of-days.pdf)
 24. [AWS What's New: Amazon S3 Glacier improves restore throughput by up to 10x (2022)](https://aws.amazon.com/about-aws/whats-new/2022/11/amazon-s3-glacier-restore-throughput-10x-large-volumes-archived-data)
-25. [AWS case study: BMW Group](https://aws.amazon.com/solutions/case-studies/bmw-group-case-study/)
+25. [AWS case study: BMW Group](https://aws.amazon.com/solutions/case-studies/bmw-group-case-study/) ([innovators ページ](https://aws.amazon.com/solutions/case-studies/innovators/bmw/))
 26. [AWS Big Data Blog: How BMW streamlined data access using AWS Lake Formation](https://aws.amazon.com/blogs/big-data/how-bmw-streamlined-data-access-using-aws-lake-formation-fine-grained-access-control/)
 27. [AWS for Industries Blog: Toyota Connected optimizes EMR costs (2022)](https://aws.amazon.com/blogs/industries/toyota-connected-optimizes-emr-costs-and-improves-resiliency-of-batch-jobs/)
 28. [AWS Storage Blog: How Zalando built its data lake on Amazon S3 (2020)](https://aws.amazon.com/blogs/storage/how-zalando-built-its-data-lake-on-amazon-s3/)
 29. [AWS case study: Bynder](https://aws.amazon.com/solutions/case-studies/bynder-amazon-s3-case-study/)
-30. [AWS case study: Salesforce and S3 Intelligent-Tiering (アーカイブ)](https://web.archive.org/web/2024/https://aws.amazon.com/solutions/case-studies/salesforce-amazons3-intelligent-tiering-case-study/)
+30. [AWS case study: Salesforce and S3 Intelligent-Tiering (Wayback Machine、2024-06-18)](https://web.archive.org/web/20240618113547/https://aws.amazon.com/solutions/case-studies/salesforce-amazons3-intelligent-tiering-case-study/)
 31. [AWS case study: Indeed and Amazon S3 Tables](https://aws.amazon.com/solutions/case-studies/indeed-s3-tables-case-study/)
 32. [Amazon S3 Tables](https://aws.amazon.com/s3/features/tables/)
 33. [Grab Engineering: Scaling Grab's Data Lake: Our journey to Apache Iceberg adoption (2026)](https://engineering.grab.com/our-journey-to-apache-iceberg-adoption)
@@ -750,7 +751,7 @@ Dropbox と 37signals に共通する条件は次の 3 つ。
 47. [Databricks Blog: Your data, your storage, your rules (2026)](https://www.databricks.com/blog/your-data-your-storage-your-rules-2026-guide-storing-unity-catalog-managed-tables)
 48. [Databricks Docs: Delta Lake limitations on S3](https://docs.databricks.com/aws/en/delta/s3-limitations)
 49. [WarpStream Blog: Kafka Is Dead, Long Live Kafka](https://www.warpstream.com/blog/kafka-is-dead-long-live-kafka)
-50. [WarpStream Blog: Minimizing S3 API Costs with Distributed mmap](https://www.warpstream.com/blog/minimizing-s3-api-costs-with-distributed-mmap)
+50. [WarpStream Blog: Minimizing S3 API Costs with Distributed mmap](https://www.warpstream.com/blog/minimizing-s3-api-costs-with-distributed-mmap) ([AI info ページ](https://www.warpstream.com/ai-info)、[low latency clusters](https://docs.warpstream.com/warpstream/kafka/advanced-agent-deployment-options/low-latency-clusters) も参照)
 51. [turbopuffer Docs: Architecture](https://turbopuffer.com/docs/architecture)
 52. [Jason Liu: TurboPuffer: Object Storage-First Vector Database Architecture (2025)](https://jxnl.co/writing/2025/09/11/turbopuffer-object-storage-first-vector-database-architecture/)
 53. [GitHub: neondatabase/neon](https://github.com/neondatabase/neon)

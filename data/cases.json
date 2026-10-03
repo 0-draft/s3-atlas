@@ -5,12 +5,12 @@
     "industry": { "en": "Media / streaming", "ja": "動画配信" },
     "region": "global",
     "summary": { "en": "Runs an exabyte-scale data warehouse on S3 and migrated it from Hive to an Apache Iceberg-only architecture.", "ja": "S3 上のエクサバイト級データウェアハウスを Hive から Apache Iceberg のみの構成へ移行した。" },
-    "scale": { "en": "Exabyte-scale; ~300 PB migrated from Hive", "ja": "エクサバイト級、約 300 PB を Hive から移行" },
+    "scale": { "en": "~1 EB data lake; ~300 PB still in Hive at migration", "ja": "約 1 EB のデータレイク、うち約 300 PB が Hive に残っていた" },
     "features": ["Data lake", "Apache Iceberg"],
     "outcome": { "en": "ACID transactions, richer metadata and better query performance; no cost figures published.", "ja": "ACID トランザクション、メタデータ強化、クエリ性能向上。削減額は非公開。" },
     "year": 2023,
     "kind": "adopter",
-    "url": "https://aws.amazon.com/video/watch/3db41488539/"
+    "url": "https://www.youtube.com/watch?v=jMFMEk8jFu8"
   },
   {
     "id": "snap",
@@ -213,12 +213,12 @@
     "industry": { "en": "Automotive", "ja": "自動車" },
     "region": "eu",
     "summary": { "en": "Runs the company-wide Cloud Data Hub on S3 with Glue, Athena and Lake Formation for fine-grained access.", "ja": "全社データ基盤 Cloud Data Hub を S3 上で運用し、Glue、Athena、Lake Formation で細粒度アクセス制御を行う。" },
-    "scale": { "en": "20 PB, ~110 TB ingested daily", "ja": "20 PB、日次約 110 TB を取り込み" },
+    "scale": { "en": "20+ PB, 20M+ connected vehicles", "ja": "20 PB 超、2,000 万台超のコネクテッドカー" },
     "features": ["Data lake", "Lake Formation"],
     "outcome": { "en": "Serves data from 20M+ connected vehicles across the organization.", "ja": "2,000 万台超のコネクテッドカーのデータを全社で活用。" },
     "year": 2026,
     "kind": "adopter",
-    "url": "https://aws.amazon.com/solutions/case-studies/bmw-group-case-study/"
+    "url": "https://aws.amazon.com/solutions/case-studies/innovators/bmw/"
   },
   {
     "id": "toyota-connected",
@@ -270,7 +270,7 @@
     "outcome": { "en": "Millions of dollars saved annually with better performance and elasticity.", "ja": "年間数百万ドルの削減と、性能・弾力性の向上。" },
     "year": 2023,
     "kind": "adopter",
-    "url": "https://web.archive.org/web/2024/https://aws.amazon.com/solutions/case-studies/salesforce-amazons3-intelligent-tiering-case-study/"
+    "url": "https://web.archive.org/web/20240618113547/https://aws.amazon.com/solutions/case-studies/salesforce-amazons3-intelligent-tiering-case-study/"
   },
   {
     "id": "indeed",
@@ -317,7 +317,7 @@
     "industry": { "en": "AI platform (model and dataset hosting)", "ja": "AI プラットフォーム (モデル / データセット)" },
     "region": "global",
     "summary": { "en": "Stores Hub files in S3 and moved from Git LFS to Xet, which keeps deduplicated content-defined chunks in S3.", "ja": "Hub のファイルを S3 に置き、Git LFS から、重複排除したチャンクを S3 に保存する Xet へ移行した。" },
-    "scale": { "en": "45 PB on the LFS backend; 20 PB / 500,000 repos moved to Xet", "ja": "LFS バックエンドで 45 PB、Xet へ 20 PB / 50 万リポジトリを移行" },
+    "scale": { "en": "20 PB / 500,000 repos moved to Xet", "ja": "Xet へ 20 PB / 50 万リポジトリを移行" },
     "features": ["S3 Standard", "Presigned URLs"],
     "outcome": { "en": "Chunk-level deduplication; CAS throughput peaked around 300 Gb/s during migration.", "ja": "チャンク単位の重複排除。移行中の CAS スループットはピーク約 300 Gb/s。" },
     "year": 2025,
@@ -436,8 +436,8 @@
     "summary": { "en": "Stateless Kafka-compatible agents write directly to S3, removing local disks and inter-AZ replication traffic.", "ja": "Kafka 互換のステートレスなエージェントが S3 に直接書き込み、ローカルディスクと AZ 間レプリケーション通信をなくす。" },
     "scale": null,
     "features": ["S3 Standard", "S3 Express One Zone"],
-    "outcome": { "en": "Vendor claims ~87% lower cost than MSK for a 1 GiB/s workload.", "ja": "1 GiB/s のワークロードで MSK 比約 87% 安いとベンダーが主張。" },
-    "year": 2026,
+    "outcome": { "en": "Vendor claims 5-10x lower TCO than self-hosted Kafka; inter-zone bandwidth is 70-90% of high-throughput Kafka cost.", "ja": "自前運用の Kafka より TCO が 5〜10 分の 1 になるとベンダーが主張。高スループットの Kafka では費用の 70〜90% が AZ 間帯域料金。" },
+    "year": 2023,
     "kind": "built-on-s3",
     "url": "https://www.warpstream.com/blog/kafka-is-dead-long-live-kafka"
   },
@@ -486,9 +486,9 @@
     "industry": { "en": "SaaS (Basecamp, HEY)", "ja": "SaaS (Basecamp、HEY)" },
     "region": "us",
     "summary": { "en": "Left S3 for an 18 PB dual-datacenter Pure Storage setup with an S3-compatible API when its four-year contract ended.", "ja": "4 年契約の満了に合わせ、S3 互換 API を持つ 18 PB・2 拠点の Pure Storage へ移った。" },
-    "scale": { "en": "~6 PB / ~5 billion objects moved", "ja": "約 6 PB / 約 50 億オブジェクトを移行" },
+    "scale": { "en": "~6 PB moved out of S3", "ja": "S3 から約 6 PB を移行" },
     "features": [],
-    "outcome": { "en": "Almost $5M projected savings over five years; AWS waived ~$250K in egress fees.", "ja": "5 年でほぼ 500 万ドルの節約見込み。AWS が約 25 万ドルの egress 料金を免除。" },
+    "outcome": { "en": "Almost $5M projected savings over five years; AWS's free 60-day egress window brought egress fees to $0.", "ja": "5 年でほぼ 500 万ドルの節約見込み。AWS の 60 日間無料 egress 枠で egress 料金は 0 ドル。" },
     "year": 2025,
     "kind": "migrated-away",
     "url": "https://world.hey.com/dhh/it-s-five-grand-a-day-to-miss-our-s3-exit-b8293563"
