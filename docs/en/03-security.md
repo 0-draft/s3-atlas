@@ -27,27 +27,27 @@ Dated facts (for example, "SSE-C disabled by default in 2026-04") were checked a
 
 Under the AWS Shared Responsibility Model, AWS is responsible for security **of** the cloud and the customer is responsible for security **in** the cloud. Because S3 is a managed, abstracted service, the customer's responsibility comes down almost entirely to configuring data and access controls.
 
-| Area | AWS responsibility | Customer responsibility |
-| --- | --- | --- |
-| Physical | Data centers, disk disposal, power, physical access | None |
-| Infrastructure | The S3 fleet, network, hypervisor, durability (designed for 11 nines) | None |
-| Service defaults | SSE-S3 default encryption, BPA enabled by default, ACLs disabled by default, SSE-C disabled by default | Do not loosen the defaults / audit them |
-| Access control | Correctness of the evaluation engine | Designing IAM / bucket policies / SCPs / RCPs / endpoint policies |
-| Encryption keys | SSE-S3 key management, KMS HSMs | KMS key policies, rotation, choice of CMK, storing SSE-C keys |
-| Data protection | Redundancy | Versioning, Object Lock, replication, backups |
-| Auditing | CloudTrail / log delivery infrastructure | Enabling CloudTrail data events, preserving and analyzing logs |
-| Application | None | Preventing application vulnerabilities such as SSRF and credential leaks |
+| Area             | AWS responsibility                                                                                     | Customer responsibility                                                  |
+| ---------------- | ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------ |
+| Physical         | Data centers, disk disposal, power, physical access                                                    | None                                                                     |
+| Infrastructure   | The S3 fleet, network, hypervisor, durability (designed for 11 nines)                                  | None                                                                     |
+| Service defaults | SSE-S3 default encryption, BPA enabled by default, ACLs disabled by default, SSE-C disabled by default | Do not loosen the defaults / audit them                                  |
+| Access control   | Correctness of the evaluation engine                                                                   | Designing IAM / bucket policies / SCPs / RCPs / endpoint policies        |
+| Encryption keys  | SSE-S3 key management, KMS HSMs                                                                        | KMS key policies, rotation, choice of CMK, storing SSE-C keys            |
+| Data protection  | Redundancy                                                                                             | Versioning, Object Lock, replication, backups                            |
+| Auditing         | CloudTrail / log delivery infrastructure                                                               | Enabling CloudTrail data events, preserving and analyzing logs           |
+| Application      | None                                                                                                   | Preventing application vulnerabilities such as SSRF and credential leaks |
 
 The key point: **since 2018, AWS has gradually built secure-by-default settings into S3**. Many historical incidents happened because the defaults at the time were permissive, or because the customer explicitly loosened them.
 
-| Date | Change to defaults |
-| --- | --- |
-| 2018-11 | S3 Block Public Access launched |
-| 2023-01-05 | SSE-S3 applied by default to new objects in all buckets |
-| 2023-04 | New buckets default to BPA enabled + ACLs disabled (Object Ownership = BucketOwnerEnforced) |
-| 2025-11 | BPA can be enforced at the organization level with AWS Organizations S3 policies |
-| 2026-03 | Account regional namespaces (bucketsquatting mitigation) |
-| 2026-04 | SSE-C disabled by default for new buckets and others |
+| Date       | Change to defaults                                                                          |
+| ---------- | ------------------------------------------------------------------------------------------- |
+| 2018-11    | S3 Block Public Access launched                                                             |
+| 2023-01-05 | SSE-S3 applied by default to new objects in all buckets                                     |
+| 2023-04    | New buckets default to BPA enabled + ACLs disabled (Object Ownership = BucketOwnerEnforced) |
+| 2025-11    | BPA can be enforced at the organization level with AWS Organizations S3 policies            |
+| 2026-03    | Account regional namespaces (bucketsquatting mitigation)                                    |
+| 2026-04    | SSE-C disabled by default for new buckets and others                                        |
 
 ## 2. Authorization evaluation logic (most important)
 
@@ -55,19 +55,19 @@ The key point: **since 2018, AWS has gradually built secure-by-default settings 
 
 A single S3 request can be subject to all of the following policies at once.
 
-| Policy type | Attached to | Role | Can it grant Allow? |
-| --- | --- | --- | --- |
-| SCP (Service Control Policy) | Organizations root / OU / account | **Upper bound** on the principal side | No (filter only) |
-| RCP (Resource Control Policy, 2024-11) | Organizations root / OU / account | **Upper bound** on the resource side | No (filter only) |
-| IAM identity-based policy | IAM user / role / group | Grants permissions | Yes |
-| Permissions boundary | IAM user / role | Upper bound on identity-based permissions | No |
-| Session policy | Passed at AssumeRole / GetFederationToken | Upper bound on the session | No |
-| Bucket policy | Bucket | Resource-based permission grants | Yes |
-| Access point policy | Access point | Permission grants via the access point | Yes (ANDed with the bucket policy) |
-| VPC endpoint policy | Gateway / Interface endpoint | Upper bound for traffic through the endpoint | No (filter) |
-| ACL (legacy) | Bucket / object | Resource-based permission grants | Yes (only when ACLs are enabled) |
-| KMS key policy | KMS key | Whether the key can be used for SSE-KMS objects | Yes (on the KMS side) |
-| Block Public Access | Org / account / bucket / AP | Neutralizes public grants | No |
+| Policy type                            | Attached to                               | Role                                            | Can it grant Allow?                |
+| -------------------------------------- | ----------------------------------------- | ----------------------------------------------- | ---------------------------------- |
+| SCP (Service Control Policy)           | Organizations root / OU / account         | **Upper bound** on the principal side           | No (filter only)                   |
+| RCP (Resource Control Policy, 2024-11) | Organizations root / OU / account         | **Upper bound** on the resource side            | No (filter only)                   |
+| IAM identity-based policy              | IAM user / role / group                   | Grants permissions                              | Yes                                |
+| Permissions boundary                   | IAM user / role                           | Upper bound on identity-based permissions       | No                                 |
+| Session policy                         | Passed at AssumeRole / GetFederationToken | Upper bound on the session                      | No                                 |
+| Bucket policy                          | Bucket                                    | Resource-based permission grants                | Yes                                |
+| Access point policy                    | Access point                              | Permission grants via the access point          | Yes (ANDed with the bucket policy) |
+| VPC endpoint policy                    | Gateway / Interface endpoint              | Upper bound for traffic through the endpoint    | No (filter)                        |
+| ACL (legacy)                           | Bucket / object                           | Resource-based permission grants                | Yes (only when ACLs are enabled)   |
+| KMS key policy                         | KMS key                                   | Whether the key can be used for SSE-KMS objects | Yes (on the KMS side)              |
+| Block Public Access                    | Org / account / bucket / AP               | Neutralizes public grants                       | No                                 |
 
 RCPs launched in 2024-11 as a new AWS Organizations policy type, supported by S3, STS, KMS, SQS, Secrets Manager, and others (re:Post notes that ECR and OpenSearch Serverless were added later). An SCP caps what principals in your organization can do; an RCP caps what **anyone (including external principals)** can do to resources in your organization. Like SCPs, RCPs do not apply to service-linked roles (SLRs).
 
@@ -128,11 +128,11 @@ flowchart TD
 
 In IAM evaluation logic, the interaction between same-account resource-based policies and permissions boundaries / session policies has the following nuances (from the IAM User Guide, "Policy evaluation logic").
 
-| Principal specified in the resource-based policy | Implicit deny from permissions boundary | Implicit deny from session policy |
-| --- | --- | --- |
-| IAM user ARN | Not restricted (the resource policy Allow takes effect) | N/A |
-| IAM role ARN | Restricted | Restricted |
-| Role session ARN (assumed-role) | Not restricted | Not restricted |
+| Principal specified in the resource-based policy | Implicit deny from permissions boundary                 | Implicit deny from session policy |
+| ------------------------------------------------ | ------------------------------------------------------- | --------------------------------- |
+| IAM user ARN                                     | Not restricted (the resource policy Allow takes effect) | N/A                               |
+| IAM role ARN                                     | Restricted                                              | Restricted                        |
+| Role session ARN (assumed-role)                  | Not restricted                                          | Not restricted                    |
 
 In practice, remember this: "If you want a boundary to reliably apply even within the same account, specify the role ARN in the resource policy."
 
@@ -156,14 +156,14 @@ Requests made through an access point need permission from **both the access poi
 
 ### 2.8 Common causes of 403 errors
 
-| Symptom | Typical cause | How to check |
-| --- | --- | --- |
-| GetObject returns 403 within the same account | Explicit Deny (for example, an aws:SourceVpce condition) | errorMessage in CloudTrail, IAM Policy Simulator |
-| 403 cross-account | Missing Allow on one side | Check the policies in both accounts |
-| 403 only for SSE-KMS objects | Insufficient KMS key policy | kms.amazonaws.com events in CloudTrail |
-| 403 only for ListBucket | Resource does not include the bucket ARN (without the trailing /*) | The policy's Resource |
-| Sudden 403 across the organization | An SCP / RCP was added | List of policies in Organizations |
-| SSE-C upload returns 403 | SSE-C blocked by default since 2026-04 | BlockedEncryptionTypes in GetBucketEncryption |
+| Symptom                                       | Typical cause                                                      | How to check                                     |
+| --------------------------------------------- | ------------------------------------------------------------------ | ------------------------------------------------ |
+| GetObject returns 403 within the same account | Explicit Deny (for example, an aws:SourceVpce condition)           | errorMessage in CloudTrail, IAM Policy Simulator |
+| 403 cross-account                             | Missing Allow on one side                                          | Check the policies in both accounts              |
+| 403 only for SSE-KMS objects                  | Insufficient KMS key policy                                        | kms.amazonaws.com events in CloudTrail           |
+| 403 only for ListBucket                       | Resource does not include the bucket ARN (without the trailing /*) | The policy's Resource                            |
+| Sudden 403 across the organization            | An SCP / RCP was added                                             | List of policies in Organizations                |
+| SSE-C upload returns 403                      | SSE-C blocked by default since 2026-04                             | BlockedEncryptionTypes in GetBucketEncryption    |
 
 Since 2024-08, S3 AccessDenied messages for same-account requests include the type of policy that denied the request (for example, `explicit deny in a service control policy`), the reason, and the requesting principal. In 2026-08 this was extended so that, for same-account and same-organization requests, the message also includes **the ARN of the denying policy** (SCP / RCP / identity / session / boundary), which makes troubleshooting much easier.
 
@@ -171,11 +171,11 @@ Since 2024-08, S3 AccessDenied messages for same-account requests include the ty
 
 ### 3.1 The three settings
 
-| Setting | ACLs | Object owner | Recommendation |
-| --- | --- | --- | --- |
-| BucketOwnerEnforced | Disabled (PUTs with ACLs other than `bucket-owner-full-control` are rejected) | Always the bucket owner | Recommended; default since 2023-04 |
-| BucketOwnerPreferred | Enabled | Bucket owner if `bucket-owner-full-control` is specified | Migration period only |
-| ObjectWriter | Enabled | The uploading account | Legacy |
+| Setting              | ACLs                                                                          | Object owner                                             | Recommendation                     |
+| -------------------- | ----------------------------------------------------------------------------- | -------------------------------------------------------- | ---------------------------------- |
+| BucketOwnerEnforced  | Disabled (PUTs with ACLs other than `bucket-owner-full-control` are rejected) | Always the bucket owner                                  | Recommended; default since 2023-04 |
+| BucketOwnerPreferred | Enabled                                                                       | Bucket owner if `bucket-owner-full-control` is specified | Migration period only              |
+| ObjectWriter         | Enabled                                                                       | The uploading account                                    | Legacy                             |
 
 Since 2023-04, new buckets default to BPA enabled and BucketOwnerEnforced. Use cases that still need ACLs are limited (for example, log delivery from some older AWS services, or the legacy method for CloudFront standard logs).
 
@@ -200,11 +200,11 @@ aws s3api put-bucket-ownership-controls \
 
 ### 4.1 The four settings
 
-| Setting | Target | Effect |
-| --- | --- | --- |
-| BlockPublicAcls | ACL | Rejects PUTs that grant public ACLs (does not change existing ACLs) |
-| IgnorePublicAcls | ACL | Ignores existing public ACLs |
-| BlockPublicPolicy | Policy | Rejects setting public bucket / access point policies |
+| Setting               | Target | Effect                                                                                                                                                                      |
+| --------------------- | ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| BlockPublicAcls       | ACL    | Rejects PUTs that grant public ACLs (does not change existing ACLs)                                                                                                         |
+| IgnorePublicAcls      | ACL    | Ignores existing public ACLs                                                                                                                                                |
+| BlockPublicPolicy     | Policy | Rejects setting public bucket / access point policies                                                                                                                       |
 | RestrictPublicBuckets | Policy | Restricts access to buckets with public policies to AWS service principals and authorized users within the bucket owner's account (ignores public and cross-account access) |
 
 The "Block" settings **reject new configurations**, while the "Ignore / Restrict" settings **neutralize existing configurations**.
@@ -230,12 +230,12 @@ S3 applies **the most restrictive** of the bucket, account, and organization set
 
 S3 considers a policy public when its Principal is `*` (or all AWS users) and it lacks a condition that narrows access to fixed values, such as the following.
 
-| Example conditions that keep a policy non-public | Description |
-| --- | --- |
-| `aws:SourceVpce` / `aws:SourceVpc` | Limits to specific VPCs / VPCEs |
-| `aws:SourceIp` (fixed CIDR) | Limits to specific IPs (broad ranges such as 0.0.0.0/1 do not count) |
-| `aws:PrincipalOrgID` / `aws:PrincipalAccount` | Limits to a specific organization / account |
-| `aws:SourceArn` / `aws:SourceAccount` | Limits to specific AWS service resources (such as CloudFront OAC) |
+| Example conditions that keep a policy non-public | Description                                                          |
+| ------------------------------------------------ | -------------------------------------------------------------------- |
+| `aws:SourceVpce` / `aws:SourceVpc`               | Limits to specific VPCs / VPCEs                                      |
+| `aws:SourceIp` (fixed CIDR)                      | Limits to specific IPs (broad ranges such as 0.0.0.0/1 do not count) |
+| `aws:PrincipalOrgID` / `aws:PrincipalAccount`    | Limits to a specific organization / account                          |
+| `aws:SourceArn` / `aws:SourceAccount`            | Limits to specific AWS service resources (such as CloudFront OAC)    |
 
 Note that conditions containing wildcards or policy variables are not treated as fixed values for the public determination.
 
@@ -297,14 +297,14 @@ flowchart TD
 
 ### 5.2 Comparison of server-side encryption options
 
-| Method | Where the key lives | Key access control | Auditing | Cost | Main use |
-| --- | --- | --- | --- | --- | --- |
-| SSE-S3 | Managed by S3 | S3 permissions only | None (no key usage logs) | Free | Default. Baseline at-rest encryption |
-| SSE-KMS (AWS managed key `aws/s3`) | KMS | Key policy cannot be changed | KMS calls in CloudTrail | KMS request charges | Not usable cross-account, so generally not recommended |
-| SSE-KMS (customer managed key) | KMS | Fine-grained control with key policies / grants | CloudTrail | Monthly key fee + request charges | Regulatory compliance, separation of duties, cross-account |
-| DSSE-KMS | KMS | Same as above | CloudTrail | Higher than SSE-KMS | Dual-layer encryption requirements such as CNSSP 15 |
-| SSE-C | Customer sends it with every request | Whoever knows the key | None | Free | Blocked by default since 2026-04. Not recommended for new adoption |
-| CSE | Customer | Customer | Customer | Customer | When you do not want S3 to see plaintext |
+| Method                             | Where the key lives                  | Key access control                              | Auditing                 | Cost                              | Main use                                                           |
+| ---------------------------------- | ------------------------------------ | ----------------------------------------------- | ------------------------ | --------------------------------- | ------------------------------------------------------------------ |
+| SSE-S3                             | Managed by S3                        | S3 permissions only                             | None (no key usage logs) | Free                              | Default. Baseline at-rest encryption                               |
+| SSE-KMS (AWS managed key `aws/s3`) | KMS                                  | Key policy cannot be changed                    | KMS calls in CloudTrail  | KMS request charges               | Not usable cross-account, so generally not recommended             |
+| SSE-KMS (customer managed key)     | KMS                                  | Fine-grained control with key policies / grants | CloudTrail               | Monthly key fee + request charges | Regulatory compliance, separation of duties, cross-account         |
+| DSSE-KMS                           | KMS                                  | Same as above                                   | CloudTrail               | Higher than SSE-KMS               | Dual-layer encryption requirements such as CNSSP 15                |
+| SSE-C                              | Customer sends it with every request | Whoever knows the key                           | None                     | Free                              | Blocked by default since 2026-04. Not recommended for new adoption |
+| CSE                                | Customer                             | Customer                                        | Customer                 | Customer                          | When you do not want S3 to see plaintext                           |
 
 ### 5.3 SSE-S3 becomes the default (2023-01)
 
@@ -433,13 +433,13 @@ In 2025-05, access points became available for S3 Express One Zone (directory bu
 
 An MRAP groups buckets in multiple Regions behind a single global endpoint (`xxxx.mrap.accesspoint.s3-global.amazonaws.com`) and routes requests to the nearest Region over the AWS Global Accelerator infrastructure.
 
-| Item | Details |
-| --- | --- |
-| Signing | Requires SigV4A (multi-Region asymmetric signing) |
-| Failover | Active-active or active-passive (manual switchover with failover controls) |
-| BPA | BPA per MRAP (cannot be changed after creation) - Security Hub S3.24 |
-| Data synchronization | The MRAP itself does not replicate. Configure CRR separately |
-| Pricing | Data routing charges + acceleration charges (when over the internet) |
+| Item                 | Details                                                                    |
+| -------------------- | -------------------------------------------------------------------------- |
+| Signing              | Requires SigV4A (multi-Region asymmetric signing)                          |
+| Failover             | Active-active or active-passive (manual switchover with failover controls) |
+| BPA                  | BPA per MRAP (cannot be changed after creation) - Security Hub S3.24       |
+| Data synchronization | The MRAP itself does not replicate. Configure CRR separately               |
+| Pricing              | Data routing charges + acceleration charges (when over the internet)       |
 
 ### 6.4 S3 Access Grants
 
@@ -466,13 +466,13 @@ This is useful when expressing thousands to tens of thousands of user × prefix 
 
 A presigned URL delegates a specific operation, with the creator's permissions and for a limited time, to anyone who holds the URL. It uses SigV4 query string authentication (`X-Amz-Algorithm`, `X-Amz-Credential`, `X-Amz-Date`, `X-Amz-Expires`, `X-Amz-SignedHeaders`, `X-Amz-Signature`).
 
-| Credentials used to create it | Maximum validity |
-| --- | --- |
-| Long-term access keys of an IAM user (SigV4) | Up to 7 days (604800 seconds) |
-| Temporary credentials of an IAM role | Until the role session expires (expires first even if a longer Expires is set) |
-| EC2 instance profile | Validity of the role credentials (usually around 6 hours) |
-| STS temporary credentials | Validity of the temporary credentials |
-| Console | 1 minute to 12 hours |
+| Credentials used to create it                | Maximum validity                                                               |
+| -------------------------------------------- | ------------------------------------------------------------------------------ |
+| Long-term access keys of an IAM user (SigV4) | Up to 7 days (604800 seconds)                                                  |
+| Temporary credentials of an IAM role         | Until the role session expires (expires first even if a longer Expires is set) |
+| EC2 instance profile                         | Validity of the role credentials (usually around 6 hours)                      |
+| STS temporary credentials                    | Validity of the temporary credentials                                          |
+| Console                                      | 1 minute to 12 hours                                                           |
 
 Important caveats:
 
@@ -494,15 +494,15 @@ This method lets an HTML form upload directly to S3. The server builds a policy 
 {
   "expiration": "2026-10-03T12:00:00.000Z",
   "conditions": [
-    {"bucket": "amzn-s3-demo-bucket"},
+    { "bucket": "amzn-s3-demo-bucket" },
     ["starts-with", "$key", "uploads/user-42/"],
-    {"acl": "private"},
+    { "acl": "private" },
     ["starts-with", "$Content-Type", "image/"],
     ["content-length-range", 1, 10485760],
-    {"x-amz-server-side-encryption": "aws:kms"},
-    {"x-amz-algorithm": "AWS4-HMAC-SHA256"},
-    {"x-amz-credential": "AKIAIOSFODNN7EXAMPLE/20261003/ap-northeast-1/s3/aws4_request"},
-    {"x-amz-date": "20261003T000000Z"}
+    { "x-amz-server-side-encryption": "aws:kms" },
+    { "x-amz-algorithm": "AWS4-HMAC-SHA256" },
+    { "x-amz-credential": "AKIAIOSFODNN7EXAMPLE/20261003/ap-northeast-1/s3/aws4_request" },
+    { "x-amz-date": "20261003T000000Z" }
   ]
 }
 ```
@@ -537,13 +537,13 @@ Combining `"AllowedOrigins": ["*"]` with presigned URLs is not dangerous in itse
 
 Object Lock provides WORM (write once, read many) storage and has a third-party assessment (Cohasset Associates) against requirements such as SEC 17a-4(f), FINRA 4511, and CFTC 1.31. It requires versioning, and locks apply **per object version**.
 
-| Mechanism | Details | Who can remove it |
-| --- | --- | --- |
-| Retention (governance mode) | Prohibits deletion, overwrite, and configuration changes until the retention date | `s3:BypassGovernanceRetention` permission + the `x-amz-bypass-governance-retention: true` header |
-| Retention (compliance mode) | No one can delete until the retention date. The period cannot be shortened and the mode cannot be changed | No one (not root, not AWS Support. Only closing the account) |
-| Legal hold | Retention with no expiration. Stays in effect until removed | Anyone with the `s3:PutObjectLegalHold` permission |
-| Default retention | The bucket's default retention setting (applied automatically to new objects) | `s3:PutBucketObjectLockConfiguration` |
-| Event hold (2026-09) | Variable retention whose period starts from a future event (contract end, audit completion, and so on). Protected while on hold; after release, the object is kept as WORM for the specified period | Dedicated IAM / bucket policy condition keys control who can set or release it and the minimum and maximum periods |
+| Mechanism                   | Details                                                                                                                                                                                             | Who can remove it                                                                                                  |
+| --------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| Retention (governance mode) | Prohibits deletion, overwrite, and configuration changes until the retention date                                                                                                                   | `s3:BypassGovernanceRetention` permission + the `x-amz-bypass-governance-retention: true` header                   |
+| Retention (compliance mode) | No one can delete until the retention date. The period cannot be shortened and the mode cannot be changed                                                                                           | No one (not root, not AWS Support. Only closing the account)                                                       |
+| Legal hold                  | Retention with no expiration. Stays in effect until removed                                                                                                                                         | Anyone with the `s3:PutObjectLegalHold` permission                                                                 |
+| Default retention           | The bucket's default retention setting (applied automatically to new objects)                                                                                                                       | `s3:PutBucketObjectLockConfiguration`                                                                              |
+| Event hold (2026-09)        | Variable retention whose period starts from a future event (contract end, audit completion, and so on). Protected while on hold; after release, the object is kept as WORM for the specified period | Dedicated IAM / bucket policy condition keys control who can set or release it and the minimum and maximum periods |
 
 ```mermaid
 stateDiagram-v2
@@ -601,15 +601,15 @@ aws s3api put-bucket-versioning \
 
 ### 9.1 Gateway endpoints vs interface endpoints
 
-| Item | Gateway endpoint | Interface endpoint (PrivateLink) |
-| --- | --- | --- |
-| How it works | Adds a prefix list (pl-xxxx) to route tables | Creates ENIs (private IPs) in the VPC |
-| Pricing | Free | Hourly charge + data processing charge |
-| From on-premises / other VPCs | Not usable (VPC only) | Usable over Direct Connect / VPN / peering |
-| DNS | Keeps the public DNS names | Endpoint-specific DNS, or enable private DNS |
-| Region | Same Region only | Same Region, and since 2025-11 also S3 in another Region of the same partition via cross-Region PrivateLink (requires the `vpce:AllowMultiRegion` permission) |
-| Policy | Endpoint policy supported | Endpoint policy supported |
-| Condition keys | `aws:SourceVpce`, `aws:SourceVpc` | `aws:SourceVpce`, `aws:SourceVpc` |
+| Item                          | Gateway endpoint                             | Interface endpoint (PrivateLink)                                                                                                                              |
+| ----------------------------- | -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| How it works                  | Adds a prefix list (pl-xxxx) to route tables | Creates ENIs (private IPs) in the VPC                                                                                                                         |
+| Pricing                       | Free                                         | Hourly charge + data processing charge                                                                                                                        |
+| From on-premises / other VPCs | Not usable (VPC only)                        | Usable over Direct Connect / VPN / peering                                                                                                                    |
+| DNS                           | Keeps the public DNS names                   | Endpoint-specific DNS, or enable private DNS                                                                                                                  |
+| Region                        | Same Region only                             | Same Region, and since 2025-11 also S3 in another Region of the same partition via cross-Region PrivateLink (requires the `vpce:AllowMultiRegion` permission) |
+| Policy                        | Endpoint policy supported                    | Endpoint policy supported                                                                                                                                     |
+| Condition keys                | `aws:SourceVpce`, `aws:SourceVpc`            | `aws:SourceVpce`, `aws:SourceVpc`                                                                                                                             |
 
 ```text
 [EC2 in VPC] --(route: pl-xxxx)--> [Gateway VPCE] ----> S3 (same Region)
@@ -626,11 +626,11 @@ A VPC endpoint policy sets the upper bound on which S3 resources can be accessed
 
 An AWS data perimeter is built by combining the following three boundaries across three dimensions: identity, resource, and network.
 
-| Boundary | Meaning | Main implementation | Main condition keys |
-| --- | --- | --- | --- |
-| Only trusted identities | Only your organization's principals (and AWS services) can access your organization's resources | RCPs, bucket policies | `aws:PrincipalOrgID`, `aws:PrincipalIsAWSService`, `aws:SourceOrgID` |
-| Only trusted resources | Your organization's principals can access only your organization's resources | SCPs, VPCE policies | `aws:ResourceOrgID` |
-| Only expected networks | Access only from your corporate network / VPCs | RCPs, SCPs, bucket policies | `aws:SourceIp`, `aws:SourceVpc`, `aws:SourceVpce`, `aws:ViaAWSService` |
+| Boundary                | Meaning                                                                                         | Main implementation         | Main condition keys                                                    |
+| ----------------------- | ----------------------------------------------------------------------------------------------- | --------------------------- | ---------------------------------------------------------------------- |
+| Only trusted identities | Only your organization's principals (and AWS services) can access your organization's resources | RCPs, bucket policies       | `aws:PrincipalOrgID`, `aws:PrincipalIsAWSService`, `aws:SourceOrgID`   |
+| Only trusted resources  | Your organization's principals can access only your organization's resources                    | SCPs, VPCE policies         | `aws:ResourceOrgID`                                                    |
+| Only expected networks  | Access only from your corporate network / VPCs                                                  | RCPs, SCPs, bucket policies | `aws:SourceIp`, `aws:SourceVpc`, `aws:SourceVpce`, `aws:ViaAWSService` |
 
 ```mermaid
 flowchart LR
@@ -652,15 +652,15 @@ Before RCPs, you had to write the same Deny statement in every bucket policy. RC
 
 ### 10.1 Server access logs vs CloudTrail data events
 
-| Item | S3 server access logs | CloudTrail data events |
-| --- | --- | --- |
-| Pricing | Log delivery itself is free (storage charges only) | Charged per 100,000 data events |
-| Delivery guarantee | Best effort (logs may be missing or delayed) | Highly reliable (usually within about 5 minutes) |
-| Format | Space-delimited text | JSON |
-| What is recorded | Authentication failures, anonymous access, lifecycle transitions, HTTP status, `aclRequired`, TLS version, and more | IAM principal details, request parameters, `tlsDetails`, organization-wide aggregation |
-| Granularity | Per bucket | Advanced event selectors specify bucket / prefix / read or write type |
-| Destination | A separate bucket in the same Region, owned by the same account, is recommended | S3 / CloudWatch Logs / CloudTrail Lake |
-| Main use | Low-cost analysis of high-volume access, billing investigations | Security auditing, forensics, detection |
+| Item               | S3 server access logs                                                                                               | CloudTrail data events                                                                 |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| Pricing            | Log delivery itself is free (storage charges only)                                                                  | Charged per 100,000 data events                                                        |
+| Delivery guarantee | Best effort (logs may be missing or delayed)                                                                        | Highly reliable (usually within about 5 minutes)                                       |
+| Format             | Space-delimited text                                                                                                | JSON                                                                                   |
+| What is recorded   | Authentication failures, anonymous access, lifecycle transitions, HTTP status, `aclRequired`, TLS version, and more | IAM principal details, request parameters, `tlsDetails`, organization-wide aggregation |
+| Granularity        | Per bucket                                                                                                          | Advanced event selectors specify bucket / prefix / read or write type                  |
+| Destination        | A separate bucket in the same Region, owned by the same account, is recommended                                     | S3 / CloudWatch Logs / CloudTrail Lake                                                 |
+| Main use           | Low-cost analysis of high-volume access, billing investigations                                                     | Security auditing, forensics, detection                                                |
 
 ```bash
 # CloudTrail: record only write data events for a specific bucket
@@ -691,10 +691,10 @@ Do not use the monitored bucket itself as the log destination, because that crea
 
 ### 10.2 GuardDuty S3 Protection and Malware Protection for S3
 
-| Feature | Details |
-| --- | --- |
-| GuardDuty S3 Protection | Analyzes CloudTrail S3 data events (without requiring you to configure a trail) and detects anomalous API patterns (mass GetObject from suspicious IPs, disabling BPA, disabling logging, and so on). Example finding types: `Exfiltration:S3/AnomalousBehavior`, `Policy:S3/BucketBlockPublicAccessDisabled`, `Stealth:S3/ServerAccessLoggingDisabled` |
-| Malware Protection for S3 (2024-06) | Scans newly uploaded objects. Can be used on its own without enabling GuardDuty itself. Results are published to EventBridge, and optionally a `GuardDutyMalwareScanStatus` tag (`NO_THREATS_FOUND` / `THREATS_FOUND` / `UNSUPPORTED` / `ACCESS_DENIED` / `FAILED`) is added |
+| Feature                             | Details                                                                                                                                                                                                                                                                                                                                                 |
+| ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| GuardDuty S3 Protection             | Analyzes CloudTrail S3 data events (without requiring you to configure a trail) and detects anomalous API patterns (mass GetObject from suspicious IPs, disabling BPA, disabling logging, and so on). Example finding types: `Exfiltration:S3/AnomalousBehavior`, `Policy:S3/BucketBlockPublicAccessDisabled`, `Stealth:S3/ServerAccessLoggingDisabled` |
+| Malware Protection for S3 (2024-06) | Scans newly uploaded objects. Can be used on its own without enabling GuardDuty itself. Results are published to EventBridge, and optionally a `GuardDutyMalwareScanStatus` tag (`NO_THREATS_FOUND` / `THREATS_FOUND` / `UNSUPPORTED` / `ACCESS_DENIED` / `FAILED`) is added                                                                            |
 
 With TBAC (tag-based access control) on these tags, you can build a bucket where only objects that were scanned and found clean can be read (policy example 12.14). Objects can have at most 10 tags, so an object that already has 10 tags cannot be tagged.
 
@@ -708,40 +708,40 @@ Macie analyzes data in S3 with machine learning and pattern matching to detect s
 
 ### 10.4 IAM Access Analyzer for S3
 
-| Feature | Details |
-| --- | --- |
-| External access findings | Analyzes bucket policies / ACLs / access point policies with automated reasoning and detects buckets accessible from outside the zone of trust (account / organization) |
-| Internal access findings (2025-06) | Detects which users / roles in the organization can access resources such as S3, by evaluating identity policies, resource policies, SCPs, and RCPs together |
-| Policy validation | Grammar and best practice checks while authoring policies |
-| Custom policy checks | Determines in CI whether a policy grants new access |
+| Feature                            | Details                                                                                                                                                                 |
+| ---------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| External access findings           | Analyzes bucket policies / ACLs / access point policies with automated reasoning and detects buckets accessible from outside the zone of trust (account / organization) |
+| Internal access findings (2025-06) | Detects which users / roles in the organization can access resources such as S3, by evaluating identity policies, resource policies, SCPs, and RCPs together            |
+| Policy validation                  | Grammar and best practice checks while authoring policies                                                                                                               |
+| Custom policy checks               | Determines in CI whether a policy grants new access                                                                                                                     |
 
 From the "IAM Access Analyzer for S3" view in the S3 console, you can list public / shared buckets and apply BPA in bulk.
 
 ### 10.5 Security Hub CSPM S3 controls
 
-| ID | Details |
-| --- | --- |
-| S3.1 | Account-level BPA is enabled |
-| S3.2 | Prohibit public read access |
-| S3.3 | Prohibit public write access |
-| S3.5 | Require TLS (SecureTransport) |
-| S3.6 | Restrict grants to other accounts |
-| S3.7 | Cross-Region replication |
-| S3.8 | Bucket-level BPA |
-| S3.9 | Server access logging enabled |
+| ID    | Details                                 |
+| ----- | --------------------------------------- |
+| S3.1  | Account-level BPA is enabled            |
+| S3.2  | Prohibit public read access             |
+| S3.3  | Prohibit public write access            |
+| S3.5  | Require TLS (SecureTransport)           |
+| S3.6  | Restrict grants to other accounts       |
+| S3.7  | Cross-Region replication                |
+| S3.8  | Bucket-level BPA                        |
+| S3.9  | Server access logging enabled           |
 | S3.10 | Lifecycle on versioning-enabled buckets |
-| S3.11 | Event notifications enabled |
-| S3.12 | Do not manage user access with ACLs |
-| S3.13 | Lifecycle configuration |
-| S3.14 | Versioning enabled |
-| S3.15 | Object Lock enabled |
-| S3.17 | Encryption at rest with KMS keys |
-| S3.19 | BPA on access points |
-| S3.20 | MFA Delete enabled |
-| S3.22 | Logging of object-level write events |
-| S3.23 | Logging of object-level read events |
-| S3.24 | BPA on MRAPs |
-| S3.25 | Lifecycle on directory buckets |
+| S3.11 | Event notifications enabled             |
+| S3.12 | Do not manage user access with ACLs     |
+| S3.13 | Lifecycle configuration                 |
+| S3.14 | Versioning enabled                      |
+| S3.15 | Object Lock enabled                     |
+| S3.17 | Encryption at rest with KMS keys        |
+| S3.19 | BPA on access points                    |
+| S3.20 | MFA Delete enabled                      |
+| S3.22 | Logging of object-level write events    |
+| S3.23 | Logging of object-level read events     |
+| S3.24 | BPA on MRAPs                            |
+| S3.25 | Lifecycle on directory buckets          |
 
 (S3.4 / S3.16 / S3.18 / S3.21 are unassigned or retired. Based on the list in the Security Hub CSPM documentation as of 2026-10.)
 
@@ -789,12 +789,12 @@ The facts (based on public reporting, court records, and the OCC announcement):
 
 Lessons and S3-side mitigations:
 
-| Lesson | Mitigation |
-| --- | --- |
-| IMDSv1 is vulnerable to SSRF | Enforce IMDSv2 (on the EC2 side) |
-| The role was over-privileged | Least privilege, IAM Access Analyzer unused access findings |
+| Lesson                                           | Mitigation                                                                                                                                                           |
+| ------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| IMDSv1 is vulnerable to SSRF                     | Enforce IMDSv2 (on the EC2 side)                                                                                                                                     |
+| The role was over-privileged                     | Least privilege, IAM Access Analyzer unused access findings                                                                                                          |
 | Stolen temporary credentials worked from outside | Network boundaries: Deny with `aws:SourceVpc` / `aws:SourceIp` / `aws:ViaAWSService`, GuardDuty `UnauthorizedAccess:IAMUser/InstanceCredentialExfiltration` findings |
-| Mass GetObject went unnoticed | CloudTrail data events, GuardDuty S3 Protection anomaly detection |
+| Mass GetObject went unnoticed                    | CloudTrail data events, GuardDuty S3 Protection anomaly detection                                                                                                    |
 
 ### 11.3 Bucketsquatting / re-registering abandoned buckets
 
@@ -829,14 +829,14 @@ On 2025-01-13, the security vendor Halcyon reported on its blog a technique by a
 
 ### 11.5 Other common patterns
 
-| Pattern | Details | Mitigation |
-| --- | --- | --- |
-| Access keys leaked to GitHub | Long-term keys committed to a repository | IAM Identity Center / roles, secret scanning, AWS automatic detection (the AWSCompromisedKeyQuarantine policy) |
-| Presigned URLs leaked through logs | URLs remain in CDN / proxy logs | Short expirations, create with role credentials |
-| Misunderstanding CORS | Believing CORS provides protection | Understand that CORS is not authorization |
-| Subdomain takeover | A CNAME still points to a deleted bucket | DNS inventory, account regional namespaces |
-| Covering tracks by disabling logging | `PutBucketLogging` / `StopLogging` | Prohibit with SCPs, GuardDuty `Stealth:` findings |
-| "Authenticated Users" ACL | Grants access to all AWS users | Disable ACLs |
+| Pattern                              | Details                                  | Mitigation                                                                                                     |
+| ------------------------------------ | ---------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| Access keys leaked to GitHub         | Long-term keys committed to a repository | IAM Identity Center / roles, secret scanning, AWS automatic detection (the AWSCompromisedKeyQuarantine policy) |
+| Presigned URLs leaked through logs   | URLs remain in CDN / proxy logs          | Short expirations, create with role credentials                                                                |
+| Misunderstanding CORS                | Believing CORS provides protection       | Understand that CORS is not authorization                                                                      |
+| Subdomain takeover                   | A CNAME still points to a deleted bucket | DNS inventory, account regional namespaces                                                                     |
+| Covering tracks by disabling logging | `PutBucketLogging` / `StopLogging`       | Prohibit with SCPs, GuardDuty `Stealth:` findings                                                              |
+| "Authenticated Users" ACL            | Grants access to all AWS users           | Disable ACLs                                                                                                   |
 
 ## 12. Ready-to-use policies
 
@@ -853,10 +853,7 @@ All of the following are working examples of bucket policies (some are RCPs / SC
       "Effect": "Deny",
       "Principal": "*",
       "Action": "s3:*",
-      "Resource": [
-        "arn:aws:s3:::amzn-s3-demo-bucket",
-        "arn:aws:s3:::amzn-s3-demo-bucket/*"
-      ],
+      "Resource": ["arn:aws:s3:::amzn-s3-demo-bucket", "arn:aws:s3:::amzn-s3-demo-bucket/*"],
       "Condition": {
         "Bool": { "aws:SecureTransport": "false" }
       }
@@ -876,10 +873,7 @@ All of the following are working examples of bucket policies (some are RCPs / SC
       "Effect": "Deny",
       "Principal": "*",
       "Action": "s3:*",
-      "Resource": [
-        "arn:aws:s3:::amzn-s3-demo-bucket",
-        "arn:aws:s3:::amzn-s3-demo-bucket/*"
-      ],
+      "Resource": ["arn:aws:s3:::amzn-s3-demo-bucket", "arn:aws:s3:::amzn-s3-demo-bucket/*"],
       "Condition": {
         "NumericLessThan": { "s3:TlsVersion": "1.2" }
       }
@@ -959,10 +953,7 @@ Since 2023-01, SSE-S3 is applied by default, so this policy is less necessary. U
       "Effect": "Deny",
       "Principal": "*",
       "Action": "s3:*",
-      "Resource": [
-        "arn:aws:s3:::amzn-s3-demo-bucket",
-        "arn:aws:s3:::amzn-s3-demo-bucket/*"
-      ],
+      "Resource": ["arn:aws:s3:::amzn-s3-demo-bucket", "arn:aws:s3:::amzn-s3-demo-bucket/*"],
       "Condition": {
         "StringNotEquals": { "aws:SourceVpce": "vpce-1a2b3c4d" },
         "ArnNotLike": {
@@ -987,10 +978,7 @@ This policy also blocks console operations. Exclude a break-glass role so admini
       "Effect": "Deny",
       "Principal": "*",
       "Action": "s3:*",
-      "Resource": [
-        "arn:aws:s3:::amzn-s3-demo-bucket",
-        "arn:aws:s3:::amzn-s3-demo-bucket/*"
-      ],
+      "Resource": ["arn:aws:s3:::amzn-s3-demo-bucket", "arn:aws:s3:::amzn-s3-demo-bucket/*"],
       "Condition": {
         "StringNotEqualsIfExists": { "aws:PrincipalOrgID": "o-exampleorgid" },
         "BoolIfExists": { "aws:PrincipalIsAWSService": "false" }
@@ -1076,9 +1064,7 @@ Account 444455556666 must also allow the same Action / Resource in the IAM polic
       "Effect": "Allow",
       "Principal": "*",
       "Action": "s3:GetObject",
-      "Resource": [
-        "arn:aws:s3:::EXAMPLE-AMAZON-LINUX-REPO-BUCKET/*"
-      ]
+      "Resource": ["arn:aws:s3:::EXAMPLE-AMAZON-LINUX-REPO-BUCKET/*"]
     }
   ]
 }
@@ -1097,10 +1083,7 @@ The actual names of AWS-owned buckets, such as Amazon Linux package repositories
       "Effect": "Deny",
       "Principal": "*",
       "Action": "s3:*",
-      "Resource": [
-        "arn:aws:s3:::amzn-s3-demo-bucket",
-        "arn:aws:s3:::amzn-s3-demo-bucket/*"
-      ],
+      "Resource": ["arn:aws:s3:::amzn-s3-demo-bucket", "arn:aws:s3:::amzn-s3-demo-bucket/*"],
       "Condition": {
         "NotIpAddress": { "aws:SourceIp": ["203.0.113.0/24", "198.51.100.10/32"] },
         "Null": { "aws:SourceVpce": "true" },
@@ -1124,10 +1107,7 @@ The actual names of AWS-owned buckets, such as Amazon Linux package repositories
       "Effect": "Allow",
       "Principal": { "AWS": "*" },
       "Action": "*",
-      "Resource": [
-        "arn:aws:s3:::amzn-s3-demo-bucket",
-        "arn:aws:s3:::amzn-s3-demo-bucket/*"
-      ],
+      "Resource": ["arn:aws:s3:::amzn-s3-demo-bucket", "arn:aws:s3:::amzn-s3-demo-bucket/*"],
       "Condition": {
         "StringEquals": { "s3:DataAccessPointAccount": "111122223333" }
       }

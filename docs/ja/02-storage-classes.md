@@ -24,18 +24,18 @@ S3 のすべてのオブジェクトは、何らかの **ストレージクラ�
 
 API で指定するときの値 (`x-amz-storage-class` ヘッダ):
 
-| クラス | API 値 |
-| --- | --- |
-| S3 Standard | `STANDARD` |
-| S3 Express One Zone | `EXPRESS_ONEZONE` |
-| S3 Intelligent-Tiering | `INTELLIGENT_TIERING` |
-| S3 Standard-IA | `STANDARD_IA` |
-| S3 One Zone-IA | `ONEZONE_IA` |
-| S3 Glacier Instant Retrieval | `GLACIER_IR` |
-| S3 Glacier Flexible Retrieval | `GLACIER` |
-| S3 Glacier Deep Archive | `DEEP_ARCHIVE` |
-| Reduced Redundancy Storage | `REDUCED_REDUNDANCY` |
-| S3 on Outposts | `OUTPOSTS` |
+| クラス                        | API 値                |
+| ----------------------------- | --------------------- |
+| S3 Standard                   | `STANDARD`            |
+| S3 Express One Zone           | `EXPRESS_ONEZONE`     |
+| S3 Intelligent-Tiering        | `INTELLIGENT_TIERING` |
+| S3 Standard-IA                | `STANDARD_IA`         |
+| S3 One Zone-IA                | `ONEZONE_IA`          |
+| S3 Glacier Instant Retrieval  | `GLACIER_IR`          |
+| S3 Glacier Flexible Retrieval | `GLACIER`             |
+| S3 Glacier Deep Archive       | `DEEP_ARCHIVE`        |
+| Reduced Redundancy Storage    | `REDUCED_REDUNDANCY`  |
+| S3 on Outposts                | `OUTPOSTS`            |
 
 `GLACIER` という API 値は歴史的経緯 (旧名 S3 Glacier) で、現在の正式名称は S3 Glacier Flexible Retrieval。
 
@@ -43,17 +43,17 @@ API で指定するときの値 (`x-amz-storage-class` ヘッダ):
 
 User Guide の比較表 (Comparing the Amazon S3 storage classes) による設計値。
 
-| クラス | 想定アクセス | 耐久性 (設計) | 可用性 (設計) | AZ 数 | 最低保存期間 | 最小課金サイズ | 取り出し料金 |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| Standard | 月 1 回超 | 99.999999999% | 99.99% | >= 3 | なし | なし | なし |
-| Express One Zone | 一桁 ms が必要 | 99.999999999% | 99.95% | 1 | なし | なし | GB 単位の upload / retrieval 料金 (少額) |
-| Intelligent-Tiering | 不明・変動 | 99.999999999% | 99.9% | >= 3 | なし | なし (128 KB 未満は監視対象外) | なし (監視料金あり) |
-| Standard-IA | 月 1 回程度 | 99.999999999% | 99.9% | >= 3 | 30 日 | 128 KB | あり |
-| One Zone-IA | 月 1 回程度・再作成可能 | 99.999999999% | 99.5% | 1 | 30 日 | 128 KB | あり |
-| Glacier Instant Retrieval | 四半期 1 回程度 | 99.999999999% | 99.9% | >= 3 | 90 日 | 128 KB | あり |
-| Glacier Flexible Retrieval | 年 1 回程度 | 99.999999999% | 99.99% (復元後) | >= 3 | 90 日 | なし (ただし 1 オブジェクト 40 KB のオーバーヘッド) | あり (Bulk は無料) |
-| Glacier Deep Archive | 年 1 回未満 | 99.999999999% | 99.99% (復元後) | >= 3 | 180 日 | なし (同 40 KB オーバーヘッド) | あり |
-| Reduced Redundancy (非推奨) | 再作成可能な頻繁アクセスデータ | 99.99% | 99.99% | >= 3 | なし | なし | なし |
+| クラス                      | 想定アクセス                   | 耐久性 (設計) | 可用性 (設計)   | AZ 数 | 最低保存期間 | 最小課金サイズ                                      | 取り出し料金                             |
+| --------------------------- | ------------------------------ | ------------- | --------------- | ----- | ------------ | --------------------------------------------------- | ---------------------------------------- |
+| Standard                    | 月 1 回超                      | 99.999999999% | 99.99%          | >= 3  | なし         | なし                                                | なし                                     |
+| Express One Zone            | 一桁 ms が必要                 | 99.999999999% | 99.95%          | 1     | なし         | なし                                                | GB 単位の upload / retrieval 料金 (少額) |
+| Intelligent-Tiering         | 不明・変動                     | 99.999999999% | 99.9%           | >= 3  | なし         | なし (128 KB 未満は監視対象外)                      | なし (監視料金あり)                      |
+| Standard-IA                 | 月 1 回程度                    | 99.999999999% | 99.9%           | >= 3  | 30 日        | 128 KB                                              | あり                                     |
+| One Zone-IA                 | 月 1 回程度・再作成可能        | 99.999999999% | 99.5%           | 1     | 30 日        | 128 KB                                              | あり                                     |
+| Glacier Instant Retrieval   | 四半期 1 回程度                | 99.999999999% | 99.9%           | >= 3  | 90 日        | 128 KB                                              | あり                                     |
+| Glacier Flexible Retrieval  | 年 1 回程度                    | 99.999999999% | 99.99% (復元後) | >= 3  | 90 日        | なし (ただし 1 オブジェクト 40 KB のオーバーヘッド) | あり (Bulk は無料)                       |
+| Glacier Deep Archive        | 年 1 回未満                    | 99.999999999% | 99.99% (復元後) | >= 3  | 180 日       | なし (同 40 KB オーバーヘッド)                      | あり                                     |
+| Reduced Redundancy (非推奨) | 再作成可能な頻繁アクセスデータ | 99.99%        | 99.99%          | >= 3  | なし         | なし                                                | なし                                     |
 
 注意点:
 
@@ -65,10 +65,10 @@ User Guide の比較表 (Comparing the Amazon S3 storage classes) による設�
 
 設計値とは別に、**SLA** は月間稼働率を下回ったときにサービスクレジット (返金) を受けられる契約上の値。S3 SLA (最終更新 2023-11-28) はクラスを 2 グループに分ける。
 
-| グループ | 対象クラス | 10% クレジット | 25% クレジット | 100% クレジット |
-| --- | --- | --- | --- | --- |
-| グループ 1 | Standard, Express One Zone, Glacier Flexible Retrieval, Glacier Deep Archive ほか | 99.0% 以上 99.9% 未満 | 95.0% 以上 99.0% 未満 | 95.0% 未満 |
-| グループ 2 | Intelligent-Tiering, Standard-IA, One Zone-IA, Glacier Instant Retrieval | 98.0% 以上 99.0% 未満 | 95.0% 以上 98.0% 未満 | 95.0% 未満 |
+| グループ   | 対象クラス                                                                        | 10% クレジット        | 25% クレジット        | 100% クレジット |
+| ---------- | --------------------------------------------------------------------------------- | --------------------- | --------------------- | --------------- |
+| グループ 1 | Standard, Express One Zone, Glacier Flexible Retrieval, Glacier Deep Archive ほか | 99.0% 以上 99.9% 未満 | 95.0% 以上 99.0% 未満 | 95.0% 未満      |
+| グループ 2 | Intelligent-Tiering, Standard-IA, One Zone-IA, Glacier Instant Retrieval          | 98.0% 以上 99.0% 未満 | 95.0% 以上 98.0% 未満 | 95.0% 未満      |
 
 つまり SLA のしきい値は、グループ 1 が **99.9%**、グループ 2 が **99%**。設計値 (99.99% など) よりかなり低いが、これは「契約で約束する下限」だからで、普段の実効可用性とは別物。耐久性 (11 nines) には SLA はない。
 
@@ -76,67 +76,67 @@ User Guide の比較表 (Comparing the Amazon S3 storage classes) による設�
 
 ### 4.1 ストレージ単価
 
-| クラス | GB-月あたり | 備考 |
-| --- | --- | --- |
-| Standard | 最初の 50 TB: $0.023 / 次の 450 TB: $0.022 / 500 TB 超: $0.021 | 段階制 |
-| Express One Zone | $0.11 | 2025-04-10 に $0.16 から 31% 値下げ |
-| Intelligent-Tiering Frequent Access | $0.023 / $0.022 / $0.021 (Standard と同じ段階) | |
-| Intelligent-Tiering Infrequent Access | $0.0125 | |
-| Intelligent-Tiering Archive Instant Access | $0.004 | |
-| Intelligent-Tiering Archive Access (任意) | $0.0036 | |
-| Intelligent-Tiering Deep Archive Access (任意) | $0.00099 | |
-| Intelligent-Tiering 監視・自動化料金 | $0.0025 / 1,000 オブジェクト / 月 | 128 KB 以上のオブジェクトのみ |
-| Standard-IA | $0.0125 | |
-| One Zone-IA | $0.01 | |
-| Glacier Instant Retrieval | $0.004 | |
-| Glacier Flexible Retrieval | $0.0036 | |
-| Glacier Deep Archive | $0.00099 | |
-| Reduced Redundancy | 最初の 1 TB: $0.024 / 次の 49 TB: $0.0236 / ... / 5,000 TB 超: $0.022 | Standard より高い |
+| クラス                                         | GB-月あたり                                                           | 備考                                |
+| ---------------------------------------------- | --------------------------------------------------------------------- | ----------------------------------- |
+| Standard                                       | 最初の 50 TB: $0.023 / 次の 450 TB: $0.022 / 500 TB 超: $0.021        | 段階制                              |
+| Express One Zone                               | $0.11                                                                 | 2025-04-10 に $0.16 から 31% 値下げ |
+| Intelligent-Tiering Frequent Access            | $0.023 / $0.022 / $0.021 (Standard と同じ段階)                        |                                     |
+| Intelligent-Tiering Infrequent Access          | $0.0125                                                               |                                     |
+| Intelligent-Tiering Archive Instant Access     | $0.004                                                                |                                     |
+| Intelligent-Tiering Archive Access (任意)      | $0.0036                                                               |                                     |
+| Intelligent-Tiering Deep Archive Access (任意) | $0.00099                                                              |                                     |
+| Intelligent-Tiering 監視・自動化料金           | $0.0025 / 1,000 オブジェクト / 月                                     | 128 KB 以上のオブジェクトのみ       |
+| Standard-IA                                    | $0.0125                                                               |                                     |
+| One Zone-IA                                    | $0.01                                                                 |                                     |
+| Glacier Instant Retrieval                      | $0.004                                                                |                                     |
+| Glacier Flexible Retrieval                     | $0.0036                                                               |                                     |
+| Glacier Deep Archive                           | $0.00099                                                              |                                     |
+| Reduced Redundancy                             | 最初の 1 TB: $0.024 / 次の 49 TB: $0.0236 / ... / 5,000 TB 超: $0.022 | Standard より高い                   |
 
 1 TB (1,024 GB) あたり月額に直すと次のとおり (Standard は最初の段階)。
 
-| クラス | 1 TB-月 |
-| --- | --- |
-| Express One Zone | 約 $112.64 |
-| Standard | 約 $23.55 |
-| Standard-IA | 約 $12.80 |
-| One Zone-IA | 約 $10.24 |
-| Glacier Instant Retrieval | 約 $4.10 |
-| Glacier Flexible Retrieval | 約 $3.69 |
-| Glacier Deep Archive | 約 $1.01 |
+| クラス                     | 1 TB-月    |
+| -------------------------- | ---------- |
+| Express One Zone           | 約 $112.64 |
+| Standard                   | 約 $23.55  |
+| Standard-IA                | 約 $12.80  |
+| One Zone-IA                | 約 $10.24  |
+| Glacier Instant Retrieval  | 約 $4.10   |
+| Glacier Flexible Retrieval | 約 $3.69   |
+| Glacier Deep Archive       | 約 $1.01   |
 
 ### 4.2 リクエスト料金
 
-| クラス | PUT / COPY / POST / LIST (1,000 件) | GET / SELECT / その他 (1,000 件) |
-| --- | --- | --- |
-| Standard | $0.005 | $0.0004 |
-| Express One Zone | $0.00113 | $0.00003 |
-| Intelligent-Tiering | $0.005 | $0.0004 |
-| Standard-IA | $0.01 | $0.001 |
-| One Zone-IA | $0.01 | $0.001 |
-| Glacier Instant Retrieval | $0.02 | $0.01 |
-| Glacier Flexible Retrieval | $0.03 | $0.0004 |
-| Glacier Deep Archive | $0.05 | $0.0004 |
+| クラス                     | PUT / COPY / POST / LIST (1,000 件) | GET / SELECT / その他 (1,000 件) |
+| -------------------------- | ----------------------------------- | -------------------------------- |
+| Standard                   | $0.005                              | $0.0004                          |
+| Express One Zone           | $0.00113                            | $0.00003                         |
+| Intelligent-Tiering        | $0.005                              | $0.0004                          |
+| Standard-IA                | $0.01                               | $0.001                           |
+| One Zone-IA                | $0.01                               | $0.001                           |
+| Glacier Instant Retrieval  | $0.02                               | $0.01                            |
+| Glacier Flexible Retrieval | $0.03                               | $0.0004                          |
+| Glacier Deep Archive       | $0.05                               | $0.0004                          |
 
 DELETE と CANCEL は無料。Glacier Flexible / Deep Archive の GET 料金は「アーカイブ状態のオブジェクトへの GET 以外の操作 (HEAD 等) や復元後コピーの GET」に適用される (アーカイブ中のデータは GET できない)。
 
 ### 4.3 取り出し (retrieval) 料金
 
-| クラス | 取り出しオプション | 典型的な所要時間 | GB あたり | リクエストあたり |
-| --- | --- | --- | --- | --- |
-| Standard / Intelligent-Tiering (FA/IA/AIA) | — | ms | なし | なし |
-| Express One Zone | upload / retrieval | 一桁 ms | upload $0.0032、retrieval $0.0006 | — |
-| Standard-IA | — | ms | $0.01 | — |
-| One Zone-IA | — | ms | $0.01 | — |
-| Glacier Instant Retrieval | — | ms | $0.03 | — |
-| Glacier Flexible Retrieval | Expedited | 1〜5 分 | $0.03 | $10 / 1,000 ($0.01/件) |
-| Glacier Flexible Retrieval | Standard | 3〜5 時間 (Batch Operations 経由なら数分〜5 時間) | $0.01 | $0.05 / 1,000 |
-| Glacier Flexible Retrieval | Bulk | 5〜12 時間 | 無料 | 無料 |
-| Glacier Deep Archive | Standard | 12 時間以内 (Batch Operations 経由で 9〜12 時間) | $0.02 | $0.10 / 1,000 |
-| Glacier Deep Archive | Bulk | 48 時間以内 | $0.0025 | $0.025 / 1,000 |
-| Intelligent-Tiering Archive Access | Expedited | 1〜5 分 | $0.03 | $0.01/件 |
-| Intelligent-Tiering Archive Access | Standard / Bulk | 3〜5 時間 / 5〜12 時間 | 無料 | 無料 |
-| Intelligent-Tiering Deep Archive Access | Standard / Bulk | 12 時間以内 / 48 時間以内 | 無料 | 無料 |
+| クラス                                     | 取り出しオプション | 典型的な所要時間                                  | GB あたり                         | リクエストあたり       |
+| ------------------------------------------ | ------------------ | ------------------------------------------------- | --------------------------------- | ---------------------- |
+| Standard / Intelligent-Tiering (FA/IA/AIA) | —                  | ms                                                | なし                              | なし                   |
+| Express One Zone                           | upload / retrieval | 一桁 ms                                           | upload $0.0032、retrieval $0.0006 | —                      |
+| Standard-IA                                | —                  | ms                                                | $0.01                             | —                      |
+| One Zone-IA                                | —                  | ms                                                | $0.01                             | —                      |
+| Glacier Instant Retrieval                  | —                  | ms                                                | $0.03                             | —                      |
+| Glacier Flexible Retrieval                 | Expedited          | 1〜5 分                                           | $0.03                             | $10 / 1,000 ($0.01/件) |
+| Glacier Flexible Retrieval                 | Standard           | 3〜5 時間 (Batch Operations 経由なら数分〜5 時間) | $0.01                             | $0.05 / 1,000          |
+| Glacier Flexible Retrieval                 | Bulk               | 5〜12 時間                                        | 無料                              | 無料                   |
+| Glacier Deep Archive                       | Standard           | 12 時間以内 (Batch Operations 経由で 9〜12 時間)  | $0.02                             | $0.10 / 1,000          |
+| Glacier Deep Archive                       | Bulk               | 48 時間以内                                       | $0.0025                           | $0.025 / 1,000         |
+| Intelligent-Tiering Archive Access         | Expedited          | 1〜5 分                                           | $0.03                             | $0.01/件               |
+| Intelligent-Tiering Archive Access         | Standard / Bulk    | 3〜5 時間 / 5〜12 時間                            | 無料                              | 無料                   |
+| Intelligent-Tiering Deep Archive Access    | Standard / Bulk    | 12 時間以内 / 48 時間以内                         | 無料                              | 無料                   |
 
 補足:
 
@@ -150,12 +150,12 @@ DELETE と CANCEL は無料。Glacier Flexible / Deep Archive の GET 料金は�
 
 ライフサイクルでクラスを移すと、**オブジェクト 1 個につき 1 遷移リクエスト** が課金される。
 
-| 遷移先 | 1,000 件あたり |
-| --- | --- |
-| Standard-IA / One Zone-IA / Intelligent-Tiering | $0.01 |
-| Glacier Instant Retrieval | $0.02 |
-| Glacier Flexible Retrieval | $0.03 |
-| Glacier Deep Archive | $0.05 |
+| 遷移先                                          | 1,000 件あたり |
+| ----------------------------------------------- | -------------- |
+| Standard-IA / One Zone-IA / Intelligent-Tiering | $0.01          |
+| Glacier Instant Retrieval                       | $0.02          |
+| Glacier Flexible Retrieval                      | $0.03          |
+| Glacier Deep Archive                            | $0.05          |
 
 ## 5. 各クラスの詳細
 
@@ -201,13 +201,13 @@ stateDiagram-v2
     DeepArchiveAccess --> FrequentAccess: RestoreObject で復元
 ```
 
-| 層 | 移動条件 | 単価 (GB-月) | アクセス |
-| --- | --- | --- | --- |
-| Frequent Access | 既定 | $0.023〜$0.021 | ms |
-| Infrequent Access | 30 日連続アクセスなし | $0.0125 | ms |
-| Archive Instant Access | 90 日連続アクセスなし | $0.004 | ms |
-| Archive Access (opt-in) | 90 日以上 (設定可能) アクセスなし | $0.0036 | 復元が必要 (分〜時間) |
-| Deep Archive Access (opt-in) | 180 日以上 (設定可能) アクセスなし | $0.00099 | 復元が必要 (時間) |
+| 層                           | 移動条件                           | 単価 (GB-月)   | アクセス              |
+| ---------------------------- | ---------------------------------- | -------------- | --------------------- |
+| Frequent Access              | 既定                               | $0.023〜$0.021 | ms                    |
+| Infrequent Access            | 30 日連続アクセスなし              | $0.0125        | ms                    |
+| Archive Instant Access       | 90 日連続アクセスなし              | $0.004         | ms                    |
+| Archive Access (opt-in)      | 90 日以上 (設定可能) アクセスなし  | $0.0036        | 復元が必要 (分〜時間) |
+| Deep Archive Access (opt-in) | 180 日以上 (設定可能) アクセスなし | $0.00099       | 復元が必要 (時間)     |
 
 ポイント:
 
@@ -360,18 +360,18 @@ flowchart TD
     GFR --> GDA
 ```
 
-| 遷移元 | 遷移可能な先 |
-| --- | --- |
-| Standard | Standard-IA, Intelligent-Tiering, One Zone-IA, Glacier IR, Glacier Flexible, Deep Archive |
-| Standard-IA | Intelligent-Tiering, One Zone-IA, Glacier IR, Glacier Flexible, Deep Archive |
-| Intelligent-Tiering (Frequent / Infrequent 層) | One Zone-IA, Glacier IR, Glacier Flexible, Deep Archive |
-| Intelligent-Tiering (Archive Instant Access 層) | Glacier IR, Glacier Flexible, Deep Archive |
-| Intelligent-Tiering (Archive Access 層) | Glacier Flexible, Deep Archive |
-| Intelligent-Tiering (Deep Archive Access 層) | Deep Archive |
-| One Zone-IA | Glacier Flexible, Deep Archive |
-| Glacier Instant Retrieval | Glacier Flexible, Deep Archive |
-| Glacier Flexible Retrieval | Deep Archive |
-| Glacier Deep Archive | (なし) |
+| 遷移元                                          | 遷移可能な先                                                                              |
+| ----------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| Standard                                        | Standard-IA, Intelligent-Tiering, One Zone-IA, Glacier IR, Glacier Flexible, Deep Archive |
+| Standard-IA                                     | Intelligent-Tiering, One Zone-IA, Glacier IR, Glacier Flexible, Deep Archive              |
+| Intelligent-Tiering (Frequent / Infrequent 層)  | One Zone-IA, Glacier IR, Glacier Flexible, Deep Archive                                   |
+| Intelligent-Tiering (Archive Instant Access 層) | Glacier IR, Glacier Flexible, Deep Archive                                                |
+| Intelligent-Tiering (Archive Access 層)         | Glacier Flexible, Deep Archive                                                            |
+| Intelligent-Tiering (Deep Archive Access 層)    | Deep Archive                                                                              |
+| One Zone-IA                                     | Glacier Flexible, Deep Archive                                                            |
+| Glacier Instant Retrieval                       | Glacier Flexible, Deep Archive                                                            |
+| Glacier Flexible Retrieval                      | Deep Archive                                                                              |
+| Glacier Deep Archive                            | (なし)                                                                                    |
 
 できないこと:
 
@@ -383,10 +383,10 @@ flowchart TD
 
 ### 7.2 30 日ルール (2026-07-16 に撤廃)
 
-| 時期 | Standard-IA / One Zone-IA への遷移 |
-| --- | --- |
+| 時期              | Standard-IA / One Zone-IA への遷移                                                                                      |
+| ----------------- | ----------------------------------------------------------------------------------------------------------------------- |
 | 2026-07-16 より前 | 作成から **30 日以上** 経ったオブジェクトしか遷移できなかった (`Days` を 30 未満にした IA 向け遷移ルールは作れなかった) |
-| 2026-07-16 以降 | **作成当日 (0 日後) から遷移可能** (全リージョン) |
+| 2026-07-16 以降   | **作成当日 (0 日後) から遷移可能** (全リージョン)                                                                       |
 
 - 旧ルールの理由は、作成直後のデータはアクセスされやすく、IA の取り出し料金で損をしやすいためだった
 - 撤廃後も、IA 側の **最低保存期間 30 日** と **最小課金サイズ 128 KB** はそのまま残る。「早く移せる」ようになっただけで、移した後 30 日以内に消せば早期削除料金がかかる
@@ -395,10 +395,10 @@ flowchart TD
 
 ### 7.3 128 KB ルール (2024-09 に変更)
 
-| 時期 | 既定の挙動 |
-| --- | --- |
+| 時期           | 既定の挙動                                                                                                                           |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
 | 2024-09 より前 | 128 KB 未満のオブジェクトは IA / Intelligent-Tiering / Glacier IR へは遷移しないが、**Glacier Flexible / Deep Archive へは遷移した** |
-| 2024-09 以降 | **128 KB 未満のオブジェクトはどのクラスへも遷移しない** のが既定 |
+| 2024-09 以降   | **128 KB 未満のオブジェクトはどのクラスへも遷移しない** のが既定                                                                     |
 
 - 2024-09 より前に作られたライフサイクル設定は、編集しない限り旧挙動のまま。ルールを作成・編集・削除すると新挙動に切り替わる
 - 小さいオブジェクトも遷移させたい場合は、ルールのフィルタに `ObjectSizeGreaterThan` (例: 1 byte) や `ObjectSizeLessThan` を明示する
@@ -463,13 +463,13 @@ flowchart TD
 
 最低保存期間のあるクラスで、期間満了前に **削除・上書き・別クラスへの遷移** をすると、残りの日数分のストレージ料金が日割りで請求される。
 
-| クラス | 最低保存期間 | 早期削除の単価 (GB-月, 日割り) |
-| --- | --- | --- |
-| Standard-IA | 30 日 | $0.0125 |
-| One Zone-IA | 30 日 | $0.01 |
-| Glacier Instant Retrieval | 90 日 | $0.004 |
-| Glacier Flexible Retrieval | 90 日 | $0.0036 |
-| Glacier Deep Archive | 180 日 | $0.00099 |
+| クラス                     | 最低保存期間 | 早期削除の単価 (GB-月, 日割り) |
+| -------------------------- | ------------ | ------------------------------ |
+| Standard-IA                | 30 日        | $0.0125                        |
+| One Zone-IA                | 30 日        | $0.01                          |
+| Glacier Instant Retrieval  | 90 日        | $0.004                         |
+| Glacier Flexible Retrieval | 90 日        | $0.0036                        |
+| Glacier Deep Archive       | 180 日       | $0.00099                       |
 
 例: Standard-IA に 100 GB を置き、10 日目に削除した場合 → 実際の 10 日分に加え、残り 20 日分 (100 GB × $0.0125 × 20/30 ≒ $0.83) が早期削除料金として請求される。
 
@@ -493,32 +493,32 @@ Glacier Flexible / Deep Archive では、オブジェクトごとに
 
 ## 9. ユースケース別の推奨
 
-| ユースケース | 推奨クラス | 理由 |
-| --- | --- | --- |
-| Web の静的アセット (CloudFront の origin) | Standard | 頻繁なアクセス、取り出し料金なし |
-| アクセス傾向不明のデータレイク | Intelligent-Tiering | 自動で IA / AIA へ落ちる。取り出し料金なし |
-| ML 学習データの高速読み込み | Express One Zone | 一桁 ms、低リクエスト料金、同 AZ の GPU と組む |
-| DB バックアップ (日次、30 日保持) | Standard-IA (ただし 30 日未満で消すなら Standard) | 稀に読む、最低 30 日 |
-| サムネイル・トランスコード済み動画 | One Zone-IA | 再作成可能 |
-| 医療画像・過去ニュース写真 | Glacier Instant Retrieval | 稀だが即時に必要 |
-| 年 1 回の監査用バックアップ | Glacier Flexible Retrieval | 分〜時間で取り出せればよい |
-| 規制による 7〜10 年保管 | Glacier Deep Archive (+ Object Lock) | 最安、12〜48 時間待てる |
-| CRR のレプリカ (DR 用) | One Zone-IA か Glacier 系 | 本番コピーが別リージョンにある |
-| オンプレ工場の局所データ | S3 on Outposts | データレジデンシー |
+| ユースケース                              | 推奨クラス                                        | 理由                                           |
+| ----------------------------------------- | ------------------------------------------------- | ---------------------------------------------- |
+| Web の静的アセット (CloudFront の origin) | Standard                                          | 頻繁なアクセス、取り出し料金なし               |
+| アクセス傾向不明のデータレイク            | Intelligent-Tiering                               | 自動で IA / AIA へ落ちる。取り出し料金なし     |
+| ML 学習データの高速読み込み               | Express One Zone                                  | 一桁 ms、低リクエスト料金、同 AZ の GPU と組む |
+| DB バックアップ (日次、30 日保持)         | Standard-IA (ただし 30 日未満で消すなら Standard) | 稀に読む、最低 30 日                           |
+| サムネイル・トランスコード済み動画        | One Zone-IA                                       | 再作成可能                                     |
+| 医療画像・過去ニュース写真                | Glacier Instant Retrieval                         | 稀だが即時に必要                               |
+| 年 1 回の監査用バックアップ               | Glacier Flexible Retrieval                        | 分〜時間で取り出せればよい                     |
+| 規制による 7〜10 年保管                   | Glacier Deep Archive (+ Object Lock)              | 最安、12〜48 時間待てる                        |
+| CRR のレプリカ (DR 用)                    | One Zone-IA か Glacier 系                         | 本番コピーが別リージョンにある                 |
+| オンプレ工場の局所データ                  | S3 on Outposts                                    | データレジデンシー                             |
 
 ## 10. よくある落とし穴
 
-| 落とし穴 | 何が起きるか | 対策 |
-| --- | --- | --- |
-| 小さいオブジェクトを IA / GIR に入れる | 128 KB 課金で Standard より高くなる | サイズフィルタ、集約、Intelligent-Tiering |
-| 小さいオブジェクトを Glacier 系へ遷移 | 遷移料金 + 40 KB オーバーヘッドで赤字 | 2024-09 以降の既定 (128 KB 未満は遷移しない) を維持 |
-| 30 日以内に消すデータを IA に置く | 早期削除料金 | 保存期間を把握してからクラスを決める |
-| Glacier に入れたデータをアプリが GET | `InvalidObjectState` エラー | 復元フローを実装、または Glacier IR を使う |
-| Intelligent-Tiering の Archive 層を安易に有効化 | 読みたいときに即時に読めない | 非同期復元を扱えるアプリだけ有効化 |
-| Expedited 復元に頼り切る | 需要が高いと受け付けられない | Provisioned Capacity か Glacier IR |
-| One Zone-IA にマスターデータ | AZ 喪失でデータ消失 | マスターは複数 AZ のクラスに |
-| RRS を使い続ける | Standard より高くて耐久性も低い | Standard / Intelligent-Tiering へ移行 |
-| 復元コピーの期間を長く取りすぎる | Standard 料金が二重にかかる | 必要日数だけ指定 |
+| 落とし穴                                        | 何が起きるか                          | 対策                                                |
+| ----------------------------------------------- | ------------------------------------- | --------------------------------------------------- |
+| 小さいオブジェクトを IA / GIR に入れる          | 128 KB 課金で Standard より高くなる   | サイズフィルタ、集約、Intelligent-Tiering           |
+| 小さいオブジェクトを Glacier 系へ遷移           | 遷移料金 + 40 KB オーバーヘッドで赤字 | 2024-09 以降の既定 (128 KB 未満は遷移しない) を維持 |
+| 30 日以内に消すデータを IA に置く               | 早期削除料金                          | 保存期間を把握してからクラスを決める                |
+| Glacier に入れたデータをアプリが GET            | `InvalidObjectState` エラー           | 復元フローを実装、または Glacier IR を使う          |
+| Intelligent-Tiering の Archive 層を安易に有効化 | 読みたいときに即時に読めない          | 非同期復元を扱えるアプリだけ有効化                  |
+| Expedited 復元に頼り切る                        | 需要が高いと受け付けられない          | Provisioned Capacity か Glacier IR                  |
+| One Zone-IA にマスターデータ                    | AZ 喪失でデータ消失                   | マスターは複数 AZ のクラスに                        |
+| RRS を使い続ける                                | Standard より高くて耐久性も低い       | Standard / Intelligent-Tiering へ移行               |
+| 復元コピーの期間を長く取りすぎる                | Standard 料金が二重にかかる           | 必要日数だけ指定                                    |
 
 ## 参考文献
 

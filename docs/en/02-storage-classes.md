@@ -24,18 +24,18 @@ Storage price     high ◀──────────────────
 
 Values used in the API (`x-amz-storage-class` header):
 
-| Class | API value |
-| --- | --- |
-| S3 Standard | `STANDARD` |
-| S3 Express One Zone | `EXPRESS_ONEZONE` |
-| S3 Intelligent-Tiering | `INTELLIGENT_TIERING` |
-| S3 Standard-IA | `STANDARD_IA` |
-| S3 One Zone-IA | `ONEZONE_IA` |
-| S3 Glacier Instant Retrieval | `GLACIER_IR` |
-| S3 Glacier Flexible Retrieval | `GLACIER` |
-| S3 Glacier Deep Archive | `DEEP_ARCHIVE` |
-| Reduced Redundancy Storage | `REDUCED_REDUNDANCY` |
-| S3 on Outposts | `OUTPOSTS` |
+| Class                         | API value             |
+| ----------------------------- | --------------------- |
+| S3 Standard                   | `STANDARD`            |
+| S3 Express One Zone           | `EXPRESS_ONEZONE`     |
+| S3 Intelligent-Tiering        | `INTELLIGENT_TIERING` |
+| S3 Standard-IA                | `STANDARD_IA`         |
+| S3 One Zone-IA                | `ONEZONE_IA`          |
+| S3 Glacier Instant Retrieval  | `GLACIER_IR`          |
+| S3 Glacier Flexible Retrieval | `GLACIER`             |
+| S3 Glacier Deep Archive       | `DEEP_ARCHIVE`        |
+| Reduced Redundancy Storage    | `REDUCED_REDUNDANCY`  |
+| S3 on Outposts                | `OUTPOSTS`            |
 
 The API value `GLACIER` is a historical artifact (the former name was S3 Glacier); the current official name is S3 Glacier Flexible Retrieval.
 
@@ -43,17 +43,17 @@ The API value `GLACIER` is a historical artifact (the former name was S3 Glacier
 
 Design values from the User Guide comparison table (Comparing the Amazon S3 storage classes).
 
-| Class | Intended access | Durability (design) | Availability (design) | AZs | Minimum storage duration | Minimum billable object size | Retrieval fee |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| Standard | More than once a month | 99.999999999% | 99.99% | >= 3 | None | None | None |
-| Express One Zone | Needs single-digit ms | 99.999999999% | 99.95% | 1 | None | None | Small per-GB upload / retrieval fees |
-| Intelligent-Tiering | Unknown or changing | 99.999999999% | 99.9% | >= 3 | None | None (objects under 128 KB are not monitored) | None (monitoring fee applies) |
-| Standard-IA | About once a month | 99.999999999% | 99.9% | >= 3 | 30 days | 128 KB | Yes |
-| One Zone-IA | About once a month, re-creatable | 99.999999999% | 99.5% | 1 | 30 days | 128 KB | Yes |
-| Glacier Instant Retrieval | About once a quarter | 99.999999999% | 99.9% | >= 3 | 90 days | 128 KB | Yes |
-| Glacier Flexible Retrieval | About once a year | 99.999999999% | 99.99% (after restore) | >= 3 | 90 days | None (but 40 KB overhead per object) | Yes (Bulk is free) |
-| Glacier Deep Archive | Less than once a year | 99.999999999% | 99.99% (after restore) | >= 3 | 180 days | None (same 40 KB overhead) | Yes |
-| Reduced Redundancy (not recommended) | Frequently accessed, re-creatable data | 99.99% | 99.99% | >= 3 | None | None | None |
+| Class                                | Intended access                        | Durability (design) | Availability (design)  | AZs  | Minimum storage duration | Minimum billable object size                  | Retrieval fee                        |
+| ------------------------------------ | -------------------------------------- | ------------------- | ---------------------- | ---- | ------------------------ | --------------------------------------------- | ------------------------------------ |
+| Standard                             | More than once a month                 | 99.999999999%       | 99.99%                 | >= 3 | None                     | None                                          | None                                 |
+| Express One Zone                     | Needs single-digit ms                  | 99.999999999%       | 99.95%                 | 1    | None                     | None                                          | Small per-GB upload / retrieval fees |
+| Intelligent-Tiering                  | Unknown or changing                    | 99.999999999%       | 99.9%                  | >= 3 | None                     | None (objects under 128 KB are not monitored) | None (monitoring fee applies)        |
+| Standard-IA                          | About once a month                     | 99.999999999%       | 99.9%                  | >= 3 | 30 days                  | 128 KB                                        | Yes                                  |
+| One Zone-IA                          | About once a month, re-creatable       | 99.999999999%       | 99.5%                  | 1    | 30 days                  | 128 KB                                        | Yes                                  |
+| Glacier Instant Retrieval            | About once a quarter                   | 99.999999999%       | 99.9%                  | >= 3 | 90 days                  | 128 KB                                        | Yes                                  |
+| Glacier Flexible Retrieval           | About once a year                      | 99.999999999%       | 99.99% (after restore) | >= 3 | 90 days                  | None (but 40 KB overhead per object)          | Yes (Bulk is free)                   |
+| Glacier Deep Archive                 | Less than once a year                  | 99.999999999%       | 99.99% (after restore) | >= 3 | 180 days                 | None (same 40 KB overhead)                    | Yes                                  |
+| Reduced Redundancy (not recommended) | Frequently accessed, re-creatable data | 99.99%              | 99.99%                 | >= 3 | None                     | None                                          | None                                 |
 
 Notes:
 
@@ -65,10 +65,10 @@ Notes:
 
 Separate from design values, the **SLA** is the contractual figure: if monthly uptime falls below it, you receive service credits (refunds). The S3 SLA (last updated 2023-11-28) splits classes into two groups.
 
-| Group | Classes | 10% credit | 25% credit | 100% credit |
-| --- | --- | --- | --- | --- |
+| Group   | Classes                                                                                  | 10% credit                     | 25% credit                     | 100% credit |
+| ------- | ---------------------------------------------------------------------------------------- | ------------------------------ | ------------------------------ | ----------- |
 | Group 1 | Standard, Express One Zone, Glacier Flexible Retrieval, Glacier Deep Archive, and others | At least 99.0% but below 99.9% | At least 95.0% but below 99.0% | Below 95.0% |
-| Group 2 | Intelligent-Tiering, Standard-IA, One Zone-IA, Glacier Instant Retrieval | At least 98.0% but below 99.0% | At least 95.0% but below 98.0% | Below 95.0% |
+| Group 2 | Intelligent-Tiering, Standard-IA, One Zone-IA, Glacier Instant Retrieval                 | At least 98.0% but below 99.0% | At least 95.0% but below 98.0% | Below 95.0% |
 
 So the SLA threshold is **99.9%** for group 1 and **99%** for group 2. These are well below the design values (99.99% and so on) because they are the contractual floor, not the availability you see day to day. Durability (11 nines) has no SLA.
 
@@ -76,67 +76,67 @@ So the SLA threshold is **99.9%** for group 1 and **99%** for group 2. These are
 
 ### 4.1 Storage prices
 
-| Class | Per GB-month | Notes |
-| --- | --- | --- |
-| Standard | First 50 TB: $0.023 / Next 450 TB: $0.022 / Over 500 TB: $0.021 | Tiered |
-| Express One Zone | $0.11 | Cut 31% from $0.16 on 2025-04-10 |
-| Intelligent-Tiering Frequent Access | $0.023 / $0.022 / $0.021 (same tiers as Standard) | |
-| Intelligent-Tiering Infrequent Access | $0.0125 | |
-| Intelligent-Tiering Archive Instant Access | $0.004 | |
-| Intelligent-Tiering Archive Access (optional) | $0.0036 | |
-| Intelligent-Tiering Deep Archive Access (optional) | $0.00099 | |
-| Intelligent-Tiering monitoring and automation fee | $0.0025 / 1,000 objects / month | Objects of 128 KB or larger only |
-| Standard-IA | $0.0125 | |
-| One Zone-IA | $0.01 | |
-| Glacier Instant Retrieval | $0.004 | |
-| Glacier Flexible Retrieval | $0.0036 | |
-| Glacier Deep Archive | $0.00099 | |
-| Reduced Redundancy | First 1 TB: $0.024 / Next 49 TB: $0.0236 / ... / Over 5,000 TB: $0.022 | More expensive than Standard |
+| Class                                              | Per GB-month                                                           | Notes                            |
+| -------------------------------------------------- | ---------------------------------------------------------------------- | -------------------------------- |
+| Standard                                           | First 50 TB: $0.023 / Next 450 TB: $0.022 / Over 500 TB: $0.021        | Tiered                           |
+| Express One Zone                                   | $0.11                                                                  | Cut 31% from $0.16 on 2025-04-10 |
+| Intelligent-Tiering Frequent Access                | $0.023 / $0.022 / $0.021 (same tiers as Standard)                      |                                  |
+| Intelligent-Tiering Infrequent Access              | $0.0125                                                                |                                  |
+| Intelligent-Tiering Archive Instant Access         | $0.004                                                                 |                                  |
+| Intelligent-Tiering Archive Access (optional)      | $0.0036                                                                |                                  |
+| Intelligent-Tiering Deep Archive Access (optional) | $0.00099                                                               |                                  |
+| Intelligent-Tiering monitoring and automation fee  | $0.0025 / 1,000 objects / month                                        | Objects of 128 KB or larger only |
+| Standard-IA                                        | $0.0125                                                                |                                  |
+| One Zone-IA                                        | $0.01                                                                  |                                  |
+| Glacier Instant Retrieval                          | $0.004                                                                 |                                  |
+| Glacier Flexible Retrieval                         | $0.0036                                                                |                                  |
+| Glacier Deep Archive                               | $0.00099                                                               |                                  |
+| Reduced Redundancy                                 | First 1 TB: $0.024 / Next 49 TB: $0.0236 / ... / Over 5,000 TB: $0.022 | More expensive than Standard     |
 
 Converted to a monthly cost per TB (1,024 GB) (Standard uses the first tier):
 
-| Class | Per TB-month |
-| --- | --- |
-| Express One Zone | About $112.64 |
-| Standard | About $23.55 |
-| Standard-IA | About $12.80 |
-| One Zone-IA | About $10.24 |
-| Glacier Instant Retrieval | About $4.10 |
-| Glacier Flexible Retrieval | About $3.69 |
-| Glacier Deep Archive | About $1.01 |
+| Class                      | Per TB-month  |
+| -------------------------- | ------------- |
+| Express One Zone           | About $112.64 |
+| Standard                   | About $23.55  |
+| Standard-IA                | About $12.80  |
+| One Zone-IA                | About $10.24  |
+| Glacier Instant Retrieval  | About $4.10   |
+| Glacier Flexible Retrieval | About $3.69   |
+| Glacier Deep Archive       | About $1.01   |
 
 ### 4.2 Request prices
 
-| Class | PUT / COPY / POST / LIST (per 1,000) | GET / SELECT / other (per 1,000) |
-| --- | --- | --- |
-| Standard | $0.005 | $0.0004 |
-| Express One Zone | $0.00113 | $0.00003 |
-| Intelligent-Tiering | $0.005 | $0.0004 |
-| Standard-IA | $0.01 | $0.001 |
-| One Zone-IA | $0.01 | $0.001 |
-| Glacier Instant Retrieval | $0.02 | $0.01 |
-| Glacier Flexible Retrieval | $0.03 | $0.0004 |
-| Glacier Deep Archive | $0.05 | $0.0004 |
+| Class                      | PUT / COPY / POST / LIST (per 1,000) | GET / SELECT / other (per 1,000) |
+| -------------------------- | ------------------------------------ | -------------------------------- |
+| Standard                   | $0.005                               | $0.0004                          |
+| Express One Zone           | $0.00113                             | $0.00003                         |
+| Intelligent-Tiering        | $0.005                               | $0.0004                          |
+| Standard-IA                | $0.01                                | $0.001                           |
+| One Zone-IA                | $0.01                                | $0.001                           |
+| Glacier Instant Retrieval  | $0.02                                | $0.01                            |
+| Glacier Flexible Retrieval | $0.03                                | $0.0004                          |
+| Glacier Deep Archive       | $0.05                                | $0.0004                          |
 
 DELETE and CANCEL are free. For Glacier Flexible / Deep Archive, the GET price applies to non-GET operations on archived objects (HEAD and so on) and to GETs on restored copies (archived data itself cannot be read with GET).
 
 ### 4.3 Retrieval prices
 
-| Class | Retrieval option | Typical time | Per GB | Per request |
-| --- | --- | --- | --- | --- |
-| Standard / Intelligent-Tiering (FA/IA/AIA) | — | ms | None | None |
-| Express One Zone | upload / retrieval | Single-digit ms | upload $0.0032, retrieval $0.0006 | — |
-| Standard-IA | — | ms | $0.01 | — |
-| One Zone-IA | — | ms | $0.01 | — |
-| Glacier Instant Retrieval | — | ms | $0.03 | — |
-| Glacier Flexible Retrieval | Expedited | 1–5 minutes | $0.03 | $10 / 1,000 ($0.01 each) |
-| Glacier Flexible Retrieval | Standard | 3–5 hours (minutes to 5 hours via Batch Operations) | $0.01 | $0.05 / 1,000 |
-| Glacier Flexible Retrieval | Bulk | 5–12 hours | Free | Free |
-| Glacier Deep Archive | Standard | Within 12 hours (9–12 hours via Batch Operations) | $0.02 | $0.10 / 1,000 |
-| Glacier Deep Archive | Bulk | Within 48 hours | $0.0025 | $0.025 / 1,000 |
-| Intelligent-Tiering Archive Access | Expedited | 1–5 minutes | $0.03 | $0.01 each |
-| Intelligent-Tiering Archive Access | Standard / Bulk | 3–5 hours / 5–12 hours | Free | Free |
-| Intelligent-Tiering Deep Archive Access | Standard / Bulk | Within 12 hours / within 48 hours | Free | Free |
+| Class                                      | Retrieval option   | Typical time                                        | Per GB                            | Per request              |
+| ------------------------------------------ | ------------------ | --------------------------------------------------- | --------------------------------- | ------------------------ |
+| Standard / Intelligent-Tiering (FA/IA/AIA) | —                  | ms                                                  | None                              | None                     |
+| Express One Zone                           | upload / retrieval | Single-digit ms                                     | upload $0.0032, retrieval $0.0006 | —                        |
+| Standard-IA                                | —                  | ms                                                  | $0.01                             | —                        |
+| One Zone-IA                                | —                  | ms                                                  | $0.01                             | —                        |
+| Glacier Instant Retrieval                  | —                  | ms                                                  | $0.03                             | —                        |
+| Glacier Flexible Retrieval                 | Expedited          | 1–5 minutes                                         | $0.03                             | $10 / 1,000 ($0.01 each) |
+| Glacier Flexible Retrieval                 | Standard           | 3–5 hours (minutes to 5 hours via Batch Operations) | $0.01                             | $0.05 / 1,000            |
+| Glacier Flexible Retrieval                 | Bulk               | 5–12 hours                                          | Free                              | Free                     |
+| Glacier Deep Archive                       | Standard           | Within 12 hours (9–12 hours via Batch Operations)   | $0.02                             | $0.10 / 1,000            |
+| Glacier Deep Archive                       | Bulk               | Within 48 hours                                     | $0.0025                           | $0.025 / 1,000           |
+| Intelligent-Tiering Archive Access         | Expedited          | 1–5 minutes                                         | $0.03                             | $0.01 each               |
+| Intelligent-Tiering Archive Access         | Standard / Bulk    | 3–5 hours / 5–12 hours                              | Free                              | Free                     |
+| Intelligent-Tiering Deep Archive Access    | Standard / Bulk    | Within 12 hours / within 48 hours                   | Free                              | Free                     |
 
 Additional notes:
 
@@ -150,12 +150,12 @@ Additional notes:
 
 Moving objects between classes with lifecycle rules is billed as **one transition request per object**.
 
-| Destination | Per 1,000 |
-| --- | --- |
-| Standard-IA / One Zone-IA / Intelligent-Tiering | $0.01 |
-| Glacier Instant Retrieval | $0.02 |
-| Glacier Flexible Retrieval | $0.03 |
-| Glacier Deep Archive | $0.05 |
+| Destination                                     | Per 1,000 |
+| ----------------------------------------------- | --------- |
+| Standard-IA / One Zone-IA / Intelligent-Tiering | $0.01     |
+| Glacier Instant Retrieval                       | $0.02     |
+| Glacier Flexible Retrieval                      | $0.03     |
+| Glacier Deep Archive                            | $0.05     |
 
 ## 5. Class details
 
@@ -201,13 +201,13 @@ stateDiagram-v2
     DeepArchiveAccess --> FrequentAccess: Restored with RestoreObject
 ```
 
-| Tier | Move condition | Price (GB-month) | Access |
-| --- | --- | --- | --- |
-| Frequent Access | Default | $0.023–$0.021 | ms |
-| Infrequent Access | No access for 30 consecutive days | $0.0125 | ms |
-| Archive Instant Access | No access for 90 consecutive days | $0.004 | ms |
-| Archive Access (opt-in) | No access for 90+ days (configurable) | $0.0036 | Restore required (minutes to hours) |
-| Deep Archive Access (opt-in) | No access for 180+ days (configurable) | $0.00099 | Restore required (hours) |
+| Tier                         | Move condition                         | Price (GB-month) | Access                              |
+| ---------------------------- | -------------------------------------- | ---------------- | ----------------------------------- |
+| Frequent Access              | Default                                | $0.023–$0.021    | ms                                  |
+| Infrequent Access            | No access for 30 consecutive days      | $0.0125          | ms                                  |
+| Archive Instant Access       | No access for 90 consecutive days      | $0.004           | ms                                  |
+| Archive Access (opt-in)      | No access for 90+ days (configurable)  | $0.0036          | Restore required (minutes to hours) |
+| Deep Archive Access (opt-in) | No access for 180+ days (configurable) | $0.00099         | Restore required (hours)            |
 
 Key points:
 
@@ -360,18 +360,18 @@ flowchart TD
     GFR --> GDA
 ```
 
-| Source | Allowed destinations |
-| --- | --- |
-| Standard | Standard-IA, Intelligent-Tiering, One Zone-IA, Glacier IR, Glacier Flexible, Deep Archive |
-| Standard-IA | Intelligent-Tiering, One Zone-IA, Glacier IR, Glacier Flexible, Deep Archive |
-| Intelligent-Tiering (Frequent / Infrequent tiers) | One Zone-IA, Glacier IR, Glacier Flexible, Deep Archive |
-| Intelligent-Tiering (Archive Instant Access tier) | Glacier IR, Glacier Flexible, Deep Archive |
-| Intelligent-Tiering (Archive Access tier) | Glacier Flexible, Deep Archive |
-| Intelligent-Tiering (Deep Archive Access tier) | Deep Archive |
-| One Zone-IA | Glacier Flexible, Deep Archive |
-| Glacier Instant Retrieval | Glacier Flexible, Deep Archive |
-| Glacier Flexible Retrieval | Deep Archive |
-| Glacier Deep Archive | (none) |
+| Source                                            | Allowed destinations                                                                      |
+| ------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| Standard                                          | Standard-IA, Intelligent-Tiering, One Zone-IA, Glacier IR, Glacier Flexible, Deep Archive |
+| Standard-IA                                       | Intelligent-Tiering, One Zone-IA, Glacier IR, Glacier Flexible, Deep Archive              |
+| Intelligent-Tiering (Frequent / Infrequent tiers) | One Zone-IA, Glacier IR, Glacier Flexible, Deep Archive                                   |
+| Intelligent-Tiering (Archive Instant Access tier) | Glacier IR, Glacier Flexible, Deep Archive                                                |
+| Intelligent-Tiering (Archive Access tier)         | Glacier Flexible, Deep Archive                                                            |
+| Intelligent-Tiering (Deep Archive Access tier)    | Deep Archive                                                                              |
+| One Zone-IA                                       | Glacier Flexible, Deep Archive                                                            |
+| Glacier Instant Retrieval                         | Glacier Flexible, Deep Archive                                                            |
+| Glacier Flexible Retrieval                        | Deep Archive                                                                              |
+| Glacier Deep Archive                              | (none)                                                                                    |
 
 Not allowed:
 
@@ -383,10 +383,10 @@ Not allowed:
 
 ### 7.2 The 30-day rule (removed 2026-07-16)
 
-| Period | Transitions to Standard-IA / One Zone-IA |
-| --- | --- |
+| Period            | Transitions to Standard-IA / One Zone-IA                                                                                 |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------ |
 | Before 2026-07-16 | Only objects **at least 30 days old** could transition (you could not create an IA transition rule with `Days` under 30) |
-| From 2026-07-16 | **Transitions allowed from the day of creation (day 0)** (all Regions) |
+| From 2026-07-16   | **Transitions allowed from the day of creation (day 0)** (all Regions)                                                   |
 
 - The old rule existed because newly created data is often accessed, so IA retrieval fees were likely to make the move a net loss
 - Even after the removal, IA's **30-day minimum storage duration** and **128 KB minimum billable size** still apply. You can move objects sooner, but deleting them within 30 days of the move still triggers early deletion fees
@@ -395,10 +395,10 @@ Not allowed:
 
 ### 7.3 The 128 KB rule (changed 2024-09)
 
-| Period | Default behavior |
-| --- | --- |
+| Period         | Default behavior                                                                                                                            |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
 | Before 2024-09 | Objects under 128 KB did not transition to IA / Intelligent-Tiering / Glacier IR, but **did transition to Glacier Flexible / Deep Archive** |
-| From 2024-09 | By default, **objects under 128 KB do not transition to any class** |
+| From 2024-09   | By default, **objects under 128 KB do not transition to any class**                                                                         |
 
 - Lifecycle configurations created before 2024-09 keep the old behavior unless edited. Creating, editing, or deleting a rule switches to the new behavior
 - To transition small objects too, explicitly set `ObjectSizeGreaterThan` (for example, 1 byte) or `ObjectSizeLessThan` in the rule filter
@@ -463,13 +463,13 @@ In this example, objects stay in Standard-IA for 90 days (days 30–120, meeting
 
 In a class with a minimum storage duration, **deleting, overwriting, or transitioning to another class** before the duration ends bills the storage charge for the remaining days, prorated daily.
 
-| Class | Minimum storage duration | Early delete rate (GB-month, prorated daily) |
-| --- | --- | --- |
-| Standard-IA | 30 days | $0.0125 |
-| One Zone-IA | 30 days | $0.01 |
-| Glacier Instant Retrieval | 90 days | $0.004 |
-| Glacier Flexible Retrieval | 90 days | $0.0036 |
-| Glacier Deep Archive | 180 days | $0.00099 |
+| Class                      | Minimum storage duration | Early delete rate (GB-month, prorated daily) |
+| -------------------------- | ------------------------ | -------------------------------------------- |
+| Standard-IA                | 30 days                  | $0.0125                                      |
+| One Zone-IA                | 30 days                  | $0.01                                        |
+| Glacier Instant Retrieval  | 90 days                  | $0.004                                       |
+| Glacier Flexible Retrieval | 90 days                  | $0.0036                                      |
+| Glacier Deep Archive       | 180 days                 | $0.00099                                     |
 
 Example: you store 100 GB in Standard-IA and delete it on day 10 → in addition to the actual 10 days, the remaining 20 days (100 GB × $0.0125 × 20/30 ≈ $0.83) are billed as an early delete fee.
 
@@ -493,32 +493,32 @@ If you archive large numbers of small objects, the golden rule is to bundle them
 
 ## 9. Recommendations by use case
 
-| Use case | Recommended class | Why |
-| --- | --- | --- |
-| Static web assets (CloudFront origin) | Standard | Frequent access, no retrieval fees |
-| Data lake with unknown access patterns | Intelligent-Tiering | Drops to IA / AIA automatically; no retrieval fees |
-| Fast loading of ML training data | Express One Zone | Single-digit ms, low request prices, pairs with GPUs in the same AZ |
-| DB backups (daily, 30-day retention) | Standard-IA (but Standard if deleted in under 30 days) | Read rarely, 30-day minimum |
-| Thumbnails, transcoded video | One Zone-IA | Re-creatable |
-| Medical images, archived news photos | Glacier Instant Retrieval | Rare but needed immediately |
-| Backups audited once a year | Glacier Flexible Retrieval | Retrieval in minutes to hours is fine |
-| 7–10 year regulatory retention | Glacier Deep Archive (+ Object Lock) | Cheapest; can wait 12–48 hours |
-| CRR replicas (for DR) | One Zone-IA or a Glacier class | The production copy is in another Region |
-| Local data at an on-premises factory | S3 on Outposts | Data residency |
+| Use case                               | Recommended class                                      | Why                                                                 |
+| -------------------------------------- | ------------------------------------------------------ | ------------------------------------------------------------------- |
+| Static web assets (CloudFront origin)  | Standard                                               | Frequent access, no retrieval fees                                  |
+| Data lake with unknown access patterns | Intelligent-Tiering                                    | Drops to IA / AIA automatically; no retrieval fees                  |
+| Fast loading of ML training data       | Express One Zone                                       | Single-digit ms, low request prices, pairs with GPUs in the same AZ |
+| DB backups (daily, 30-day retention)   | Standard-IA (but Standard if deleted in under 30 days) | Read rarely, 30-day minimum                                         |
+| Thumbnails, transcoded video           | One Zone-IA                                            | Re-creatable                                                        |
+| Medical images, archived news photos   | Glacier Instant Retrieval                              | Rare but needed immediately                                         |
+| Backups audited once a year            | Glacier Flexible Retrieval                             | Retrieval in minutes to hours is fine                               |
+| 7–10 year regulatory retention         | Glacier Deep Archive (+ Object Lock)                   | Cheapest; can wait 12–48 hours                                      |
+| CRR replicas (for DR)                  | One Zone-IA or a Glacier class                         | The production copy is in another Region                            |
+| Local data at an on-premises factory   | S3 on Outposts                                         | Data residency                                                      |
 
 ## 10. Common pitfalls
 
-| Pitfall | What happens | Mitigation |
-| --- | --- | --- |
-| Putting small objects in IA / GIR | 128 KB minimum billing makes it more expensive than Standard | Size filters, aggregation, Intelligent-Tiering |
-| Transitioning small objects to Glacier classes | Transition fees + 40 KB overhead put you in the red | Keep the post-2024-09 default (no transitions under 128 KB) |
-| Putting data deleted within 30 days in IA | Early delete fees | Know the retention period before choosing a class |
-| The application GETs data stored in Glacier | `InvalidObjectState` error | Implement a restore flow, or use Glacier IR |
-| Enabling Intelligent-Tiering archive tiers casually | Data cannot be read immediately when you need it | Enable only for applications that handle asynchronous restores |
-| Relying entirely on Expedited restores | Rejected when demand is high | Provisioned Capacity or Glacier IR |
-| Master data in One Zone-IA | Losing the AZ loses the data | Keep master data in a multi-AZ class |
-| Continuing to use RRS | More expensive than Standard and less durable | Migrate to Standard / Intelligent-Tiering |
-| Keeping restored copies too long | Double billing at the Standard rate | Specify only the days you need |
+| Pitfall                                             | What happens                                                 | Mitigation                                                     |
+| --------------------------------------------------- | ------------------------------------------------------------ | -------------------------------------------------------------- |
+| Putting small objects in IA / GIR                   | 128 KB minimum billing makes it more expensive than Standard | Size filters, aggregation, Intelligent-Tiering                 |
+| Transitioning small objects to Glacier classes      | Transition fees + 40 KB overhead put you in the red          | Keep the post-2024-09 default (no transitions under 128 KB)    |
+| Putting data deleted within 30 days in IA           | Early delete fees                                            | Know the retention period before choosing a class              |
+| The application GETs data stored in Glacier         | `InvalidObjectState` error                                   | Implement a restore flow, or use Glacier IR                    |
+| Enabling Intelligent-Tiering archive tiers casually | Data cannot be read immediately when you need it             | Enable only for applications that handle asynchronous restores |
+| Relying entirely on Expedited restores              | Rejected when demand is high                                 | Provisioned Capacity or Glacier IR                             |
+| Master data in One Zone-IA                          | Losing the AZ loses the data                                 | Keep master data in a multi-AZ class                           |
+| Continuing to use RRS                               | More expensive than Standard and less durable                | Migrate to Standard / Intelligent-Tiering                      |
+| Keeping restored copies too long                    | Double billing at the Standard rate                          | Specify only the days you need                                 |
 
 ## References
 

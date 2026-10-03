@@ -18,13 +18,13 @@ flowchart LR
     CLI --> OTHER[aws sts / iam / cloudwatch / accessanalyzer<br/>トラブルシュート]
 ```
 
-| 名前空間 | 使い分け |
-| --- | --- |
-| `aws s3` | ファイル転送の 9 割はこれ。マルチパート・並列化・再帰処理を自動でやる |
-| `aws s3api` | API を 1 対 1 で叩く。設定変更、メタデータ、バージョン、条件付き書き込みなど |
-| `aws s3control` | バケットではなく **アカウント** にぶら下がるリソース (`--account-id` 必須) |
-| `aws s3tables` | S3 Tables (テーブルバケット、名前空間、テーブル、メンテナンス) |
-| `aws s3vectors` | S3 Vectors (ベクトルバケット、インデックス、ベクトルの PUT / クエリ) |
+| 名前空間        | 使い分け                                                                     |
+| --------------- | ---------------------------------------------------------------------------- |
+| `aws s3`        | ファイル転送の 9 割はこれ。マルチパート・並列化・再帰処理を自動でやる        |
+| `aws s3api`     | API を 1 対 1 で叩く。設定変更、メタデータ、バージョン、条件付き書き込みなど |
+| `aws s3control` | バケットではなく **アカウント** にぶら下がるリソース (`--account-id` 必須)   |
+| `aws s3tables`  | S3 Tables (テーブルバケット、名前空間、テーブル、メンテナンス)               |
+| `aws s3vectors` | S3 Vectors (ベクトルバケット、インデックス、ベクトルの PUT / クエリ)         |
 
 ## 1. セットアップ
 
@@ -95,16 +95,16 @@ duration_seconds = 3600
 
 ### 1.5 環境変数
 
-| 変数 | 意味 |
-| --- | --- |
-| `AWS_PROFILE` | 使うプロファイル |
-| `AWS_REGION` / `AWS_DEFAULT_REGION` | リージョン (SDK は `AWS_REGION`、CLI は両方見る) |
-| `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY` / `AWS_SESSION_TOKEN` | 一時クレデンシャル直指定 |
-| `AWS_ENDPOINT_URL_S3` | S3 だけエンドポイントを差し替え (MinIO、LocalStack 等) |
-| `AWS_CA_BUNDLE` | 社内プロキシの CA |
-| `AWS_RETRY_MODE` / `AWS_MAX_ATTEMPTS` | リトライ (`standard` / `adaptive`) |
-| `AWS_PAGER` | `""` にするとページャ (less) を無効化 |
-| `AWS_CLI_AUTO_PROMPT` | `on-partial` で対話補完 |
+| 変数                                                                | 意味                                                   |
+| ------------------------------------------------------------------- | ------------------------------------------------------ |
+| `AWS_PROFILE`                                                       | 使うプロファイル                                       |
+| `AWS_REGION` / `AWS_DEFAULT_REGION`                                 | リージョン (SDK は `AWS_REGION`、CLI は両方見る)       |
+| `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY` / `AWS_SESSION_TOKEN` | 一時クレデンシャル直指定                               |
+| `AWS_ENDPOINT_URL_S3`                                               | S3 だけエンドポイントを差し替え (MinIO、LocalStack 等) |
+| `AWS_CA_BUNDLE`                                                     | 社内プロキシの CA                                      |
+| `AWS_RETRY_MODE` / `AWS_MAX_ATTEMPTS`                               | リトライ (`standard` / `adaptive`)                     |
+| `AWS_PAGER`                                                         | `""` にするとページャ (less) を無効化                  |
+| `AWS_CLI_AUTO_PROMPT`                                               | `on-partial` で対話補完                                |
 
 ```bash
 export AWS_PROFILE=dev-admin
@@ -140,17 +140,17 @@ s3 =
   target_bandwidth = 25Gb/s
 ```
 
-| キー | 既定 | 対応クライアント | 説明 |
-| --- | --- | --- | --- |
-| `max_concurrent_requests` | 10 | classic | 同時リクエスト数 |
-| `max_queue_size` | 1000 | classic | タスクキュー長 |
-| `multipart_threshold` | 8MB | 両方 | この値以上でマルチパート |
-| `multipart_chunksize` | 8MB | 両方 | パートサイズ (10,000 パートを超えるなら自動調整) |
-| `max_bandwidth` | なし | classic | 帯域上限 |
-| `preferred_transfer_client` | auto | — | `auto` / `classic` / `crt` |
-| `target_bandwidth` | 自動検出 | crt | 目標帯域 |
-| `use_accelerate_endpoint` | false | 両方 | Transfer Acceleration |
-| `disable_s3_express_session_auth` | false | — | プロファイル直下に書く (s3 キーの下ではない) |
+| キー                              | 既定     | 対応クライアント | 説明                                             |
+| --------------------------------- | -------- | ---------------- | ------------------------------------------------ |
+| `max_concurrent_requests`         | 10       | classic          | 同時リクエスト数                                 |
+| `max_queue_size`                  | 1000     | classic          | タスクキュー長                                   |
+| `multipart_threshold`             | 8MB      | 両方             | この値以上でマルチパート                         |
+| `multipart_chunksize`             | 8MB      | 両方             | パートサイズ (10,000 パートを超えるなら自動調整) |
+| `max_bandwidth`                   | なし     | classic          | 帯域上限                                         |
+| `preferred_transfer_client`       | auto     | —                | `auto` / `classic` / `crt`                       |
+| `target_bandwidth`                | 自動検出 | crt              | 目標帯域                                         |
+| `use_accelerate_endpoint`         | false    | 両方             | Transfer Acceleration                            |
+| `disable_s3_express_session_auth` | false    | —                | プロファイル直下に書く (s3 キーの下ではない)     |
 
 ## 2. `aws s3` 高レベルコマンド
 
@@ -244,15 +244,15 @@ aws s3 sync s3://src-bucket/prefix s3://amzn-s3-demo-bucket/prefix --source-regi
 
 sync の比較ロジック:
 
-| 条件 | 既定動作 |
-| --- | --- |
-| 宛先に存在しない | 転送 |
-| サイズが違う | 転送 |
-| サイズ同じ、ソースの更新時刻が新しい | 転送 |
-| サイズ同じ、更新時刻が同じか古い | スキップ |
-| `--size-only` | サイズだけで判定 |
-| `--exact-timestamps` (S3→ローカル) | 同サイズでも時刻が完全一致しなければ転送 |
-| `--delete` | ソースにないものを宛先から削除 |
+| 条件                                 | 既定動作                                 |
+| ------------------------------------ | ---------------------------------------- |
+| 宛先に存在しない                     | 転送                                     |
+| サイズが違う                         | 転送                                     |
+| サイズ同じ、ソースの更新時刻が新しい | 転送                                     |
+| サイズ同じ、更新時刻が同じか古い     | スキップ                                 |
+| `--size-only`                        | サイズだけで判定                         |
+| `--exact-timestamps` (S3→ローカル)   | 同サイズでも時刻が完全一致しなければ転送 |
+| `--delete`                           | ソースにないものを宛先から削除           |
 
 `--exclude` / `--include` は **順番に評価され、後のフィルタが優先** する。`--exclude "*" --include "*.gz"` は「全部除外したあと .gz だけ戻す」。パスはソースディレクトリからの相対で評価される。
 
@@ -539,16 +539,16 @@ aws s3api list-objects-v2 --bucket amzn-s3-demo-bucket \
 
 JMESPath の早見表:
 
-| 書き方 | 意味 |
-| --- | --- |
-| `Contents[].Key` | 配列の各要素から Key |
-| ``Contents[?Size > `1048576`]`` | フィルタ (数値リテラルはバッククォートで囲む) |
-| `sort_by(Contents, &Size)` | ソート |
-| `reverse(...)[:10]` | 降順上位 10 |
-| `sum(Contents[].Size)` | 合計 |
-| `length(Contents[])` | 件数 |
-| `{a: x, b: y}` | 形を変える |
-| `starts_with(Key, 'logs/')` / `ends_with(Key, '.gz')` / `contains(Key, 'tmp')` | 文字列関数 |
+| 書き方                                                                         | 意味                                          |
+| ------------------------------------------------------------------------------ | --------------------------------------------- |
+| `Contents[].Key`                                                               | 配列の各要素から Key                          |
+| ``Contents[?Size > `1048576`]``                                                | フィルタ (数値リテラルはバッククォートで囲む) |
+| `sort_by(Contents, &Size)`                                                     | ソート                                        |
+| `reverse(...)[:10]`                                                            | 降順上位 10                                   |
+| `sum(Contents[].Size)`                                                         | 合計                                          |
+| `length(Contents[])`                                                           | 件数                                          |
+| `{a: x, b: y}`                                                                 | 形を変える                                    |
+| `starts_with(Key, 'logs/')` / `ends_with(Key, '.gz')` / `contains(Key, 'tmp')` | 文字列関数                                    |
 
 注意: 数百万オブジェクトを `list-objects-v2` で総なめするのは遅くて高い (1,000 件ごとに LIST 1 回)。定期的な棚卸しは **S3 Inventory** か **S3 Metadata のライブインベントリテーブル** を使う。
 
@@ -759,11 +759,11 @@ while read -r k; do
 done
 ```
 
-| クラス | Expedited | Standard | Bulk |
-| --- | --- | --- | --- |
-| Glacier Flexible Retrieval | 1〜5 分 | 3〜5 時間 | 5〜12 時間 |
-| Glacier Deep Archive | なし | 12 時間以内 | 48 時間以内 |
-| Glacier Instant Retrieval | 復元不要 (ミリ秒で GET) | — | — |
+| クラス                     | Expedited               | Standard    | Bulk        |
+| -------------------------- | ----------------------- | ----------- | ----------- |
+| Glacier Flexible Retrieval | 1〜5 分                 | 3〜5 時間   | 5〜12 時間  |
+| Glacier Deep Archive       | なし                    | 12 時間以内 | 48 時間以内 |
+| Glacier Instant Retrieval  | 復元不要 (ミリ秒で GET) | —           | —           |
 
 大量なら S3 Batch Operations の `S3InitiateRestoreObject` を使う。
 
@@ -1242,50 +1242,65 @@ npm i @aws-sdk/client-s3 @aws-sdk/s3-request-presigner @aws-sdk/lib-storage
 ```
 
 ```javascript
-import { S3Client, PutObjectCommand, GetObjectCommand, ListObjectsV2Command,
-         paginateListObjectsV2 } from "@aws-sdk/client-s3";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { Upload } from "@aws-sdk/lib-storage";
-import { createReadStream } from "node:fs";
+import {
+  S3Client,
+  PutObjectCommand,
+  GetObjectCommand,
+  ListObjectsV2Command,
+  paginateListObjectsV2,
+} from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import { Upload } from '@aws-sdk/lib-storage';
+import { createReadStream } from 'node:fs';
 
-const s3 = new S3Client({ region: "ap-northeast-1" });
+const s3 = new S3Client({ region: 'ap-northeast-1' });
 
 // 単純な PUT (条件付き)
-await s3.send(new PutObjectCommand({
-  Bucket: "amzn-s3-demo-bucket",
-  Key: "docs/a.txt",
-  Body: "hello",
-  ContentType: "text/plain",
-  IfNoneMatch: "*",
-}));
+await s3.send(
+  new PutObjectCommand({
+    Bucket: 'amzn-s3-demo-bucket',
+    Key: 'docs/a.txt',
+    Body: 'hello',
+    ContentType: 'text/plain',
+    IfNoneMatch: '*',
+  }),
+);
 
 // 大きいファイルは lib-storage の Upload (自動マルチパート・並列)
 const upload = new Upload({
   client: s3,
-  params: { Bucket: "amzn-s3-demo-bucket", Key: "data/big.bin", Body: createReadStream("big.bin") },
+  params: { Bucket: 'amzn-s3-demo-bucket', Key: 'data/big.bin', Body: createReadStream('big.bin') },
   queueSize: 8,
   partSize: 16 * 1024 * 1024,
   leavePartsOnError: false,
 });
-upload.on("httpUploadProgress", (p) => console.log(p.loaded, p.total));
+upload.on('httpUploadProgress', (p) => console.log(p.loaded, p.total));
 await upload.done();
 
 // 署名付き URL
-const getUrl = await getSignedUrl(s3,
-  new GetObjectCommand({ Bucket: "amzn-s3-demo-bucket", Key: "docs/a.pdf" }), { expiresIn: 900 });
-const putUrl = await getSignedUrl(s3,
-  new PutObjectCommand({ Bucket: "amzn-s3-demo-bucket", Key: "uploads/a.png", ContentType: "image/png" }),
-  { expiresIn: 600 });
+const getUrl = await getSignedUrl(
+  s3,
+  new GetObjectCommand({ Bucket: 'amzn-s3-demo-bucket', Key: 'docs/a.pdf' }),
+  { expiresIn: 900 },
+);
+const putUrl = await getSignedUrl(
+  s3,
+  new PutObjectCommand({ Bucket: 'amzn-s3-demo-bucket', Key: 'uploads/a.png', ContentType: 'image/png' }),
+  { expiresIn: 600 },
+);
 
 // ページング
 let bytes = 0;
-for await (const page of paginateListObjectsV2({ client: s3 }, { Bucket: "amzn-s3-demo-bucket", Prefix: "logs/" })) {
+for await (const page of paginateListObjectsV2(
+  { client: s3 },
+  { Bucket: 'amzn-s3-demo-bucket', Prefix: 'logs/' },
+)) {
   for (const o of page.Contents ?? []) bytes += o.Size ?? 0;
 }
 console.log(bytes);
 
 // GET してテキストに
-const res = await s3.send(new GetObjectCommand({ Bucket: "amzn-s3-demo-bucket", Key: "docs/a.txt" }));
+const res = await s3.send(new GetObjectCommand({ Bucket: 'amzn-s3-demo-bucket', Key: 'docs/a.txt' }));
 console.log(await res.Body.transformToString());
 ```
 
@@ -1437,14 +1452,14 @@ s3://amzn-s3-demo-bucket/datasets/ /mnt/datasets mount-s3 _netdev,nosuid,nodev,n
 
 ### 20.6 ツール比較
 
-| ツール | 速度 | 特徴 | 向く用途 |
-| --- | --- | --- | --- |
-| `aws s3` (CRT) | 速い | 公式、全機能 | 普段使い |
-| `s5cmd` | 非常に速い | ワイルドカード、並列、バッチ実行 | 数百万オブジェクトの一括操作 |
-| `rclone` | 速い | 70 以上のバックエンド、暗号化、マウント | クラウド間移行、バックアップ |
-| `mc` | 速い | S3 互換全般、`mirror` / `find` | MinIO と AWS の両方を扱う |
-| `s3cmd` | 普通 | 古くからある、設定が簡単 | レガシーなスクリプト |
-| `mount-s3` | 読み取りが非常に速い | FUSE、POSIX 非完全 | ML 学習データ、ログ読み込み |
+| ツール         | 速度                 | 特徴                                    | 向く用途                     |
+| -------------- | -------------------- | --------------------------------------- | ---------------------------- |
+| `aws s3` (CRT) | 速い                 | 公式、全機能                            | 普段使い                     |
+| `s5cmd`        | 非常に速い           | ワイルドカード、並列、バッチ実行        | 数百万オブジェクトの一括操作 |
+| `rclone`       | 速い                 | 70 以上のバックエンド、暗号化、マウント | クラウド間移行、バックアップ |
+| `mc`           | 速い                 | S3 互換全般、`mirror` / `find`          | MinIO と AWS の両方を扱う    |
+| `s3cmd`        | 普通                 | 古くからある、設定が簡単                | レガシーなスクリプト         |
+| `mount-s3`     | 読み取りが非常に速い | FUSE、POSIX 非完全                      | ML 学習データ、ログ読み込み  |
 
 ## 21. IaC: セキュアなバケットの雛形
 
@@ -1536,14 +1551,14 @@ resource "aws_s3_bucket_policy" "secure" {
 ### 21.2 CloudFormation (YAML)
 
 ```yaml
-AWSTemplateFormatVersion: "2010-09-09"
+AWSTemplateFormatVersion: '2010-09-09'
 Resources:
   SecureBucket:
     Type: AWS::S3::Bucket
     DeletionPolicy: Retain
     UpdateReplacePolicy: Retain
     Properties:
-      BucketName: !Sub "amzn-s3-demo-secure-${AWS::AccountId}"
+      BucketName: !Sub 'amzn-s3-demo-secure-${AWS::AccountId}'
       OwnershipControls:
         Rules:
           - ObjectOwnership: BucketOwnerEnforced
@@ -1574,18 +1589,18 @@ Resources:
     Properties:
       Bucket: !Ref SecureBucket
       PolicyDocument:
-        Version: "2012-10-17"
+        Version: '2012-10-17'
         Statement:
           - Sid: DenyInsecureTransport
             Effect: Deny
-            Principal: "*"
-            Action: "s3:*"
+            Principal: '*'
+            Action: 's3:*'
             Resource:
               - !GetAtt SecureBucket.Arn
-              - !Sub "${SecureBucket.Arn}/*"
+              - !Sub '${SecureBucket.Arn}/*'
             Condition:
               Bool:
-                aws:SecureTransport: "false"
+                aws:SecureTransport: 'false'
 ```
 
 `SSEAlgorithm: aws:kms` で `KMSMasterKeyID` を省略すると AWS マネージドキー (`aws/s3`) が使われる。
@@ -1593,17 +1608,17 @@ Resources:
 ### 21.3 AWS CDK (TypeScript)
 
 ```typescript
-import { Stack, StackProps, RemovalPolicy, Duration } from "aws-cdk-lib";
-import * as s3 from "aws-cdk-lib/aws-s3";
-import * as kms from "aws-cdk-lib/aws-kms";
-import { Construct } from "constructs";
+import { Stack, StackProps, RemovalPolicy, Duration } from 'aws-cdk-lib';
+import * as s3 from 'aws-cdk-lib/aws-s3';
+import * as kms from 'aws-cdk-lib/aws-kms';
+import { Construct } from 'constructs';
 
 export class SecureBucketStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
-    const key = new kms.Key(this, "S3Key", { enableKeyRotation: true });
+    const key = new kms.Key(this, 'S3Key', { enableKeyRotation: true });
 
-    new s3.Bucket(this, "SecureBucket", {
+    new s3.Bucket(this, 'SecureBucket', {
       encryption: s3.BucketEncryption.KMS,
       encryptionKey: key,
       bucketKeyEnabled: true,
@@ -1682,22 +1697,22 @@ S3 の 403 エラーメッセージは、同一アカウント (または同一�
 
 ### 22.2 よくあるエラー
 
-| エラー | 原因 | 対処 |
-| --- | --- | --- |
-| `AccessDenied` | 上の切り分け参照 | — |
-| `NoSuchBucket` | 名前間違い、別パーティション | `aws s3api head-bucket` |
-| `PermanentRedirect` / `AuthorizationHeaderMalformed` | リージョン違い | `--region` をバケットのリージョンに |
-| `IllegalLocationConstraintException` | us-east-1 に LocationConstraint を付けた / 付け忘れ | 3.1 節参照 |
-| `BucketAlreadyExists` | グローバル名前空間で他人が使用中 | 別名、またはアカウントリージョナル名前空間 |
-| `SlowDown` (503) | リクエストレート超過 | バックオフ、プレフィックス分散 |
-| `PreconditionFailed` (412) | 条件付き書き込みの条件不成立 | 想定どおりなら正常系として扱う |
-| `ConditionalRequestConflict` (409) | 条件付き書き込みの競合 | リトライ |
-| `InvalidObjectState` | Glacier 系オブジェクトを復元せず GET | `restore-object` |
-| `EntityTooLarge` | 単一 PUT で 5 GB 超 | マルチパート |
-| `KMS.ThrottlingException` | KMS クォータ | バケットキー |
-| `RequestTimeTooSkewed` | クライアントの時計ずれ (15 分超) | NTP 同期 |
-| `SignatureDoesNotMatch` | キー違い、presigned URL の改変、Content-Type 不一致 | 署名時と同じヘッダーで送る |
-| `ExpiredToken` | SSO / STS の期限切れ | `aws sso login` |
+| エラー                                               | 原因                                                | 対処                                       |
+| ---------------------------------------------------- | --------------------------------------------------- | ------------------------------------------ |
+| `AccessDenied`                                       | 上の切り分け参照                                    | —                                          |
+| `NoSuchBucket`                                       | 名前間違い、別パーティション                        | `aws s3api head-bucket`                    |
+| `PermanentRedirect` / `AuthorizationHeaderMalformed` | リージョン違い                                      | `--region` をバケットのリージョンに        |
+| `IllegalLocationConstraintException`                 | us-east-1 に LocationConstraint を付けた / 付け忘れ | 3.1 節参照                                 |
+| `BucketAlreadyExists`                                | グローバル名前空間で他人が使用中                    | 別名、またはアカウントリージョナル名前空間 |
+| `SlowDown` (503)                                     | リクエストレート超過                                | バックオフ、プレフィックス分散             |
+| `PreconditionFailed` (412)                           | 条件付き書き込みの条件不成立                        | 想定どおりなら正常系として扱う             |
+| `ConditionalRequestConflict` (409)                   | 条件付き書き込みの競合                              | リトライ                                   |
+| `InvalidObjectState`                                 | Glacier 系オブジェクトを復元せず GET                | `restore-object`                           |
+| `EntityTooLarge`                                     | 単一 PUT で 5 GB 超                                 | マルチパート                               |
+| `KMS.ThrottlingException`                            | KMS クォータ                                        | バケットキー                               |
+| `RequestTimeTooSkewed`                               | クライアントの時計ずれ (15 分超)                    | NTP 同期                                   |
+| `SignatureDoesNotMatch`                              | キー違い、presigned URL の改変、Content-Type 不一致 | 署名時と同じヘッダーで送る                 |
+| `ExpiredToken`                                       | SSO / STS の期限切れ                                | `aws sso login`                            |
 
 ### 22.3 リクエスト ID を取る (AWS サポートに渡す)
 
@@ -1711,10 +1726,10 @@ curl -sI "$(aws s3 presign s3://amzn-s3-demo-bucket/a.txt --expires-in 60)" \
   | grep -iE 'x-amz-request-id|x-amz-id-2|HTTP/'
 ```
 
-| ヘッダー | 意味 |
-| --- | --- |
-| `x-amz-request-id` | リクエスト固有 ID |
-| `x-amz-id-2` | 拡張リクエスト ID (ホスト ID)。サポートには **両方** を渡す |
+| ヘッダー           | 意味                                                        |
+| ------------------ | ----------------------------------------------------------- |
+| `x-amz-request-id` | リクエスト固有 ID                                           |
+| `x-amz-id-2`       | 拡張リクエスト ID (ホスト ID)。サポートには **両方** を渡す |
 
 boto3 なら `response["ResponseMetadata"]["RequestId"]` と `response["ResponseMetadata"]["HostId"]`。CloudTrail データイベントやサーバーアクセスログにも同じ ID が記録される。
 

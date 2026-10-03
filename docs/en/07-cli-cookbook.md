@@ -18,13 +18,13 @@ flowchart LR
     CLI --> OTHER[aws sts / iam / cloudwatch / accessanalyzer<br/>Troubleshooting]
 ```
 
-| Namespace | When to use it |
-| --- | --- |
-| `aws s3` | Covers 90% of file transfers. Handles multipart, parallelism, and recursion automatically |
-| `aws s3api` | Calls the API 1:1. Configuration changes, metadata, versions, conditional writes, and so on |
-| `aws s3control` | Resources attached to the **account** rather than a bucket (`--account-id` required) |
-| `aws s3tables` | S3 Tables (table buckets, namespaces, tables, maintenance) |
-| `aws s3vectors` | S3 Vectors (vector buckets, indexes, vector PUT / query) |
+| Namespace       | When to use it                                                                              |
+| --------------- | ------------------------------------------------------------------------------------------- |
+| `aws s3`        | Covers 90% of file transfers. Handles multipart, parallelism, and recursion automatically   |
+| `aws s3api`     | Calls the API 1:1. Configuration changes, metadata, versions, conditional writes, and so on |
+| `aws s3control` | Resources attached to the **account** rather than a bucket (`--account-id` required)        |
+| `aws s3tables`  | S3 Tables (table buckets, namespaces, tables, maintenance)                                  |
+| `aws s3vectors` | S3 Vectors (vector buckets, indexes, vector PUT / query)                                    |
 
 ## 1. Setup
 
@@ -95,16 +95,16 @@ duration_seconds = 3600
 
 ### 1.5 Environment variables
 
-| Variable | Meaning |
-| --- | --- |
-| `AWS_PROFILE` | Profile to use |
-| `AWS_REGION` / `AWS_DEFAULT_REGION` | Region (SDKs read `AWS_REGION`; the CLI reads both) |
-| `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY` / `AWS_SESSION_TOKEN` | Temporary credentials specified directly |
-| `AWS_ENDPOINT_URL_S3` | Overrides the endpoint for S3 only (MinIO, LocalStack, etc.) |
-| `AWS_CA_BUNDLE` | CA for a corporate proxy |
-| `AWS_RETRY_MODE` / `AWS_MAX_ATTEMPTS` | Retries (`standard` / `adaptive`) |
-| `AWS_PAGER` | Set to `""` to disable the pager (less) |
-| `AWS_CLI_AUTO_PROMPT` | `on-partial` enables interactive completion |
+| Variable                                                            | Meaning                                                      |
+| ------------------------------------------------------------------- | ------------------------------------------------------------ |
+| `AWS_PROFILE`                                                       | Profile to use                                               |
+| `AWS_REGION` / `AWS_DEFAULT_REGION`                                 | Region (SDKs read `AWS_REGION`; the CLI reads both)          |
+| `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY` / `AWS_SESSION_TOKEN` | Temporary credentials specified directly                     |
+| `AWS_ENDPOINT_URL_S3`                                               | Overrides the endpoint for S3 only (MinIO, LocalStack, etc.) |
+| `AWS_CA_BUNDLE`                                                     | CA for a corporate proxy                                     |
+| `AWS_RETRY_MODE` / `AWS_MAX_ATTEMPTS`                               | Retries (`standard` / `adaptive`)                            |
+| `AWS_PAGER`                                                         | Set to `""` to disable the pager (less)                      |
+| `AWS_CLI_AUTO_PROMPT`                                               | `on-partial` enables interactive completion                  |
 
 ```bash
 export AWS_PROFILE=dev-admin
@@ -140,17 +140,17 @@ s3 =
   target_bandwidth = 25Gb/s
 ```
 
-| Key | Default | Client | Description |
-| --- | --- | --- | --- |
-| `max_concurrent_requests` | 10 | classic | Number of concurrent requests |
-| `max_queue_size` | 1000 | classic | Task queue length |
-| `multipart_threshold` | 8MB | both | Multipart is used at or above this size |
-| `multipart_chunksize` | 8MB | both | Part size (adjusted automatically if it would exceed 10,000 parts) |
-| `max_bandwidth` | none | classic | Bandwidth cap |
-| `preferred_transfer_client` | auto | — | `auto` / `classic` / `crt` |
-| `target_bandwidth` | auto-detected | crt | Target bandwidth |
-| `use_accelerate_endpoint` | false | both | Transfer Acceleration |
-| `disable_s3_express_session_auth` | false | — | Set directly under the profile (not under the s3 key) |
+| Key                               | Default       | Client  | Description                                                        |
+| --------------------------------- | ------------- | ------- | ------------------------------------------------------------------ |
+| `max_concurrent_requests`         | 10            | classic | Number of concurrent requests                                      |
+| `max_queue_size`                  | 1000          | classic | Task queue length                                                  |
+| `multipart_threshold`             | 8MB           | both    | Multipart is used at or above this size                            |
+| `multipart_chunksize`             | 8MB           | both    | Part size (adjusted automatically if it would exceed 10,000 parts) |
+| `max_bandwidth`                   | none          | classic | Bandwidth cap                                                      |
+| `preferred_transfer_client`       | auto          | —       | `auto` / `classic` / `crt`                                         |
+| `target_bandwidth`                | auto-detected | crt     | Target bandwidth                                                   |
+| `use_accelerate_endpoint`         | false         | both    | Transfer Acceleration                                              |
+| `disable_s3_express_session_auth` | false         | —       | Set directly under the profile (not under the s3 key)              |
 
 ## 2. `aws s3` high-level commands
 
@@ -244,15 +244,15 @@ aws s3 sync s3://src-bucket/prefix s3://amzn-s3-demo-bucket/prefix --source-regi
 
 How sync compares files:
 
-| Condition | Default behavior |
-| --- | --- |
-| Does not exist at the destination | Transfer |
-| Size differs | Transfer |
-| Same size, source modified time is newer | Transfer |
-| Same size, modified time is the same or older | Skip |
-| `--size-only` | Decide by size only |
-| `--exact-timestamps` (S3 -> local) | Transfer same-size files unless timestamps match exactly |
-| `--delete` | Delete from the destination anything not in the source |
+| Condition                                     | Default behavior                                         |
+| --------------------------------------------- | -------------------------------------------------------- |
+| Does not exist at the destination             | Transfer                                                 |
+| Size differs                                  | Transfer                                                 |
+| Same size, source modified time is newer      | Transfer                                                 |
+| Same size, modified time is the same or older | Skip                                                     |
+| `--size-only`                                 | Decide by size only                                      |
+| `--exact-timestamps` (S3 -> local)            | Transfer same-size files unless timestamps match exactly |
+| `--delete`                                    | Delete from the destination anything not in the source   |
 
 `--exclude` / `--include` are **evaluated in order, and later filters take precedence**. `--exclude "*" --include "*.gz"` means "exclude everything, then add back only .gz." Paths are evaluated relative to the source directory.
 
@@ -539,16 +539,16 @@ aws s3api list-objects-v2 --bucket amzn-s3-demo-bucket \
 
 JMESPath cheat sheet:
 
-| Expression | Meaning |
-| --- | --- |
-| `Contents[].Key` | Key from each element of the array |
-| ``Contents[?Size > `1048576`]`` | Filter (wrap numeric literals in backticks) |
-| `sort_by(Contents, &Size)` | Sort |
-| `reverse(...)[:10]` | Top 10 in descending order |
-| `sum(Contents[].Size)` | Sum |
-| `length(Contents[])` | Count |
-| `{a: x, b: y}` | Reshape |
-| `starts_with(Key, 'logs/')` / `ends_with(Key, '.gz')` / `contains(Key, 'tmp')` | String functions |
+| Expression                                                                     | Meaning                                     |
+| ------------------------------------------------------------------------------ | ------------------------------------------- |
+| `Contents[].Key`                                                               | Key from each element of the array          |
+| ``Contents[?Size > `1048576`]``                                                | Filter (wrap numeric literals in backticks) |
+| `sort_by(Contents, &Size)`                                                     | Sort                                        |
+| `reverse(...)[:10]`                                                            | Top 10 in descending order                  |
+| `sum(Contents[].Size)`                                                         | Sum                                         |
+| `length(Contents[])`                                                           | Count                                       |
+| `{a: x, b: y}`                                                                 | Reshape                                     |
+| `starts_with(Key, 'logs/')` / `ends_with(Key, '.gz')` / `contains(Key, 'tmp')` | String functions                            |
 
 Note: scanning millions of objects with `list-objects-v2` is slow and expensive (one LIST per 1,000 objects). For regular inventories, use **S3 Inventory** or the **S3 Metadata live inventory table**.
 
@@ -759,11 +759,11 @@ while read -r k; do
 done
 ```
 
-| Class | Expedited | Standard | Bulk |
-| --- | --- | --- | --- |
-| Glacier Flexible Retrieval | 1-5 minutes | 3-5 hours | 5-12 hours |
-| Glacier Deep Archive | not available | within 12 hours | within 48 hours |
-| Glacier Instant Retrieval | no restore needed (GET in milliseconds) | — | — |
+| Class                      | Expedited                               | Standard        | Bulk            |
+| -------------------------- | --------------------------------------- | --------------- | --------------- |
+| Glacier Flexible Retrieval | 1-5 minutes                             | 3-5 hours       | 5-12 hours      |
+| Glacier Deep Archive       | not available                           | within 12 hours | within 48 hours |
+| Glacier Instant Retrieval  | no restore needed (GET in milliseconds) | —               | —               |
 
 For large volumes, use S3 Batch Operations `S3InitiateRestoreObject`.
 
@@ -1242,50 +1242,65 @@ npm i @aws-sdk/client-s3 @aws-sdk/s3-request-presigner @aws-sdk/lib-storage
 ```
 
 ```javascript
-import { S3Client, PutObjectCommand, GetObjectCommand, ListObjectsV2Command,
-         paginateListObjectsV2 } from "@aws-sdk/client-s3";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { Upload } from "@aws-sdk/lib-storage";
-import { createReadStream } from "node:fs";
+import {
+  S3Client,
+  PutObjectCommand,
+  GetObjectCommand,
+  ListObjectsV2Command,
+  paginateListObjectsV2,
+} from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import { Upload } from '@aws-sdk/lib-storage';
+import { createReadStream } from 'node:fs';
 
-const s3 = new S3Client({ region: "ap-northeast-1" });
+const s3 = new S3Client({ region: 'ap-northeast-1' });
 
 // Simple PUT (conditional)
-await s3.send(new PutObjectCommand({
-  Bucket: "amzn-s3-demo-bucket",
-  Key: "docs/a.txt",
-  Body: "hello",
-  ContentType: "text/plain",
-  IfNoneMatch: "*",
-}));
+await s3.send(
+  new PutObjectCommand({
+    Bucket: 'amzn-s3-demo-bucket',
+    Key: 'docs/a.txt',
+    Body: 'hello',
+    ContentType: 'text/plain',
+    IfNoneMatch: '*',
+  }),
+);
 
 // For large files, use lib-storage Upload (automatic multipart, parallel)
 const upload = new Upload({
   client: s3,
-  params: { Bucket: "amzn-s3-demo-bucket", Key: "data/big.bin", Body: createReadStream("big.bin") },
+  params: { Bucket: 'amzn-s3-demo-bucket', Key: 'data/big.bin', Body: createReadStream('big.bin') },
   queueSize: 8,
   partSize: 16 * 1024 * 1024,
   leavePartsOnError: false,
 });
-upload.on("httpUploadProgress", (p) => console.log(p.loaded, p.total));
+upload.on('httpUploadProgress', (p) => console.log(p.loaded, p.total));
 await upload.done();
 
 // Presigned URLs
-const getUrl = await getSignedUrl(s3,
-  new GetObjectCommand({ Bucket: "amzn-s3-demo-bucket", Key: "docs/a.pdf" }), { expiresIn: 900 });
-const putUrl = await getSignedUrl(s3,
-  new PutObjectCommand({ Bucket: "amzn-s3-demo-bucket", Key: "uploads/a.png", ContentType: "image/png" }),
-  { expiresIn: 600 });
+const getUrl = await getSignedUrl(
+  s3,
+  new GetObjectCommand({ Bucket: 'amzn-s3-demo-bucket', Key: 'docs/a.pdf' }),
+  { expiresIn: 900 },
+);
+const putUrl = await getSignedUrl(
+  s3,
+  new PutObjectCommand({ Bucket: 'amzn-s3-demo-bucket', Key: 'uploads/a.png', ContentType: 'image/png' }),
+  { expiresIn: 600 },
+);
 
 // Pagination
 let bytes = 0;
-for await (const page of paginateListObjectsV2({ client: s3 }, { Bucket: "amzn-s3-demo-bucket", Prefix: "logs/" })) {
+for await (const page of paginateListObjectsV2(
+  { client: s3 },
+  { Bucket: 'amzn-s3-demo-bucket', Prefix: 'logs/' },
+)) {
   for (const o of page.Contents ?? []) bytes += o.Size ?? 0;
 }
 console.log(bytes);
 
 // GET and read as text
-const res = await s3.send(new GetObjectCommand({ Bucket: "amzn-s3-demo-bucket", Key: "docs/a.txt" }));
+const res = await s3.send(new GetObjectCommand({ Bucket: 'amzn-s3-demo-bucket', Key: 'docs/a.txt' }));
 console.log(await res.Body.transformToString());
 ```
 
@@ -1437,14 +1452,14 @@ s3://amzn-s3-demo-bucket/datasets/ /mnt/datasets mount-s3 _netdev,nosuid,nodev,n
 
 ### 20.6 Tool comparison
 
-| Tool | Speed | Characteristics | Best for |
-| --- | --- | --- | --- |
-| `aws s3` (CRT) | Fast | Official, full feature set | Everyday use |
-| `s5cmd` | Very fast | Wildcards, parallelism, batch execution | Bulk operations on millions of objects |
-| `rclone` | Fast | 70+ backends, encryption, mounting | Cross-cloud migration, backups |
-| `mc` | Fast | S3-compatible storage in general, `mirror` / `find` | Working with both MinIO and AWS |
-| `s3cmd` | Moderate | Long-established, easy to configure | Legacy scripts |
-| `mount-s3` | Very fast reads | FUSE, not fully POSIX | ML training data, reading logs |
+| Tool           | Speed           | Characteristics                                     | Best for                               |
+| -------------- | --------------- | --------------------------------------------------- | -------------------------------------- |
+| `aws s3` (CRT) | Fast            | Official, full feature set                          | Everyday use                           |
+| `s5cmd`        | Very fast       | Wildcards, parallelism, batch execution             | Bulk operations on millions of objects |
+| `rclone`       | Fast            | 70+ backends, encryption, mounting                  | Cross-cloud migration, backups         |
+| `mc`           | Fast            | S3-compatible storage in general, `mirror` / `find` | Working with both MinIO and AWS        |
+| `s3cmd`        | Moderate        | Long-established, easy to configure                 | Legacy scripts                         |
+| `mount-s3`     | Very fast reads | FUSE, not fully POSIX                               | ML training data, reading logs         |
 
 ## 21. IaC: secure bucket templates
 
@@ -1536,14 +1551,14 @@ resource "aws_s3_bucket_policy" "secure" {
 ### 21.2 CloudFormation (YAML)
 
 ```yaml
-AWSTemplateFormatVersion: "2010-09-09"
+AWSTemplateFormatVersion: '2010-09-09'
 Resources:
   SecureBucket:
     Type: AWS::S3::Bucket
     DeletionPolicy: Retain
     UpdateReplacePolicy: Retain
     Properties:
-      BucketName: !Sub "amzn-s3-demo-secure-${AWS::AccountId}"
+      BucketName: !Sub 'amzn-s3-demo-secure-${AWS::AccountId}'
       OwnershipControls:
         Rules:
           - ObjectOwnership: BucketOwnerEnforced
@@ -1574,18 +1589,18 @@ Resources:
     Properties:
       Bucket: !Ref SecureBucket
       PolicyDocument:
-        Version: "2012-10-17"
+        Version: '2012-10-17'
         Statement:
           - Sid: DenyInsecureTransport
             Effect: Deny
-            Principal: "*"
-            Action: "s3:*"
+            Principal: '*'
+            Action: 's3:*'
             Resource:
               - !GetAtt SecureBucket.Arn
-              - !Sub "${SecureBucket.Arn}/*"
+              - !Sub '${SecureBucket.Arn}/*'
             Condition:
               Bool:
-                aws:SecureTransport: "false"
+                aws:SecureTransport: 'false'
 ```
 
 With `SSEAlgorithm: aws:kms` and `KMSMasterKeyID` omitted, the AWS managed key (`aws/s3`) is used.
@@ -1593,17 +1608,17 @@ With `SSEAlgorithm: aws:kms` and `KMSMasterKeyID` omitted, the AWS managed key (
 ### 21.3 AWS CDK (TypeScript)
 
 ```typescript
-import { Stack, StackProps, RemovalPolicy, Duration } from "aws-cdk-lib";
-import * as s3 from "aws-cdk-lib/aws-s3";
-import * as kms from "aws-cdk-lib/aws-kms";
-import { Construct } from "constructs";
+import { Stack, StackProps, RemovalPolicy, Duration } from 'aws-cdk-lib';
+import * as s3 from 'aws-cdk-lib/aws-s3';
+import * as kms from 'aws-cdk-lib/aws-kms';
+import { Construct } from 'constructs';
 
 export class SecureBucketStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
-    const key = new kms.Key(this, "S3Key", { enableKeyRotation: true });
+    const key = new kms.Key(this, 'S3Key', { enableKeyRotation: true });
 
-    new s3.Bucket(this, "SecureBucket", {
+    new s3.Bucket(this, 'SecureBucket', {
       encryption: s3.BucketEncryption.KMS,
       encryptionKey: key,
       bucketKeyEnabled: true,
@@ -1682,22 +1697,22 @@ For requests within the same account (or the same organization), S3 403 error me
 
 ### 22.2 Common errors
 
-| Error | Cause | Fix |
-| --- | --- | --- |
-| `AccessDenied` | See the isolation steps above | — |
-| `NoSuchBucket` | Wrong name, different partition | `aws s3api head-bucket` |
-| `PermanentRedirect` / `AuthorizationHeaderMalformed` | Wrong region | Set `--region` to the bucket's region |
-| `IllegalLocationConstraintException` | LocationConstraint added for us-east-1 / missing elsewhere | See section 3.1 |
-| `BucketAlreadyExists` | Someone else uses the name in the global namespace | Use another name, or the account regional namespace |
-| `SlowDown` (503) | Request rate exceeded | Back off, spread across prefixes |
-| `PreconditionFailed` (412) | Conditional write condition not met | If expected, treat it as a normal path |
-| `ConditionalRequestConflict` (409) | Conflict on a conditional write | Retry |
-| `InvalidObjectState` | GET on a Glacier-class object without restoring it | `restore-object` |
-| `EntityTooLarge` | Single PUT over 5 GB | Multipart |
-| `KMS.ThrottlingException` | KMS quota | Bucket Key |
-| `RequestTimeTooSkewed` | Client clock skew (over 15 minutes) | Sync with NTP |
-| `SignatureDoesNotMatch` | Wrong key, modified presigned URL, Content-Type mismatch | Send the same headers used when signing |
-| `ExpiredToken` | SSO / STS credentials expired | `aws sso login` |
+| Error                                                | Cause                                                      | Fix                                                 |
+| ---------------------------------------------------- | ---------------------------------------------------------- | --------------------------------------------------- |
+| `AccessDenied`                                       | See the isolation steps above                              | —                                                   |
+| `NoSuchBucket`                                       | Wrong name, different partition                            | `aws s3api head-bucket`                             |
+| `PermanentRedirect` / `AuthorizationHeaderMalformed` | Wrong region                                               | Set `--region` to the bucket's region               |
+| `IllegalLocationConstraintException`                 | LocationConstraint added for us-east-1 / missing elsewhere | See section 3.1                                     |
+| `BucketAlreadyExists`                                | Someone else uses the name in the global namespace         | Use another name, or the account regional namespace |
+| `SlowDown` (503)                                     | Request rate exceeded                                      | Back off, spread across prefixes                    |
+| `PreconditionFailed` (412)                           | Conditional write condition not met                        | If expected, treat it as a normal path              |
+| `ConditionalRequestConflict` (409)                   | Conflict on a conditional write                            | Retry                                               |
+| `InvalidObjectState`                                 | GET on a Glacier-class object without restoring it         | `restore-object`                                    |
+| `EntityTooLarge`                                     | Single PUT over 5 GB                                       | Multipart                                           |
+| `KMS.ThrottlingException`                            | KMS quota                                                  | Bucket Key                                          |
+| `RequestTimeTooSkewed`                               | Client clock skew (over 15 minutes)                        | Sync with NTP                                       |
+| `SignatureDoesNotMatch`                              | Wrong key, modified presigned URL, Content-Type mismatch   | Send the same headers used when signing             |
+| `ExpiredToken`                                       | SSO / STS credentials expired                              | `aws sso login`                                     |
 
 ### 22.3 Getting request IDs (to give to AWS Support)
 
@@ -1711,10 +1726,10 @@ curl -sI "$(aws s3 presign s3://amzn-s3-demo-bucket/a.txt --expires-in 60)" \
   | grep -iE 'x-amz-request-id|x-amz-id-2|HTTP/'
 ```
 
-| Header | Meaning |
-| --- | --- |
-| `x-amz-request-id` | Unique request ID |
-| `x-amz-id-2` | Extended request ID (host ID). Give **both** to Support |
+| Header             | Meaning                                                 |
+| ------------------ | ------------------------------------------------------- |
+| `x-amz-request-id` | Unique request ID                                       |
+| `x-amz-id-2`       | Extended request ID (host ID). Give **both** to Support |
 
 In boto3, use `response["ResponseMetadata"]["RequestId"]` and `response["ResponseMetadata"]["HostId"]`. The same IDs are recorded in CloudTrail data events and server access logs.
 

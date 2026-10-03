@@ -6,36 +6,36 @@ S3 has been around since 2006, so "common knowledge" based on old blog posts and
 
 ## 0. Misconceptions at a glance
 
-| # | Misconception | Reality (as of 2026-10) |
-| --- | --- | --- |
-| 1 | S3 is eventually consistent, so you may not be able to read right after writing | Strong read-after-write consistency (including LIST) since December 2020 |
-| 2 | S3 has folders | General purpose buckets have a flat key space. Folders are just how prefixes are displayed |
-| 3 | Keys are slow unless you randomize their beginnings | Since the 2018 improvements, 3,500/5,500 req/s per prefix. Randomizing is unnecessary; spreading load still helps |
-| 4 | The maximum object size is 5 TB | 50 TB (48.8 TiB) since December 2025 |
-| 5 | Objects are not encrypted unless you turn it on | All new objects are encrypted with SSE-S3 automatically since January 2023 |
-| 6 | The first thing to do with a new bucket is set ACLs | Since April 2023, new buckets default to ACLs disabled (Bucket owner enforced) and BPA enabled |
-| 7 | You can serve a static site over HTTPS from the website endpoint | The website endpoint is HTTP only. Use CloudFront for HTTPS |
-| 8 | The ETag is the file's MD5 | Not an MD5 for multipart uploads or SSE-KMS |
-| 9 | Objects in Glacier are readable right away | Everything except Instant Retrieval requires a restore |
-| 10 | Lifecycle rules take effect the moment you set them | Evaluated asynchronously once a day. It can take several days |
-| 11 | Turning off versioning removes old versions | You can only suspend it, and existing versions remain |
-| 12 | Setting up replication also copies existing objects | New objects only. Use Batch Replication for existing ones |
-| 13 | Deletes are always synced by replication | Delete marker replication depends on configuration; version-specific deletes are not replicated |
-| 14 | When you get a 403, you only need to check the IAM policy | Many layers: bucket policy, BPA, KMS, VPCE, SCP/RCP, ACLs, and more |
-| 15 | A missing key always returns 404 | Without `s3:ListBucket`, you get 403 |
-| 16 | A presigned URL is valid for up to 7 days | If created with temporary credentials, their expiration is the limit |
-| 17 | Intelligent-Tiering saves money on small files too | Objects under 128 KB are not monitored and always pay the Frequent Access rate |
-| 18 | 503 SlowDown means S3 is having an outage | Usually throttling while S3 scales. Handle it with retries and by spreading load |
-| 19 | One Zone-IA has low durability | Same 11 nines durability target, but data can be lost if the AZ is lost |
-| 20 | A bucket name only needs to be unique within your account | In the global namespace it must be unique across the partition. Account regional namespaces exist since March 2026 |
-| 21 | You are billed for every S3 403 error | 403s from outside your organization or account are not billed to the bucket owner |
-| 22 | S3 cannot prevent concurrent write conflicts | Conditional writes (`If-None-Match` / `If-Match`) and conditional deletes exist |
-| 23 | SSE-C is the most secure option | Key management is a heavy burden, and since April 2026 it is blocked by default for new buckets and others |
-| 24 | You can create as many buckets as you like for free | Default quota is 10,000, and buckets beyond 2,000 are billed under `Global-Bucket-Hrs` |
-| 25 | The total from `aws s3 ls --summarize` is your billed storage | It excludes noncurrent versions, incomplete MPUs, metadata, and more |
-| 26 | Gateway endpoints work from on premises too | VPC only. On premises needs an interface endpoint |
-| 27 | Event notifications arrive exactly once and in order | At-least-once. Duplicates and reordering happen |
-| 28 | Only you can reuse a bucket name you deleted | In the global namespace, anyone can recreate it |
+| #   | Misconception                                                                   | Reality (as of 2026-10)                                                                                            |
+| --- | ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| 1   | S3 is eventually consistent, so you may not be able to read right after writing | Strong read-after-write consistency (including LIST) since December 2020                                           |
+| 2   | S3 has folders                                                                  | General purpose buckets have a flat key space. Folders are just how prefixes are displayed                         |
+| 3   | Keys are slow unless you randomize their beginnings                             | Since the 2018 improvements, 3,500/5,500 req/s per prefix. Randomizing is unnecessary; spreading load still helps  |
+| 4   | The maximum object size is 5 TB                                                 | 50 TB (48.8 TiB) since December 2025                                                                               |
+| 5   | Objects are not encrypted unless you turn it on                                 | All new objects are encrypted with SSE-S3 automatically since January 2023                                         |
+| 6   | The first thing to do with a new bucket is set ACLs                             | Since April 2023, new buckets default to ACLs disabled (Bucket owner enforced) and BPA enabled                     |
+| 7   | You can serve a static site over HTTPS from the website endpoint                | The website endpoint is HTTP only. Use CloudFront for HTTPS                                                        |
+| 8   | The ETag is the file's MD5                                                      | Not an MD5 for multipart uploads or SSE-KMS                                                                        |
+| 9   | Objects in Glacier are readable right away                                      | Everything except Instant Retrieval requires a restore                                                             |
+| 10  | Lifecycle rules take effect the moment you set them                             | Evaluated asynchronously once a day. It can take several days                                                      |
+| 11  | Turning off versioning removes old versions                                     | You can only suspend it, and existing versions remain                                                              |
+| 12  | Setting up replication also copies existing objects                             | New objects only. Use Batch Replication for existing ones                                                          |
+| 13  | Deletes are always synced by replication                                        | Delete marker replication depends on configuration; version-specific deletes are not replicated                    |
+| 14  | When you get a 403, you only need to check the IAM policy                       | Many layers: bucket policy, BPA, KMS, VPCE, SCP/RCP, ACLs, and more                                                |
+| 15  | A missing key always returns 404                                                | Without `s3:ListBucket`, you get 403                                                                               |
+| 16  | A presigned URL is valid for up to 7 days                                       | If created with temporary credentials, their expiration is the limit                                               |
+| 17  | Intelligent-Tiering saves money on small files too                              | Objects under 128 KB are not monitored and always pay the Frequent Access rate                                     |
+| 18  | 503 SlowDown means S3 is having an outage                                       | Usually throttling while S3 scales. Handle it with retries and by spreading load                                   |
+| 19  | One Zone-IA has low durability                                                  | Same 11 nines durability target, but data can be lost if the AZ is lost                                            |
+| 20  | A bucket name only needs to be unique within your account                       | In the global namespace it must be unique across the partition. Account regional namespaces exist since March 2026 |
+| 21  | You are billed for every S3 403 error                                           | 403s from outside your organization or account are not billed to the bucket owner                                  |
+| 22  | S3 cannot prevent concurrent write conflicts                                    | Conditional writes (`If-None-Match` / `If-Match`) and conditional deletes exist                                    |
+| 23  | SSE-C is the most secure option                                                 | Key management is a heavy burden, and since April 2026 it is blocked by default for new buckets and others         |
+| 24  | You can create as many buckets as you like for free                             | Default quota is 10,000, and buckets beyond 2,000 are billed under `Global-Bucket-Hrs`                             |
+| 25  | The total from `aws s3 ls --summarize` is your billed storage                   | It excludes noncurrent versions, incomplete MPUs, metadata, and more                                               |
+| 26  | Gateway endpoints work from on premises too                                     | VPC only. On premises needs an interface endpoint                                                                  |
+| 27  | Event notifications arrive exactly once and in order                            | At-least-once. Duplicates and reordering happen                                                                    |
+| 28  | Only you can reuse a bucket name you deleted                                    | In the global namespace, anyone can recreate it                                                                    |
 
 ## 1. Consistency and namespace
 
@@ -240,15 +240,15 @@ Mostly a misconception. "Create folder" in the console only creates a zero-byte 
 
 ### 8.1 Data format
 
-| Field | Type | Description |
-| --- | --- | --- |
-| `id` | String | Unique ID (`q01`–`q40`) |
-| `question` | `{ en, ja }` | Question text |
-| `choices` | `{ en: [4], ja: [4] }` | Choices, in the same order in both languages |
-| `answer` | Number (0–3) | Index of the correct choice |
-| `explanation` | `{ en, ja }` | Explanation |
-| `difficulty` | `easy` / `medium` / `hard` | Difficulty |
-| `topic` | `{ en, ja }` | Topic |
+| Field         | Type                       | Description                                  |
+| ------------- | -------------------------- | -------------------------------------------- |
+| `id`          | String                     | Unique ID (`q01`–`q40`)                      |
+| `question`    | `{ en, ja }`               | Question text                                |
+| `choices`     | `{ en: [4], ja: [4] }`     | Choices, in the same order in both languages |
+| `answer`      | Number (0–3)               | Index of the correct choice                  |
+| `explanation` | `{ en, ja }`               | Explanation                                  |
+| `difficulty`  | `easy` / `medium` / `hard` | Difficulty                                   |
+| `topic`       | `{ en, ja }`               | Topic                                        |
 
 ```json
 {
@@ -264,13 +264,13 @@ Mostly a misconception. "Create folder" in the console only creates a zero-byte 
 
 ### 8.2 Coverage
 
-| Topic | Approx. questions | Matching chapter content |
-| --- | --- | --- |
-| Basics (consistency, namespace, limits) | 8 | Buckets, keys, object size, consistency |
-| Security (BPA, ACLs, encryption, policies) | 10 | Permission evaluation, KMS, presigned URLs |
-| Storage classes and lifecycle | 7 | Minimum storage duration, restore, 128 KB rule |
-| Protection (versioning, Object Lock, replication, Backup) | 7 | DR and ransomware protection |
-| Performance, operations, and cost | 8 | Request rates, errors, billing |
+| Topic                                                     | Approx. questions | Matching chapter content                       |
+| --------------------------------------------------------- | ----------------- | ---------------------------------------------- |
+| Basics (consistency, namespace, limits)                   | 8                 | Buckets, keys, object size, consistency        |
+| Security (BPA, ACLs, encryption, policies)                | 10                | Permission evaluation, KMS, presigned URLs     |
+| Storage classes and lifecycle                             | 7                 | Minimum storage duration, restore, 128 KB rule |
+| Protection (versioning, Object Lock, replication, Backup) | 7                 | DR and ransomware protection                   |
+| Performance, operations, and cost                         | 8                 | Request rates, errors, billing                 |
 
 ### 8.3 Validation
 
@@ -282,69 +282,69 @@ node -e 'const q=require("./data/quiz.json"); console.log(q.length, q.every(x =>
 
 See `data/quiz.json` for each question's answer and explanation. This list shows only the question text, topic, and difficulty.
 
-| ID | Topic | Difficulty | Question |
-| --- | --- | --- | --- |
-| q01 | Consistency | easy | You overwrite an existing object with a successful PUT and immediately issue a GET for the same key from another client. What does S3 return? |
-| q02 | Limits | easy | As of 2026, what is the maximum size of a single S3 object? |
-| q03 | Limits | easy | What is the largest object you can upload with a single PutObject request? |
-| q04 | Multipart upload | easy | In a multipart upload, what is the minimum size of each part except the last one? |
-| q05 | Multipart upload | easy | What is the maximum number of parts in a single multipart upload? |
-| q06 | Performance | medium | At minimum, how many GET/HEAD requests per second does S3 support per partitioned prefix? |
-| q07 | Encryption | easy | You upload a new object to a bucket without specifying any encryption settings. How is it stored? |
-| q08 | Access control | easy | What is the default S3 Object Ownership setting for newly created general purpose buckets? |
-| q09 | Architecture | easy | You want to serve a static website from S3 over HTTPS with a custom domain. What is the recommended approach? |
-| q10 | Troubleshooting | medium | A user with s3:GetObject but without s3:ListBucket requests a key that does not exist. Which HTTP status is returned? |
-| q11 | Presigned URLs | medium | A presigned URL is generated with a 7-day expiry using temporary role credentials that expire in 1 hour. What happens after 1 hour? |
-| q12 | Troubleshooting | hard | In which case does S3 return only a generic 'Access Denied' message instead of the enhanced message that names the policy type? |
-| q13 | Encryption | medium | Which KMS permission does a caller need to download an object encrypted with SSE-KMS? |
-| q14 | Encryption | hard | For a multipart upload of an SSE-KMS object, which pair of KMS permissions is required? |
-| q15 | Encryption | medium | What is the main benefit of enabling S3 Bucket Keys for SSE-KMS? |
-| q16 | Access control | medium | What does an AWS Organizations resource control policy (RCP) do for S3? |
-| q17 | Conditional requests | medium | You send PutObject with the header If-None-Match: * and an object with that key already exists. What happens? |
-| q18 | Conditional requests | hard | A conditional CompleteMultipartUpload returns 409 Conflict because a concurrent delete succeeded first. What must you do? |
-| q19 | Storage classes | medium | What is the minimum storage duration charge for S3 Glacier Deep Archive? |
-| q20 | Cost | medium | How are 40 KB objects stored in S3 Standard-IA billed? |
-| q21 | Storage classes | medium | How does S3 Intelligent-Tiering handle objects smaller than 128 KB? |
-| q22 | Lifecycle | hard | A lifecycle rule transitions all objects to Glacier Flexible Retrieval after 30 days, but 50 KB objects created in 2026 are not transitioned. Why? |
-| q23 | Storage classes | medium | You GET an object stored in Glacier Flexible Retrieval without restoring it first. Which error do you get? |
-| q24 | Storage classes | medium | Which retrieval option is NOT available for S3 Glacier Deep Archive? |
-| q25 | Versioning | easy | After enabling versioning on a bucket, which state changes are possible? |
-| q26 | Versioning | easy | In a versioning-enabled bucket, what does DeleteObject without a version ID do? |
-| q27 | Replication | medium | You add a replication rule to a bucket that already contains 10 million objects. How do you replicate those existing objects? |
-| q28 | Data protection | medium | Under Object Lock compliance mode, who can shorten the retention period of a locked object version? |
-| q29 | Data protection | medium | With AWS Backup continuous backups for S3, how far back can you restore to any point in time? |
-| q30 | Versioning | hard | Which statement about MFA Delete is correct? |
-| q31 | Performance | easy | Your application receives many 503 SlowDown errors. Which is the best response? |
-| q32 | Cost | medium | Are bucket owners billed for requests that fail with HTTP 503 Slow Down? |
-| q33 | Cost | hard | An unknown external account sends millions of unauthorized requests that receive 403 AccessDenied. Who pays for them? |
-| q34 | Cost | medium | In your bill, the usage type TimedStorage-ByteHrs suddenly increased. What does it measure? |
-| q35 | Cost | medium | Which requests are counted in the Requests-Tier1 usage type for S3 Standard? |
-| q36 | Events | hard | You want S3 Event Notifications delivered directly to an SQS FIFO queue. What happens? |
-| q37 | Networking | easy | EC2 instances in a private subnet download terabytes from S3 in the same Region through a NAT gateway. What change reduces cost most simply? |
-| q38 | Data integrity | medium | An object was uploaded with multipart upload using SSE-S3. Its ETag looks like "...-12". What is true? |
-| q39 | Buckets | hard | With S3 account regional namespaces (introduced in 2026), what does a bucket name look like? |
-| q40 | Architecture | easy | Which design is an S3 anti-pattern? |
+| ID  | Topic                | Difficulty | Question                                                                                                                                           |
+| --- | -------------------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| q01 | Consistency          | easy       | You overwrite an existing object with a successful PUT and immediately issue a GET for the same key from another client. What does S3 return?      |
+| q02 | Limits               | easy       | As of 2026, what is the maximum size of a single S3 object?                                                                                        |
+| q03 | Limits               | easy       | What is the largest object you can upload with a single PutObject request?                                                                         |
+| q04 | Multipart upload     | easy       | In a multipart upload, what is the minimum size of each part except the last one?                                                                  |
+| q05 | Multipart upload     | easy       | What is the maximum number of parts in a single multipart upload?                                                                                  |
+| q06 | Performance          | medium     | At minimum, how many GET/HEAD requests per second does S3 support per partitioned prefix?                                                          |
+| q07 | Encryption           | easy       | You upload a new object to a bucket without specifying any encryption settings. How is it stored?                                                  |
+| q08 | Access control       | easy       | What is the default S3 Object Ownership setting for newly created general purpose buckets?                                                         |
+| q09 | Architecture         | easy       | You want to serve a static website from S3 over HTTPS with a custom domain. What is the recommended approach?                                      |
+| q10 | Troubleshooting      | medium     | A user with s3:GetObject but without s3:ListBucket requests a key that does not exist. Which HTTP status is returned?                              |
+| q11 | Presigned URLs       | medium     | A presigned URL is generated with a 7-day expiry using temporary role credentials that expire in 1 hour. What happens after 1 hour?                |
+| q12 | Troubleshooting      | hard       | In which case does S3 return only a generic 'Access Denied' message instead of the enhanced message that names the policy type?                    |
+| q13 | Encryption           | medium     | Which KMS permission does a caller need to download an object encrypted with SSE-KMS?                                                              |
+| q14 | Encryption           | hard       | For a multipart upload of an SSE-KMS object, which pair of KMS permissions is required?                                                            |
+| q15 | Encryption           | medium     | What is the main benefit of enabling S3 Bucket Keys for SSE-KMS?                                                                                   |
+| q16 | Access control       | medium     | What does an AWS Organizations resource control policy (RCP) do for S3?                                                                            |
+| q17 | Conditional requests | medium     | You send PutObject with the header If-None-Match: * and an object with that key already exists. What happens?                                      |
+| q18 | Conditional requests | hard       | A conditional CompleteMultipartUpload returns 409 Conflict because a concurrent delete succeeded first. What must you do?                          |
+| q19 | Storage classes      | medium     | What is the minimum storage duration charge for S3 Glacier Deep Archive?                                                                           |
+| q20 | Cost                 | medium     | How are 40 KB objects stored in S3 Standard-IA billed?                                                                                             |
+| q21 | Storage classes      | medium     | How does S3 Intelligent-Tiering handle objects smaller than 128 KB?                                                                                |
+| q22 | Lifecycle            | hard       | A lifecycle rule transitions all objects to Glacier Flexible Retrieval after 30 days, but 50 KB objects created in 2026 are not transitioned. Why? |
+| q23 | Storage classes      | medium     | You GET an object stored in Glacier Flexible Retrieval without restoring it first. Which error do you get?                                         |
+| q24 | Storage classes      | medium     | Which retrieval option is NOT available for S3 Glacier Deep Archive?                                                                               |
+| q25 | Versioning           | easy       | After enabling versioning on a bucket, which state changes are possible?                                                                           |
+| q26 | Versioning           | easy       | In a versioning-enabled bucket, what does DeleteObject without a version ID do?                                                                    |
+| q27 | Replication          | medium     | You add a replication rule to a bucket that already contains 10 million objects. How do you replicate those existing objects?                      |
+| q28 | Data protection      | medium     | Under Object Lock compliance mode, who can shorten the retention period of a locked object version?                                                |
+| q29 | Data protection      | medium     | With AWS Backup continuous backups for S3, how far back can you restore to any point in time?                                                      |
+| q30 | Versioning           | hard       | Which statement about MFA Delete is correct?                                                                                                       |
+| q31 | Performance          | easy       | Your application receives many 503 SlowDown errors. Which is the best response?                                                                    |
+| q32 | Cost                 | medium     | Are bucket owners billed for requests that fail with HTTP 503 Slow Down?                                                                           |
+| q33 | Cost                 | hard       | An unknown external account sends millions of unauthorized requests that receive 403 AccessDenied. Who pays for them?                              |
+| q34 | Cost                 | medium     | In your bill, the usage type TimedStorage-ByteHrs suddenly increased. What does it measure?                                                        |
+| q35 | Cost                 | medium     | Which requests are counted in the Requests-Tier1 usage type for S3 Standard?                                                                       |
+| q36 | Events               | hard       | You want S3 Event Notifications delivered directly to an SQS FIFO queue. What happens?                                                             |
+| q37 | Networking           | easy       | EC2 instances in a private subnet download terabytes from S3 in the same Region through a NAT gateway. What change reduces cost most simply?       |
+| q38 | Data integrity       | medium     | An object was uploaded with multipart upload using SSE-S3. Its ETag looks like "...-12". What is true?                                             |
+| q39 | Buckets              | hard       | With S3 account regional namespaces (introduced in 2026), what does a bucket name look like?                                                       |
+| q40 | Architecture         | easy       | Which design is an S3 anti-pattern?                                                                                                                |
 
 ## 9. Why misconceptions arise: a timeline of changes
 
 Most S3 misconceptions are information that used to be true. When you read a blog post or book, check when it was written against this timeline.
 
-| Date | Change | Outdated "common knowledge" it affects |
-| --- | --- | --- |
-| July 2018 | Major request performance increase (3,500/5,500 req/s per prefix) | "Use random hashes at the start of keys" |
-| September 2020 | Path-style URLs not supported for buckets created after 2020-09-30 | "`s3.amazonaws.com/bucket/key` works for everything" |
-| December 2020 | Strong read-after-write consistency (including LIST) | "Stale data is returned right after an overwrite" |
-| January 2023 | All new objects encrypted automatically with SSE-S3 | "Objects are not encrypted by default" |
-| April 2023 | BPA enabled and ACLs disabled by default for new buckets | "Set ACLs first" |
-| 2024 | 403s from outside the organization or account no longer billed to the bucket owner | "Even 403 attack requests are billed" |
-| August / November 2024 | Conditional writes (`If-None-Match`, then `If-Match`) | "You cannot do optimistic locking in S3" |
-| September 2024 | Objects under 128 KB excluded from lifecycle transitions by default | "All objects are transitioned" |
-| November 2024 | AWS Organizations RCPs | "Bucket policies are the only defense against external principals" |
-| September 2025 | Conditional deletes for general purpose buckets | "Delete conflicts cannot be prevented" |
-| November 2025 | ABAC for general purpose buckets, SSE-C blocking setting | "Bucket tags are only for cost allocation" |
-| December 2025 | Maximum object size of 50 TB | "The maximum is 5 TB" |
-| March 2026 | Account regional namespaces | "Bucket names are strictly first come, first served" |
-| April 2026 | SSE-C disabled by default rollout, Amazon S3 Files GA | "SSE-C is always available," "S3 cannot be used as a file system" |
+| Date                   | Change                                                                             | Outdated "common knowledge" it affects                             |
+| ---------------------- | ---------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| July 2018              | Major request performance increase (3,500/5,500 req/s per prefix)                  | "Use random hashes at the start of keys"                           |
+| September 2020         | Path-style URLs not supported for buckets created after 2020-09-30                 | "`s3.amazonaws.com/bucket/key` works for everything"               |
+| December 2020          | Strong read-after-write consistency (including LIST)                               | "Stale data is returned right after an overwrite"                  |
+| January 2023           | All new objects encrypted automatically with SSE-S3                                | "Objects are not encrypted by default"                             |
+| April 2023             | BPA enabled and ACLs disabled by default for new buckets                           | "Set ACLs first"                                                   |
+| 2024                   | 403s from outside the organization or account no longer billed to the bucket owner | "Even 403 attack requests are billed"                              |
+| August / November 2024 | Conditional writes (`If-None-Match`, then `If-Match`)                              | "You cannot do optimistic locking in S3"                           |
+| September 2024         | Objects under 128 KB excluded from lifecycle transitions by default                | "All objects are transitioned"                                     |
+| November 2024          | AWS Organizations RCPs                                                             | "Bucket policies are the only defense against external principals" |
+| September 2025         | Conditional deletes for general purpose buckets                                    | "Delete conflicts cannot be prevented"                             |
+| November 2025          | ABAC for general purpose buckets, SSE-C blocking setting                           | "Bucket tags are only for cost allocation"                         |
+| December 2025          | Maximum object size of 50 TB                                                       | "The maximum is 5 TB"                                              |
+| March 2026             | Account regional namespaces                                                        | "Bucket names are strictly first come, first served"               |
+| April 2026             | SSE-C disabled by default rollout, Amazon S3 Files GA                              | "SSE-C is always available," "S3 cannot be used as a file system"  |
 
 The months above are based on What's New and blog announcement dates. Conditional writes were announced on 2024-08-20 (`If-None-Match`) and 2024-11-25 (`If-Match`).
 

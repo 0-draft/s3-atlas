@@ -47,14 +47,14 @@ S3 is **a fully managed, Regional object store accessed through an HTTP(S) REST 
 
 Here is how S3 compares with other AWS storage services.
 
-| Aspect | S3 (object) | EBS (block) | EFS / FSx (file) |
-| --- | --- | --- | --- |
-| Access method | HTTP REST API / SDK | OS block device | NFS / SMB / POSIX |
-| Unit | Object (up to 50 TB) | Block (volume) | File / directory |
-| Partial update | No (overwrite only; append is supported only in Express One Zone) | Yes | Yes |
-| Scope | Region (AZ-redundant) | Single AZ | Region or AZ |
-| Capacity provisioning | Not needed (unlimited) | Size specified up front | Grows automatically (EFS) |
-| Concurrent access | Effectively unlimited clients | Basically one instance (Multi-Attach is the exception) | Many clients |
+| Aspect                | S3 (object)                                                       | EBS (block)                                            | EFS / FSx (file)          |
+| --------------------- | ----------------------------------------------------------------- | ------------------------------------------------------ | ------------------------- |
+| Access method         | HTTP REST API / SDK                                               | OS block device                                        | NFS / SMB / POSIX         |
+| Unit                  | Object (up to 50 TB)                                              | Block (volume)                                         | File / directory          |
+| Partial update        | No (overwrite only; append is supported only in Express One Zone) | Yes                                                    | Yes                       |
+| Scope                 | Region (AZ-redundant)                                             | Single AZ                                              | Region or AZ              |
+| Capacity provisioning | Not needed (unlimited)                                            | Size specified up front                                | Grows automatically (EFS) |
+| Concurrent access     | Effectively unlimited clients                                     | Basically one instance (Multi-Attach is the exception) | Many clients              |
 
 In 2026-04, **S3 Files** (an EFS-based service that lets you mount an S3 bucket as a POSIX file system) became GA, so the line "S3 is not a file system" is gradually blurring. The semantics of S3 itself (the object API) have not changed, however.
 
@@ -66,36 +66,36 @@ S3 became generally available in the US on **2006-03-14** (Pi Day), making it on
 
 According to the 20th-anniversary post (published 2026-03-13), S3 at launch looked like this.
 
-| Item | At launch in 2006 | 2026 |
-| --- | --- | --- |
-| Total capacity | About 1 PB | Hundreds of exabytes |
-| Storage nodes | About 400 nodes / 15 racks / 3 data centers | Not published (said to be tens of millions of HDDs) |
-| Total bandwidth | 15 Gbps | Said to peak at about 1 PB/s (see below; treat the source with caution) |
-| Maximum object size | 5 GB | 50 TB (10,000x) |
-| Storage price | 15 cents / GB-month | Just over 2 cents / GB-month (about 85% lower) |
-| Scale | — | Over 500 trillion objects, over 200 million req/s, 39 Regions and 123 AZs |
+| Item                | At launch in 2006                           | 2026                                                                      |
+| ------------------- | ------------------------------------------- | ------------------------------------------------------------------------- |
+| Total capacity      | About 1 PB                                  | Hundreds of exabytes                                                      |
+| Storage nodes       | About 400 nodes / 15 racks / 3 data centers | Not published (said to be tens of millions of HDDs)                       |
+| Total bandwidth     | 15 Gbps                                     | Said to peak at about 1 PB/s (see below; treat the source with caution)   |
+| Maximum object size | 5 GB                                        | 50 TB (10,000x)                                                           |
+| Storage price       | 15 cents / GB-month                         | Just over 2 cents / GB-month (about 85% lower)                            |
+| Scale               | —                                           | Over 500 trillion objects, over 200 million req/s, 39 Regions and 123 AZs |
 
 ### 2.2 Major milestones
 
 A detailed timeline (with dates and URLs) is in `data/timeline.json`. Only the turning points that changed the character of S3 are listed here.
 
-| Year | Event | Significance |
-| --- | --- | --- |
-| 2006 | S3 launch | A simple object store with PUT/GET/DELETE/LIST |
-| 2010 | Versioning, Reduced Redundancy Storage, Multipart Upload | Foundations for data protection and large uploads |
-| 2011 | Static website hosting, SSE (server-side encryption) | Web delivery and encryption |
-| 2012 | Amazon Glacier, Glacier archiving via lifecycle | Hot/cold tiering begins |
-| 2014 | Event notifications | S3 becomes the starting point of event-driven architectures |
-| 2015 | Standard-IA, cross-Region replication, VPC endpoints | Storage classes diversify |
-| 2017 | Major us-east-1 outage (2017-02-28) | Trigger for stronger safeguards in operational tooling |
-| 2018 | Block Public Access, Intelligent-Tiering, Object Lock, One Zone-IA | Countermeasures for public-bucket incidents, and automatic tiering |
-| 2019 | Glacier Deep Archive, Batch Operations, Access Points | Tape-replacement price point, large-scale bulk operations |
-| 2020 | **Strong consistency (strong read-after-write)**, Storage Lens, Bucket Keys | The year "eventually consistent S3" ended |
-| 2021 | Object Lambda, Multi-Region Access Points, Glacier Instant Retrieval, disabling ACLs | Simpler access control |
-| 2023 | Default encryption (SSE-S3) for all new objects, BPA + ACLs disabled by default for new buckets, **Express One Zone**, Mountpoint | Secure by default, low-latency tier |
-| 2024 | No charges for unauthorized 403 requests, **conditional writes**, bucket limit of 10,000, **S3 Tables**, S3 Metadata (preview) | S3 becomes an analytics and data platform |
-| 2025 | S3 Metadata GA, large Express One Zone price cuts, **S3 Vectors** (preview → GA), **50 TB maximum object size** | Storage for the AI era |
-| 2026 | Account regional namespaces, **S3 Files**, SSE-C disabled by default, Annotations, removal of the 30-day requirement for IA transitions, Iceberg V3 | Bucket name collisions solved, file and AI integration |
+| Year | Event                                                                                                                                               | Significance                                                       |
+| ---- | --------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| 2006 | S3 launch                                                                                                                                           | A simple object store with PUT/GET/DELETE/LIST                     |
+| 2010 | Versioning, Reduced Redundancy Storage, Multipart Upload                                                                                            | Foundations for data protection and large uploads                  |
+| 2011 | Static website hosting, SSE (server-side encryption)                                                                                                | Web delivery and encryption                                        |
+| 2012 | Amazon Glacier, Glacier archiving via lifecycle                                                                                                     | Hot/cold tiering begins                                            |
+| 2014 | Event notifications                                                                                                                                 | S3 becomes the starting point of event-driven architectures        |
+| 2015 | Standard-IA, cross-Region replication, VPC endpoints                                                                                                | Storage classes diversify                                          |
+| 2017 | Major us-east-1 outage (2017-02-28)                                                                                                                 | Trigger for stronger safeguards in operational tooling             |
+| 2018 | Block Public Access, Intelligent-Tiering, Object Lock, One Zone-IA                                                                                  | Countermeasures for public-bucket incidents, and automatic tiering |
+| 2019 | Glacier Deep Archive, Batch Operations, Access Points                                                                                               | Tape-replacement price point, large-scale bulk operations          |
+| 2020 | **Strong consistency (strong read-after-write)**, Storage Lens, Bucket Keys                                                                         | The year "eventually consistent S3" ended                          |
+| 2021 | Object Lambda, Multi-Region Access Points, Glacier Instant Retrieval, disabling ACLs                                                                | Simpler access control                                             |
+| 2023 | Default encryption (SSE-S3) for all new objects, BPA + ACLs disabled by default for new buckets, **Express One Zone**, Mountpoint                   | Secure by default, low-latency tier                                |
+| 2024 | No charges for unauthorized 403 requests, **conditional writes**, bucket limit of 10,000, **S3 Tables**, S3 Metadata (preview)                      | S3 becomes an analytics and data platform                          |
+| 2025 | S3 Metadata GA, large Express One Zone price cuts, **S3 Vectors** (preview → GA), **50 TB maximum object size**                                     | Storage for the AI era                                             |
+| 2026 | Account regional namespaces, **S3 Files**, SSE-C disabled by default, Annotations, removal of the 30-day requirement for IA transitions, Iceberg V3 | Bucket name collisions solved, file and AI integration             |
 
 ### 2.3 Key points of the 2017-02-28 us-east-1 outage
 
@@ -134,17 +134,17 @@ classDiagram
     Bucket "1" --> "many" Object
 ```
 
-| Element | Description | Main constraints |
-| --- | --- | --- |
-| Bucket | A container for objects. Belongs to a Region | Name is 3 to 63 characters. Name and Region cannot be changed after creation |
-| Object | The data itself + metadata | 0 B to about 50 TB (48.8 TiB) |
-| Key | A string that uniquely identifies an object within a bucket | Up to 1,024 bytes in UTF-8 |
-| Prefix | The leading part of a key. The unit for filtering LIST and for performance partitioning | A logical concept (it has no physical existence) |
-| Metadata | System-defined (Content-Type, etc.) and user-defined (`x-amz-meta-*`) | User-defined is up to 2 KB (the whole PUT header is up to 8 KB) |
-| Tags | Key-value pairs. Usable in IAM conditions, lifecycle, and cost allocation | Up to 10 per object |
-| Version ID | Identifies each version of an object when versioning is enabled | `null` when disabled |
-| ETag | A hash-like identifier of the object's content | Not necessarily MD5 (see below) |
-| Annotations | Added in 2026-06. JSON/XML/YAML context data attached to an object after the fact | Docs say up to 1 MB per annotation; the announcement says up to 1 GB per object |
+| Element     | Description                                                                             | Main constraints                                                                |
+| ----------- | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| Bucket      | A container for objects. Belongs to a Region                                            | Name is 3 to 63 characters. Name and Region cannot be changed after creation    |
+| Object      | The data itself + metadata                                                              | 0 B to about 50 TB (48.8 TiB)                                                   |
+| Key         | A string that uniquely identifies an object within a bucket                             | Up to 1,024 bytes in UTF-8                                                      |
+| Prefix      | The leading part of a key. The unit for filtering LIST and for performance partitioning | A logical concept (it has no physical existence)                                |
+| Metadata    | System-defined (Content-Type, etc.) and user-defined (`x-amz-meta-*`)                   | User-defined is up to 2 KB (the whole PUT header is up to 8 KB)                 |
+| Tags        | Key-value pairs. Usable in IAM conditions, lifecycle, and cost allocation               | Up to 10 per object                                                             |
+| Version ID  | Identifies each version of an object when versioning is enabled                         | `null` when disabled                                                            |
+| ETag        | A hash-like identifier of the object's content                                          | Not necessarily MD5 (see below)                                                 |
+| Annotations | Added in 2026-06. JSON/XML/YAML context data attached to an object after the fact       | Docs say up to 1 MB per annotation; the announcement says up to 1 GB per object |
 
 An object's "address" is uniquely determined by the combination **bucket + key (+ versionId)**.
 
@@ -190,13 +190,13 @@ When load spikes, S3 automatically repartitions prefixes, and while that happens
 
 ### 3.4 Kinds of metadata
 
-| Kind | Example | Mutable? |
-| --- | --- | --- |
-| System-defined (system-controlled) | `Date`, `Last-Modified`, `Content-Length`, `x-amz-version-id` | No |
-| System-defined (user-controlled) | `Content-Type`, `Cache-Control`, `x-amz-storage-class`, `x-amz-server-side-encryption`, `x-amz-website-redirect-location` | Set at upload. Changing it later requires a copy |
-| User-defined | `x-amz-meta-author: alice` | Upload only. Changing it means a copy, which is treated as a new object |
-| Object tags | `project=atlas` | Can be changed later with PutObjectTagging |
-| Annotations (2026-) | Summaries, classifications, AI-generated descriptions | Can be created, updated, and deleted later |
+| Kind                               | Example                                                                                                                   | Mutable?                                                                |
+| ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| System-defined (system-controlled) | `Date`, `Last-Modified`, `Content-Length`, `x-amz-version-id`                                                             | No                                                                      |
+| System-defined (user-controlled)   | `Content-Type`, `Cache-Control`, `x-amz-storage-class`, `x-amz-server-side-encryption`, `x-amz-website-redirect-location` | Set at upload. Changing it later requires a copy                        |
+| User-defined                       | `x-amz-meta-author: alice`                                                                                                | Upload only. Changing it means a copy, which is treated as a new object |
+| Object tags                        | `project=atlas`                                                                                                           | Can be changed later with PutObjectTagging                              |
+| Annotations (2026-)                | Summaries, classifications, AI-generated descriptions                                                                     | Can be created, updated, and deleted later                              |
 
 User-defined metadata **cannot be changed after the object is created** (you copy and recreate it). The standard practice is to keep frequently changing attributes in tags or annotations, or in an external DB / S3 Metadata tables.
 
@@ -204,11 +204,11 @@ User-defined metadata **cannot be changed after the object is created** (you cop
 
 A bucket has three versioning states.
 
-| State | Behavior |
-| --- | --- |
-| Unversioned (default) | A PUT to the same key overwrites. DELETE removes immediately. The version ID is `null` |
-| Enabled | Every PUT gets a new version ID, and older versions remain as noncurrent versions. DELETE just adds a **delete marker** |
-| Suspended | New PUTs are created with version ID `null`, overwriting any existing `null` version. Past versions remain |
+| State                 | Behavior                                                                                                                |
+| --------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| Unversioned (default) | A PUT to the same key overwrites. DELETE removes immediately. The version ID is `null`                                  |
+| Enabled               | Every PUT gets a new version ID, and older versions remain as noncurrent versions. DELETE just adds a **delete marker** |
+| Suspended             | New PUTs are created with version ID `null`, overwriting any existing `null` version. Past versions remain              |
 
 Once a bucket is Enabled, it cannot go back to Unversioned (it can be Suspended).
 
@@ -228,11 +228,11 @@ Noncurrent versions are billed too. Without a lifecycle `NoncurrentVersionExpira
 
 ETags are often described as "the object's MD5", but strictly speaking that only holds under certain conditions.
 
-| How the object was created | ETag |
-| --- | --- |
-| Created by PutObject / POST / Copy, unencrypted or SSE-S3 | MD5 digest of the object data |
-| Encrypted with SSE-C or SSE-KMS | Not MD5 |
-| Created by Multipart Upload or Part Copy | Not MD5, regardless of encryption (the known form is a hash of the concatenated MD5s of each part + `-<number of parts>`, but this is not guaranteed by the spec) |
+| How the object was created                                | ETag                                                                                                                                                              |
+| --------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Created by PutObject / POST / Copy, unencrypted or SSE-S3 | MD5 digest of the object data                                                                                                                                     |
+| Encrypted with SSE-C or SSE-KMS                           | Not MD5                                                                                                                                                           |
+| Created by Multipart Upload or Part Copy                  | Not MD5, regardless of encryption (the known form is a hash of the concatenated MD5s of each part + `-<number of parts>`, but this is not guaranteed by the spec) |
 
 For integrity checks, the current recommendation is to use **additional checksums** rather than ETags (CRC64NVME, CRC32, CRC32C, SHA-1, SHA-256, plus MD5, XXHash3/64/128, and SHA-512 added in 2026-04, for 10 in total). Since 2024-12, the latest SDKs compute and send a CRC checksum by default on upload, and S3 verifies and stores it.
 
@@ -242,12 +242,12 @@ ETags matter as the comparison value for **conditional requests** (`If-Match` / 
 
 As of 2026, S3 has **four types of buckets**. They are all called "buckets", but their APIs, namespaces, and internal structures differ considerably.
 
-| Type | Introduced | Use | Name example / identification | API namespace | Redundancy |
-| --- | --- | --- | --- | --- | --- |
-| General purpose bucket | 2006 | General purpose. Almost every use case | `my-bucket` / `my-bucket-111122223333-us-east-1-an` | `s3` | Multiple AZs (One Zone-IA uses 1 AZ) |
-| Directory bucket | 2023-11 | S3 Express One Zone (low latency), data residency in Local Zones | `name--use1-az4--x-s3` | `s3` (Zonal / Regional endpoints) | Single AZ (or Local Zone) |
-| Table bucket | 2024-12 | Apache Iceberg tables (S3 Tables) | Identified by ARN. `--table-s3` is a reserved suffix | `s3tables` | Multiple AZs |
-| Vector bucket | 2025-07 (preview) / 2025-12 (GA) | Storing vector embeddings and similarity search (S3 Vectors) | Identified by ARN | `s3vectors` | Claims the same durability and availability as S3 |
+| Type                   | Introduced                       | Use                                                              | Name example / identification                        | API namespace                     | Redundancy                                        |
+| ---------------------- | -------------------------------- | ---------------------------------------------------------------- | ---------------------------------------------------- | --------------------------------- | ------------------------------------------------- |
+| General purpose bucket | 2006                             | General purpose. Almost every use case                           | `my-bucket` / `my-bucket-111122223333-us-east-1-an`  | `s3`                              | Multiple AZs (One Zone-IA uses 1 AZ)              |
+| Directory bucket       | 2023-11                          | S3 Express One Zone (low latency), data residency in Local Zones | `name--use1-az4--x-s3`                               | `s3` (Zonal / Regional endpoints) | Single AZ (or Local Zone)                         |
+| Table bucket           | 2024-12                          | Apache Iceberg tables (S3 Tables)                                | Identified by ARN. `--table-s3` is a reserved suffix | `s3tables`                        | Multiple AZs                                      |
+| Vector bucket          | 2025-07 (preview) / 2025-12 (GA) | Storing vector embeddings and similarity search (S3 Vectors)     | Identified by ARN                                    | `s3vectors`                       | Claims the same durability and availability as S3 |
 
 ### 4.1 General purpose bucket
 
@@ -324,11 +324,11 @@ A bucket's Region is chosen at creation and cannot be changed afterward. Data do
 
 ### 6.2 Two URL styles
 
-| Style | Format | Status |
-| --- | --- | --- |
-| Virtual-hosted style | `https://BUCKET.s3.REGION.amazonaws.com/KEY` | Recommended |
-| Path style | `https://s3.REGION.amazonaws.com/BUCKET/KEY` | Deprecated. In 2019-05 AWS announced it would end for buckets created after 2020-09-30, but this was postponed and it is still available |
-| Legacy global | `https://BUCKET.s3.amazonaws.com/KEY` | Routed to us-east-1. Not redirected for buckets in Regions launched after 2019-03-20 |
+| Style                | Format                                       | Status                                                                                                                                   |
+| -------------------- | -------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| Virtual-hosted style | `https://BUCKET.s3.REGION.amazonaws.com/KEY` | Recommended                                                                                                                              |
+| Path style           | `https://s3.REGION.amazonaws.com/BUCKET/KEY` | Deprecated. In 2019-05 AWS announced it would end for buckets created after 2020-09-30, but this was postponed and it is still available |
+| Legacy global        | `https://BUCKET.s3.amazonaws.com/KEY`        | Routed to us-east-1. Not redirected for buckets in Regions launched after 2019-03-20                                                     |
 
 ```text
 virtual-hosted:  https://my-bucket.s3.ap-northeast-1.amazonaws.com/photos/cat.jpg
@@ -342,18 +342,18 @@ Virtual-hosted style is recommended because the bucket name is part of the DNS h
 
 ### 6.3 Other endpoints
 
-| Endpoint | Example format | Use |
-| --- | --- | --- |
-| Dualstack (IPv4 + IPv6) | `BUCKET.s3.dualstack.REGION.amazonaws.com` | IPv6 clients |
-| FIPS | `BUCKET.s3-fips.REGION.amazonaws.com` (dualstack version is `s3-fips.dualstack`) | US government workloads that require FIPS 140-validated cryptographic modules |
-| Transfer Acceleration | `BUCKET.s3-accelerate.amazonaws.com` (`s3-accelerate.dualstack` also exists) | Fast long-distance transfers via CloudFront edges |
-| Static website | `BUCKET.s3-website-REGION.amazonaws.com` or `BUCKET.s3-website.REGION.amazonaws.com` (varies by Region) | HTTP only, index/error documents, redirects |
-| Access Point | `ACCESSPOINT-ACCOUNTID.s3-accesspoint.REGION.amazonaws.com` | Per-application access control |
-| Multi-Region Access Point | `ALIAS.accesspoint.s3-global.amazonaws.com` | Proximity routing across multiple Regions |
-| Directory bucket (Zonal) | `BUCKET.s3express-use1-az4.us-east-1.amazonaws.com` | Express One Zone data plane |
-| Directory bucket (Regional) | `s3express-control.us-east-1.amazonaws.com` | Control plane, such as CreateBucket |
-| Gateway VPC endpoint | (DNS stays the normal S3 name; traffic is steered by route tables) | Reach S3 from inside a VPC at no charge |
-| Interface VPC endpoint (PrivateLink) | `bucket.vpce-xxxx.s3.REGION.vpce.amazonaws.com` | Reach S3 over private IPs from on premises or other VPCs (paid) |
+| Endpoint                             | Example format                                                                                          | Use                                                                           |
+| ------------------------------------ | ------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| Dualstack (IPv4 + IPv6)              | `BUCKET.s3.dualstack.REGION.amazonaws.com`                                                              | IPv6 clients                                                                  |
+| FIPS                                 | `BUCKET.s3-fips.REGION.amazonaws.com` (dualstack version is `s3-fips.dualstack`)                        | US government workloads that require FIPS 140-validated cryptographic modules |
+| Transfer Acceleration                | `BUCKET.s3-accelerate.amazonaws.com` (`s3-accelerate.dualstack` also exists)                            | Fast long-distance transfers via CloudFront edges                             |
+| Static website                       | `BUCKET.s3-website-REGION.amazonaws.com` or `BUCKET.s3-website.REGION.amazonaws.com` (varies by Region) | HTTP only, index/error documents, redirects                                   |
+| Access Point                         | `ACCESSPOINT-ACCOUNTID.s3-accesspoint.REGION.amazonaws.com`                                             | Per-application access control                                                |
+| Multi-Region Access Point            | `ALIAS.accesspoint.s3-global.amazonaws.com`                                                             | Proximity routing across multiple Regions                                     |
+| Directory bucket (Zonal)             | `BUCKET.s3express-use1-az4.us-east-1.amazonaws.com`                                                     | Express One Zone data plane                                                   |
+| Directory bucket (Regional)          | `s3express-control.us-east-1.amazonaws.com`                                                             | Control plane, such as CreateBucket                                           |
+| Gateway VPC endpoint                 | (DNS stays the normal S3 name; traffic is steered by route tables)                                      | Reach S3 from inside a VPC at no charge                                       |
+| Interface VPC endpoint (PrivateLink) | `bucket.vpce-xxxx.s3.REGION.vpce.amazonaws.com`                                                         | Reach S3 over private IPs from on premises or other VPCs (paid)               |
 
 ## 7. The shape of the REST API
 
@@ -361,20 +361,20 @@ Virtual-hosted style is recommended because the bucket name is part of the DNS h
 
 The S3 API maps fairly directly onto HTTP verbs.
 
-| HTTP | Target | Main operations |
-| --- | --- | --- |
-| `PUT` | `/key` | PutObject (a single PUT is up to 5 GB), CopyObject (`x-amz-copy-source`), UploadPart |
-| `GET` | `/key` | GetObject (partial retrieval with the Range header) |
-| `HEAD` | `/key` | HeadObject (metadata only) |
-| `DELETE` | `/key` | DeleteObject |
-| `POST` | `/?delete` | DeleteObjects (bulk delete of up to 1,000 keys) |
-| `POST` | `/key?uploads` | CreateMultipartUpload |
-| `POST` | `/key?uploadId=...` | CompleteMultipartUpload |
-| `POST` | `/key?restore` | RestoreObject (temporary restore from Glacier classes) |
-| `POST` | `/` (form) | POST Object from a browser (signed policy) |
-| `GET` | `/?list-type=2` | ListObjectsV2 |
-| `GET` | `/?versions` | ListObjectVersions |
-| `PUT` / `GET` / `DELETE` | `/?policy`, `/?lifecycle`, `/?versioning` ... | Bucket subresource configuration |
+| HTTP                     | Target                                        | Main operations                                                                      |
+| ------------------------ | --------------------------------------------- | ------------------------------------------------------------------------------------ |
+| `PUT`                    | `/key`                                        | PutObject (a single PUT is up to 5 GB), CopyObject (`x-amz-copy-source`), UploadPart |
+| `GET`                    | `/key`                                        | GetObject (partial retrieval with the Range header)                                  |
+| `HEAD`                   | `/key`                                        | HeadObject (metadata only)                                                           |
+| `DELETE`                 | `/key`                                        | DeleteObject                                                                         |
+| `POST`                   | `/?delete`                                    | DeleteObjects (bulk delete of up to 1,000 keys)                                      |
+| `POST`                   | `/key?uploads`                                | CreateMultipartUpload                                                                |
+| `POST`                   | `/key?uploadId=...`                           | CompleteMultipartUpload                                                              |
+| `POST`                   | `/key?restore`                                | RestoreObject (temporary restore from Glacier classes)                               |
+| `POST`                   | `/` (form)                                    | POST Object from a browser (signed policy)                                           |
+| `GET`                    | `/?list-type=2`                               | ListObjectsV2                                                                        |
+| `GET`                    | `/?versions`                                  | ListObjectVersions                                                                   |
+| `PUT` / `GET` / `DELETE` | `/?policy`, `/?lifecycle`, `/?versioning` ... | Bucket subresource configuration                                                     |
 
 Example: PutObject as raw HTTP.
 
@@ -415,14 +415,14 @@ aws s3api list-objects-v2 \
   --max-keys 1000
 ```
 
-| Parameter | Meaning |
-| --- | --- |
-| `prefix` | Only keys that start with this string |
-| `delimiter` | Delimiter character. Everything after it is grouped into `CommonPrefixes` |
-| `max-keys` | Maximum items per page (up to 1,000) |
-| `continuation-token` | The `NextContinuationToken` from the previous page |
-| `start-after` | List starting after this key |
-| `fetch-owner` | Whether to include Owner information |
+| Parameter            | Meaning                                                                   |
+| -------------------- | ------------------------------------------------------------------------- |
+| `prefix`             | Only keys that start with this string                                     |
+| `delimiter`          | Delimiter character. Everything after it is grouped into `CommonPrefixes` |
+| `max-keys`           | Maximum items per page (up to 1,000)                                      |
+| `continuation-token` | The `NextContinuationToken` from the previous page                        |
+| `start-after`        | List starting after this key                                              |
+| `fetch-owner`        | Whether to include Owner information                                      |
 
 Properties:
 
@@ -459,36 +459,36 @@ sequenceDiagram
 
 ### 7.4 Conditional requests
 
-| Header | Read (GET/HEAD) | Write (PUT / CompleteMultipartUpload) |
-| --- | --- | --- |
-| `If-Match: <ETag>` | Returns the object if the ETag matches | Supported since 2024-11. Returns `412 Precondition Failed` on mismatch (optimistic locking) |
-| `If-None-Match: *` | — | Supported since 2024-08. Returns `412` if the key already exists (create-if-not-exists) |
-| `If-None-Match: <ETag>` | Returns the object if it does not match (304 if it matches) | — |
-| `If-Modified-Since` / `If-Unmodified-Since` | Conditional on date/time | — |
+| Header                                      | Read (GET/HEAD)                                             | Write (PUT / CompleteMultipartUpload)                                                       |
+| ------------------------------------------- | ----------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| `If-Match: <ETag>`                          | Returns the object if the ETag matches                      | Supported since 2024-11. Returns `412 Precondition Failed` on mismatch (optimistic locking) |
+| `If-None-Match: *`                          | —                                                           | Supported since 2024-08. Returns `412` if the key already exists (create-if-not-exists)     |
+| `If-None-Match: <ETag>`                     | Returns the object if it does not match (304 if it matches) | —                                                                                           |
+| `If-Modified-Since` / `If-Unmodified-Since` | Conditional on date/time                                    | —                                                                                           |
 
 Conditional writes made it possible to do "exclusive creation" and "compare-and-swap-style updates" with S3 alone. More and more cases, such as Iceberg / Delta Lake commits and distributed lock implementations, no longer need an external DB (DynamoDB, etc.). In 2024-11 it also became possible to **enforce** conditional writes with a bucket policy.
 
 ### 7.5 Common errors
 
-| Status | Example codes | Meaning |
-| --- | --- | --- |
-| 301 / 307 | `PermanentRedirect` / `TemporaryRedirect` | Request sent to an endpoint in a different Region |
-| 400 | `InvalidRequest`, `EntityTooLarge` | Invalid parameters / over 5 GB in a single PUT, etc. |
-| 403 | `AccessDenied` | No permission (403s from outside the account/organization are not billed since 2024) |
-| 404 | `NoSuchKey`, `NoSuchBucket` | Does not exist |
-| 409 | `BucketAlreadyExists`, `OperationAborted` | Name collision / conflicting operation in progress |
-| 412 | `PreconditionFailed` | Condition of a conditional request not met |
-| 416 | `InvalidRange` | Invalid Range |
-| 503 | `SlowDown` | Request rate exceeded. Back off and retry |
+| Status    | Example codes                             | Meaning                                                                              |
+| --------- | ----------------------------------------- | ------------------------------------------------------------------------------------ |
+| 301 / 307 | `PermanentRedirect` / `TemporaryRedirect` | Request sent to an endpoint in a different Region                                    |
+| 400       | `InvalidRequest`, `EntityTooLarge`        | Invalid parameters / over 5 GB in a single PUT, etc.                                 |
+| 403       | `AccessDenied`                            | No permission (403s from outside the account/organization are not billed since 2024) |
+| 404       | `NoSuchKey`, `NoSuchBucket`               | Does not exist                                                                       |
+| 409       | `BucketAlreadyExists`, `OperationAborted` | Name collision / conflicting operation in progress                                   |
+| 412       | `PreconditionFailed`                      | Condition of a conditional request not met                                           |
+| 416       | `InvalidRange`                            | Invalid Range                                                                        |
+| 503       | `SlowDown`                                | Request rate exceeded. Back off and retry                                            |
 
 ## 8. Consistency model
 
 ### 8.1 Before and after 2020-12
 
-| Period | GET after new PUT | GET after overwrite/delete | LIST |
-| --- | --- | --- | --- |
-| Up to 2020-11 | Read-after-write (but eventually consistent if you had GET a 404 beforehand) | Eventually consistent (stale data could be returned) | Eventually consistent |
-| From 2020-12-01 | **Strongly consistent** | **Strongly consistent** | **Strongly consistent** |
+| Period          | GET after new PUT                                                            | GET after overwrite/delete                           | LIST                    |
+| --------------- | ---------------------------------------------------------------------------- | ---------------------------------------------------- | ----------------------- |
+| Up to 2020-11   | Read-after-write (but eventually consistent if you had GET a 404 beforehand) | Eventually consistent (stale data could be returned) | Eventually consistent   |
+| From 2020-12-01 | **Strongly consistent**                                                      | **Strongly consistent**                              | **Strongly consistent** |
 
 At re:Invent in 2020-12, S3 began providing **strong read-after-write consistency in all Regions for all objects (including existing ones), with no extra charge and no performance penalty**.
 
@@ -523,9 +523,9 @@ Client ──PUT──▶ Front end ──▶ Metadata     Client ──GET─�
 
 Annual durability of 99.999999999% (11 nines) is, in AWS's words, a design target of "if you store 10 million objects, you can on average expect to lose one object every 10,000 years". **It is a design value, not an SLA**; what the SLA guarantees is availability (monthly uptime).
 
-| Metric | Meaning | S3 Standard |
-| --- | --- | --- |
-| Durability | Probability that data is not lost | 99.999999999% (design value) |
+| Metric       | Meaning                              | S3 Standard                         |
+| ------------ | ------------------------------------ | ----------------------------------- |
+| Durability   | Probability that data is not lost    | 99.999999999% (design value)        |
 | Availability | Probability that requests are served | 99.99% (design value) / 99.9% (SLA) |
 
 Note: durability is **protection against failures on the AWS side, such as hardware faults**. It does not protect you from your own accidental deletes, overwrites, or ransomware. That is the job of versioning, Object Lock, replication, and AWS Backup.
@@ -545,16 +545,16 @@ flowchart TB
     G --> D1
 ```
 
-| Mechanism | Description | Source |
-| --- | --- | --- |
-| Spread across multiple AZs | Standard and similar classes store data redundantly across three or more AZs. Tolerates the loss of one AZ | Storage class comparison table |
-| Erasure coding | Reed-Solomon-style coding provides redundancy with less capacity overhead than replication. Used together with replication | Warfield (article based on the FAST '23 keynote) |
-| Success response after write confirmation | Returns 200 only after data is stored redundantly | S3 FAQ |
-| Checksums | Data in transit and at rest is verified with checksums. Since 2024-12, SDKs send a CRC by default | What's New 2024-12 |
-| Continuous auditing and automatic repair | A set of microservices continuously inspects every byte and automatically repairs any degradation found | 20th-anniversary post |
-| Formal methods | ShardStore (the KV store on storage nodes) is verified with lightweight formal methods | SOSP 2021 paper |
-| Rust | Performance-critical code was gradually rewritten in Rust over 8 years | 20th-anniversary post |
-| Durability review | A culture of reviewing every change for "ways it could lose data", similar to threat modeling | Warfield article |
+| Mechanism                                 | Description                                                                                                                | Source                                           |
+| ----------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
+| Spread across multiple AZs                | Standard and similar classes store data redundantly across three or more AZs. Tolerates the loss of one AZ                 | Storage class comparison table                   |
+| Erasure coding                            | Reed-Solomon-style coding provides redundancy with less capacity overhead than replication. Used together with replication | Warfield (article based on the FAST '23 keynote) |
+| Success response after write confirmation | Returns 200 only after data is stored redundantly                                                                          | S3 FAQ                                           |
+| Checksums                                 | Data in transit and at rest is verified with checksums. Since 2024-12, SDKs send a CRC by default                          | What's New 2024-12                               |
+| Continuous auditing and automatic repair  | A set of microservices continuously inspects every byte and automatically repairs any degradation found                    | 20th-anniversary post                            |
+| Formal methods                            | ShardStore (the KV store on storage nodes) is verified with lightweight formal methods                                     | SOSP 2021 paper                                  |
+| Rust                                      | Performance-critical code was gradually rewritten in Rust over 8 years                                                     | 20th-anniversary post                            |
+| Durability review                         | A culture of reviewing every change for "ways it could lose data", similar to threat modeling                              | Warfield article                                 |
 
 ### 9.3 ShardStore and lightweight formal methods
 
@@ -573,58 +573,58 @@ Main values as of 2026-10. Figures come from the S3 quota table in the AWS Gener
 
 ### 10.1 Objects
 
-| Item | Value | Notes |
-| --- | --- | --- |
-| Maximum object size | **50 TB** (48.828125 TB in the quota table, 48.8 TiB in the User Guide) | Increased 10x from 5 TB in 2025-12. All Regions and all storage classes |
-| Maximum size of a single PUT | 5 GB | Multipart Upload is required above this |
-| Console upload limit | 160 GB | |
-| Number of multipart parts | Up to 10,000 | Part numbers 1 to 10,000 |
-| Part size | 5 MiB to 5 GiB | No minimum for the last part. 5 GiB × 10,000 ≈ 48.8 TiB is the basis for the maximum size |
-| Items per ListParts / ListMultipartUploads response | Up to 1,000 | |
-| Key length | 1,024 bytes (UTF-8) | |
-| User-defined metadata | 2 KB | The whole PUT request header is up to 8 KB |
-| Object tags | 10 | |
-| Annotations | Up to 1 MB per annotation (User Guide) / up to 1 GB per object (announcement) | Added in 2026-06 |
-| Keys per DeleteObjects call | 1,000 | |
+| Item                                                | Value                                                                         | Notes                                                                                     |
+| --------------------------------------------------- | ----------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| Maximum object size                                 | **50 TB** (48.828125 TB in the quota table, 48.8 TiB in the User Guide)       | Increased 10x from 5 TB in 2025-12. All Regions and all storage classes                   |
+| Maximum size of a single PUT                        | 5 GB                                                                          | Multipart Upload is required above this                                                   |
+| Console upload limit                                | 160 GB                                                                        |                                                                                           |
+| Number of multipart parts                           | Up to 10,000                                                                  | Part numbers 1 to 10,000                                                                  |
+| Part size                                           | 5 MiB to 5 GiB                                                                | No minimum for the last part. 5 GiB × 10,000 ≈ 48.8 TiB is the basis for the maximum size |
+| Items per ListParts / ListMultipartUploads response | Up to 1,000                                                                   |                                                                                           |
+| Key length                                          | 1,024 bytes (UTF-8)                                                           |                                                                                           |
+| User-defined metadata                               | 2 KB                                                                          | The whole PUT request header is up to 8 KB                                                |
+| Object tags                                         | 10                                                                            |                                                                                           |
+| Annotations                                         | Up to 1 MB per annotation (User Guide) / up to 1 GB per object (announcement) | Added in 2026-06                                                                          |
+| Keys per DeleteObjects call                         | 1,000                                                                         |                                                                                           |
 
 ### 10.2 Buckets and accounts
 
-| Item | Default | Adjustable? |
-| --- | --- | --- |
-| General purpose buckets | 10,000 / account | Yes (up to 1 million) |
-| Directory buckets | 100 / account | Yes |
-| Table buckets | 100 / Region / account (raised from 10 in 2026-10) | Request through Support |
-| Objects per bucket | Unlimited | — |
-| Capacity per bucket | Unlimited | — |
-| Bucket policy size | 20 KB | No |
-| Bucket tags | 50 | No |
-| Lifecycle rules | 1,000 / bucket | No |
-| Event notification configurations | 100 / bucket | No |
-| Access Points | 10,000 / Region / account | Yes |
-| Multi-Region Access Points | 100 / account, 20 Regions per MRAP | No |
+| Item                              | Default                                            | Adjustable?             |
+| --------------------------------- | -------------------------------------------------- | ----------------------- |
+| General purpose buckets           | 10,000 / account                                   | Yes (up to 1 million)   |
+| Directory buckets                 | 100 / account                                      | Yes                     |
+| Table buckets                     | 100 / Region / account (raised from 10 in 2026-10) | Request through Support |
+| Objects per bucket                | Unlimited                                          | —                       |
+| Capacity per bucket               | Unlimited                                          | —                       |
+| Bucket policy size                | 20 KB                                              | No                      |
+| Bucket tags                       | 50                                                 | No                      |
+| Lifecycle rules                   | 1,000 / bucket                                     | No                      |
+| Event notification configurations | 100 / bucket                                       | No                      |
+| Access Points                     | 10,000 / Region / account                          | Yes                     |
+| Multi-Region Access Points        | 100 / account, 20 Regions per MRAP                 | No                      |
 
 ### 10.3 Performance
 
-| Item | Value |
-| --- | --- |
-| Writes per prefix | At least 3,500 PUT/COPY/POST/DELETE req/s |
-| Reads per prefix | At least 5,500 GET/HEAD req/s |
-| Number of prefixes | Unlimited |
-| Per directory bucket | Up to 2 million GET TPS / 200,000 PUT TPS |
-| Glacier restore requests | 1,000 TPS / account |
-| Glacier restore throughput | 1 to 2 PB/day / account |
+| Item                       | Value                                     |
+| -------------------------- | ----------------------------------------- |
+| Writes per prefix          | At least 3,500 PUT/COPY/POST/DELETE req/s |
+| Reads per prefix           | At least 5,500 GET/HEAD req/s             |
+| Number of prefixes         | Unlimited                                 |
+| Per directory bucket       | Up to 2 million GET TPS / 200,000 PUT TPS |
+| Glacier restore requests   | 1,000 TPS / account                       |
+| Glacier restore throughput | 1 to 2 PB/day / account                   |
 
 ## 11. Published scale statistics
 
 AWS publishes S3's scale at milestones. Always pair a figure with its year and source.
 
-| Point in time | Objects | Requests | Data | Source |
-| --- | --- | --- | --- | --- |
-| 2006 (launch) | — | — | About 1 PB of total capacity | AWS News Blog 20th-anniversary post (2026-03-13) |
-| 2022-03 | Over 200 trillion | Over 100 million req/s on average | — | AWS News Blog (Pi Day 2022) |
-| 2023-07 | Over 280 trillion | Over 100 million req/s on average | Millions of drives | Werner Vogels, All Things Distributed (guest post by Warfield, 2023-07-27) |
-| 2025 | Over 500 trillion | Hundreds of millions of TPS | Hundreds of EB | The Pragmatic Engineer interview with Mai-Lan Tomsen Bukovec (secondary source) |
-| 2026-03 | **Over 500 trillion** | **Over 200 million req/s** | **Hundreds of EB** | AWS News Blog 20th-anniversary post |
+| Point in time | Objects               | Requests                          | Data                         | Source                                                                          |
+| ------------- | --------------------- | --------------------------------- | ---------------------------- | ------------------------------------------------------------------------------- |
+| 2006 (launch) | —                     | —                                 | About 1 PB of total capacity | AWS News Blog 20th-anniversary post (2026-03-13)                                |
+| 2022-03       | Over 200 trillion     | Over 100 million req/s on average | —                            | AWS News Blog (Pi Day 2022)                                                     |
+| 2023-07       | Over 280 trillion     | Over 100 million req/s on average | Millions of drives           | Werner Vogels, All Things Distributed (guest post by Warfield, 2023-07-27)      |
+| 2025          | Over 500 trillion     | Hundreds of millions of TPS       | Hundreds of EB               | The Pragmatic Engineer interview with Mai-Lan Tomsen Bukovec (secondary source) |
+| 2026-03       | **Over 500 trillion** | **Over 200 million req/s**        | **Hundreds of EB**           | AWS News Blog 20th-anniversary post                                             |
 
 Notes:
 
@@ -661,13 +661,13 @@ Much of S3's internal structure is not public, but a rough picture emerges from 
 └───────────────────────────────────────────────────────────────────────┘
 ```
 
-| Layer | Role | Notes |
-| --- | --- | --- |
-| Front end | Accepts HTTP, SigV4 authentication, IAM/bucket policy evaluation, request routing | Virtual-hosted style is recommended because DNS distributes traffic per bucket |
-| Namespace (index) | Mapping from key to data location, versions, metadata | The "index subsystem" in the 2017 outage report. The strong-consistency witness is also involved here |
-| Placement | Decides which disks new data goes on | The "placement subsystem" in the 2017 outage report |
-| Storage fleet | Stores the actual data (shards) on HDDs. The KV store on each node is ShardStore | Written in Rust. Verified with lightweight formal methods |
-| Background | Auditing/repair, replication, lifecycle, storage class transitions, etc. | Invisible to users |
+| Layer             | Role                                                                              | Notes                                                                                                 |
+| ----------------- | --------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| Front end         | Accepts HTTP, SigV4 authentication, IAM/bucket policy evaluation, request routing | Virtual-hosted style is recommended because DNS distributes traffic per bucket                        |
+| Namespace (index) | Mapping from key to data location, versions, metadata                             | The "index subsystem" in the 2017 outage report. The strong-consistency witness is also involved here |
+| Placement         | Decides which disks new data goes on                                              | The "placement subsystem" in the 2017 outage report                                                   |
+| Storage fleet     | Stores the actual data (shards) on HDDs. The KV store on each node is ShardStore  | Written in Rust. Verified with lightweight formal methods                                             |
+| Background        | Auditing/repair, replication, lifecycle, storage class transitions, etc.          | Invisible to users                                                                                    |
 
 Organizationally, each of these components has its own team, run "like an independent business" (Warfield).
 
@@ -744,17 +744,17 @@ A PUT goes the other way:
 
 ## 14. Common misconceptions
 
-| Misconception | Reality |
-| --- | --- |
-| S3 has folders | The namespace is flat. Folders are a presentation built from prefixes and delimiters (except in directory buckets) |
-| S3 is eventually consistent | Strongly consistent since 2020-12. Bucket configuration and replication are still asynchronous, though |
-| The maximum object size is 5 TB | 50 TB since 2025-12. A single PUT is still limited to 5 GB |
-| You can have up to 100 buckets per account | The default has been 10,000 since 2024-11, and up to 1 million on request |
-| The ETag is the MD5 | Not with multipart or SSE-KMS/SSE-C |
-| 11 nines means you do not need backups | Useless against accidental deletes, overwrites, and malicious deletion. You need versioning / Object Lock / replication |
-| Bucket names are globally unique | Basically yes, but since 2026-03 you can also choose an account regional namespace |
-| Even hostile requests that return 403 are billed | Since 2024, 403s from outside the account / organization incur neither request nor transfer charges |
-| S3 cannot be mounted as a file system | Possible with Mountpoint for S3 (2023) and S3 Files (2026). Mind the semantic differences, though |
+| Misconception                                    | Reality                                                                                                                 |
+| ------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------- |
+| S3 has folders                                   | The namespace is flat. Folders are a presentation built from prefixes and delimiters (except in directory buckets)      |
+| S3 is eventually consistent                      | Strongly consistent since 2020-12. Bucket configuration and replication are still asynchronous, though                  |
+| The maximum object size is 5 TB                  | 50 TB since 2025-12. A single PUT is still limited to 5 GB                                                              |
+| You can have up to 100 buckets per account       | The default has been 10,000 since 2024-11, and up to 1 million on request                                               |
+| The ETag is the MD5                              | Not with multipart or SSE-KMS/SSE-C                                                                                     |
+| 11 nines means you do not need backups           | Useless against accidental deletes, overwrites, and malicious deletion. You need versioning / Object Lock / replication |
+| Bucket names are globally unique                 | Basically yes, but since 2026-03 you can also choose an account regional namespace                                      |
+| Even hostile requests that return 403 are billed | Since 2024, 403s from outside the account / organization incur neither request nor transfer charges                     |
+| S3 cannot be mounted as a file system            | Possible with Mountpoint for S3 (2023) and S3 Files (2026). Mind the semantic differences, though                       |
 
 ## References
 

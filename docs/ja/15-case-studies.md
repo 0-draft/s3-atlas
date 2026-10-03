@@ -479,16 +479,16 @@ S3 20 周年の AWS News Blog (2026-03-13) によると、S3 は **500 兆を超
 
 ### 10.1 業種別パターン
 
-| 業種 | 典型的なデータ | よく使う S3 機能 | 代表事例 |
-| --- | --- | --- | --- |
-| メディア・SNS | 写真・動画・UGC、作成直後だけ熱い | Glacier IR、lifecycle、Storage Class Analysis | Snap、Canva、BBC、テレビ東京 |
-| 金融・規制 | 全取引データの長期保持と監査クエリ | データレイク、Glacier、Object Lock、Intelligent-Tiering | FINRA、Nasdaq、BMLL、Capital One |
-| 公共・科学 | 公開データ、誰が読むか予測不能 | Intelligent-Tiering、Open Data | NASA |
-| ライフサイエンス | 研究・実データ、たまに一括で読む | データレイク、Glacier | Moderna、Ancestry |
-| 自動車・製造 | 車両テレメトリ、日次 10 TB 以上 | データレイク + Glue/Athena/Lake Formation | BMW、Toyota Connected |
-| EC・SaaS | ログと顧客アセット | Intelligent-Tiering、Iceberg / S3 Tables | Zalando、Bynder、Salesforce、Indeed、Grab |
-| AI | 学習データ、モデル重み、ベクトル | Storage Lens、Intelligent-Tiering、Express One Zone、S3 Vectors | Anthropic、Hugging Face、Pinterest、March Networks |
-| データ基盤製品 | 製品そのもののストレージ層 | 標準 S3、conditional write、Express One Zone | Snowflake、Databricks、WarpStream、turbopuffer、Neon |
+| 業種             | 典型的なデータ                     | よく使う S3 機能                                                | 代表事例                                             |
+| ---------------- | ---------------------------------- | --------------------------------------------------------------- | ---------------------------------------------------- |
+| メディア・SNS    | 写真・動画・UGC、作成直後だけ熱い  | Glacier IR、lifecycle、Storage Class Analysis                   | Snap、Canva、BBC、テレビ東京                         |
+| 金融・規制       | 全取引データの長期保持と監査クエリ | データレイク、Glacier、Object Lock、Intelligent-Tiering         | FINRA、Nasdaq、BMLL、Capital One                     |
+| 公共・科学       | 公開データ、誰が読むか予測不能     | Intelligent-Tiering、Open Data                                  | NASA                                                 |
+| ライフサイエンス | 研究・実データ、たまに一括で読む   | データレイク、Glacier                                           | Moderna、Ancestry                                    |
+| 自動車・製造     | 車両テレメトリ、日次 10 TB 以上    | データレイク + Glue/Athena/Lake Formation                       | BMW、Toyota Connected                                |
+| EC・SaaS         | ログと顧客アセット                 | Intelligent-Tiering、Iceberg / S3 Tables                        | Zalando、Bynder、Salesforce、Indeed、Grab            |
+| AI               | 学習データ、モデル重み、ベクトル   | Storage Lens、Intelligent-Tiering、Express One Zone、S3 Vectors | Anthropic、Hugging Face、Pinterest、March Networks   |
+| データ基盤製品   | 製品そのもののストレージ層         | 標準 S3、conditional write、Express One Zone                    | Snowflake、Databricks、WarpStream、turbopuffer、Neon |
 
 ### 10.2 共通アーキテクチャ A: S3 データレイク / lakehouse
 
@@ -578,27 +578,27 @@ flowchart LR
 
 この構造の利点と代償:
 
-| 観点 | 利点 | 代償 |
-| --- | --- | --- |
-| 耐久性 | S3 の 11 ナインと複数 AZ 冗長をそのまま使える | なし (S3 に任せる) |
-| コスト | ローカルディスクの 3 重化と AZ 間転送料金が消える | リクエスト料金が増えるのでバッチ化が必須 |
-| 運用 | ノードがステートレスなのでリバランスがない | メタデータ層の設計が難しい |
-| レイテンシ | キャッシュヒット時はミリ秒台 | コールドスタートは数百 ms (turbopuffer で p50 874 ms) |
+| 観点       | 利点                                              | 代償                                                  |
+| ---------- | ------------------------------------------------- | ----------------------------------------------------- |
+| 耐久性     | S3 の 11 ナインと複数 AZ 冗長をそのまま使える     | なし (S3 に任せる)                                    |
+| コスト     | ローカルディスクの 3 重化と AZ 間転送料金が消える | リクエスト料金が増えるのでバッチ化が必須              |
+| 運用       | ノードがステートレスなのでリバランスがない        | メタデータ層の設計が難しい                            |
+| レイテンシ | キャッシュヒット時はミリ秒台                      | コールドスタートは数百 ms (turbopuffer で p50 874 ms) |
 
 ### 10.5 機能別の採用状況
 
-| 機能 | 事例 | 典型的な成果 |
-| --- | --- | --- |
-| Intelligent-Tiering | Zalando、Bynder、Salesforce、NASA、BMLL、BBC、Indeed、Anthropic、Capital One | 37〜65% のストレージ削減 (Zalando 37%、Bynder 65%、NASA 推定 60%) |
-| Glacier Instant Retrieval | Snap、Canva、BBC、CyberAgent | Snap 数千万ドル、Canva 年 360 万ドル |
-| Glacier Flexible Retrieval / Deep Archive | Pinterest、Capital One、Ancestry、テレビ東京、BMLL、NAVITIME (失敗) | Pinterest 年数百万ドル、BMLL 年 300 万ドル |
-| Lifecycle (削除・バージョン整理) | Duolingo、CyberAgent、Capital One、Canva | CyberAgent 年約 1,200 万円 |
-| Storage Lens / Storage Class Analysis / Inventory | Pinterest、Canva、Anthropic | 移行判断の根拠 |
-| オープンテーブルフォーマット (Iceberg) | Netflix、Grab、Indeed | Grab で S3 API コスト最大 95% 削減 |
-| S3 Tables | Indeed | 10% のコスト削減、年 1,000 時間超の工数削減 |
-| Express One Zone | Pinterest (MemQ)、WarpStream (Lightning Topics) | Pinterest で 10 倍超のレイテンシ改善 |
-| S3 Vectors | March Networks | 長期映像ストレージ最大 80% 削減 (Glacier との併用) |
-| バージョニング | Zalando (誤削除から復旧)、Capital One (90% 超のバケットで有効) | 誤削除からの復旧。ただし noncurrent の管理が必須 |
+| 機能                                              | 事例                                                                         | 典型的な成果                                                      |
+| ------------------------------------------------- | ---------------------------------------------------------------------------- | ----------------------------------------------------------------- |
+| Intelligent-Tiering                               | Zalando、Bynder、Salesforce、NASA、BMLL、BBC、Indeed、Anthropic、Capital One | 37〜65% のストレージ削減 (Zalando 37%、Bynder 65%、NASA 推定 60%) |
+| Glacier Instant Retrieval                         | Snap、Canva、BBC、CyberAgent                                                 | Snap 数千万ドル、Canva 年 360 万ドル                              |
+| Glacier Flexible Retrieval / Deep Archive         | Pinterest、Capital One、Ancestry、テレビ東京、BMLL、NAVITIME (失敗)          | Pinterest 年数百万ドル、BMLL 年 300 万ドル                        |
+| Lifecycle (削除・バージョン整理)                  | Duolingo、CyberAgent、Capital One、Canva                                     | CyberAgent 年約 1,200 万円                                        |
+| Storage Lens / Storage Class Analysis / Inventory | Pinterest、Canva、Anthropic                                                  | 移行判断の根拠                                                    |
+| オープンテーブルフォーマット (Iceberg)            | Netflix、Grab、Indeed                                                        | Grab で S3 API コスト最大 95% 削減                                |
+| S3 Tables                                         | Indeed                                                                       | 10% のコスト削減、年 1,000 時間超の工数削減                       |
+| Express One Zone                                  | Pinterest (MemQ)、WarpStream (Lightning Topics)                              | Pinterest で 10 倍超のレイテンシ改善                              |
+| S3 Vectors                                        | March Networks                                                               | 長期映像ストレージ最大 80% 削減 (Glacier との併用)                |
+| バージョニング                                    | Zalando (誤削除から復旧)、Capital One (90% 超のバケットで有効)               | 誤削除からの復旧。ただし noncurrent の管理が必須                  |
 
 ### 10.6 失敗・注意点のパターン
 
@@ -641,62 +641,62 @@ Dropbox と 37signals に共通する条件は次の 3 つ。
 
 ## 11. 全事例サマリー
 
-| 企業 | 業種 | 種別 | 規模 (年) | 主な機能 | 成果 |
-| --- | --- | --- | --- | --- | --- |
-| Netflix | 動画配信 | adopter | 約 1 EB のデータレイク (2023) | Iceberg、データレイク | Hive に残っていた約 300 PB を Iceberg へ |
-| Snap | SNS | adopter | 2 EB / 1.5 兆ファイル (2022) | Glacier IR | 数千万ドル削減 |
-| Canva | デザイン SaaS | adopter | 230 PB / 3,000 億オブジェクト (2023) | Glacier IR、lifecycle、Storage Class Analysis | 年 360 万ドル削減 |
-| Pinterest | SNS | adopter | 約 1 EB (2021) | Deep Archive、Storage Lens、Inventory、Batch Operations | 年数百万ドル削減 |
-| Pinterest (MemQ) | SNS | adopter | GB/s 級の Pub/Sub (2022) | S3 Standard、Express One Zone | Kafka 比 90% 超安い |
-| BBC | 放送 | adopter | 25 PB (2023) | Glacier IR、Intelligent-Tiering | 物理インフラ半減 |
-| Twitch | ライブ配信 | adopter | 100 PB 超 (2023) | データレイク | 未公開 |
-| Epic Games | ゲーム | adopter | 14 PB、月 2 PB 増 (2018) | データレイク、Kinesis、EMR | 未公開 |
-| Duolingo | 教育 | adopter | 非公開 (2024) | lifecycle、バージョニング | クラウド費 年換算 20% 削減 |
-| FINRA | 金融規制 | adopter | 1 日 370 億レコード、3 億オブジェクト (2017) | データレイク、EMR | 同一データに複数ワークロード |
-| Nasdaq | 取引所 | adopter | 1 日 700 億レコード (2019) | データレイク、Redshift Spectrum | RI 費用 75% 削減 |
-| Capital One | 銀行 | adopter | 数百バケット (2021) | lifecycle、Glacier、Deep Archive、バージョニング | 非公開 |
-| BMLL | 金融データ | adopter | 20 PB 超 (2025) | Intelligent-Tiering、Glacier、Object Lock、Replication | 年 350 万ドル削減 |
-| NASA Earthdata | 公共・科学 | adopter | 170 PB 超 (2026) | Intelligent-Tiering、Open Data | 推定 60% 削減 |
-| Moderna | バイオ | adopter | 非公開 (2023) | データレイク | 抽出・分析 70% 高速化 |
-| Ancestry | 系図 | adopter | 数百 TB (2023) | Glacier | restore が日から時間へ |
-| BMW Group | 自動車 | adopter | 20 PB 超、2,000 万台超 (2026) | データレイク、Lake Formation | 全社データ基盤 |
-| Toyota Connected | 自動車 | adopter | PB 級 (2022) | データレイク、EMR、Athena | 処理 27 分から 30 秒 |
-| Zalando | EC | adopter | 15 PB (2020) | Intelligent-Tiering、バージョニング | 年 37% 削減 |
-| Bynder | SaaS | adopter | 18 PB / 1.75 億アセット (2024) | Intelligent-Tiering | 65% 削減 |
-| Salesforce | SaaS | adopter | 100 PB 超 (2023) | Intelligent-Tiering、EMR | 年数百万ドル削減 |
-| Indeed | HR テック | adopter | 101 PB (2026) | S3 Tables、Replication、Intelligent-Tiering | 10% 削減、年 1,000 時間超 |
-| Grab | スーパーアプリ | adopter | PB 級 / 数十億オブジェクト (2026) | Iceberg | S3 API コスト最大 95% 削減 |
-| Anthropic | AI | adopter | 数百 PB (2023) | Storage Lens、Intelligent-Tiering | 講演紹介文に記載なし |
-| Hugging Face | AI | adopter | Xet へ 20 PB / 50 万リポジトリ (2025) | S3 Standard、presigned URL | チャンク単位の重複排除 |
-| March Networks | 映像監視 | adopter | 数十億ベクトル (2025) | S3 Vectors、Glacier | 最大 80% 削減 (5 年) |
-| テレビ東京 | 放送 | adopter | 13 PB (2020) | S3、Glacier、lifecycle、Direct Connect | 年数千万円削減 |
-| NTT ドコモ | 通信 | adopter | 約 9,000 万会員 (2023) | データレイク | 利用アカウント 13 倍 |
-| クックパッド | レシピ | adopter | ログテーブル約 300 本 (2020) | Redshift Spectrum、Parquet | ディスク使用率 50% 未満に |
-| サイバーエージェント | 広告 | adopter | 100 TB 超を削除・移行 (2022) | lifecycle、Standard-IA、Glacier IR | 年約 1,200 万円削減 |
-| ナビタイムジャパン | ナビ | adopter | 非公開 (2023) | Deep Archive | 月 100 万円超のコスト増 (反面教師) |
-| Snowflake | データ基盤製品 | built-on-s3 | — (2016 論文) | S3 Standard | ストレージ・コンピュート分離 |
-| Databricks | データ基盤製品 | built-on-s3 | — (2026) | S3 Standard、IAM | 顧客バケットにデータを保持 |
-| WarpStream | ストリーミング | built-on-s3 | — (2023) | S3 Standard、Express One Zone | 自前 Kafka の 5〜10 分の 1 のコスト (ベンダー主張) |
-| turbopuffer | 検索 DB | built-on-s3 | — (2025) | S3 Standard | キャッシュ時 p50 14 ms |
-| Neon | サーバーレス Postgres | built-on-s3 | — (2023) | S3 Standard | scale-to-zero、ブランチ |
-| Dropbox | クラウドストレージ | migrated-away | 500 PB (2016) | — | 90% 超を自社基盤へ |
-| 37signals | SaaS | migrated-away | 約 6 PB を移行 (2025) | — | 5 年で約 500 万ドル節約見込み |
+| 企業                 | 業種                  | 種別          | 規模 (年)                                    | 主な機能                                                | 成果                                               |
+| -------------------- | --------------------- | ------------- | -------------------------------------------- | ------------------------------------------------------- | -------------------------------------------------- |
+| Netflix              | 動画配信              | adopter       | 約 1 EB のデータレイク (2023)                | Iceberg、データレイク                                   | Hive に残っていた約 300 PB を Iceberg へ           |
+| Snap                 | SNS                   | adopter       | 2 EB / 1.5 兆ファイル (2022)                 | Glacier IR                                              | 数千万ドル削減                                     |
+| Canva                | デザイン SaaS         | adopter       | 230 PB / 3,000 億オブジェクト (2023)         | Glacier IR、lifecycle、Storage Class Analysis           | 年 360 万ドル削減                                  |
+| Pinterest            | SNS                   | adopter       | 約 1 EB (2021)                               | Deep Archive、Storage Lens、Inventory、Batch Operations | 年数百万ドル削減                                   |
+| Pinterest (MemQ)     | SNS                   | adopter       | GB/s 級の Pub/Sub (2022)                     | S3 Standard、Express One Zone                           | Kafka 比 90% 超安い                                |
+| BBC                  | 放送                  | adopter       | 25 PB (2023)                                 | Glacier IR、Intelligent-Tiering                         | 物理インフラ半減                                   |
+| Twitch               | ライブ配信            | adopter       | 100 PB 超 (2023)                             | データレイク                                            | 未公開                                             |
+| Epic Games           | ゲーム                | adopter       | 14 PB、月 2 PB 増 (2018)                     | データレイク、Kinesis、EMR                              | 未公開                                             |
+| Duolingo             | 教育                  | adopter       | 非公開 (2024)                                | lifecycle、バージョニング                               | クラウド費 年換算 20% 削減                         |
+| FINRA                | 金融規制              | adopter       | 1 日 370 億レコード、3 億オブジェクト (2017) | データレイク、EMR                                       | 同一データに複数ワークロード                       |
+| Nasdaq               | 取引所                | adopter       | 1 日 700 億レコード (2019)                   | データレイク、Redshift Spectrum                         | RI 費用 75% 削減                                   |
+| Capital One          | 銀行                  | adopter       | 数百バケット (2021)                          | lifecycle、Glacier、Deep Archive、バージョニング        | 非公開                                             |
+| BMLL                 | 金融データ            | adopter       | 20 PB 超 (2025)                              | Intelligent-Tiering、Glacier、Object Lock、Replication  | 年 350 万ドル削減                                  |
+| NASA Earthdata       | 公共・科学            | adopter       | 170 PB 超 (2026)                             | Intelligent-Tiering、Open Data                          | 推定 60% 削減                                      |
+| Moderna              | バイオ                | adopter       | 非公開 (2023)                                | データレイク                                            | 抽出・分析 70% 高速化                              |
+| Ancestry             | 系図                  | adopter       | 数百 TB (2023)                               | Glacier                                                 | restore が日から時間へ                             |
+| BMW Group            | 自動車                | adopter       | 20 PB 超、2,000 万台超 (2026)                | データレイク、Lake Formation                            | 全社データ基盤                                     |
+| Toyota Connected     | 自動車                | adopter       | PB 級 (2022)                                 | データレイク、EMR、Athena                               | 処理 27 分から 30 秒                               |
+| Zalando              | EC                    | adopter       | 15 PB (2020)                                 | Intelligent-Tiering、バージョニング                     | 年 37% 削減                                        |
+| Bynder               | SaaS                  | adopter       | 18 PB / 1.75 億アセット (2024)               | Intelligent-Tiering                                     | 65% 削減                                           |
+| Salesforce           | SaaS                  | adopter       | 100 PB 超 (2023)                             | Intelligent-Tiering、EMR                                | 年数百万ドル削減                                   |
+| Indeed               | HR テック             | adopter       | 101 PB (2026)                                | S3 Tables、Replication、Intelligent-Tiering             | 10% 削減、年 1,000 時間超                          |
+| Grab                 | スーパーアプリ        | adopter       | PB 級 / 数十億オブジェクト (2026)            | Iceberg                                                 | S3 API コスト最大 95% 削減                         |
+| Anthropic            | AI                    | adopter       | 数百 PB (2023)                               | Storage Lens、Intelligent-Tiering                       | 講演紹介文に記載なし                               |
+| Hugging Face         | AI                    | adopter       | Xet へ 20 PB / 50 万リポジトリ (2025)        | S3 Standard、presigned URL                              | チャンク単位の重複排除                             |
+| March Networks       | 映像監視              | adopter       | 数十億ベクトル (2025)                        | S3 Vectors、Glacier                                     | 最大 80% 削減 (5 年)                               |
+| テレビ東京           | 放送                  | adopter       | 13 PB (2020)                                 | S3、Glacier、lifecycle、Direct Connect                  | 年数千万円削減                                     |
+| NTT ドコモ           | 通信                  | adopter       | 約 9,000 万会員 (2023)                       | データレイク                                            | 利用アカウント 13 倍                               |
+| クックパッド         | レシピ                | adopter       | ログテーブル約 300 本 (2020)                 | Redshift Spectrum、Parquet                              | ディスク使用率 50% 未満に                          |
+| サイバーエージェント | 広告                  | adopter       | 100 TB 超を削除・移行 (2022)                 | lifecycle、Standard-IA、Glacier IR                      | 年約 1,200 万円削減                                |
+| ナビタイムジャパン   | ナビ                  | adopter       | 非公開 (2023)                                | Deep Archive                                            | 月 100 万円超のコスト増 (反面教師)                 |
+| Snowflake            | データ基盤製品        | built-on-s3   | — (2016 論文)                                | S3 Standard                                             | ストレージ・コンピュート分離                       |
+| Databricks           | データ基盤製品        | built-on-s3   | — (2026)                                     | S3 Standard、IAM                                        | 顧客バケットにデータを保持                         |
+| WarpStream           | ストリーミング        | built-on-s3   | — (2023)                                     | S3 Standard、Express One Zone                           | 自前 Kafka の 5〜10 分の 1 のコスト (ベンダー主張) |
+| turbopuffer          | 検索 DB               | built-on-s3   | — (2025)                                     | S3 Standard                                             | キャッシュ時 p50 14 ms                             |
+| Neon                 | サーバーレス Postgres | built-on-s3   | — (2023)                                     | S3 Standard                                             | scale-to-zero、ブランチ                            |
+| Dropbox              | クラウドストレージ    | migrated-away | 500 PB (2016)                                | —                                                       | 90% 超を自社基盤へ                                 |
+| 37signals            | SaaS                  | migrated-away | 約 6 PB を移行 (2025)                        | —                                                       | 5 年で約 500 万ドル節約見込み                      |
 
 ## 12. 調査したが掲載を見送った企業
 
 以下は候補に挙がったが、S3 の使い方を具体的に示す一次ソース (公式事例・技術ブログ・講演) が見つからなかった、または情報が古すぎるため本文に入れなかった。
 
-| 企業 | 見送った理由 |
-| --- | --- |
-| Airbnb | AWS 事例はあるが、S3 にユーザー写真 10 TB という初期の数字のみで年が不明 |
-| Zoom | 録画を S3 に送る連携サンプルはあるが、Zoom 自身のストレージ基盤を説明した AWS 事例や Zoom の公開資料は見つからない (AWS の事例インデックスに Zoom のエントリはない)。未確認 |
-| Shopify | S3 に関する一次ソースが見つからない。Shopify Engineering (2018 年 3 月) は、自社データセンターから Google Cloud へ移行中で、データセンターのワークロードの 50% 超を移したと書いている |
-| Riot Games | Databricks lakehouse が S3 上にあるという言及 (Alation 事例) のみで、数値と年がない |
-| Woven by Toyota | Step Functions の結果を S3 に書くという記述のみ。データレイクの規模を示す AWS 事例や Woven by Toyota の公開資料は見つからず、未確認 |
-| Peloton、Pfizer、任天堂 | S3 に特化した公開事例が見つからない |
-| ソニー (aibo) | 構成要素に S3 があるが、S3 固有の規模・成果の記載なし |
-| メルカリ | 2019 年のブログで商品画像・バックアップに S3 を使うとあるが、規模の数字なし |
-| SmartNews、freee、日本経済新聞 | S3 を使う記述はあるが、S3 固有の規模・成果がない、または資料が古い |
+| 企業                           | 見送った理由                                                                                                                                                                          |
+| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Airbnb                         | AWS 事例はあるが、S3 にユーザー写真 10 TB という初期の数字のみで年が不明                                                                                                              |
+| Zoom                           | 録画を S3 に送る連携サンプルはあるが、Zoom 自身のストレージ基盤を説明した AWS 事例や Zoom の公開資料は見つからない (AWS の事例インデックスに Zoom のエントリはない)。未確認           |
+| Shopify                        | S3 に関する一次ソースが見つからない。Shopify Engineering (2018 年 3 月) は、自社データセンターから Google Cloud へ移行中で、データセンターのワークロードの 50% 超を移したと書いている |
+| Riot Games                     | Databricks lakehouse が S3 上にあるという言及 (Alation 事例) のみで、数値と年がない                                                                                                   |
+| Woven by Toyota                | Step Functions の結果を S3 に書くという記述のみ。データレイクの規模を示す AWS 事例や Woven by Toyota の公開資料は見つからず、未確認                                                   |
+| Peloton、Pfizer、任天堂        | S3 に特化した公開事例が見つからない                                                                                                                                                   |
+| ソニー (aibo)                  | 構成要素に S3 があるが、S3 固有の規模・成果の記載なし                                                                                                                                 |
+| メルカリ                       | 2019 年のブログで商品画像・バックアップに S3 を使うとあるが、規模の数字なし                                                                                                           |
+| SmartNews、freee、日本経済新聞 | S3 を使う記述はあるが、S3 固有の規模・成果がない、または資料が古い                                                                                                                    |
 
 ## 参考文献
 

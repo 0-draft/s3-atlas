@@ -4,10 +4,19 @@
     "company": "Netflix",
     "industry": { "en": "Media / streaming", "ja": "動画配信" },
     "region": "global",
-    "summary": { "en": "Runs an exabyte-scale data warehouse on S3 and migrated it from Hive to an Apache Iceberg-only architecture.", "ja": "S3 上のエクサバイト級データウェアハウスを Hive から Apache Iceberg のみの構成へ移行した。" },
-    "scale": { "en": "~1 EB data lake; ~300 PB still in Hive at migration", "ja": "約 1 EB のデータレイク、うち約 300 PB が Hive に残っていた" },
+    "summary": {
+      "en": "Runs an exabyte-scale data warehouse on S3 and migrated it from Hive to an Apache Iceberg-only architecture.",
+      "ja": "S3 上のエクサバイト級データウェアハウスを Hive から Apache Iceberg のみの構成へ移行した。"
+    },
+    "scale": {
+      "en": "~1 EB data lake; ~300 PB still in Hive at migration",
+      "ja": "約 1 EB のデータレイク、うち約 300 PB が Hive に残っていた"
+    },
     "features": ["Data lake", "Apache Iceberg"],
-    "outcome": { "en": "ACID transactions, richer metadata and better query performance; no cost figures published.", "ja": "ACID トランザクション、メタデータ強化、クエリ性能向上。削減額は非公開。" },
+    "outcome": {
+      "en": "ACID transactions, richer metadata and better query performance; no cost figures published.",
+      "ja": "ACID トランザクション、メタデータ強化、クエリ性能向上。削減額は非公開。"
+    },
     "year": 2023,
     "kind": "adopter",
     "url": "https://www.youtube.com/watch?v=jMFMEk8jFu8"
@@ -17,10 +26,16 @@
     "company": "Snap",
     "industry": { "en": "Social media", "ja": "SNS" },
     "region": "us",
-    "summary": { "en": "Moved 2 EB of saved Snapchat photos and videos from S3 Standard-IA to Glacier Instant Retrieval in three months.", "ja": "Snapchat の保存写真・動画 2 EB を 3 か月で Standard-IA から Glacier Instant Retrieval へ移行した。" },
+    "summary": {
+      "en": "Moved 2 EB of saved Snapchat photos and videos from S3 Standard-IA to Glacier Instant Retrieval in three months.",
+      "ja": "Snapchat の保存写真・動画 2 EB を 3 か月で Standard-IA から Glacier Instant Retrieval へ移行した。"
+    },
     "scale": { "en": "2 EB, ~1.5 trillion media files", "ja": "2 EB、約 1.5 兆メディアファイル" },
     "features": ["Glacier Instant Retrieval", "S3 Standard-IA"],
-    "outcome": { "en": "Tens of millions of dollars saved; 20-30% lower download latency in some Regions.", "ja": "数千万ドルの削減、一部リージョンでダウンロードレイテンシ 20〜30% 改善。" },
+    "outcome": {
+      "en": "Tens of millions of dollars saved; 20-30% lower download latency in some Regions.",
+      "ja": "数千万ドルの削減、一部リージョンでダウンロードレイテンシ 20〜30% 改善。"
+    },
     "year": 2022,
     "kind": "adopter",
     "url": "https://aws.amazon.com/solutions/case-studies/snap-case-study/"
@@ -30,10 +45,16 @@
     "company": "Canva",
     "industry": { "en": "Design SaaS", "ja": "デザイン SaaS" },
     "region": "global",
-    "summary": { "en": "Analyzed access patterns and moved 130 PB of 230 PB to Glacier Instant Retrieval, prioritizing buckets with large average object size.", "ja": "アクセスパターンを分析し、230 PB のうち 130 PB を Glacier Instant Retrieval へ移行。平均オブジェクトサイズの大きいバケットを優先した。" },
+    "summary": {
+      "en": "Analyzed access patterns and moved 130 PB of 230 PB to Glacier Instant Retrieval, prioritizing buckets with large average object size.",
+      "ja": "アクセスパターンを分析し、230 PB のうち 130 PB を Glacier Instant Retrieval へ移行。平均オブジェクトサイズの大きいバケットを優先した。"
+    },
     "scale": { "en": "230 PB, 300+ billion objects", "ja": "230 PB、3,000 億超のオブジェクト" },
     "features": ["Glacier Instant Retrieval", "S3 Standard-IA", "Lifecycle", "Storage Class Analysis"],
-    "outcome": { "en": "$3.6M saved per year after a $1.6M one-time transition cost.", "ja": "一時コスト 160 万ドルに対し年 360 万ドル削減。" },
+    "outcome": {
+      "en": "$3.6M saved per year after a $1.6M one-time transition cost.",
+      "ja": "一時コスト 160 万ドルに対し年 360 万ドル削減。"
+    },
     "year": 2023,
     "kind": "adopter",
     "url": "https://www.canva.dev/blog/engineering/optimising-s3-savings/"
@@ -43,10 +64,16 @@
     "company": "Pinterest",
     "industry": { "en": "Social media / visual discovery", "ja": "SNS / ビジュアル検索" },
     "region": "us",
-    "summary": { "en": "Built a storage insights pipeline from access logs, S3 Inventory and Storage Lens to move dormant data to Glacier Deep Archive via lifecycle rules.", "ja": "アクセスログ、S3 Inventory、Storage Lens から利用状況を分析し、使われないデータを lifecycle で Glacier Deep Archive へ移した。" },
+    "summary": {
+      "en": "Built a storage insights pipeline from access logs, S3 Inventory and Storage Lens to move dormant data to Glacier Deep Archive via lifecycle rules.",
+      "ja": "アクセスログ、S3 Inventory、Storage Lens から利用状況を分析し、使われないデータを lifecycle で Glacier Deep Archive へ移した。"
+    },
     "scale": { "en": "Nearly 1 EB, billions of objects", "ja": "約 1 EB、数十億オブジェクト" },
     "features": ["Glacier Deep Archive", "Lifecycle", "Storage Lens", "S3 Inventory", "Batch Operations"],
-    "outcome": { "en": "Savings in the millions of dollars per year (exact amount undisclosed).", "ja": "年間数百万ドル規模の削減 (具体額は非公開)。" },
+    "outcome": {
+      "en": "Savings in the millions of dollars per year (exact amount undisclosed).",
+      "ja": "年間数百万ドル規模の削減 (具体額は非公開)。"
+    },
     "year": 2021,
     "kind": "adopter",
     "url": "https://aws.amazon.com/blogs/storage/how-pinterest-uses-amazon-s3-glacier-deep-archive-to-manage-storage-for-its-visual-discovery-engine/"
@@ -56,10 +83,16 @@
     "company": "Pinterest (MemQ)",
     "industry": { "en": "Social media / ML data pipelines", "ja": "SNS / ML データパイプライン" },
     "region": "us",
-    "summary": { "en": "Built MemQ, an S3-backed pub/sub system for ML training data, and later tested it on S3 Express One Zone.", "ja": "ML 学習データ用に S3 をストレージとする Pub/Sub「MemQ」を構築し、後に S3 Express One Zone でも検証した。" },
+    "summary": {
+      "en": "Built MemQ, an S3-backed pub/sub system for ML training data, and later tested it on S3 Express One Zone.",
+      "ja": "ML 学習データ用に S3 をストレージとする Pub/Sub「MemQ」を構築し、後に S3 Express One Zone でも検証した。"
+    },
     "scale": { "en": "GB/s of traffic", "ja": "GB/s 級のトラフィック" },
     "features": ["S3 Standard", "S3 Express One Zone"],
-    "outcome": { "en": "Over 90% cheaper than its Kafka footprint; over 10x latency improvement in the Express One Zone test.", "ja": "Kafka 構成比 90% 超安価。Express One Zone 検証で 10 倍超のレイテンシ改善。" },
+    "outcome": {
+      "en": "Over 90% cheaper than its Kafka footprint; over 10x latency improvement in the Express One Zone test.",
+      "ja": "Kafka 構成比 90% 超安価。Express One Zone 検証で 10 倍超のレイテンシ改善。"
+    },
     "year": 2022,
     "kind": "adopter",
     "url": "https://aws.amazon.com/blogs/storage/memq-by-pinterest-an-efficient-scalable-cloud-native-publish-subscribe-system/"
@@ -69,10 +102,16 @@
     "company": "BBC",
     "industry": { "en": "Public broadcasting", "ja": "公共放送" },
     "region": "eu",
-    "summary": { "en": "Migrated its 100-year archive of 16 million assets to S3 in 10 months.", "ja": "1,600 万アセット、100 年分のアーカイブを 10 か月で S3 に移行した。" },
+    "summary": {
+      "en": "Migrated its 100-year archive of 16 million assets to S3 in 10 months.",
+      "ja": "1,600 万アセット、100 年分のアーカイブを 10 か月で S3 に移行した。"
+    },
     "scale": { "en": "25 PB at up to 120 TB/day", "ja": "25 PB、ピーク 120 TB/日" },
     "features": ["Glacier Instant Retrieval", "Intelligent-Tiering"],
-    "outcome": { "en": "Retired half of the archive's physical infrastructure and reduced overall infrastructure cost.", "ja": "アーカイブの物理インフラを半減し、インフラ全体のコストを削減。" },
+    "outcome": {
+      "en": "Retired half of the archive's physical infrastructure and reduced overall infrastructure cost.",
+      "ja": "アーカイブの物理インフラを半減し、インフラ全体のコストを削減。"
+    },
     "year": 2023,
     "kind": "adopter",
     "url": "https://aws.amazon.com/solutions/case-studies/bbc-s3-case-study/"
@@ -82,10 +121,16 @@
     "company": "Twitch",
     "industry": { "en": "Live streaming", "ja": "ライブ配信" },
     "region": "us",
-    "summary": { "en": "Stores VOD segments, thumbnails and playlists in S3 and runs the Tahoe analytics data lake on S3.", "ja": "VOD のセグメント・サムネイル・プレイリストを S3 に保存し、分析データレイク Tahoe も S3 上で運用する。" },
+    "summary": {
+      "en": "Stores VOD segments, thumbnails and playlists in S3 and runs the Tahoe analytics data lake on S3.",
+      "ja": "VOD のセグメント・サムネイル・プレイリストを S3 に保存し、分析データレイク Tahoe も S3 上で運用する。"
+    },
     "scale": { "en": "Over 100 PB in the Tahoe data lake", "ja": "データレイク Tahoe で 100 PB 超" },
     "features": ["Data lake"],
-    "outcome": { "en": "Not published; keeps size in check with daily compaction and deletion.", "ja": "非公開。日次の compaction と削除で容量を抑えている。" },
+    "outcome": {
+      "en": "Not published; keeps size in check with daily compaction and deletion.",
+      "ja": "非公開。日次の compaction と削除で容量を抑えている。"
+    },
     "year": 2023,
     "kind": "adopter",
     "url": "https://blog.twitch.tv/en/2023/09/28/twitch-state-of-engineering-2023/"
@@ -95,10 +140,16 @@
     "company": "Epic Games",
     "industry": { "en": "Gaming", "ja": "ゲーム" },
     "region": "us",
-    "summary": { "en": "Ingests Fortnite telemetry through Kinesis into an S3 data lake processed by EMR batch ETL.", "ja": "Fortnite のテレメトリを Kinesis で取り込み、S3 データレイクに置いて EMR のバッチ ETL で処理する。" },
+    "summary": {
+      "en": "Ingests Fortnite telemetry through Kinesis into an S3 data lake processed by EMR batch ETL.",
+      "ja": "Fortnite のテレメトリを Kinesis で取り込み、S3 データレイクに置いて EMR のバッチ ETL で処理する。"
+    },
     "scale": { "en": "14 PB, growing 2 PB per month", "ja": "14 PB、月 2 PB 増加" },
     "features": ["Data lake"],
-    "outcome": { "en": "Handles 92 million events per minute and 8,000+ daily ETL jobs.", "ja": "毎分 9,200 万イベント、1 日 8,000 本超の ETL を処理。" },
+    "outcome": {
+      "en": "Handles 92 million events per minute and 8,000+ daily ETL jobs.",
+      "ja": "毎分 9,200 万イベント、1 日 8,000 本超の ETL を処理。"
+    },
     "year": 2018,
     "kind": "adopter",
     "url": "https://hpcwire.com/bigdatawire/2018/07/31/inside-fortnites-massive-data-analytics-pipeline/"
@@ -108,10 +159,16 @@
     "company": "Duolingo",
     "industry": { "en": "Education app", "ja": "語学学習アプリ" },
     "region": "us",
-    "summary": { "en": "Found it was paying to keep the full revision history of versioned buckets and added lifecycle rules to its largest buckets.", "ja": "バージョニング済みバケットの全リビジョン履歴に料金を払っていたことに気づき、最大級のバケットに lifecycle を追加した。" },
+    "summary": {
+      "en": "Found it was paying to keep the full revision history of versioned buckets and added lifecycle rules to its largest buckets.",
+      "ja": "バージョニング済みバケットの全リビジョン履歴に料金を払っていたことに気づき、最大級のバケットに lifecycle を追加した。"
+    },
     "scale": null,
     "features": ["Lifecycle", "Versioning"],
-    "outcome": { "en": "Part of a cloud cost program that cut total spend 20% (annualized); S3-only savings undisclosed.", "ja": "クラウド費全体を年換算 20% 削減した施策の一部。S3 単体の額は非公開。" },
+    "outcome": {
+      "en": "Part of a cloud cost program that cut total spend 20% (annualized); S3-only savings undisclosed.",
+      "ja": "クラウド費全体を年換算 20% 削減した施策の一部。S3 単体の額は非公開。"
+    },
     "year": 2024,
     "kind": "adopter",
     "url": "https://blog.duolingo.com/reducing-cloud-spending/"
@@ -121,10 +178,19 @@
     "company": "FINRA",
     "industry": { "en": "Financial regulation", "ja": "金融規制" },
     "region": "us",
-    "summary": { "en": "Keeps all US market trading data in an S3 data lake and runs multiple analytics workloads against one copy of the data.", "ja": "米国市場の取引データをすべて S3 データレイクに置き、同じデータの 1 コピーに複数の分析ワークロードを走らせる。" },
-    "scale": { "en": "37 billion records per day, 300M+ objects", "ja": "1 日 370 億レコード、3 億超のオブジェクト" },
+    "summary": {
+      "en": "Keeps all US market trading data in an S3 data lake and runs multiple analytics workloads against one copy of the data.",
+      "ja": "米国市場の取引データをすべて S3 データレイクに置き、同じデータの 1 コピーに複数の分析ワークロードを走らせる。"
+    },
+    "scale": {
+      "en": "37 billion records per day, 300M+ objects",
+      "ja": "1 日 370 億レコード、3 億超のオブジェクト"
+    },
     "features": ["Data lake"],
-    "outcome": { "en": "Compute scales independently from storage; built the open-source herd catalog to track objects.", "ja": "ストレージと独立にコンピュートを伸縮。オブジェクト管理のため OSS カタログ herd を開発。" },
+    "outcome": {
+      "en": "Compute scales independently from storage; built the open-source herd catalog to track objects.",
+      "ja": "ストレージと独立にコンピュートを伸縮。オブジェクト管理のため OSS カタログ herd を開発。"
+    },
     "year": 2017,
     "kind": "adopter",
     "url": "https://aws.amazon.com/blogs/publicsector/analytics-without-limits-finras-scalable-and-secure-big-data-architecture-part-1/"
@@ -134,10 +200,16 @@
     "company": "Nasdaq",
     "industry": { "en": "Stock exchange", "ja": "証券取引所" },
     "region": "us",
-    "summary": { "en": "Moved from a 70-node Redshift cluster to an S3 data lake queried with Redshift Spectrum.", "ja": "70 ノードの Redshift クラスタから、Redshift Spectrum でクエリする S3 データレイクへ移行した。" },
+    "summary": {
+      "en": "Moved from a 70-node Redshift cluster to an S3 data lake queried with Redshift Spectrum.",
+      "ja": "70 ノードの Redshift クラスタから、Redshift Spectrum でクエリする S3 データレイクへ移行した。"
+    },
     "scale": { "en": "Up to 70 billion records per day", "ja": "1 日最大 700 億レコード" },
     "features": ["Data lake", "Redshift Spectrum"],
-    "outcome": { "en": "Shrank the cluster from 70 to 20 nodes and cut Reserved Instance cost by 75%.", "ja": "クラスタを 70 ノードから 20 ノードに縮小し、RI 費用を 75% 削減。" },
+    "outcome": {
+      "en": "Shrank the cluster from 70 to 20 nodes and cut Reserved Instance cost by 75%.",
+      "ja": "クラスタを 70 ノードから 20 ノードに縮小し、RI 費用を 75% 削減。"
+    },
     "year": 2019,
     "kind": "adopter",
     "url": "https://aws.amazon.com/solutions/case-studies/nasdaq-data-lake/"
@@ -147,10 +219,19 @@
     "company": "Capital One",
     "industry": { "en": "Banking", "ja": "銀行" },
     "region": "us",
-    "summary": { "en": "Uses prefix-level lifecycle policies to move noncurrent versions and analytical data into Glacier classes across hundreds of buckets.", "ja": "数百のバケットで、プレフィックス単位の lifecycle により旧バージョンや分析データを Glacier 系クラスへ移す。" },
-    "scale": { "en": "Hundreds of buckets, 90%+ versioned", "ja": "数百バケット、90% 超がバージョニング有効" },
+    "summary": {
+      "en": "Uses prefix-level lifecycle policies to move noncurrent versions and analytical data into Glacier classes across hundreds of buckets.",
+      "ja": "数百のバケットで、プレフィックス単位の lifecycle により旧バージョンや分析データを Glacier 系クラスへ移す。"
+    },
+    "scale": {
+      "en": "Hundreds of buckets, 90%+ versioned",
+      "ja": "数百バケット、90% 超がバージョニング有効"
+    },
     "features": ["Lifecycle", "Versioning", "Intelligent-Tiering", "S3 Glacier", "Glacier Deep Archive"],
-    "outcome": { "en": "Savings undisclosed; lesson: one lifecycle policy does not fit all buckets.", "ja": "削減額は非公開。教訓は「1 つの lifecycle で全バケットは賄えない」。" },
+    "outcome": {
+      "en": "Savings undisclosed; lesson: one lifecycle policy does not fit all buckets.",
+      "ja": "削減額は非公開。教訓は「1 つの lifecycle で全バケットは賄えない」。"
+    },
     "year": 2021,
     "kind": "adopter",
     "url": "https://aws.amazon.com/blogs/storage/how-capital-one-uses-amazon-s3-glacier-to-optimize-data-storage-costs-and-maximize-resources/"
@@ -160,10 +241,16 @@
     "company": "BMLL Technologies",
     "industry": { "en": "Financial data", "ja": "金融データ" },
     "region": "eu",
-    "summary": { "en": "Stores historical trading data on S3 with Intelligent-Tiering for live data and Glacier for archive and backup.", "ja": "過去取引データを S3 に置き、現役データは Intelligent-Tiering、アーカイブとバックアップは Glacier で管理する。" },
+    "summary": {
+      "en": "Stores historical trading data on S3 with Intelligent-Tiering for live data and Glacier for archive and backup.",
+      "ja": "過去取引データを S3 に置き、現役データは Intelligent-Tiering、アーカイブとバックアップは Glacier で管理する。"
+    },
     "scale": { "en": "20+ PB, expected 50 PB by 2030", "ja": "20 PB 超、2030 年に 50 PB 見込み" },
     "features": ["Intelligent-Tiering", "S3 Glacier", "Replication", "Object Lock", "Access Points"],
-    "outcome": { "en": "$3.5M saved per year ($0.5M Intelligent-Tiering + $3M Glacier).", "ja": "年 350 万ドル削減 (Intelligent-Tiering 50 万ドル + Glacier 300 万ドル)。" },
+    "outcome": {
+      "en": "$3.5M saved per year ($0.5M Intelligent-Tiering + $3M Glacier).",
+      "ja": "年 350 万ドル削減 (Intelligent-Tiering 50 万ドル + Glacier 300 万ドル)。"
+    },
     "year": 2025,
     "kind": "adopter",
     "url": "https://aws.amazon.com/solutions/case-studies/bmll-case-study/"
@@ -173,10 +260,16 @@
     "company": "NASA Earthdata",
     "industry": { "en": "Government / Earth science", "ja": "政府 / 地球科学" },
     "region": "us",
-    "summary": { "en": "Moved over 90% of the EOSDIS Earth science archive to S3 and uses Intelligent-Tiering for unpredictable public access.", "ja": "EOSDIS の地球科学アーカイブの 90% 超を S3 に移し、予測できない公開アクセスに Intelligent-Tiering を使う。" },
+    "summary": {
+      "en": "Moved over 90% of the EOSDIS Earth science archive to S3 and uses Intelligent-Tiering for unpredictable public access.",
+      "ja": "EOSDIS の地球科学アーカイブの 90% 超を S3 に移し、予測できない公開アクセスに Intelligent-Tiering を使う。"
+    },
     "scale": { "en": "170+ PB; 450+ TB distributed daily", "ja": "170 PB 超、日次 450 TB 超を配信" },
     "features": ["Intelligent-Tiering", "Open Data"],
-    "outcome": { "en": "Estimated 60% reduction in storage costs.", "ja": "ストレージコストを推定 60% 削減。" },
+    "outcome": {
+      "en": "Estimated 60% reduction in storage costs.",
+      "ja": "ストレージコストを推定 60% 削減。"
+    },
     "year": 2026,
     "kind": "adopter",
     "url": "https://aws.amazon.com/blogs/publicsector/providing-equitable-access-to-nasas-earth-science-data-archive/"
@@ -186,10 +279,16 @@
     "company": "Moderna",
     "industry": { "en": "Biotechnology", "ja": "バイオテクノロジー" },
     "region": "us",
-    "summary": { "en": "Lands real-world data from AWS Data Exchange in S3 data lakes and analyzes it with Redshift.", "ja": "AWS Data Exchange のリアルワールドデータを S3 データレイクに取り込み、Redshift で分析する。" },
+    "summary": {
+      "en": "Lands real-world data from AWS Data Exchange in S3 data lakes and analyzes it with Redshift.",
+      "ja": "AWS Data Exchange のリアルワールドデータを S3 データレイクに取り込み、Redshift で分析する。"
+    },
     "scale": null,
     "features": ["Data lake"],
-    "outcome": { "en": "70% faster data extraction and analysis; onboarding cut from 8-10 days to 3 days.", "ja": "データ抽出・分析が 70% 高速化、オンボーディングが 8〜10 日から 3 日に。" },
+    "outcome": {
+      "en": "70% faster data extraction and analysis; onboarding cut from 8-10 days to 3 days.",
+      "ja": "データ抽出・分析が 70% 高速化、オンボーディングが 8〜10 日から 3 日に。"
+    },
     "year": 2023,
     "kind": "adopter",
     "url": "https://aws.amazon.com/solutions/case-studies/moderna-case-study/"
@@ -199,10 +298,16 @@
     "company": "Ancestry",
     "industry": { "en": "Genealogy", "ja": "系図・家系調査" },
     "region": "us",
-    "summary": { "en": "Keeps hundreds of TB of handwritten document images in S3 Glacier and restores them to train handwriting recognition models.", "ja": "手書き文書の画像数百 TB を S3 Glacier に置き、手書き認識モデルの学習時に restore する。" },
+    "summary": {
+      "en": "Keeps hundreds of TB of handwritten document images in S3 Glacier and restores them to train handwriting recognition models.",
+      "ja": "手書き文書の画像数百 TB を S3 Glacier に置き、手書き認識モデルの学習時に restore する。"
+    },
     "scale": { "en": "Hundreds of TB", "ja": "数百 TB" },
     "features": ["S3 Glacier"],
-    "outcome": { "en": "Restoring hundreds of TB takes hours instead of days.", "ja": "数百 TB の restore が数日から数時間に。" },
+    "outcome": {
+      "en": "Restoring hundreds of TB takes hours instead of days.",
+      "ja": "数百 TB の restore が数日から数時間に。"
+    },
     "year": 2023,
     "kind": "adopter",
     "url": "https://d1.awsstatic.com/AWS%20Cloud%20Storage/Ancestry-uses-Amazon-S3-Glacier-to-restore-terabytes-of-images-in-mere-hours-instead-of-days.pdf"
@@ -212,10 +317,16 @@
     "company": "BMW Group",
     "industry": { "en": "Automotive", "ja": "自動車" },
     "region": "eu",
-    "summary": { "en": "Runs the company-wide Cloud Data Hub on S3 with Glue, Athena and Lake Formation for fine-grained access.", "ja": "全社データ基盤 Cloud Data Hub を S3 上で運用し、Glue、Athena、Lake Formation で細粒度アクセス制御を行う。" },
+    "summary": {
+      "en": "Runs the company-wide Cloud Data Hub on S3 with Glue, Athena and Lake Formation for fine-grained access.",
+      "ja": "全社データ基盤 Cloud Data Hub を S3 上で運用し、Glue、Athena、Lake Formation で細粒度アクセス制御を行う。"
+    },
     "scale": { "en": "20+ PB, 20M+ connected vehicles", "ja": "20 PB 超、2,000 万台超のコネクテッドカー" },
     "features": ["Data lake", "Lake Formation"],
-    "outcome": { "en": "Serves data from 20M+ connected vehicles across the organization.", "ja": "2,000 万台超のコネクテッドカーのデータを全社で活用。" },
+    "outcome": {
+      "en": "Serves data from 20M+ connected vehicles across the organization.",
+      "ja": "2,000 万台超のコネクテッドカーのデータを全社で活用。"
+    },
     "year": 2026,
     "kind": "adopter",
     "url": "https://aws.amazon.com/solutions/case-studies/innovators/bmw/"
@@ -225,10 +336,16 @@
     "company": "Toyota Connected",
     "industry": { "en": "Automotive (connected vehicles)", "ja": "自動車 (コネクテッドカー)" },
     "region": "global",
-    "summary": { "en": "Stores connected-vehicle data in a petabyte-scale S3 data lake with millions of small-file partitions, curated by EMR and queried by Athena.", "ja": "コネクテッドカーのデータを、小さなファイルが数百万パーティションに並ぶ PB 級の S3 データレイクに置き、EMR で整形し Athena でクエリする。" },
+    "summary": {
+      "en": "Stores connected-vehicle data in a petabyte-scale S3 data lake with millions of small-file partitions, curated by EMR and queried by Athena.",
+      "ja": "コネクテッドカーのデータを、小さなファイルが数百万パーティションに並ぶ PB 級の S3 データレイクに置き、EMR で整形し Athena でクエリする。"
+    },
     "scale": { "en": "Petabyte-scale, millions of partitions", "ja": "PB 級、数百万パーティション" },
     "features": ["Data lake"],
-    "outcome": { "en": "Filtering 65,000 prefixes went from 27 minutes to 30 seconds.", "ja": "65,000 プレフィックスのフィルタが 27 分から 30 秒に。" },
+    "outcome": {
+      "en": "Filtering 65,000 prefixes went from 27 minutes to 30 seconds.",
+      "ja": "65,000 プレフィックスのフィルタが 27 分から 30 秒に。"
+    },
     "year": 2022,
     "kind": "adopter",
     "url": "https://aws.amazon.com/blogs/industries/toyota-connected-optimizes-emr-costs-and-improves-resiliency-of-batch-jobs/"
@@ -238,10 +355,16 @@
     "company": "Zalando",
     "industry": { "en": "Fashion e-commerce", "ja": "ファッション EC" },
     "region": "eu",
-    "summary": { "en": "Built its central data lake on S3 and lets Intelligent-Tiering move untouched objects to the infrequent-access tier.", "ja": "中央データレイクを S3 上に作り、触られないオブジェクトは Intelligent-Tiering で低頻度ティアへ移す。" },
+    "summary": {
+      "en": "Built its central data lake on S3 and lets Intelligent-Tiering move untouched objects to the infrequent-access tier.",
+      "ja": "中央データレイクを S3 上に作り、触られないオブジェクトは Intelligent-Tiering で低頻度ティアへ移す。"
+    },
     "scale": { "en": "15 PB, 8,000+ buckets", "ja": "15 PB、8,000 超のバケット" },
     "features": ["Intelligent-Tiering", "Versioning", "Data lake"],
-    "outcome": { "en": "37% annual storage cost savings; versioning recovered accidentally deleted data within a day.", "ja": "年 37% のストレージ削減。誤削除したデータをバージョニングで 1 日以内に復旧。" },
+    "outcome": {
+      "en": "37% annual storage cost savings; versioning recovered accidentally deleted data within a day.",
+      "ja": "年 37% のストレージ削減。誤削除したデータをバージョニングで 1 日以内に復旧。"
+    },
     "year": 2020,
     "kind": "adopter",
     "url": "https://aws.amazon.com/blogs/storage/how-zalando-built-its-data-lake-on-amazon-s3/"
@@ -251,7 +374,10 @@
     "company": "Bynder",
     "industry": { "en": "Digital asset management SaaS", "ja": "デジタルアセット管理 SaaS" },
     "region": "eu",
-    "summary": { "en": "Stores customer digital assets on S3 Intelligent-Tiering instead of reviewing access patterns manually.", "ja": "顧客のデジタルアセットを、手動のアクセス分析ではなく S3 Intelligent-Tiering に任せて保存する。" },
+    "summary": {
+      "en": "Stores customer digital assets on S3 Intelligent-Tiering instead of reviewing access patterns manually.",
+      "ja": "顧客のデジタルアセットを、手動のアクセス分析ではなく S3 Intelligent-Tiering に任せて保存する。"
+    },
     "scale": { "en": "18 PB, 175M+ assets", "ja": "18 PB、1 億 7,500 万超のアセット" },
     "features": ["Intelligent-Tiering"],
     "outcome": { "en": "65% reduction in storage costs.", "ja": "ストレージコスト 65% 削減。" },
@@ -264,10 +390,16 @@
     "company": "Salesforce",
     "industry": { "en": "SaaS (CRM)", "ja": "SaaS (CRM)" },
     "region": "us",
-    "summary": { "en": "Moved its internal log data lake (UIP) from on-premises to S3 and EMR with Intelligent-Tiering.", "ja": "社内のログデータレイク UIP をオンプレミスから S3 + EMR へ移し、Intelligent-Tiering を使う。" },
+    "summary": {
+      "en": "Moved its internal log data lake (UIP) from on-premises to S3 and EMR with Intelligent-Tiering.",
+      "ja": "社内のログデータレイク UIP をオンプレミスから S3 + EMR へ移し、Intelligent-Tiering を使う。"
+    },
     "scale": { "en": "100+ PB, 250+ TB ingested daily", "ja": "100 PB 超、日次 250 TB 超を取り込み" },
     "features": ["Intelligent-Tiering", "Data lake"],
-    "outcome": { "en": "Millions of dollars saved annually with better performance and elasticity.", "ja": "年間数百万ドルの削減と、性能・弾力性の向上。" },
+    "outcome": {
+      "en": "Millions of dollars saved annually with better performance and elasticity.",
+      "ja": "年間数百万ドルの削減と、性能・弾力性の向上。"
+    },
     "year": 2023,
     "kind": "adopter",
     "url": "https://web.archive.org/web/20240618113547/https://aws.amazon.com/solutions/case-studies/salesforce-amazons3-intelligent-tiering-case-study/"
@@ -277,10 +409,19 @@
     "company": "Indeed",
     "industry": { "en": "HR tech / job search", "ja": "HR テック / 求人検索" },
     "region": "global",
-    "summary": { "en": "Migrating its Hive data lake to Apache Iceberg on S3 Tables, replacing Glacier Deep Archive backups with S3 Tables replication.", "ja": "Hive のデータレイクを S3 Tables (Apache Iceberg) へ移行し、Glacier Deep Archive によるバックアップを S3 Tables のレプリケーションに置き換えた。" },
-    "scale": { "en": "101 PB, 18,000 datasets, 190,000 queries/day", "ja": "101 PB、18,000 データセット、1 日 19 万クエリ" },
+    "summary": {
+      "en": "Migrating its Hive data lake to Apache Iceberg on S3 Tables, replacing Glacier Deep Archive backups with S3 Tables replication.",
+      "ja": "Hive のデータレイクを S3 Tables (Apache Iceberg) へ移行し、Glacier Deep Archive によるバックアップを S3 Tables のレプリケーションに置き換えた。"
+    },
+    "scale": {
+      "en": "101 PB, 18,000 datasets, 190,000 queries/day",
+      "ja": "101 PB、18,000 データセット、1 日 19 万クエリ"
+    },
     "features": ["S3 Tables", "Replication", "Intelligent-Tiering", "Apache Iceberg"],
-    "outcome": { "en": "10% cost savings and 1,000+ engineering hours saved per year.", "ja": "10% のコスト削減、年 1,000 時間超の工数削減。" },
+    "outcome": {
+      "en": "10% cost savings and 1,000+ engineering hours saved per year.",
+      "ja": "10% のコスト削減、年 1,000 時間超の工数削減。"
+    },
     "year": 2026,
     "kind": "adopter",
     "url": "https://aws.amazon.com/solutions/case-studies/indeed-s3-tables-case-study/"
@@ -288,12 +429,24 @@
   {
     "id": "grab",
     "company": "Grab",
-    "industry": { "en": "Super app (ride-hailing, delivery, payments)", "ja": "スーパーアプリ (配車・配達・決済)" },
+    "industry": {
+      "en": "Super app (ride-hailing, delivery, payments)",
+      "ja": "スーパーアプリ (配車・配達・決済)"
+    },
     "region": "asia",
-    "summary": { "en": "Migrated its S3 data lake from Hive Parquet to Apache Iceberg to remove expensive object listing.", "ja": "S3 データレイクを Hive + Parquet から Apache Iceberg へ移行し、高コストなオブジェクト列挙をなくした。" },
-    "scale": { "en": "Petabytes across billions of S3 objects", "ja": "数十億の S3 オブジェクトにまたがる PB 級" },
+    "summary": {
+      "en": "Migrated its S3 data lake from Hive Parquet to Apache Iceberg to remove expensive object listing.",
+      "ja": "S3 データレイクを Hive + Parquet から Apache Iceberg へ移行し、高コストなオブジェクト列挙をなくした。"
+    },
+    "scale": {
+      "en": "Petabytes across billions of S3 objects",
+      "ja": "数十億の S3 オブジェクトにまたがる PB 級"
+    },
     "features": ["Apache Iceberg", "Data lake"],
-    "outcome": { "en": "Daily S3 API cost cut by up to 95%; ~10x faster queries on one dataset.", "ja": "日次の S3 API コストを最大 95% 削減。一部データセットでクエリ約 10 倍高速化。" },
+    "outcome": {
+      "en": "Daily S3 API cost cut by up to 95%; ~10x faster queries on one dataset.",
+      "ja": "日次の S3 API コストを最大 95% 削減。一部データセットでクエリ約 10 倍高速化。"
+    },
     "year": 2026,
     "kind": "adopter",
     "url": "https://engineering.grab.com/our-journey-to-apache-iceberg-adoption"
@@ -303,10 +456,16 @@
     "company": "Anthropic",
     "industry": { "en": "AI (foundation models)", "ja": "AI (基盤モデル)" },
     "region": "us",
-    "summary": { "en": "Presented at re:Invent 2023 how it manages AI training data on S3 using Storage Lens, Intelligent-Tiering and throughput best practices.", "ja": "re:Invent 2023 で、Storage Lens、Intelligent-Tiering、スループット最適化を使った S3 上の学習データ管理を紹介した。" },
+    "summary": {
+      "en": "Presented at re:Invent 2023 how it manages AI training data on S3 using Storage Lens, Intelligent-Tiering and throughput best practices.",
+      "ja": "re:Invent 2023 で、Storage Lens、Intelligent-Tiering、スループット最適化を使った S3 上の学習データ管理を紹介した。"
+    },
     "scale": { "en": "Hundreds of PB of training data", "ja": "学習データ数百 PB" },
     "features": ["Storage Lens", "Intelligent-Tiering"],
-    "outcome": { "en": "No savings figures in the talk description; the talk recording itself could not be checked.", "ja": "講演紹介文に削減額の記載なし。講演本編は確認できず未確認。" },
+    "outcome": {
+      "en": "No savings figures in the talk description; the talk recording itself could not be checked.",
+      "ja": "講演紹介文に削減額の記載なし。講演本編は確認できず未確認。"
+    },
     "year": 2023,
     "kind": "adopter",
     "url": "https://aws.amazon.com/video/watch/70d82a08dd0/"
@@ -314,12 +473,21 @@
   {
     "id": "hugging-face",
     "company": "Hugging Face",
-    "industry": { "en": "AI platform (model and dataset hosting)", "ja": "AI プラットフォーム (モデル / データセット)" },
+    "industry": {
+      "en": "AI platform (model and dataset hosting)",
+      "ja": "AI プラットフォーム (モデル / データセット)"
+    },
     "region": "global",
-    "summary": { "en": "Stores Hub files in S3 and moved from Git LFS to Xet, which keeps deduplicated content-defined chunks in S3.", "ja": "Hub のファイルを S3 に置き、Git LFS から、重複排除したチャンクを S3 に保存する Xet へ移行した。" },
+    "summary": {
+      "en": "Stores Hub files in S3 and moved from Git LFS to Xet, which keeps deduplicated content-defined chunks in S3.",
+      "ja": "Hub のファイルを S3 に置き、Git LFS から、重複排除したチャンクを S3 に保存する Xet へ移行した。"
+    },
     "scale": { "en": "20 PB / 500,000 repos moved to Xet", "ja": "Xet へ 20 PB / 50 万リポジトリを移行" },
     "features": ["S3 Standard", "Presigned URLs"],
-    "outcome": { "en": "Chunk-level deduplication; CAS throughput peaked around 300 Gb/s during migration.", "ja": "チャンク単位の重複排除。移行中の CAS スループットはピーク約 300 Gb/s。" },
+    "outcome": {
+      "en": "Chunk-level deduplication; CAS throughput peaked around 300 Gb/s during migration.",
+      "ja": "チャンク単位の重複排除。移行中の CAS スループットはピーク約 300 Gb/s。"
+    },
     "year": 2025,
     "kind": "adopter",
     "url": "https://huggingface.co/blog/migrating-the-hub-to-xet"
@@ -329,10 +497,16 @@
     "company": "March Networks",
     "industry": { "en": "Video surveillance", "ja": "映像監視" },
     "region": "global",
-    "summary": { "en": "Uses S3 Vectors for natural-language video search and S3 Glacier for tiered long-term video archives.", "ja": "自然言語の映像検索に S3 Vectors、長期の映像アーカイブに S3 Glacier を使う。" },
+    "summary": {
+      "en": "Uses S3 Vectors for natural-language video search and S3 Glacier for tiered long-term video archives.",
+      "ja": "自然言語の映像検索に S3 Vectors、長期の映像アーカイブに S3 Glacier を使う。"
+    },
     "scale": { "en": "Billions of vector embeddings", "ja": "数十億のベクトル埋め込み" },
     "features": ["S3 Vectors", "S3 Glacier"],
-    "outcome": { "en": "Up to 80% lower long-term video storage cost over 5 years (company claim).", "ja": "長期の映像ストレージコストを 5 年で最大 80% 削減 (同社発表)。" },
+    "outcome": {
+      "en": "Up to 80% lower long-term video storage cost over 5 years (company claim).",
+      "ja": "長期の映像ストレージコストを 5 年で最大 80% 削減 (同社発表)。"
+    },
     "year": 2025,
     "kind": "adopter",
     "url": "https://www.marchnetworks.com/news/march-networks-reduces-long-term-video-storage-cost-by-up-to-80-with-amazon-s3/"
@@ -342,10 +516,19 @@
     "company": "TV Tokyo",
     "industry": { "en": "Broadcasting", "ja": "放送" },
     "region": "japan",
-    "summary": { "en": "Moved its video archive from HDCAM/XDCAM tapes to S3 and S3 Glacier over Direct Connect, with Lambda tagging MXF files.", "ja": "映像アーカイブを HDCAM / XDCAM テープから Direct Connect 経由で S3 と S3 Glacier へ移し、Lambda で MXF にタグ付けする。" },
-    "scale": { "en": "13 PB, ~220,000 tapes, ~600 TB/year growth", "ja": "13 PB、テープ約 22 万本、年約 600 TB 増" },
+    "summary": {
+      "en": "Moved its video archive from HDCAM/XDCAM tapes to S3 and S3 Glacier over Direct Connect, with Lambda tagging MXF files.",
+      "ja": "映像アーカイブを HDCAM / XDCAM テープから Direct Connect 経由で S3 と S3 Glacier へ移し、Lambda で MXF にタグ付けする。"
+    },
+    "scale": {
+      "en": "13 PB, ~220,000 tapes, ~600 TB/year growth",
+      "ja": "13 PB、テープ約 22 万本、年約 600 TB 増"
+    },
     "features": ["S3 Glacier", "Lifecycle"],
-    "outcome": { "en": "Direct cost savings of tens of millions of yen per year; no more annual tape purchases.", "ja": "年間数千万円の直接費削減。毎年のテープ購入が不要に。" },
+    "outcome": {
+      "en": "Direct cost savings of tens of millions of yen per year; no more annual tape purchases.",
+      "ja": "年間数千万円の直接費削減。毎年のテープ購入が不要に。"
+    },
     "year": 2020,
     "kind": "adopter",
     "url": "https://aws.amazon.com/jp/solutions/case-studies/tv-tokyo/"
@@ -355,10 +538,16 @@
     "company": "NTT Docomo",
     "industry": { "en": "Telecommunications", "ja": "通信" },
     "region": "japan",
-    "summary": { "en": "Migrated an on-premises analytics platform for about 90 million members to AWS in about seven months, centered on S3 with per-team environments.", "ja": "約 9,000 万会員の分析基盤をオンプレミスから約 7 か月で AWS へ移し、S3 を中心に組織別の分析環境を提供した。" },
+    "summary": {
+      "en": "Migrated an on-premises analytics platform for about 90 million members to AWS in about seven months, centered on S3 with per-team environments.",
+      "ja": "約 9,000 万会員の分析基盤をオンプレミスから約 7 か月で AWS へ移し、S3 を中心に組織別の分析環境を提供した。"
+    },
     "scale": { "en": "About 90 million members", "ja": "約 9,000 万会員" },
     "features": ["Data lake"],
-    "outcome": { "en": "Analytics accounts grew 13x and environments 10x within a year.", "ja": "1 年足らずで分析アカウント数 13 倍、環境構築数 10 倍。" },
+    "outcome": {
+      "en": "Analytics accounts grew 13x and environments 10x within a year.",
+      "ja": "1 年足らずで分析アカウント数 13 倍、環境構築数 10 倍。"
+    },
     "year": 2023,
     "kind": "adopter",
     "url": "https://d1.awsstatic.com/case-studies/jp/pdf/AWS322_docomo_0314_4.pdf"
@@ -368,10 +557,16 @@
     "company": "Cookpad",
     "industry": { "en": "Recipe service", "ja": "レシピサービス" },
     "region": "japan",
-    "summary": { "en": "Moved about 300 log tables out of Redshift into Parquet on S3 queried with Redshift Spectrum.", "ja": "約 300 本のログテーブルを Redshift 内部から S3 上の Parquet へ移し、Redshift Spectrum でクエリする構成にした。" },
+    "summary": {
+      "en": "Moved about 300 log tables out of Redshift into Parquet on S3 queried with Redshift Spectrum.",
+      "ja": "約 300 本のログテーブルを Redshift 内部から S3 上の Parquet へ移し、Redshift Spectrum でクエリする構成にした。"
+    },
     "scale": { "en": "About 300 log tables", "ja": "ログテーブル約 300 本" },
     "features": ["Redshift Spectrum", "Data lake"],
-    "outcome": { "en": "Redshift disk usage dropped below 50%; migration took three years.", "ja": "Redshift のディスク使用率が 50% 未満に。移行には丸 3 年。" },
+    "outcome": {
+      "en": "Redshift disk usage dropped below 50%; migration took three years.",
+      "ja": "Redshift のディスク使用率が 50% 未満に。移行には丸 3 年。"
+    },
     "year": 2020,
     "kind": "adopter",
     "url": "https://techlife.cookpad.com/entry/2020/12/29/004145"
@@ -381,7 +576,10 @@
     "company": "CyberAgent",
     "industry": { "en": "Internet advertising", "ja": "インターネット広告" },
     "region": "japan",
-    "summary": { "en": "Deleted unneeded objects and transitioned data to Standard-IA after 30 days and Glacier Instant Retrieval after 90 days via lifecycle rules.", "ja": "lifecycle で不要オブジェクトを削除し、30 日後に Standard-IA、90 日後に Glacier Instant Retrieval へ移した。" },
+    "summary": {
+      "en": "Deleted unneeded objects and transitioned data to Standard-IA after 30 days and Glacier Instant Retrieval after 90 days via lifecycle rules.",
+      "ja": "lifecycle で不要オブジェクトを削除し、30 日後に Standard-IA、90 日後に Glacier Instant Retrieval へ移した。"
+    },
     "scale": { "en": "100+ TB deleted or transitioned", "ja": "100 TB 超を削除・移行" },
     "features": ["Lifecycle", "S3 Standard-IA", "Glacier Instant Retrieval"],
     "outcome": { "en": "About 12 million yen saved per year.", "ja": "年間約 1,200 万円の削減。" },
@@ -394,10 +592,16 @@
     "company": "NAVITIME JAPAN",
     "industry": { "en": "Navigation service", "ja": "ナビゲーションサービス" },
     "region": "japan",
-    "summary": { "en": "Moved mostly kilobyte-sized files to Glacier Deep Archive and costs rose because of per-object overhead and transition requests.", "ja": "キロバイト級のファイルが中心のデータを Glacier Deep Archive に移したところ、オブジェクトごとのオーバーヘッドと移行リクエスト料金でコストが増えた。" },
+    "summary": {
+      "en": "Moved mostly kilobyte-sized files to Glacier Deep Archive and costs rose because of per-object overhead and transition requests.",
+      "ja": "キロバイト級のファイルが中心のデータを Glacier Deep Archive に移したところ、オブジェクトごとのオーバーヘッドと移行リクエスト料金でコストが増えた。"
+    },
     "scale": null,
     "features": ["Glacier Deep Archive"],
-    "outcome": { "en": "Cost increased by over 1 million yen in one month (counter-example).", "ja": "ある月にコストが 100 万円以上増加 (反面教師)。" },
+    "outcome": {
+      "en": "Cost increased by over 1 million yen in one month (counter-example).",
+      "ja": "ある月にコストが 100 万円以上増加 (反面教師)。"
+    },
     "year": 2023,
     "kind": "adopter",
     "url": "https://note.com/navitime_tech/n/n13e8badc0c4c"
@@ -407,10 +611,16 @@
     "company": "Snowflake",
     "industry": { "en": "Cloud data warehouse", "ja": "クラウドデータウェアハウス" },
     "region": "global",
-    "summary": { "en": "On AWS, stores all persistent table data as immutable micro-partitions in S3, separate from elastic compute.", "ja": "AWS 上では永続的なテーブルデータをすべて不変のマイクロパーティションとして S3 に置き、伸縮するコンピュートと分離する。" },
+    "summary": {
+      "en": "On AWS, stores all persistent table data as immutable micro-partitions in S3, separate from elastic compute.",
+      "ja": "AWS 上では永続的なテーブルデータをすべて不変のマイクロパーティションとして S3 に置き、伸縮するコンピュートと分離する。"
+    },
     "scale": null,
     "features": ["S3 Standard"],
-    "outcome": { "en": "Popularized separating storage and compute for data warehouses.", "ja": "データウェアハウスのストレージとコンピュートの分離を広めた。" },
+    "outcome": {
+      "en": "Popularized separating storage and compute for data warehouses.",
+      "ja": "データウェアハウスのストレージとコンピュートの分離を広めた。"
+    },
     "year": 2016,
     "kind": "built-on-s3",
     "url": "https://dl.acm.org/doi/10.1145/2882903.2903741"
@@ -420,10 +630,16 @@
     "company": "Databricks",
     "industry": { "en": "Data and AI platform", "ja": "データ / AI プラットフォーム" },
     "region": "global",
-    "summary": { "en": "Keeps Delta Lake and Unity Catalog managed table data as Parquet plus transaction logs in customer-owned S3 buckets.", "ja": "Delta Lake と Unity Catalog の managed table のデータを、Parquet とトランザクションログとして顧客所有の S3 バケットに置く。" },
+    "summary": {
+      "en": "Keeps Delta Lake and Unity Catalog managed table data as Parquet plus transaction logs in customer-owned S3 buckets.",
+      "ja": "Delta Lake と Unity Catalog の managed table のデータを、Parquet とトランザクションログとして顧客所有の S3 バケットに置く。"
+    },
     "scale": null,
     "features": ["S3 Standard"],
-    "outcome": { "en": "Open formats in customer storage; recommends disabling S3 versioning on Delta buckets.", "ja": "顧客のストレージにオープン形式で保持。Delta のバケットではバージョニング無効を推奨。" },
+    "outcome": {
+      "en": "Open formats in customer storage; recommends disabling S3 versioning on Delta buckets.",
+      "ja": "顧客のストレージにオープン形式で保持。Delta のバケットではバージョニング無効を推奨。"
+    },
     "year": 2026,
     "kind": "built-on-s3",
     "url": "https://www.databricks.com/blog/your-data-your-storage-your-rules-2026-guide-storing-unity-catalog-managed-tables"
@@ -433,10 +649,16 @@
     "company": "WarpStream",
     "industry": { "en": "Data streaming (Kafka-compatible)", "ja": "データストリーミング (Kafka 互換)" },
     "region": "global",
-    "summary": { "en": "Stateless Kafka-compatible agents write directly to S3, removing local disks and inter-AZ replication traffic.", "ja": "Kafka 互換のステートレスなエージェントが S3 に直接書き込み、ローカルディスクと AZ 間レプリケーション通信をなくす。" },
+    "summary": {
+      "en": "Stateless Kafka-compatible agents write directly to S3, removing local disks and inter-AZ replication traffic.",
+      "ja": "Kafka 互換のステートレスなエージェントが S3 に直接書き込み、ローカルディスクと AZ 間レプリケーション通信をなくす。"
+    },
     "scale": null,
     "features": ["S3 Standard", "S3 Express One Zone"],
-    "outcome": { "en": "Vendor claims 5-10x lower TCO than self-hosted Kafka; inter-zone bandwidth is 70-90% of high-throughput Kafka cost.", "ja": "自前運用の Kafka より TCO が 5〜10 分の 1 になるとベンダーが主張。高スループットの Kafka では費用の 70〜90% が AZ 間帯域料金。" },
+    "outcome": {
+      "en": "Vendor claims 5-10x lower TCO than self-hosted Kafka; inter-zone bandwidth is 70-90% of high-throughput Kafka cost.",
+      "ja": "自前運用の Kafka より TCO が 5〜10 分の 1 になるとベンダーが主張。高スループットの Kafka では費用の 70〜90% が AZ 間帯域料金。"
+    },
     "year": 2023,
     "kind": "built-on-s3",
     "url": "https://www.warpstream.com/blog/kafka-is-dead-long-live-kafka"
@@ -444,12 +666,21 @@
   {
     "id": "turbopuffer",
     "company": "turbopuffer",
-    "industry": { "en": "Search database (vector and full-text)", "ja": "検索データベース (ベクトル + 全文)" },
+    "industry": {
+      "en": "Search database (vector and full-text)",
+      "ja": "検索データベース (ベクトル + 全文)"
+    },
     "region": "global",
-    "summary": { "en": "Uses S3 as the source of truth with a write-ahead log on object storage and memory/NVMe caches on top.", "ja": "S3 を唯一の source of truth とし、オブジェクトストレージ上の WAL とメモリ / NVMe キャッシュで構成する。" },
+    "summary": {
+      "en": "Uses S3 as the source of truth with a write-ahead log on object storage and memory/NVMe caches on top.",
+      "ja": "S3 を唯一の source of truth とし、オブジェクトストレージ上の WAL とメモリ / NVMe キャッシュで構成する。"
+    },
     "scale": null,
     "features": ["S3 Standard"],
-    "outcome": { "en": "Cached query p50 of 14 ms vs. 874 ms cold for 1M documents.", "ja": "100 万ドキュメントでキャッシュ時 p50 14 ms、コールド時 874 ms。" },
+    "outcome": {
+      "en": "Cached query p50 of 14 ms vs. 874 ms cold for 1M documents.",
+      "ja": "100 万ドキュメントでキャッシュ時 p50 14 ms、コールド時 874 ms。"
+    },
     "year": 2025,
     "kind": "built-on-s3",
     "url": "https://turbopuffer.com/docs/architecture"
@@ -459,10 +690,16 @@
     "company": "Neon",
     "industry": { "en": "Serverless PostgreSQL", "ja": "サーバーレス PostgreSQL" },
     "region": "global",
-    "summary": { "en": "Separates Postgres compute from storage: Safekeepers hold recent WAL and Pageservers write layer files to S3 for long-term storage.", "ja": "Postgres のコンピュートとストレージを分離。直近の WAL は Safekeeper、長期のデータは Pageserver が layer file として S3 に置く。" },
+    "summary": {
+      "en": "Separates Postgres compute from storage: Safekeepers hold recent WAL and Pageservers write layer files to S3 for long-term storage.",
+      "ja": "Postgres のコンピュートとストレージを分離。直近の WAL は Safekeeper、長期のデータは Pageserver が layer file として S3 に置く。"
+    },
     "scale": null,
     "features": ["S3 Standard"],
-    "outcome": { "en": "Enables scale-to-zero and instant branching.", "ja": "scale-to-zero と即時ブランチを実現。" },
+    "outcome": {
+      "en": "Enables scale-to-zero and instant branching.",
+      "ja": "scale-to-zero と即時ブランチを実現。"
+    },
     "year": 2023,
     "kind": "built-on-s3",
     "url": "https://github.com/neondatabase/neon"
@@ -472,10 +709,16 @@
     "company": "Dropbox",
     "industry": { "en": "Cloud storage", "ja": "クラウドストレージ" },
     "region": "us",
-    "summary": { "en": "Moved over 90% of user data from S3 to its in-house Magic Pocket storage system, while keeping some AWS usage.", "ja": "ユーザーデータの 90% 超を S3 から自社開発の Magic Pocket へ移した。AWS の利用は一部残している。" },
+    "summary": {
+      "en": "Moved over 90% of user data from S3 to its in-house Magic Pocket storage system, while keeping some AWS usage.",
+      "ja": "ユーザーデータの 90% 超を S3 から自社開発の Magic Pocket へ移した。AWS の利用は一部残している。"
+    },
     "scale": { "en": "500 PB in 2016; exabytes later", "ja": "2016 年に 500 PB、その後エクサバイト級" },
     "features": [],
-    "outcome": { "en": "Better performance control and unit economics; only pays off at exabyte scale.", "ja": "性能の制御とユニットエコノミクスが改善。エクサバイト規模でないと割に合わない。" },
+    "outcome": {
+      "en": "Better performance control and unit economics; only pays off at exabyte scale.",
+      "ja": "性能の制御とユニットエコノミクスが改善。エクサバイト規模でないと割に合わない。"
+    },
     "year": 2016,
     "kind": "migrated-away",
     "url": "https://dropbox.tech/infrastructure/magic-pocket-infrastructure"
@@ -485,10 +728,16 @@
     "company": "37signals",
     "industry": { "en": "SaaS (Basecamp, HEY)", "ja": "SaaS (Basecamp、HEY)" },
     "region": "us",
-    "summary": { "en": "Left S3 for an 18 PB dual-datacenter Pure Storage setup with an S3-compatible API when its four-year contract ended.", "ja": "4 年契約の満了に合わせ、S3 互換 API を持つ 18 PB・2 拠点の Pure Storage へ移った。" },
+    "summary": {
+      "en": "Left S3 for an 18 PB dual-datacenter Pure Storage setup with an S3-compatible API when its four-year contract ended.",
+      "ja": "4 年契約の満了に合わせ、S3 互換 API を持つ 18 PB・2 拠点の Pure Storage へ移った。"
+    },
     "scale": { "en": "~6 PB moved out of S3", "ja": "S3 から約 6 PB を移行" },
     "features": [],
-    "outcome": { "en": "Almost $5M projected savings over five years; AWS's free 60-day egress window brought egress fees to $0.", "ja": "5 年でほぼ 500 万ドルの節約見込み。AWS の 60 日間無料 egress 枠で egress 料金は 0 ドル。" },
+    "outcome": {
+      "en": "Almost $5M projected savings over five years; AWS's free 60-day egress window brought egress fees to $0.",
+      "ja": "5 年でほぼ 500 万ドルの節約見込み。AWS の 60 日間無料 egress 枠で egress 料金は 0 ドル。"
+    },
     "year": 2025,
     "kind": "migrated-away",
     "url": "https://world.hey.com/dhh/it-s-five-grand-a-day-to-miss-our-s3-exit-b8293563"

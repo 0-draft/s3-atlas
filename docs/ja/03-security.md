@@ -27,27 +27,27 @@ _最終確認: 2026-10-03_
 
 AWS の責任共有モデル (Shared Responsibility Model) では、AWS は「クラウド **の** セキュリティ」、利用者は「クラウド **における** セキュリティ」を担う。S3 はマネージドな抽象サービスなので、利用者側の責任範囲は「データとアクセス制御の設定」にほぼ集約される。
 
-| 領域 | AWS の責任 | 利用者の責任 |
-| --- | --- | --- |
-| 物理 | データセンター、ディスク廃棄、電源、物理アクセス | なし |
-| インフラ | S3 のフリート、ネットワーク、ハイパーバイザ、耐久性 (11 9s 設計) | なし |
-| サービス既定値 | SSE-S3 の既定暗号化、BPA の既定有効化、ACL 既定無効化、SSE-C 既定無効化 | 既定値を緩める変更をしない / 監査する |
-| アクセス制御 | 評価エンジンの正しさ | IAM / バケットポリシー / SCP / RCP / エンドポイントポリシーの設計 |
-| 暗号鍵 | SSE-S3 の鍵管理、KMS の HSM | KMS キーポリシー、ローテーション、CMK の選択、SSE-C の鍵保管 |
-| データ保護 | 冗長化 | バージョニング、Object Lock、レプリケーション、バックアップ |
-| 監査 | CloudTrail / ログ配信基盤 | CloudTrail データイベントの有効化、ログの保全・分析 |
-| アプリ | なし | SSRF 等のアプリ脆弱性、認証情報漏洩の防止 |
+| 領域           | AWS の責任                                                              | 利用者の責任                                                      |
+| -------------- | ----------------------------------------------------------------------- | ----------------------------------------------------------------- |
+| 物理           | データセンター、ディスク廃棄、電源、物理アクセス                        | なし                                                              |
+| インフラ       | S3 のフリート、ネットワーク、ハイパーバイザ、耐久性 (11 9s 設計)        | なし                                                              |
+| サービス既定値 | SSE-S3 の既定暗号化、BPA の既定有効化、ACL 既定無効化、SSE-C 既定無効化 | 既定値を緩める変更をしない / 監査する                             |
+| アクセス制御   | 評価エンジンの正しさ                                                    | IAM / バケットポリシー / SCP / RCP / エンドポイントポリシーの設計 |
+| 暗号鍵         | SSE-S3 の鍵管理、KMS の HSM                                             | KMS キーポリシー、ローテーション、CMK の選択、SSE-C の鍵保管      |
+| データ保護     | 冗長化                                                                  | バージョニング、Object Lock、レプリケーション、バックアップ       |
+| 監査           | CloudTrail / ログ配信基盤                                               | CloudTrail データイベントの有効化、ログの保全・分析               |
+| アプリ         | なし                                                                    | SSRF 等のアプリ脆弱性、認証情報漏洩の防止                         |
 
 ポイントは、**AWS は 2018 年以降、段階的に「安全側の既定値」を S3 に組み込んできた** こと。歴史的なインシデントの多くは「当時の既定値が緩かった / 利用者が明示的に緩めた」ことに起因する。
 
-| 時期 | 既定値の変化 |
-| --- | --- |
-| 2018-11 | S3 Block Public Access 登場 |
-| 2023-01-05 | 全バケットの新規オブジェクトに SSE-S3 を既定適用 |
-| 2023-04 | 新規バケットで BPA 有効 + ACL 無効 (Object Ownership = BucketOwnerEnforced) が既定 |
-| 2025-11 | BPA を AWS Organizations の S3 ポリシーで組織レベル強制可能に |
-| 2026-03 | アカウントリージョナル名前空間 (bucketsquatting 対策) |
-| 2026-04 | SSE-C を新規バケット等で既定無効化 |
+| 時期       | 既定値の変化                                                                       |
+| ---------- | ---------------------------------------------------------------------------------- |
+| 2018-11    | S3 Block Public Access 登場                                                        |
+| 2023-01-05 | 全バケットの新規オブジェクトに SSE-S3 を既定適用                                   |
+| 2023-04    | 新規バケットで BPA 有効 + ACL 無効 (Object Ownership = BucketOwnerEnforced) が既定 |
+| 2025-11    | BPA を AWS Organizations の S3 ポリシーで組織レベル強制可能に                      |
+| 2026-03    | アカウントリージョナル名前空間 (bucketsquatting 対策)                              |
+| 2026-04    | SSE-C を新規バケット等で既定無効化                                                 |
 
 ## 2. 認可評価ロジック (最重要)
 
@@ -55,19 +55,19 @@ AWS の責任共有モデル (Shared Responsibility Model) では、AWS は「�
 
 S3 への 1 リクエストには、最大で以下のポリシーが同時に関与する。
 
-| ポリシー種別 | アタッチ先 | 役割 | Allow を付与できるか |
-| --- | --- | --- | --- |
-| SCP (Service Control Policy) | Organizations の Root / OU / アカウント | プリンシパル側の **上限** | 付与しない (フィルタのみ) |
-| RCP (Resource Control Policy, 2024-11) | Organizations の Root / OU / アカウント | リソース側の **上限** | 付与しない (フィルタのみ) |
-| IAM アイデンティティベースポリシー | IAM ユーザー / ロール / グループ | 権限付与 | する |
-| Permissions Boundary | IAM ユーザー / ロール | アイデンティティベース権限の上限 | 付与しない |
-| セッションポリシー | AssumeRole / GetFederationToken 時に渡す | セッションの上限 | 付与しない |
-| バケットポリシー | バケット | リソースベースの権限付与 | する |
-| アクセスポイントポリシー | アクセスポイント | アクセスポイント経由の権限付与 | する (バケットポリシーとの AND) |
-| VPC エンドポイントポリシー | Gateway / Interface エンドポイント | エンドポイント経由の上限 | 付与しない (フィルタ) |
-| ACL (レガシー) | バケット / オブジェクト | リソースベースの権限付与 | する (ACL 有効時のみ) |
-| KMS キーポリシー | KMS キー | SSE-KMS オブジェクトの鍵利用可否 | する (KMS 側) |
-| Block Public Access | Org / アカウント / バケット / AP | パブリックな許可を無効化 | 付与しない |
+| ポリシー種別                           | アタッチ先                               | 役割                             | Allow を付与できるか            |
+| -------------------------------------- | ---------------------------------------- | -------------------------------- | ------------------------------- |
+| SCP (Service Control Policy)           | Organizations の Root / OU / アカウント  | プリンシパル側の **上限**        | 付与しない (フィルタのみ)       |
+| RCP (Resource Control Policy, 2024-11) | Organizations の Root / OU / アカウント  | リソース側の **上限**            | 付与しない (フィルタのみ)       |
+| IAM アイデンティティベースポリシー     | IAM ユーザー / ロール / グループ         | 権限付与                         | する                            |
+| Permissions Boundary                   | IAM ユーザー / ロール                    | アイデンティティベース権限の上限 | 付与しない                      |
+| セッションポリシー                     | AssumeRole / GetFederationToken 時に渡す | セッションの上限                 | 付与しない                      |
+| バケットポリシー                       | バケット                                 | リソースベースの権限付与         | する                            |
+| アクセスポイントポリシー               | アクセスポイント                         | アクセスポイント経由の権限付与   | する (バケットポリシーとの AND) |
+| VPC エンドポイントポリシー             | Gateway / Interface エンドポイント       | エンドポイント経由の上限         | 付与しない (フィルタ)           |
+| ACL (レガシー)                         | バケット / オブジェクト                  | リソースベースの権限付与         | する (ACL 有効時のみ)           |
+| KMS キーポリシー                       | KMS キー                                 | SSE-KMS オブジェクトの鍵利用可否 | する (KMS 側)                   |
+| Block Public Access                    | Org / アカウント / バケット / AP         | パブリックな許可を無効化         | 付与しない                      |
 
 RCP は 2024-11 に AWS Organizations の新しいポリシータイプとして登場し、S3・STS・KMS・SQS・Secrets Manager などが対応している (その後 ECR や OpenSearch Serverless も追加された旨が re:Post に記載)。SCP が「自組織のプリンシパルが何をできるか」の上限なのに対し、RCP は「自組織のリソースに対して **誰が (外部プリンシパル含む)** 何をできるか」の上限になる。SCP と同じくサービスリンクロール (SLR) には適用されない。
 
@@ -128,11 +128,11 @@ flowchart TD
 
 IAM の評価ロジックでは、同一アカウント内のリソースベースポリシーと Permissions Boundary / セッションポリシーの関係に以下のニュアンスがある (IAM ユーザーガイド "Policy evaluation logic" より)。
 
-| リソースベースポリシーのプリンシパル指定 | Permissions Boundary の暗黙 Deny | セッションポリシーの暗黙 Deny |
-| --- | --- | --- |
-| IAM ユーザー ARN | 制限されない (リソースポリシーの Allow が有効) | 該当なし |
-| IAM ロール ARN | 制限される | 制限される |
-| ロールセッション ARN (assumed-role) | 制限されない | 制限されない |
+| リソースベースポリシーのプリンシパル指定 | Permissions Boundary の暗黙 Deny               | セッションポリシーの暗黙 Deny |
+| ---------------------------------------- | ---------------------------------------------- | ----------------------------- |
+| IAM ユーザー ARN                         | 制限されない (リソースポリシーの Allow が有効) | 該当なし                      |
+| IAM ロール ARN                           | 制限される                                     | 制限される                    |
+| ロールセッション ARN (assumed-role)      | 制限されない                                   | 制限されない                  |
 
 実務上は「同一アカウントでも Boundary を確実に効かせたいならリソースポリシーでロール ARN を指定する」と覚えておけばよい。
 
@@ -156,14 +156,14 @@ ACL が有効なバケットでは、S3 は歴史的に以下の 3 コンテキ�
 
 ### 2.8 よくある 403 の原因マトリクス
 
-| 症状 | 典型原因 | 確認方法 |
-| --- | --- | --- |
-| 同一アカウントで GetObject が 403 | 明示的 Deny (例: aws:SourceVpce 条件) | CloudTrail の errorMessage、IAM Policy Simulator |
-| クロスアカウントで 403 | 片側の Allow 不足 | 両アカウントのポリシーを確認 |
-| SSE-KMS オブジェクトのみ 403 | KMS キーポリシー不足 | CloudTrail の kms.amazonaws.com イベント |
-| ListBucket だけ 403 | Resource にバケット ARN (末尾 /* なし) を書いていない | ポリシーの Resource |
-| 組織全体で突然 403 | SCP / RCP 追加 | Organizations のポリシー一覧 |
-| SSE-C アップロードが 403 | 2026-04 以降の SSE-C 既定ブロック | GetBucketEncryption の BlockedEncryptionTypes |
+| 症状                              | 典型原因                                              | 確認方法                                         |
+| --------------------------------- | ----------------------------------------------------- | ------------------------------------------------ |
+| 同一アカウントで GetObject が 403 | 明示的 Deny (例: aws:SourceVpce 条件)                 | CloudTrail の errorMessage、IAM Policy Simulator |
+| クロスアカウントで 403            | 片側の Allow 不足                                     | 両アカウントのポリシーを確認                     |
+| SSE-KMS オブジェクトのみ 403      | KMS キーポリシー不足                                  | CloudTrail の kms.amazonaws.com イベント         |
+| ListBucket だけ 403               | Resource にバケット ARN (末尾 /* なし) を書いていない | ポリシーの Resource                              |
+| 組織全体で突然 403                | SCP / RCP 追加                                        | Organizations のポリシー一覧                     |
+| SSE-C アップロードが 403          | 2026-04 以降の SSE-C 既定ブロック                     | GetBucketEncryption の BlockedEncryptionTypes    |
 
 S3 の AccessDenied メッセージには、2024-08 以降、同一アカウント内リクエストについて「拒否したポリシー種別 (例: `explicit deny in a service control policy`)・理由・リクエスト元プリンシパル」が含まれるようになった。さらに 2026-08 には、同一アカウント / 同一組織のリクエストで **拒否したポリシーの ARN** (SCP / RCP / アイデンティティ / セッション / 境界) まで含まれるよう拡張され、切り分けが大幅に容易になっている。
 
@@ -171,11 +171,11 @@ S3 の AccessDenied メッセージには、2024-08 以降、同一アカウン�
 
 ### 3.1 3 つの設定値
 
-| 設定 | ACL | オブジェクト所有者 | 推奨 |
-| --- | --- | --- | --- |
-| BucketOwnerEnforced | 無効 (ACL 付き PUT は `bucket-owner-full-control` 以外拒否) | 常にバケット所有者 | 推奨・2023-04 以降の既定 |
-| BucketOwnerPreferred | 有効 | `bucket-owner-full-control` 付きならバケット所有者 | 移行期のみ |
-| ObjectWriter | 有効 | アップロードしたアカウント | レガシー |
+| 設定                 | ACL                                                         | オブジェクト所有者                                 | 推奨                     |
+| -------------------- | ----------------------------------------------------------- | -------------------------------------------------- | ------------------------ |
+| BucketOwnerEnforced  | 無効 (ACL 付き PUT は `bucket-owner-full-control` 以外拒否) | 常にバケット所有者                                 | 推奨・2023-04 以降の既定 |
+| BucketOwnerPreferred | 有効                                                        | `bucket-owner-full-control` 付きならバケット所有者 | 移行期のみ               |
+| ObjectWriter         | 有効                                                        | アップロードしたアカウント                         | レガシー                 |
 
 2023-04 以降、新規バケットは BPA 有効かつ BucketOwnerEnforced が既定。ACL が必要な用途 (例: 一部の古い AWS サービスのログ配信、CloudFront 標準ログの旧方式など) は限られる。
 
@@ -200,11 +200,11 @@ aws s3api put-bucket-ownership-controls \
 
 ### 4.1 4 つの設定
 
-| 設定 | 対象 | 効果 |
-| --- | --- | --- |
-| BlockPublicAcls | ACL | パブリック ACL を付与する PUT を拒否 (既存 ACL は変えない) |
-| IgnorePublicAcls | ACL | 既存のパブリック ACL を無視 |
-| BlockPublicPolicy | ポリシー | パブリックなバケット / アクセスポイントポリシーの設定を拒否 |
+| 設定                  | 対象     | 効果                                                                                                                                                                      |
+| --------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| BlockPublicAcls       | ACL      | パブリック ACL を付与する PUT を拒否 (既存 ACL は変えない)                                                                                                                |
+| IgnorePublicAcls      | ACL      | 既存のパブリック ACL を無視                                                                                                                                               |
+| BlockPublicPolicy     | ポリシー | パブリックなバケット / アクセスポイントポリシーの設定を拒否                                                                                                               |
 | RestrictPublicBuckets | ポリシー | パブリックポリシーを持つバケットへのアクセスを、AWS サービスプリンシパルとバケット所有者アカウント内の許可済みユーザーに限定 (パブリック・クロスアカウントアクセスを無視) |
 
 「Block」系は **新規設定を拒否**、「Ignore / Restrict」系は **既存設定を無効化** という違いがある。
@@ -230,12 +230,12 @@ S3 は「バケット・アカウント・組織」の設定のうち **最も�
 
 S3 は、ポリシーの Principal が `*` (または全 AWS ユーザー) で、かつ以下のような「固定値で絞り込む条件」がない場合に「パブリック」と判定する。
 
-| パブリック扱いにならない条件の例 | 説明 |
-| --- | --- |
-| `aws:SourceVpce` / `aws:SourceVpc` | 特定 VPC / VPCE に限定 |
-| `aws:SourceIp` (固定 CIDR) | 特定 IP に限定 (ただし 0.0.0.0/1 のような広い範囲は不可) |
-| `aws:PrincipalOrgID` / `aws:PrincipalAccount` | 特定組織 / アカウントに限定 |
-| `aws:SourceArn` / `aws:SourceAccount` | 特定 AWS サービスリソースに限定 (CloudFront OAC など) |
+| パブリック扱いにならない条件の例              | 説明                                                     |
+| --------------------------------------------- | -------------------------------------------------------- |
+| `aws:SourceVpce` / `aws:SourceVpc`            | 特定 VPC / VPCE に限定                                   |
+| `aws:SourceIp` (固定 CIDR)                    | 特定 IP に限定 (ただし 0.0.0.0/1 のような広い範囲は不可) |
+| `aws:PrincipalOrgID` / `aws:PrincipalAccount` | 特定組織 / アカウントに限定                              |
+| `aws:SourceArn` / `aws:SourceAccount`         | 特定 AWS サービスリソースに限定 (CloudFront OAC など)    |
 
 ワイルドカードやポリシー変数を含む条件はパブリック判定上「固定値」とみなされない点に注意。
 
@@ -297,14 +297,14 @@ flowchart TD
 
 ### 5.2 サーバーサイド暗号化の比較
 
-| 方式 | 鍵の所在 | 鍵のアクセス制御 | 監査 | コスト | 主な用途 |
-| --- | --- | --- | --- | --- | --- |
-| SSE-S3 | S3 管理 | S3 の権限のみ | なし (鍵利用ログはない) | 無料 | 既定。最低限の at-rest 暗号化 |
-| SSE-KMS (AWS 管理キー `aws/s3`) | KMS | キーポリシー変更不可 | CloudTrail に KMS 呼び出し | KMS リクエスト料 | クロスアカウント不可なので非推奨寄り |
-| SSE-KMS (カスタマー管理キー) | KMS | キーポリシー / グラントで細かく制御 | CloudTrail | キー月額 + リクエスト料 | 規制対応、職務分離、クロスアカウント |
-| DSSE-KMS | KMS | 同上 | CloudTrail | SSE-KMS より高い | CNSSP 15 等の二層暗号化要件 |
-| SSE-C | 利用者が毎リクエスト送る | 鍵を知っているか | なし | 無料 | 2026-04 以降は既定ブロック。新規採用は非推奨 |
-| CSE | 利用者 | 利用者 | 利用者 | 利用者 | S3 にも平文を見せたくない場合 |
+| 方式                            | 鍵の所在                 | 鍵のアクセス制御                    | 監査                       | コスト                  | 主な用途                                     |
+| ------------------------------- | ------------------------ | ----------------------------------- | -------------------------- | ----------------------- | -------------------------------------------- |
+| SSE-S3                          | S3 管理                  | S3 の権限のみ                       | なし (鍵利用ログはない)    | 無料                    | 既定。最低限の at-rest 暗号化                |
+| SSE-KMS (AWS 管理キー `aws/s3`) | KMS                      | キーポリシー変更不可                | CloudTrail に KMS 呼び出し | KMS リクエスト料        | クロスアカウント不可なので非推奨寄り         |
+| SSE-KMS (カスタマー管理キー)    | KMS                      | キーポリシー / グラントで細かく制御 | CloudTrail                 | キー月額 + リクエスト料 | 規制対応、職務分離、クロスアカウント         |
+| DSSE-KMS                        | KMS                      | 同上                                | CloudTrail                 | SSE-KMS より高い        | CNSSP 15 等の二層暗号化要件                  |
+| SSE-C                           | 利用者が毎リクエスト送る | 鍵を知っているか                    | なし                       | 無料                    | 2026-04 以降は既定ブロック。新規採用は非推奨 |
+| CSE                             | 利用者                   | 利用者                              | 利用者                     | 利用者                  | S3 にも平文を見せたくない場合                |
 
 ### 5.3 SSE-S3 の既定化 (2023-01)
 
@@ -433,13 +433,13 @@ aws s3control create-access-point \
 
 複数リージョンのバケットを 1 つのグローバルエンドポイント (`xxxx.mrap.accesspoint.s3-global.amazonaws.com`) で束ね、AWS Global Accelerator 基盤で最寄りリージョンにルーティングする。
 
-| 項目 | 内容 |
-| --- | --- |
-| 署名 | SigV4A (マルチリージョン非対称署名) が必要 |
+| 項目             | 内容                                                                         |
+| ---------------- | ---------------------------------------------------------------------------- |
+| 署名             | SigV4A (マルチリージョン非対称署名) が必要                                   |
 | フェイルオーバー | Active-Active または Active-Passive (フェイルオーバーコントロールで手動切替) |
-| BPA | MRAP 単位で BPA (作成後変更不可) - Security Hub S3.24 |
-| データ同期 | MRAP 自体は複製しない。CRR を別途設定 |
-| 料金 | データルーティング料金 + (インターネット経由なら) 加速料金 |
+| BPA              | MRAP 単位で BPA (作成後変更不可) - Security Hub S3.24                        |
+| データ同期       | MRAP 自体は複製しない。CRR を別途設定                                        |
+| 料金             | データルーティング料金 + (インターネット経由なら) 加速料金                   |
 
 ### 6.4 S3 Access Grants
 
@@ -466,13 +466,13 @@ sequenceDiagram
 
 署名付き URL は「作成者の権限で、特定の操作を、期限付きで、URL を持つ人に委任する」仕組み。SigV4 のクエリ文字列認証 (`X-Amz-Algorithm`, `X-Amz-Credential`, `X-Amz-Date`, `X-Amz-Expires`, `X-Amz-SignedHeaders`, `X-Amz-Signature`) を使う。
 
-| 作成に使う認証情報 | 最大有効期間 |
-| --- | --- |
-| IAM ユーザーの長期アクセスキー (SigV4) | 最大 7 日 (604800 秒) |
-| IAM ロールの一時認証情報 | ロールセッションの失効まで (長い Expires を指定しても先に失効) |
-| EC2 インスタンスプロファイル | ロール認証情報の有効期間 (通常 6 時間程度) |
-| STS の一時認証情報 | 一時認証情報の有効期間 |
-| コンソール | 1 分〜12 時間 |
+| 作成に使う認証情報                     | 最大有効期間                                                   |
+| -------------------------------------- | -------------------------------------------------------------- |
+| IAM ユーザーの長期アクセスキー (SigV4) | 最大 7 日 (604800 秒)                                          |
+| IAM ロールの一時認証情報               | ロールセッションの失効まで (長い Expires を指定しても先に失効) |
+| EC2 インスタンスプロファイル           | ロール認証情報の有効期間 (通常 6 時間程度)                     |
+| STS の一時認証情報                     | 一時認証情報の有効期間                                         |
+| コンソール                             | 1 分〜12 時間                                                  |
 
 重要な注意点。
 
@@ -494,15 +494,15 @@ HTML フォームから直接 S3 にアップロードさせる方式。サー�
 {
   "expiration": "2026-10-03T12:00:00.000Z",
   "conditions": [
-    {"bucket": "amzn-s3-demo-bucket"},
+    { "bucket": "amzn-s3-demo-bucket" },
     ["starts-with", "$key", "uploads/user-42/"],
-    {"acl": "private"},
+    { "acl": "private" },
     ["starts-with", "$Content-Type", "image/"],
     ["content-length-range", 1, 10485760],
-    {"x-amz-server-side-encryption": "aws:kms"},
-    {"x-amz-algorithm": "AWS4-HMAC-SHA256"},
-    {"x-amz-credential": "AKIAIOSFODNN7EXAMPLE/20261003/ap-northeast-1/s3/aws4_request"},
-    {"x-amz-date": "20261003T000000Z"}
+    { "x-amz-server-side-encryption": "aws:kms" },
+    { "x-amz-algorithm": "AWS4-HMAC-SHA256" },
+    { "x-amz-credential": "AKIAIOSFODNN7EXAMPLE/20261003/ap-northeast-1/s3/aws4_request" },
+    { "x-amz-date": "20261003T000000Z" }
   ]
 }
 ```
@@ -537,13 +537,13 @@ aws s3api put-bucket-cors --bucket amzn-s3-demo-bucket --cors-configuration file
 
 Object Lock は WORM (Write Once Read Many) を実現する機能で、SEC 17a-4(f)、FINRA 4511、CFTC 1.31 などの要件に対する第三者評価 (Cohasset Associates) がある。バージョニングが前提で、ロックは **オブジェクトバージョン単位** で効く。
 
-| 仕組み | 内容 | 解除できる人 |
-| --- | --- | --- |
-| Retention (Governance モード) | 保持期限までの削除・上書き・設定変更を禁止 | `s3:BypassGovernanceRetention` 権限 + `x-amz-bypass-governance-retention: true` ヘッダ |
-| Retention (Compliance モード) | 保持期限まで誰も削除不可。期限短縮・モード変更も不可 | 誰もできない (root も AWS サポートも不可。アカウント閉鎖のみ) |
-| Legal Hold | 期限なしの保持。解除するまで有効 | `s3:PutObjectLegalHold` 権限を持つ人 |
-| Default Retention | バケットの既定保持設定 (新規オブジェクトに自動適用) | `s3:PutBucketObjectLockConfiguration` |
-| Event Hold (2026-09) | 将来のイベント (契約終了・監査完了等) を起点に保持期間を開始する可変保持。hold 中は保護され、解除後に指定期間だけ WORM 保持される | 専用の IAM / バケットポリシー条件キーで設定・解除者や期間の上下限を制御 |
+| 仕組み                        | 内容                                                                                                                              | 解除できる人                                                                           |
+| ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| Retention (Governance モード) | 保持期限までの削除・上書き・設定変更を禁止                                                                                        | `s3:BypassGovernanceRetention` 権限 + `x-amz-bypass-governance-retention: true` ヘッダ |
+| Retention (Compliance モード) | 保持期限まで誰も削除不可。期限短縮・モード変更も不可                                                                              | 誰もできない (root も AWS サポートも不可。アカウント閉鎖のみ)                          |
+| Legal Hold                    | 期限なしの保持。解除するまで有効                                                                                                  | `s3:PutObjectLegalHold` 権限を持つ人                                                   |
+| Default Retention             | バケットの既定保持設定 (新規オブジェクトに自動適用)                                                                               | `s3:PutBucketObjectLockConfiguration`                                                  |
+| Event Hold (2026-09)          | 将来のイベント (契約終了・監査完了等) を起点に保持期間を開始する可変保持。hold 中は保護され、解除後に指定期間だけ WORM 保持される | 専用の IAM / バケットポリシー条件キーで設定・解除者や期間の上下限を制御                |
 
 ```mermaid
 stateDiagram-v2
@@ -601,15 +601,15 @@ aws s3api put-bucket-versioning \
 
 ### 9.1 Gateway エンドポイント vs Interface エンドポイント
 
-| 項目 | Gateway エンドポイント | Interface エンドポイント (PrivateLink) |
-| --- | --- | --- |
-| 仕組み | ルートテーブルにプレフィックスリスト (pl-xxxx) を追加 | VPC 内に ENI (プライベート IP) を作成 |
-| 料金 | 無料 | 時間料金 + データ処理料金 |
-| オンプレ / 他 VPC から | 使えない (VPC 内のみ) | Direct Connect / VPN / ピアリング経由で使える |
-| DNS | パブリック DNS 名のまま | エンドポイント固有 DNS、またはプライベート DNS 有効化 |
-| リージョン | 同一リージョンのみ | 同一リージョンに加え、2025-11 以降は同一パーティション内の別リージョンの S3 にもクロスリージョン PrivateLink で接続できる (`vpce:AllowMultiRegion` 権限が必要) |
-| ポリシー | エンドポイントポリシー可 | エンドポイントポリシー可 |
-| 条件キー | `aws:SourceVpce`, `aws:SourceVpc` | `aws:SourceVpce`, `aws:SourceVpc` |
+| 項目                   | Gateway エンドポイント                                | Interface エンドポイント (PrivateLink)                                                                                                                         |
+| ---------------------- | ----------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 仕組み                 | ルートテーブルにプレフィックスリスト (pl-xxxx) を追加 | VPC 内に ENI (プライベート IP) を作成                                                                                                                          |
+| 料金                   | 無料                                                  | 時間料金 + データ処理料金                                                                                                                                      |
+| オンプレ / 他 VPC から | 使えない (VPC 内のみ)                                 | Direct Connect / VPN / ピアリング経由で使える                                                                                                                  |
+| DNS                    | パブリック DNS 名のまま                               | エンドポイント固有 DNS、またはプライベート DNS 有効化                                                                                                          |
+| リージョン             | 同一リージョンのみ                                    | 同一リージョンに加え、2025-11 以降は同一パーティション内の別リージョンの S3 にもクロスリージョン PrivateLink で接続できる (`vpce:AllowMultiRegion` 権限が必要) |
+| ポリシー               | エンドポイントポリシー可                              | エンドポイントポリシー可                                                                                                                                       |
+| 条件キー               | `aws:SourceVpce`, `aws:SourceVpc`                     | `aws:SourceVpce`, `aws:SourceVpc`                                                                                                                              |
 
 ```text
 [EC2 in VPC] --(route: pl-xxxx)--> [Gateway VPCE] ----> S3 (同一リージョン)
@@ -626,11 +626,11 @@ VPC エンドポイントポリシーは「この VPC から、どの S3 リソ�
 
 AWS のデータペリメーター (Data Perimeter) は、以下 3 つの境界を「アイデンティティ」「リソース」「ネットワーク」の 3 軸で組み合わせて構築する考え方。
 
-| 境界 | 意味 | 主な実装 | 主な条件キー |
-| --- | --- | --- | --- |
-| 信頼できるアイデンティティのみ | 自組織のプリンシパル (と AWS サービス) だけが自組織リソースにアクセス | RCP、バケットポリシー | `aws:PrincipalOrgID`, `aws:PrincipalIsAWSService`, `aws:SourceOrgID` |
-| 信頼できるリソースのみ | 自組織のプリンシパルは自組織のリソースだけにアクセス | SCP、VPCE ポリシー | `aws:ResourceOrgID` |
-| 想定ネットワークのみ | 自社ネットワーク / VPC からのみアクセス | RCP、SCP、バケットポリシー | `aws:SourceIp`, `aws:SourceVpc`, `aws:SourceVpce`, `aws:ViaAWSService` |
+| 境界                           | 意味                                                                  | 主な実装                   | 主な条件キー                                                           |
+| ------------------------------ | --------------------------------------------------------------------- | -------------------------- | ---------------------------------------------------------------------- |
+| 信頼できるアイデンティティのみ | 自組織のプリンシパル (と AWS サービス) だけが自組織リソースにアクセス | RCP、バケットポリシー      | `aws:PrincipalOrgID`, `aws:PrincipalIsAWSService`, `aws:SourceOrgID`   |
+| 信頼できるリソースのみ         | 自組織のプリンシパルは自組織のリソースだけにアクセス                  | SCP、VPCE ポリシー         | `aws:ResourceOrgID`                                                    |
+| 想定ネットワークのみ           | 自社ネットワーク / VPC からのみアクセス                               | RCP、SCP、バケットポリシー | `aws:SourceIp`, `aws:SourceVpc`, `aws:SourceVpce`, `aws:ViaAWSService` |
 
 ```mermaid
 flowchart LR
@@ -652,15 +652,15 @@ RCP の登場以前は、すべてのバケットポリシーに同じ Deny 文�
 
 ### 10.1 サーバーアクセスログ vs CloudTrail データイベント
 
-| 項目 | S3 サーバーアクセスログ | CloudTrail データイベント |
-| --- | --- | --- |
-| 料金 | ログ配信自体は無料 (保存料金のみ) | データイベント 10 万件あたり課金 |
-| 配信保証 | ベストエフォート (欠落・遅延ありうる) | 高信頼 (通常 5 分程度以内) |
-| 形式 | スペース区切りテキスト | JSON |
+| 項目     | S3 サーバーアクセスログ                                                                      | CloudTrail データイベント                                                |
+| -------- | -------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| 料金     | ログ配信自体は無料 (保存料金のみ)                                                            | データイベント 10 万件あたり課金                                         |
+| 配信保証 | ベストエフォート (欠落・遅延ありうる)                                                        | 高信頼 (通常 5 分程度以内)                                               |
+| 形式     | スペース区切りテキスト                                                                       | JSON                                                                     |
 | 記録内容 | 認証失敗、匿名アクセス、ライフサイクル遷移、HTTP ステータス、`aclRequired`、TLS バージョン等 | IAM プリンシパル詳細、リクエストパラメータ、`tlsDetails`、組織横断の集約 |
-| 粒度指定 | バケット単位 | 高度なイベントセレクタでバケット / プレフィックス / 読み書き種別を指定 |
-| 配信先 | 同一リージョン・同一アカウント所有の別バケット推奨 | S3 / CloudWatch Logs / CloudTrail Lake |
-| 主用途 | 低コストな大量アクセス分析、課金調査 | セキュリティ監査、フォレンジック、検知 |
+| 粒度指定 | バケット単位                                                                                 | 高度なイベントセレクタでバケット / プレフィックス / 読み書き種別を指定   |
+| 配信先   | 同一リージョン・同一アカウント所有の別バケット推奨                                           | S3 / CloudWatch Logs / CloudTrail Lake                                   |
+| 主用途   | 低コストな大量アクセス分析、課金調査                                                         | セキュリティ監査、フォレンジック、検知                                   |
 
 ```bash
 # CloudTrail: 特定バケットの書き込みデータイベントのみ記録
@@ -691,10 +691,10 @@ aws s3api put-bucket-logging --bucket amzn-s3-demo-bucket \
 
 ### 10.2 GuardDuty S3 Protection と Malware Protection for S3
 
-| 機能 | 内容 |
-| --- | --- |
-| GuardDuty S3 Protection | CloudTrail の S3 データイベントを (利用者側でトレイル設定不要で) 分析し、異常な API パターン (不審な IP からの大量 GetObject、BPA 無効化、ログ無効化等) を検出。検出結果タイプ例: `Exfiltration:S3/AnomalousBehavior`, `Policy:S3/BucketBlockPublicAccessDisabled`, `Stealth:S3/ServerAccessLoggingDisabled` |
-| Malware Protection for S3 (2024-06) | 新規アップロードされたオブジェクトをスキャン。GuardDuty 本体を有効化せず単独でも利用可能。結果は EventBridge に発行され、オプションで `GuardDutyMalwareScanStatus` タグ (`NO_THREATS_FOUND` / `THREATS_FOUND` / `UNSUPPORTED` / `ACCESS_DENIED` / `FAILED`) を付与 |
+| 機能                                | 内容                                                                                                                                                                                                                                                                                                         |
+| ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| GuardDuty S3 Protection             | CloudTrail の S3 データイベントを (利用者側でトレイル設定不要で) 分析し、異常な API パターン (不審な IP からの大量 GetObject、BPA 無効化、ログ無効化等) を検出。検出結果タイプ例: `Exfiltration:S3/AnomalousBehavior`, `Policy:S3/BucketBlockPublicAccessDisabled`, `Stealth:S3/ServerAccessLoggingDisabled` |
+| Malware Protection for S3 (2024-06) | 新規アップロードされたオブジェクトをスキャン。GuardDuty 本体を有効化せず単独でも利用可能。結果は EventBridge に発行され、オプションで `GuardDutyMalwareScanStatus` タグ (`NO_THREATS_FOUND` / `THREATS_FOUND` / `UNSUPPORTED` / `ACCESS_DENIED` / `FAILED`) を付与                                           |
 
 タグを使った TBAC (Tag-Based Access Control) で「スキャン済みで脅威なしのオブジェクトしか読めない」バケットを作れる (ポリシー例 12.14)。オブジェクトのタグ上限は 10 個なので、既に 10 個使っているとタグ付けできない点に注意。
 
@@ -708,40 +708,40 @@ S3 内のデータを機械学習とパターンマッチで分析し、PII・�
 
 ### 10.4 IAM Access Analyzer for S3
 
-| 機能 | 内容 |
-| --- | --- |
-| 外部アクセス検出 | バケットポリシー / ACL / アクセスポイントポリシーを自動推論 (automated reasoning) で解析し、ゾーンオブトラスト (アカウント / 組織) 外からアクセス可能なバケットを検出 |
-| 内部アクセス検出 (2025-06) | 組織内のどのユーザー / ロールが S3 等のリソースにアクセスできるかを、アイデンティティ / リソース / SCP / RCP を総合評価して検出 |
-| ポリシー検証 | ポリシー作成時の文法・ベストプラクティスチェック |
-| カスタムポリシーチェック | 「このポリシーは新しいアクセスを付与するか」を CI で判定 |
+| 機能                       | 内容                                                                                                                                                                  |
+| -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 外部アクセス検出           | バケットポリシー / ACL / アクセスポイントポリシーを自動推論 (automated reasoning) で解析し、ゾーンオブトラスト (アカウント / 組織) 外からアクセス可能なバケットを検出 |
+| 内部アクセス検出 (2025-06) | 組織内のどのユーザー / ロールが S3 等のリソースにアクセスできるかを、アイデンティティ / リソース / SCP / RCP を総合評価して検出                                       |
+| ポリシー検証               | ポリシー作成時の文法・ベストプラクティスチェック                                                                                                                      |
+| カスタムポリシーチェック   | 「このポリシーは新しいアクセスを付与するか」を CI で判定                                                                                                              |
 
 S3 コンソールの「IAM Access Analyzer for S3」ビューから、パブリック / 共有バケットの一覧と一括 BPA 適用ができる。
 
 ### 10.5 Security Hub CSPM の S3 コントロール
 
-| ID | 内容 |
-| --- | --- |
-| S3.1 | アカウントレベル BPA が有効 |
-| S3.2 | パブリック読み取りを禁止 |
-| S3.3 | パブリック書き込みを禁止 |
-| S3.5 | TLS (SecureTransport) を要求 |
-| S3.6 | 他アカウントへの許可を制限 |
-| S3.7 | クロスリージョンレプリケーション |
-| S3.8 | バケットレベル BPA |
-| S3.9 | サーバーアクセスログ有効 |
-| S3.10 | バージョニング有効バケットに Lifecycle |
-| S3.11 | イベント通知有効 |
-| S3.12 | ACL でユーザーアクセスを管理しない |
-| S3.13 | Lifecycle 設定 |
-| S3.14 | バージョニング有効 |
-| S3.15 | Object Lock 有効 |
-| S3.17 | KMS キーで保存時暗号化 |
-| S3.19 | アクセスポイントの BPA |
-| S3.20 | MFA Delete 有効 |
+| ID    | 内容                                     |
+| ----- | ---------------------------------------- |
+| S3.1  | アカウントレベル BPA が有効              |
+| S3.2  | パブリック読み取りを禁止                 |
+| S3.3  | パブリック書き込みを禁止                 |
+| S3.5  | TLS (SecureTransport) を要求             |
+| S3.6  | 他アカウントへの許可を制限               |
+| S3.7  | クロスリージョンレプリケーション         |
+| S3.8  | バケットレベル BPA                       |
+| S3.9  | サーバーアクセスログ有効                 |
+| S3.10 | バージョニング有効バケットに Lifecycle   |
+| S3.11 | イベント通知有効                         |
+| S3.12 | ACL でユーザーアクセスを管理しない       |
+| S3.13 | Lifecycle 設定                           |
+| S3.14 | バージョニング有効                       |
+| S3.15 | Object Lock 有効                         |
+| S3.17 | KMS キーで保存時暗号化                   |
+| S3.19 | アクセスポイントの BPA                   |
+| S3.20 | MFA Delete 有効                          |
 | S3.22 | オブジェクトレベル書き込みイベントのログ |
 | S3.23 | オブジェクトレベル読み取りイベントのログ |
-| S3.24 | MRAP の BPA |
-| S3.25 | ディレクトリバケットに Lifecycle |
+| S3.24 | MRAP の BPA                              |
+| S3.25 | ディレクトリバケットに Lifecycle         |
 
 (S3.4 / S3.16 / S3.18 / S3.21 は欠番または廃止。2026-10 時点の Security Hub CSPM ドキュメントの一覧に基づく。)
 
@@ -789,12 +789,12 @@ flowchart LR
 
 教訓と S3 側の対策。
 
-| 教訓 | 対策 |
-| --- | --- |
-| IMDSv1 は SSRF に弱い | IMDSv2 の強制 (EC2 側) |
-| ロールが過剰権限 | 最小権限、IAM Access Analyzer の未使用アクセス検出 |
+| 教訓                                 | 対策                                                                                                                                                                |
+| ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| IMDSv1 は SSRF に弱い                | IMDSv2 の強制 (EC2 側)                                                                                                                                              |
+| ロールが過剰権限                     | 最小権限、IAM Access Analyzer の未使用アクセス検出                                                                                                                  |
 | 盗まれた一時認証情報が外部から使えた | ネットワーク境界: `aws:SourceVpc` / `aws:SourceIp` / `aws:ViaAWSService` による Deny、GuardDuty の `UnauthorizedAccess:IAMUser/InstanceCredentialExfiltration` 検出 |
-| 大量 GetObject に気づけなかった | CloudTrail データイベント、GuardDuty S3 Protection の異常検知 |
+| 大量 GetObject に気づけなかった      | CloudTrail データイベント、GuardDuty S3 Protection の異常検知                                                                                                       |
 
 ### 11.3 Bucketsquatting / 放棄バケットの再取得
 
@@ -829,14 +829,14 @@ aws s3api create-bucket \
 
 ### 11.5 その他の頻出パターン
 
-| パターン | 内容 | 対策 |
-| --- | --- | --- |
-| アクセスキーの GitHub 流出 | 長期キーがリポジトリに混入 | IAM Identity Center / ロール、Secret scanning、AWS の自動検知 (AWSCompromisedKeyQuarantine ポリシー) |
-| 署名付き URL のログ流出 | URL が CDN / プロキシログに残る | 短い有効期限、ロール認証情報で作成 |
-| CORS の誤解 | CORS で保護しているつもり | CORS は認可ではないと理解 |
-| サブドメインテイクオーバー | CNAME が削除済みバケットを指したまま | DNS の棚卸し、アカウントリージョナル名前空間 |
-| ログ無効化による痕跡消し | `PutBucketLogging` / `StopLogging` | SCP で禁止、GuardDuty `Stealth:` 系検知 |
-| 「Authenticated Users」ACL | 全 AWS ユーザーに許可 | ACL 無効化 |
+| パターン                   | 内容                                 | 対策                                                                                                 |
+| -------------------------- | ------------------------------------ | ---------------------------------------------------------------------------------------------------- |
+| アクセスキーの GitHub 流出 | 長期キーがリポジトリに混入           | IAM Identity Center / ロール、Secret scanning、AWS の自動検知 (AWSCompromisedKeyQuarantine ポリシー) |
+| 署名付き URL のログ流出    | URL が CDN / プロキシログに残る      | 短い有効期限、ロール認証情報で作成                                                                   |
+| CORS の誤解                | CORS で保護しているつもり            | CORS は認可ではないと理解                                                                            |
+| サブドメインテイクオーバー | CNAME が削除済みバケットを指したまま | DNS の棚卸し、アカウントリージョナル名前空間                                                         |
+| ログ無効化による痕跡消し   | `PutBucketLogging` / `StopLogging`   | SCP で禁止、GuardDuty `Stealth:` 系検知                                                              |
+| 「Authenticated Users」ACL | 全 AWS ユーザーに許可                | ACL 無効化                                                                                           |
 
 ## 12. すぐ使えるポリシー集
 
@@ -853,10 +853,7 @@ aws s3api create-bucket \
       "Effect": "Deny",
       "Principal": "*",
       "Action": "s3:*",
-      "Resource": [
-        "arn:aws:s3:::amzn-s3-demo-bucket",
-        "arn:aws:s3:::amzn-s3-demo-bucket/*"
-      ],
+      "Resource": ["arn:aws:s3:::amzn-s3-demo-bucket", "arn:aws:s3:::amzn-s3-demo-bucket/*"],
       "Condition": {
         "Bool": { "aws:SecureTransport": "false" }
       }
@@ -876,10 +873,7 @@ aws s3api create-bucket \
       "Effect": "Deny",
       "Principal": "*",
       "Action": "s3:*",
-      "Resource": [
-        "arn:aws:s3:::amzn-s3-demo-bucket",
-        "arn:aws:s3:::amzn-s3-demo-bucket/*"
-      ],
+      "Resource": ["arn:aws:s3:::amzn-s3-demo-bucket", "arn:aws:s3:::amzn-s3-demo-bucket/*"],
       "Condition": {
         "NumericLessThan": { "s3:TlsVersion": "1.2" }
       }
@@ -959,10 +953,7 @@ aws s3api create-bucket \
       "Effect": "Deny",
       "Principal": "*",
       "Action": "s3:*",
-      "Resource": [
-        "arn:aws:s3:::amzn-s3-demo-bucket",
-        "arn:aws:s3:::amzn-s3-demo-bucket/*"
-      ],
+      "Resource": ["arn:aws:s3:::amzn-s3-demo-bucket", "arn:aws:s3:::amzn-s3-demo-bucket/*"],
       "Condition": {
         "StringNotEquals": { "aws:SourceVpce": "vpce-1a2b3c4d" },
         "ArnNotLike": {
@@ -987,10 +978,7 @@ aws s3api create-bucket \
       "Effect": "Deny",
       "Principal": "*",
       "Action": "s3:*",
-      "Resource": [
-        "arn:aws:s3:::amzn-s3-demo-bucket",
-        "arn:aws:s3:::amzn-s3-demo-bucket/*"
-      ],
+      "Resource": ["arn:aws:s3:::amzn-s3-demo-bucket", "arn:aws:s3:::amzn-s3-demo-bucket/*"],
       "Condition": {
         "StringNotEqualsIfExists": { "aws:PrincipalOrgID": "o-exampleorgid" },
         "BoolIfExists": { "aws:PrincipalIsAWSService": "false" }
@@ -1076,9 +1064,7 @@ OAC (Origin Access Control) は旧来の OAI の後継で、SSE-KMS オブジェ
       "Effect": "Allow",
       "Principal": "*",
       "Action": "s3:GetObject",
-      "Resource": [
-        "arn:aws:s3:::EXAMPLE-AMAZON-LINUX-REPO-BUCKET/*"
-      ]
+      "Resource": ["arn:aws:s3:::EXAMPLE-AMAZON-LINUX-REPO-BUCKET/*"]
     }
   ]
 }
@@ -1097,10 +1083,7 @@ Amazon Linux のパッケージリポジトリなど AWS 所有バケットの�
       "Effect": "Deny",
       "Principal": "*",
       "Action": "s3:*",
-      "Resource": [
-        "arn:aws:s3:::amzn-s3-demo-bucket",
-        "arn:aws:s3:::amzn-s3-demo-bucket/*"
-      ],
+      "Resource": ["arn:aws:s3:::amzn-s3-demo-bucket", "arn:aws:s3:::amzn-s3-demo-bucket/*"],
       "Condition": {
         "NotIpAddress": { "aws:SourceIp": ["203.0.113.0/24", "198.51.100.10/32"] },
         "Null": { "aws:SourceVpce": "true" },
@@ -1124,10 +1107,7 @@ Amazon Linux のパッケージリポジトリなど AWS 所有バケットの�
       "Effect": "Allow",
       "Principal": { "AWS": "*" },
       "Action": "*",
-      "Resource": [
-        "arn:aws:s3:::amzn-s3-demo-bucket",
-        "arn:aws:s3:::amzn-s3-demo-bucket/*"
-      ],
+      "Resource": ["arn:aws:s3:::amzn-s3-demo-bucket", "arn:aws:s3:::amzn-s3-demo-bucket/*"],
       "Condition": {
         "StringEquals": { "s3:DataAccessPointAccount": "111122223333" }
       }

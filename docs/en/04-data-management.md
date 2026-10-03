@@ -66,17 +66,17 @@ flowchart TB
     EN --> BO
 ```
 
-| Goal | First choice | Supporting options |
-| --- | --- | --- |
-| Recover from accidental deletes and overwrites | Versioning | AWS Backup (35-day PITR), Object Lock |
-| Reduce cost | Lifecycle, Intelligent-Tiering | Storage Lens, Storage Class Analysis |
-| DR / Regional redundancy | CRR (+ RTC) | MRAP, AWS Backup cross-Region copy |
-| Bulk operations on billions of objects | Batch Operations | Generate manifests with Inventory / Metadata |
-| Know what objects you have | S3 Metadata live inventory, Inventory | ListObjectsV2 (small scale only) |
-| Detect changes | Event notifications / EventBridge | S3 Metadata journal table |
-| Data integrity | Checksums | Batch Operations Compute checksums |
-| Optimistic concurrency | Conditional writes / deletes | Version IDs |
-| Need a file API | S3 Files (NFS), Mountpoint | Storage Gateway, FSx |
+| Goal                                           | First choice                          | Supporting options                           |
+| ---------------------------------------------- | ------------------------------------- | -------------------------------------------- |
+| Recover from accidental deletes and overwrites | Versioning                            | AWS Backup (35-day PITR), Object Lock        |
+| Reduce cost                                    | Lifecycle, Intelligent-Tiering        | Storage Lens, Storage Class Analysis         |
+| DR / Regional redundancy                       | CRR (+ RTC)                           | MRAP, AWS Backup cross-Region copy           |
+| Bulk operations on billions of objects         | Batch Operations                      | Generate manifests with Inventory / Metadata |
+| Know what objects you have                     | S3 Metadata live inventory, Inventory | ListObjectsV2 (small scale only)             |
+| Detect changes                                 | Event notifications / EventBridge     | S3 Metadata journal table                    |
+| Data integrity                                 | Checksums                             | Batch Operations Compute checksums           |
+| Optimistic concurrency                         | Conditional writes / deletes          | Version IDs                                  |
+| Need a file API                                | S3 Files (NFS), Mountpoint            | Storage Gateway, FSx                         |
 
 ## 2. Versioning
 
@@ -92,11 +92,11 @@ stateDiagram-v2
     Suspended --> Enabled: PutBucketVersioning Enabled
 ```
 
-| State | Version ID of a new PUT | On overwrite | DELETE (no version ID) |
-| --- | --- | --- | --- |
-| Unversioned | `null` | Old data is lost | The object is removed |
-| Enabled | A unique ID is assigned | The old version remains as noncurrent | Creates a delete marker (data remains) |
-| Suspended | `null` | Overwrites the `null` version (other versions remain) | Creates a delete marker as the `null` version |
+| State       | Version ID of a new PUT | On overwrite                                          | DELETE (no version ID)                        |
+| ----------- | ----------------------- | ----------------------------------------------------- | --------------------------------------------- |
+| Unversioned | `null`                  | Old data is lost                                      | The object is removed                         |
+| Enabled     | A unique ID is assigned | The old version remains as noncurrent                 | Creates a delete marker (data remains)        |
+| Suspended   | `null`                  | Overwrites the `null` version (other versions remain) | Creates a delete marker as the `null` version |
 
 ### 2.2 Version stacks and delete markers
 
@@ -144,16 +144,16 @@ MFA Delete is attached to the versioning configuration and requires MFA to chang
 
 ### 3.1 Components of a Lifecycle rule
 
-| Element | Description |
-| --- | --- |
-| Filter | Prefix, Tag (multiple tags use And), ObjectSizeGreaterThan / ObjectSizeLessThan. An empty filter applies to the whole bucket |
-| Status | Enabled / Disabled |
-| Transitions | Move the current version to another storage class after N days (or on a date) |
-| Expiration | Expire the current version after N days (with versioning enabled, this creates a delete marker) |
-| NoncurrentVersionTransitions | Transition N days after a version becomes noncurrent. Use NewerNoncurrentVersions to keep the newest N |
-| NoncurrentVersionExpiration | Permanently delete N days after a version becomes noncurrent |
-| ExpiredObjectDeleteMarker | Remove expired object delete markers |
-| AbortIncompleteMultipartUpload | Abort incomplete MPUs N days after initiation (stops charges for uploaded parts) |
+| Element                        | Description                                                                                                                  |
+| ------------------------------ | ---------------------------------------------------------------------------------------------------------------------------- |
+| Filter                         | Prefix, Tag (multiple tags use And), ObjectSizeGreaterThan / ObjectSizeLessThan. An empty filter applies to the whole bucket |
+| Status                         | Enabled / Disabled                                                                                                           |
+| Transitions                    | Move the current version to another storage class after N days (or on a date)                                                |
+| Expiration                     | Expire the current version after N days (with versioning enabled, this creates a delete marker)                              |
+| NoncurrentVersionTransitions   | Transition N days after a version becomes noncurrent. Use NewerNoncurrentVersions to keep the newest N                       |
+| NoncurrentVersionExpiration    | Permanently delete N days after a version becomes noncurrent                                                                 |
+| ExpiredObjectDeleteMarker      | Remove expired object delete markers                                                                                         |
+| AbortIncompleteMultipartUpload | Abort incomplete MPUs N days after initiation (stops charges for uploaded parts)                                             |
 
 A bucket can have up to 1,000 rules. Rules are evaluated asynchronously (typically about once a day), so there is a lag between the due date and the actual delete or transition. For Expiration, however, billing stops once the due date passes.
 
@@ -239,11 +239,11 @@ An example that filters by tag and size (only objects of 1 MB or larger tagged `
       "Filter": {
         "And": {
           "Prefix": "media/",
-          "Tags": [ { "Key": "class", "Value": "archive" } ],
+          "Tags": [{ "Key": "class", "Value": "archive" }],
           "ObjectSizeGreaterThan": 1048576
         }
       },
-      "Transitions": [ { "Days": 0, "StorageClass": "DEEP_ARCHIVE" } ]
+      "Transitions": [{ "Days": 0, "StorageClass": "DEEP_ARCHIVE" }]
     }
   ]
 }
@@ -258,7 +258,7 @@ An example that moves everything to Intelligent-Tiering (for general-purpose dat
       "ID": "to-intelligent-tiering",
       "Status": "Enabled",
       "Filter": { "ObjectSizeGreaterThan": 131072 },
-      "Transitions": [ { "Days": 0, "StorageClass": "INTELLIGENT_TIERING" } ]
+      "Transitions": [{ "Days": 0, "StorageClass": "INTELLIGENT_TIERING" }]
     }
   ]
 }
@@ -286,14 +286,14 @@ aws s3api get-bucket-lifecycle-configuration --bucket amzn-s3-demo-bucket
 
 ### 4.1 Types
 
-| Type | Description |
-| --- | --- |
-| SRR (Same-Region Replication) | To another bucket in the same Region. Log aggregation, separating production and test, account separation |
-| CRR (Cross-Region Replication) | To another Region. DR, latency, data sovereignty requirements |
-| Live replication | Asynchronously replicates new and updated objects after configuration |
-| Batch Replication | Replicates existing objects, previously failed objects, and replicas (a Batch Operations job) |
-| Two-way | Mutual replication between two buckets + replica modification sync. Used in MRAP active-active setups |
-| Multi-destination | From one source to multiple destinations (one destination per rule) |
+| Type                           | Description                                                                                               |
+| ------------------------------ | --------------------------------------------------------------------------------------------------------- |
+| SRR (Same-Region Replication)  | To another bucket in the same Region. Log aggregation, separating production and test, account separation |
+| CRR (Cross-Region Replication) | To another Region. DR, latency, data sovereignty requirements                                             |
+| Live replication               | Asynchronously replicates new and updated objects after configuration                                     |
+| Batch Replication              | Replicates existing objects, previously failed objects, and replicas (a Batch Operations job)             |
+| Two-way                        | Mutual replication between two buckets + replica modification sync. Used in MRAP active-active setups     |
+| Multi-destination              | From one source to multiple destinations (one destination per rule)                                       |
 
 Prerequisites:
 
@@ -305,18 +305,18 @@ Prerequisites:
 
 ### 4.2 What is and is not replicated
 
-| Item | Default | Notes |
-| --- | --- | --- |
-| New objects after configuration | Replicated | |
-| Existing objects before configuration | Not replicated | Use Batch Replication |
-| Metadata, tags, ACLs, Object Lock retention information | Replicated | |
-| Delete markers | Not replicated by default | Enable with `DeleteMarkerReplication` (not available for rules with tag-based filters) |
-| Deletes that specify a version ID (permanent deletes) | Not replicated | Designed to prevent malicious deletes from propagating |
-| Changes to replicas (metadata, etc.) | Not replicated | Two-way sync with `ReplicaModifications` |
-| Actions taken by Lifecycle | Not replicated | Configure Lifecycle on the destination as well |
-| SSE-C objects | Replicated (supported) | Fails with 403 if SSE-C is blocked on the destination (watch the default since 2026-04) |
-| Objects that are already replicas | Not replicated (no chaining) | In A→B→C, replicas in B are not sent to C. Batch Replication can do this |
-| Glacier / Deep Archive objects | Live replication works; Batch may require a restore | |
+| Item                                                    | Default                                             | Notes                                                                                   |
+| ------------------------------------------------------- | --------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| New objects after configuration                         | Replicated                                          |                                                                                         |
+| Existing objects before configuration                   | Not replicated                                      | Use Batch Replication                                                                   |
+| Metadata, tags, ACLs, Object Lock retention information | Replicated                                          |                                                                                         |
+| Delete markers                                          | Not replicated by default                           | Enable with `DeleteMarkerReplication` (not available for rules with tag-based filters)  |
+| Deletes that specify a version ID (permanent deletes)   | Not replicated                                      | Designed to prevent malicious deletes from propagating                                  |
+| Changes to replicas (metadata, etc.)                    | Not replicated                                      | Two-way sync with `ReplicaModifications`                                                |
+| Actions taken by Lifecycle                              | Not replicated                                      | Configure Lifecycle on the destination as well                                          |
+| SSE-C objects                                           | Replicated (supported)                              | Fails with 403 if SSE-C is blocked on the destination (watch the default since 2026-04) |
+| Objects that are already replicas                       | Not replicated (no chaining)                        | In A→B→C, replicas in B are not sent to C. Batch Replication can do this                |
+| Glacier / Deep Archive objects                          | Live replication works; Batch may require a restore |                                                                                         |
 
 ### 4.3 S3 Replication Time Control (RTC)
 
@@ -393,11 +393,7 @@ The trust policy and permissions policy for the replication role:
     },
     {
       "Effect": "Allow",
-      "Action": [
-        "s3:GetObjectVersionForReplication",
-        "s3:GetObjectVersionAcl",
-        "s3:GetObjectVersionTagging"
-      ],
+      "Action": ["s3:GetObjectVersionForReplication", "s3:GetObjectVersionAcl", "s3:GetObjectVersionTagging"],
       "Resource": "arn:aws:s3:::amzn-s3-demo-bucket/*"
     },
     {
@@ -458,19 +454,19 @@ A single job can process billions of objects and exabytes of data, with progress
 
 ### 5.2 Supported operations (as of 2026-10)
 
-| Operation | What it does | Notes |
-| --- | --- | --- |
-| Copy | Copies objects (can also change metadata, storage class, and encryption) | Also works on directory buckets |
-| Compute checksums (2025-08) | Computes and reports checksums of stored objects without restoring or downloading them | SHA-1 / SHA-256 / CRC32 / CRC32C / CRC64NVME / MD5, etc. |
-| Delete all object tags | Removes all tags | |
-| Invoke AWS Lambda function | Arbitrary processing | Also works on directory buckets |
-| Replace all object tags | Replaces tags in bulk | |
-| Replace access control list (ACL) | Replaces ACLs | Not needed on buckets with ACLs disabled |
-| Restore | Restores from Glacier Flexible / Deep Archive / Intelligent-Tiering archive tiers | |
-| Update object encryption (2026-01) | Changes the SSE type, KMS key, or Bucket Key without moving data | Up to 20 billion objects per job |
-| Replicate (Batch Replication) | Replicates existing and failed objects | |
-| Object Lock retention | Sets the retain-until date and mode | |
-| Object Lock legal hold | Sets or removes a legal hold | |
+| Operation                          | What it does                                                                           | Notes                                                    |
+| ---------------------------------- | -------------------------------------------------------------------------------------- | -------------------------------------------------------- |
+| Copy                               | Copies objects (can also change metadata, storage class, and encryption)               | Also works on directory buckets                          |
+| Compute checksums (2025-08)        | Computes and reports checksums of stored objects without restoring or downloading them | SHA-1 / SHA-256 / CRC32 / CRC32C / CRC64NVME / MD5, etc. |
+| Delete all object tags             | Removes all tags                                                                       |                                                          |
+| Invoke AWS Lambda function         | Arbitrary processing                                                                   | Also works on directory buckets                          |
+| Replace all object tags            | Replaces tags in bulk                                                                  |                                                          |
+| Replace access control list (ACL)  | Replaces ACLs                                                                          | Not needed on buckets with ACLs disabled                 |
+| Restore                            | Restores from Glacier Flexible / Deep Archive / Intelligent-Tiering archive tiers      |                                                          |
+| Update object encryption (2026-01) | Changes the SSE type, KMS key, or Bucket Key without moving data                       | Up to 20 billion objects per job                         |
+| Replicate (Batch Replication)      | Replicates existing and failed objects                                                 |                                                          |
+| Object Lock retention              | Sets the retain-until date and mode                                                    |                                                          |
+| Object Lock legal hold             | Sets or removes a legal hold                                                           |                                                          |
 
 For objects in directory buckets, only Copy and Invoke Lambda are supported.
 
@@ -478,10 +474,10 @@ At its 2025-08 announcement, Compute checksums supported SHA-1 / SHA-256 / CRC32
 
 ### 5.3 Manifests
 
-| Method | Description |
-| --- | --- |
-| CSV | Rows of `bucket,key[,versionId]`. Keys are URL-encoded |
-| S3 Inventory report | Specify the `manifest.json` |
+| Method                             | Description                                                                                                                                                               |
+| ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| CSV                                | Rows of `bucket,key[,versionId]`. Keys are URL-encoded                                                                                                                    |
+| S3 Inventory report                | Specify the `manifest.json`                                                                                                                                               |
 | Generated (S3JobManifestGenerator) | S3 builds the list from a source bucket + filters (creation date, key prefix / suffix / substring, size, storage class, encryption type `MatchAnyObjectEncryption`, etc.) |
 
 ### 5.4 Job lifecycle
@@ -518,14 +514,14 @@ The report is a CSV with fields such as `Bucket, Key, VersionId, TaskStatus, Err
 
 S3 Inventory exports a list of objects and their attributes for a bucket (or prefix) daily or weekly as CSV, ORC, or Parquet. For buckets with billions of objects, it is far cheaper and faster than running ListObjects.
 
-| Item | Details |
-| --- | --- |
-| Frequency | Daily / Weekly |
-| Format | CSV, Apache ORC, Apache Parquet |
-| Scope | Current versions only / all versions |
-| Destination | A destination bucket in the same Region (cross-account allowed). Can be encrypted with SSE-S3 / SSE-KMS |
+| Item                    | Details                                                                                                                                                                                                                                                                    |
+| ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Frequency               | Daily / Weekly                                                                                                                                                                                                                                                             |
+| Format                  | CSV, Apache ORC, Apache Parquet                                                                                                                                                                                                                                            |
+| Scope                   | Current versions only / all versions                                                                                                                                                                                                                                       |
+| Destination             | A destination bucket in the same Region (cross-account allowed). Can be encrypted with SSE-S3 / SSE-KMS                                                                                                                                                                    |
 | Example optional fields | Size, LastModifiedDate, StorageClass, ETag, IsMultipartUploaded, ReplicationStatus, EncryptionStatus, BucketKeyStatus, ObjectLockRetainUntilDate / Mode / LegalHoldStatus, IntelligentTieringAccessTier, ChecksumAlgorithm, ObjectOwner, ObjectAccessControlList, and more |
-| Consistency | Eventually consistent (a snapshot at report generation time; recent changes may be missing) |
+| Consistency             | Eventually consistent (a snapshot at report generation time; recent changes may be missing)                                                                                                                                                                                |
 
 ```bash
 aws s3api put-bucket-inventory-configuration \
@@ -565,15 +561,15 @@ GROUP BY encryption_status;
 
 A dashboard that shows storage usage and activity at the organization (with Organizations integration), account, Region, bucket, and prefix levels. According to the FAQ, there are 198 metrics in total (unique + derived).
 
-| Item | Free tier | Paid (Advanced metrics and recommendations) |
-| --- | --- | --- |
-| Metrics | Usage metrics in the cost optimization, data protection, access management, performance, and event categories | Free metrics + activity (request counts, etc.), detailed status codes (403, etc.), advanced cost optimization and data protection (number of Lifecycle / Replication rules, etc.), advanced performance metrics |
-| History | 14 days | 15 months |
-| Prefix aggregation | No | Yes (since 2025-12, expanded to billions of prefixes per bucket) |
-| Publish to CloudWatch | No | Yes |
-| Recommendations | No | Yes |
-| Export | S3 (CSV / Parquet) or S3 Tables (Parquet) | Same |
-| Storage Lens groups | Not available | Available (define custom groups by object tags, size, age, prefix, etc. and aggregate) |
+| Item                  | Free tier                                                                                                     | Paid (Advanced metrics and recommendations)                                                                                                                                                                     |
+| --------------------- | ------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Metrics               | Usage metrics in the cost optimization, data protection, access management, performance, and event categories | Free metrics + activity (request counts, etc.), detailed status codes (403, etc.), advanced cost optimization and data protection (number of Lifecycle / Replication rules, etc.), advanced performance metrics |
+| History               | 14 days                                                                                                       | 15 months                                                                                                                                                                                                       |
+| Prefix aggregation    | No                                                                                                            | Yes (since 2025-12, expanded to billions of prefixes per bucket)                                                                                                                                                |
+| Publish to CloudWatch | No                                                                                                            | Yes                                                                                                                                                                                                             |
+| Recommendations       | No                                                                                                            | Yes                                                                                                                                                                                                             |
+| Export                | S3 (CSV / Parquet) or S3 Tables (Parquet)                                                                     | Same                                                                                                                                                                                                            |
+| Storage Lens groups   | Not available                                                                                                 | Available (define custom groups by object tags, size, age, prefix, etc. and aggregate)                                                                                                                          |
 
 The 2025-12 update added the following (excluding AWS China and GovCloud; Storage Lens itself became available in GovCloud in 2026-01):
 
@@ -640,22 +636,22 @@ S3 Metadata automatically captures object metadata from general purpose buckets 
 
 ### 8.2 The three tables
 
-| Table | Required | Contents | Update frequency |
-| --- | --- | --- | --- |
-| Journal table | Required | Records object change events (uploads, deletes, metadata updates, Lifecycle transitions, etc.). Only changes made after the configuration is created. You can set a record expiration (minimum 7 days) | Near real time |
-| Live inventory table (2025-07) | Optional | The latest state of every object and every version in the bucket. Enabling it backfills existing objects (at least 15 minutes; hours for large buckets) | Usually within 1 hour |
-| Annotation table (2026-06) | Optional | The latest state of object annotations (described later). One row = one annotation on one object version. Enabling it backfills existing annotations (minutes to hours, charged) | Usually within 1 hour after the backfill completes |
+| Table                          | Required | Contents                                                                                                                                                                                               | Update frequency                                   |
+| ------------------------------ | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------- |
+| Journal table                  | Required | Records object change events (uploads, deletes, metadata updates, Lifecycle transitions, etc.). Only changes made after the configuration is created. You can set a record expiration (minimum 7 days) | Near real time                                     |
+| Live inventory table (2025-07) | Optional | The latest state of every object and every version in the bucket. Enabling it backfills existing objects (at least 15 minutes; hours for large buckets)                                                | Usually within 1 hour                              |
+| Annotation table (2026-06)     | Optional | The latest state of object annotations (described later). One row = one annotation on one object version. Enabling it backfills existing annotations (minutes to hours, charged)                       | Usually within 1 hour after the backfill completes |
 
 In the initial release, the journal table was simply called the "metadata table". The 2025-07 expansion added support for existing objects (live inventory) and cut the journal price by 33%. Pricing is based on the number of journal records + live inventory backfill (per object) + a monthly fee for buckets with more than 1 billion objects.
 
 ### 8.3 Choosing between Inventory, Storage Lens, and Metadata
 
-| Aspect | S3 Inventory | Storage Lens | S3 Metadata |
-| --- | --- | --- | --- |
-| Granularity | Per object | Aggregates | Per object + change events |
-| Freshness | Daily / weekly | Daily | Journal is near real time; live inventory is about 1 hour |
-| Querying | Requires an external table definition in Athena | Dashboard / export | Query directly with SQL as Iceberg tables |
-| Main use | Auditing, Batch manifests | Cost and trend analysis | Data discovery, change auditing, catalog for AI and analytics |
+| Aspect      | S3 Inventory                                    | Storage Lens            | S3 Metadata                                                   |
+| ----------- | ----------------------------------------------- | ----------------------- | ------------------------------------------------------------- |
+| Granularity | Per object                                      | Aggregates              | Per object + change events                                    |
+| Freshness   | Daily / weekly                                  | Daily                   | Journal is near real time; live inventory is about 1 hour     |
+| Querying    | Requires an external table definition in Athena | Dashboard / export      | Query directly with SQL as Iceberg tables                     |
+| Main use    | Auditing, Batch manifests                       | Cost and trend analysis | Data discovery, change auditing, catalog for AI and analytics |
 
 ### 8.4 Configuration example
 
@@ -690,12 +686,12 @@ The catalog name and namespace name (`b_` + bucket name) are examples based on t
 
 ### 9.1 Four kinds of information that describe an object
 
-| Kind | Limit | Mutability | Use |
-| --- | --- | --- | --- |
-| System-defined metadata | - | Managed by S3 (some, such as Content-Type, can be changed by copying) | Size, creation time, storage class, encryption status, checksum |
-| User-defined metadata (`x-amz-meta-*`) | 2 KB total | Immutable (changing it requires a copy) | Attributes fixed at upload time |
-| Object tags | 10 per object; keys up to 128 characters, values up to 256 characters | Can be changed at any time (PutObjectTagging) | IAM conditions, Lifecycle / Replication filters, ABAC |
-| Annotations (2026-06) | Up to 1 GB per object | Can be changed or deleted at any time | Business context for AI agents and analytics tools (JSON / XML / YAML) |
+| Kind                                   | Limit                                                                 | Mutability                                                            | Use                                                                    |
+| -------------------------------------- | --------------------------------------------------------------------- | --------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| System-defined metadata                | -                                                                     | Managed by S3 (some, such as Content-Type, can be changed by copying) | Size, creation time, storage class, encryption status, checksum        |
+| User-defined metadata (`x-amz-meta-*`) | 2 KB total                                                            | Immutable (changing it requires a copy)                               | Attributes fixed at upload time                                        |
+| Object tags                            | 10 per object; keys up to 128 characters, values up to 256 characters | Can be changed at any time (PutObjectTagging)                         | IAM conditions, Lifecycle / Replication filters, ABAC                  |
+| Annotations (2026-06)                  | Up to 1 GB per object                                                 | Can be changed or deleted at any time                                 | Business context for AI agents and analytics tools (JSON / XML / YAML) |
 
 ### 9.2 Object tags
 
@@ -754,30 +750,30 @@ flowchart LR
     EB --> T4["SQS / SNS / Lambda (multiple)"]
 ```
 
-| Aspect | Native notifications | EventBridge |
-| --- | --- | --- |
-| Destinations | SNS / SQS (standard) / Lambda | 20+ targets, buses in other accounts and Regions |
-| Filtering | Prefix / suffix only | Advanced patterns on key, size, requester, metadata, and more |
-| Multiple destinations for the same event type with overlapping prefixes | Not allowed (overlapping configurations are rejected) | Write as many rules as you need |
-| Archive / replay | No | Yes |
-| Price | Free (you pay only for the destination) | EventBridge event charges |
-| How to enable | `NotificationConfiguration` | `EventBridgeConfiguration: {}` |
+| Aspect                                                                  | Native notifications                                  | EventBridge                                                   |
+| ----------------------------------------------------------------------- | ----------------------------------------------------- | ------------------------------------------------------------- |
+| Destinations                                                            | SNS / SQS (standard) / Lambda                         | 20+ targets, buses in other accounts and Regions              |
+| Filtering                                                               | Prefix / suffix only                                  | Advanced patterns on key, size, requester, metadata, and more |
+| Multiple destinations for the same event type with overlapping prefixes | Not allowed (overlapping configurations are rejected) | Write as many rules as you need                               |
+| Archive / replay                                                        | No                                                    | Yes                                                           |
+| Price                                                                   | Free (you pay only for the destination)               | EventBridge event charges                                     |
+| How to enable                                                           | `NotificationConfiguration`                           | `EventBridgeConfiguration: {}`                                |
 
 AWS Backup continuous backup for S3 depends on EventBridge notifications, so disabling the EventBridge integration stops continuous backups.
 
 ### 10.2 Event types
 
-| Category | Event name (native) | EventBridge detail-type |
-| --- | --- | --- |
-| Create | `s3:ObjectCreated:Put` / `Post` / `Copy` / `CompleteMultipartUpload` / `*` | Object Created |
-| Delete | `s3:ObjectRemoved:Delete` / `DeleteMarkerCreated` / `*` | Object Deleted |
-| Restore | `s3:ObjectRestore:Post` / `Completed` / `Delete` | Object Restore Initiated / Completed / Expired |
-| Replication | `s3:Replication:OperationFailedReplication` / `OperationMissedThreshold` / `OperationReplicatedAfterThreshold` / `OperationNotTracked` | (equivalent events) |
-| Lifecycle | `s3:LifecycleExpiration:Delete` / `DeleteMarkerCreated`, `s3:LifecycleTransition` | Object Deleted / Object Storage Class Changed |
-| Intelligent-Tiering | `s3:IntelligentTiering` | Object Access Tier Changed |
-| Tags | `s3:ObjectTagging:Put` / `Delete` | Object Tags Added / Deleted |
-| ACL | `s3:ObjectAcl:Put` | Object ACL Updated |
-| Reduced redundancy | `s3:ReducedRedundancyLostObject` | - |
+| Category            | Event name (native)                                                                                                                    | EventBridge detail-type                        |
+| ------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
+| Create              | `s3:ObjectCreated:Put` / `Post` / `Copy` / `CompleteMultipartUpload` / `*`                                                             | Object Created                                 |
+| Delete              | `s3:ObjectRemoved:Delete` / `DeleteMarkerCreated` / `*`                                                                                | Object Deleted                                 |
+| Restore             | `s3:ObjectRestore:Post` / `Completed` / `Delete`                                                                                       | Object Restore Initiated / Completed / Expired |
+| Replication         | `s3:Replication:OperationFailedReplication` / `OperationMissedThreshold` / `OperationReplicatedAfterThreshold` / `OperationNotTracked` | (equivalent events)                            |
+| Lifecycle           | `s3:LifecycleExpiration:Delete` / `DeleteMarkerCreated`, `s3:LifecycleTransition`                                                      | Object Deleted / Object Storage Class Changed  |
+| Intelligent-Tiering | `s3:IntelligentTiering`                                                                                                                | Object Access Tier Changed                     |
+| Tags                | `s3:ObjectTagging:Put` / `Delete`                                                                                                      | Object Tags Added / Deleted                    |
+| ACL                 | `s3:ObjectAcl:Put`                                                                                                                     | Object ACL Updated                             |
+| Reduced redundancy  | `s3:ReducedRedundancyLostObject`                                                                                                       | -                                              |
 
 ### 10.3 Delivery guarantees, ordering, and duplicates
 
@@ -821,7 +817,12 @@ Because this is a string comparison, in production right-pad the sequencer with 
       "LambdaFunctionArn": "arn:aws:lambda:ap-northeast-1:111122223333:function:make-thumbnail",
       "Events": ["s3:ObjectCreated:*"],
       "Filter": {
-        "Key": { "FilterRules": [ { "Name": "prefix", "Value": "uploads/" }, { "Name": "suffix", "Value": ".jpg" } ] }
+        "Key": {
+          "FilterRules": [
+            { "Name": "prefix", "Value": "uploads/" },
+            { "Name": "suffix", "Value": ".jpg" }
+          ]
+        }
       }
     }
   ],
@@ -858,11 +859,11 @@ Inserts a Lambda function into GET / HEAD / LIST requests to transform the retur
 
 Alternatives suggested by AWS:
 
-| Use case | Alternative |
-| --- | --- |
-| Image transformation | Dynamic Image Transformation for Amazon CloudFront (AWS Solution) |
+| Use case                       | Alternative                                                                  |
+| ------------------------------ | ---------------------------------------------------------------------------- |
+| Image transformation           | Dynamic Image Transformation for Amazon CloudFront (AWS Solution)            |
 | PII masking, format conversion | Call Lambda directly through CloudFront / API Gateway / Lambda function URLs |
-| Simple filtering | Client-side processing |
+| Simple filtering               | Client-side processing                                                       |
 
 ### 11.2 S3 Select
 
@@ -884,16 +885,16 @@ Since 2024-12, S3 and the latest AWS SDKs provide **default data integrity prote
 
 ### 12.2 Supported algorithms (expanded to 10 in 2026-04)
 
-| Algorithm | Full object type (MPU) | Composite type (MPU) | Notes |
-| --- | --- | --- | --- |
-| CRC64NVME | Supported (the only type) | Not supported | Default |
-| CRC32 | Supported | Supported | |
-| CRC32C | Supported | Supported | |
-| SHA-1 | Not supported | Supported | |
-| SHA-256 | Not supported | Supported | |
-| SHA-512 | Not supported | Supported | Added 2026-04 |
-| MD5 | Not supported | Supported | Added 2026-04 (separate from the Content-MD5 header) |
-| XXHash3 / XXHash64 / XXHash128 | Not supported | Supported | Added 2026-04 |
+| Algorithm                      | Full object type (MPU)    | Composite type (MPU) | Notes                                                |
+| ------------------------------ | ------------------------- | -------------------- | ---------------------------------------------------- |
+| CRC64NVME                      | Supported (the only type) | Not supported        | Default                                              |
+| CRC32                          | Supported                 | Supported            |                                                      |
+| CRC32C                         | Supported                 | Supported            |                                                      |
+| SHA-1                          | Not supported             | Supported            |                                                      |
+| SHA-256                        | Not supported             | Supported            |                                                      |
+| SHA-512                        | Not supported             | Supported            | Added 2026-04                                        |
+| MD5                            | Not supported             | Supported            | Added 2026-04 (separate from the Content-MD5 header) |
+| XXHash3 / XXHash64 / XXHash128 | Not supported             | Supported            | Added 2026-04                                        |
 
 For multipart uploads with the algorithms added in 2026-04, you must specify `x-amz-checksum-algorithm` in `CreateMultipartUpload`. The full/composite assignments are based on the official statement that "full object checksums are CRC-only", and composite support for the new algorithms is based on the What's New statement about "computing composites from part-level checksums".
 
@@ -939,14 +940,14 @@ The Batch Operations Compute checksums operation computes checksums for objects 
 
 ### 13.1 Timeline
 
-| When | Feature |
-| --- | --- |
-| Long-standing | If-Match / If-None-Match / If-Modified-Since / If-Unmodified-Since for GET / HEAD / the CopyObject source |
-| 2024-08 | Conditional writes: `If-None-Match: *` on PutObject / CompleteMultipartUpload (write only if the key does not exist) |
-| 2024-11 | Conditional writes: `If-Match` with an ETag (overwrite only if it matches = optimistic locking). In the same month, enforcement through bucket policies with the `s3:if-none-match` / `s3:if-match` condition keys was added |
-| 2025-06 | `If-None-Match: *` on RenameObject (directory buckets) |
-| 2025-09 | Conditional deletes for general purpose buckets: `If-Match` (an ETag or `*`) on DeleteObject / DeleteObjects |
-| 2025-10 | Conditional copies: If-None-Match / If-Match on the CopyObject destination (both general purpose and directory buckets) |
+| When          | Feature                                                                                                                                                                                                                      |
+| ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Long-standing | If-Match / If-None-Match / If-Modified-Since / If-Unmodified-Since for GET / HEAD / the CopyObject source                                                                                                                    |
+| 2024-08       | Conditional writes: `If-None-Match: *` on PutObject / CompleteMultipartUpload (write only if the key does not exist)                                                                                                         |
+| 2024-11       | Conditional writes: `If-Match` with an ETag (overwrite only if it matches = optimistic locking). In the same month, enforcement through bucket policies with the `s3:if-none-match` / `s3:if-match` condition keys was added |
+| 2025-06       | `If-None-Match: *` on RenameObject (directory buckets)                                                                                                                                                                       |
+| 2025-09       | Conditional deletes for general purpose buckets: `If-Match` (an ETag or `*`) on DeleteObject / DeleteObjects                                                                                                                 |
+| 2025-10       | Conditional copies: If-None-Match / If-Match on the CopyObject destination (both general purpose and directory buckets)                                                                                                      |
 
 Conditional deletes were available earlier for directory buckets (S3 Express One Zone), launched on 2024-11-25. DeleteObject / DeleteObjects accept `If-Match` (ETag), `x-amz-if-match-last-modified-time`, and `x-amz-if-match-size`, individually or together.
 
@@ -966,12 +967,12 @@ sequenceDiagram
     B->>S3: GET state.json (ETag: "e2") and retry
 ```
 
-| Header | Succeeds when | On failure |
-| --- | --- | --- |
-| `If-None-Match: *` | The key does not exist | 412 Precondition Failed |
-| `If-Match: "etag"` | The current ETag matches | 412. 404 if the key does not exist |
-| `If-Match: *` (delete) | The key exists | 412 / 404 |
-| Concurrent conflict | - | May return 409 Conflict; retry |
+| Header                 | Succeeds when            | On failure                         |
+| ---------------------- | ------------------------ | ---------------------------------- |
+| `If-None-Match: *`     | The key does not exist   | 412 Precondition Failed            |
+| `If-Match: "etag"`     | The current ETag matches | 412. 404 if the key does not exist |
+| `If-Match: *` (delete) | The key exists           | 412 / 404                          |
+| Concurrent conflict    | -                        | May return 409 Conflict; retry     |
 
 Conditional deletes are evaluated **only against the current version**.
 
@@ -1037,13 +1038,13 @@ An example that enforces conditional deletes (based on the example in the offici
 
 ### 14.1 Object size limits (raised to 50 TB in 2025-12)
 
-| Item | Limit |
-| --- | --- |
-| Single object | 50 TB (raised from 5 TB in 2025-12; all storage classes, all Regions) |
-| Single PUT | 5 GB |
-| Parts per multipart upload | 10,000 |
-| Part size | 5 MiB to 5 GiB (except the last part) |
-| CopyObject (single request) | 5 GB. Larger objects require a multipart copy with UploadPartCopy |
+| Item                        | Limit                                                                 |
+| --------------------------- | --------------------------------------------------------------------- |
+| Single object               | 50 TB (raised from 5 TB in 2025-12; all storage classes, all Regions) |
+| Single PUT                  | 5 GB                                                                  |
+| Parts per multipart upload  | 10,000                                                                |
+| Part size                   | 5 MiB to 5 GiB (except the last part)                                 |
+| CopyObject (single request) | 5 GB. Larger objects require a multipart copy with UploadPartCopy     |
 
 For objects around 50 TB, AWS recommends the AWS CRT-based S3 Transfer Manager. The part size limit has not changed (5 MiB to 5 GiB, up to 10,000 parts), and the multipart upload limits table in the S3 User Guide lists the maximum object size as 48.8 TiB. Because 10,000 parts × 5 GiB = 50,000 GiB ≈ 48.8 TiB, an object of the maximum size fits exactly when all 10,000 parts are at the 5 GiB maximum. AWS markets this as "50 TB" by treating 50,000 GiB as 50 TB at 1 TB = 1,000 GB; the exact limit is 5 GiB × 10,000 = 50,000 GiB ÷ 1,024 = 48.828125 TiB (≈ 48.8 TiB), which is 53,687,091,200,000 bytes ≈ 53.7 TB in decimal units.
 
@@ -1090,13 +1091,13 @@ The CLI parameter names were confirmed with `aws s3api rename-object help` in AW
 
 ### 15.1 Comparing the options
 
-| Option | Protocol | Writes | POSIX compatibility | Caching | Typical use |
-| --- | --- | --- | --- | --- | --- |
-| Mountpoint for Amazon S3 | FUSE (client) | Sequential writes to new files; appends and overwrites when configured. No random writes | Limited (no directory rename, no symbolic links, etc.) | Local cache / S3 Express One Zone cache | Large-scale parallel reads (ML training, genomics, log processing) |
-| Mountpoint CSI driver | Kubernetes CSI | Same as above | Same as above | Same as above | Mount S3 from EKS pods |
-| Amazon S3 Files (GA 2026-04) | NFS v4.1+ | Full (create, read, update, delete) | Full file system semantics | Automatic caching in a high-performance storage layer | Existing file-based applications, shared file systems, agentic AI |
-| Storage Gateway (S3 File Gateway) | NFS / SMB (on-premises VM) | Full | Depends on the gateway | Local cache | Using S3 from on premises |
-| FSx for Lustre (S3 integration) | Lustre | Full | Full | The file system itself | HPC, importing / exporting S3 data |
+| Option                            | Protocol                   | Writes                                                                                   | POSIX compatibility                                    | Caching                                               | Typical use                                                        |
+| --------------------------------- | -------------------------- | ---------------------------------------------------------------------------------------- | ------------------------------------------------------ | ----------------------------------------------------- | ------------------------------------------------------------------ |
+| Mountpoint for Amazon S3          | FUSE (client)              | Sequential writes to new files; appends and overwrites when configured. No random writes | Limited (no directory rename, no symbolic links, etc.) | Local cache / S3 Express One Zone cache               | Large-scale parallel reads (ML training, genomics, log processing) |
+| Mountpoint CSI driver             | Kubernetes CSI             | Same as above                                                                            | Same as above                                          | Same as above                                         | Mount S3 from EKS pods                                             |
+| Amazon S3 Files (GA 2026-04)      | NFS v4.1+                  | Full (create, read, update, delete)                                                      | Full file system semantics                             | Automatic caching in a high-performance storage layer | Existing file-based applications, shared file systems, agentic AI  |
+| Storage Gateway (S3 File Gateway) | NFS / SMB (on-premises VM) | Full                                                                                     | Depends on the gateway                                 | Local cache                                           | Using S3 from on premises                                          |
+| FSx for Lustre (S3 integration)   | Lustre                     | Full                                                                                     | Full                                                   | The file system itself                                | HPC, importing / exporting S3 data                                 |
 
 ### 15.2 Mountpoint for Amazon S3
 
@@ -1121,18 +1122,18 @@ Not a good fit for: random writes to existing files, file locking, hard links, a
 
 A new service that became GA in 2026-04 and **makes existing general purpose S3 buckets directly accessible as file systems**. The AWS News Blog describes S3 as "the first and only cloud object store that offers fully featured, high-performance file system access".
 
-| Feature | Details |
-| --- | --- |
-| Foundation | Built on Amazon EFS technology |
-| Protocol | All NFS v4.1+ operations (create, read, update, delete) |
-| Scope | Any new or existing general purpose bucket (no data migration needed). Can be scoped to a prefix |
-| Synchronization | Changes on the file system are automatically reflected in the S3 bucket. Fine-grained control over synchronization is available |
-| Performance | Metadata and contents of frequently used files are placed in a high-performance storage layer for low latency. Large sequential reads are served directly from S3. Aggregate read throughput of up to multiple TB per second |
-| Concurrent connections | Mounted concurrently from thousands of compute resources |
-| Compute | EC2, ECS, EKS, Lambda |
-| Concurrent use | Supports simultaneous access through the file system and the S3 API |
-| Regions | 34 Regions at GA |
-| Networking | Through mount targets. Allow NFS (TCP 2049) in security groups |
+| Feature                | Details                                                                                                                                                                                                                      |
+| ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Foundation             | Built on Amazon EFS technology                                                                                                                                                                                               |
+| Protocol               | All NFS v4.1+ operations (create, read, update, delete)                                                                                                                                                                      |
+| Scope                  | Any new or existing general purpose bucket (no data migration needed). Can be scoped to a prefix                                                                                                                             |
+| Synchronization        | Changes on the file system are automatically reflected in the S3 bucket. Fine-grained control over synchronization is available                                                                                              |
+| Performance            | Metadata and contents of frequently used files are placed in a high-performance storage layer for low latency. Large sequential reads are served directly from S3. Aggregate read throughput of up to multiple TB per second |
+| Concurrent connections | Mounted concurrently from thousands of compute resources                                                                                                                                                                     |
+| Compute                | EC2, ECS, EKS, Lambda                                                                                                                                                                                                        |
+| Concurrent use         | Supports simultaneous access through the file system and the S3 API                                                                                                                                                          |
+| Regions                | 34 Regions at GA                                                                                                                                                                                                             |
+| Networking             | Through mount targets. Allow NFS (TCP 2049) in security groups                                                                                                                                                               |
 
 ```text
  [EC2] [ECS] [EKS] [Lambda]
@@ -1156,13 +1157,13 @@ Pricing consists of a storage rate for the active data resident on the high-perf
 
 ### 16.1 AWS Backup for Amazon S3
 
-| Item | Continuous backup | Periodic backup (snapshots) |
-| --- | --- | --- |
-| Restore granularity | Any point in time within the past 35 days (PITR) | The snapshot time |
-| Retention | Up to 35 days | Up to 99 years |
-| Frequency | Continuous | 1 hour / 12 hours / 1 day / 1 week / 1 month / on demand |
-| Prerequisites | Versioning required; depends on EventBridge notifications | Versioning required |
-| Copies | Cross-account / cross-Region allowed (copies do not support PITR) | Allowed |
+| Item                | Continuous backup                                                 | Periodic backup (snapshots)                              |
+| ------------------- | ----------------------------------------------------------------- | -------------------------------------------------------- |
+| Restore granularity | Any point in time within the past 35 days (PITR)                  | The snapshot time                                        |
+| Retention           | Up to 35 days                                                     | Up to 99 years                                           |
+| Frequency           | Continuous                                                        | 1 hour / 12 hours / 1 day / 1 week / 1 month / on demand |
+| Prerequisites       | Versioning required; depends on EventBridge notifications         | Versioning required                                      |
+| Copies              | Cross-account / cross-Region allowed (copies do not support PITR) | Allowed                                                  |
 
 - Backs up object data, tags, ACLs, and user-defined metadata.
 - The first backup is full; subsequent backups are object-level incremental.
@@ -1198,14 +1199,14 @@ A managed service for online data transfer.
 
 A managed file transfer service backed by S3 (or EFS).
 
-| Feature | Details |
-| --- | --- |
-| Servers | SFTP, FTPS, FTP (VPC only), AS2 |
-| Authentication | Service-managed users (SSH keys), AWS Directory Service, custom IdP (Lambda / API Gateway) |
-| SFTP connectors | Send and receive files from AWS to external SFTP servers |
-| Managed workflows | Post-upload copy, tagging, decryption (PGP), and Lambda processing |
-| Web apps | A managed web UI for working with files in S3 from a browser (integrated with S3 Access Grants + IAM Identity Center) |
-| Logical directories | Map an S3 prefix to a virtual root per user (equivalent to chroot) |
+| Feature             | Details                                                                                                               |
+| ------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| Servers             | SFTP, FTPS, FTP (VPC only), AS2                                                                                       |
+| Authentication      | Service-managed users (SSH keys), AWS Directory Service, custom IdP (Lambda / API Gateway)                            |
+| SFTP connectors     | Send and receive files from AWS to external SFTP servers                                                              |
+| Managed workflows   | Post-upload copy, tagging, decryption (PGP), and Lambda processing                                                    |
+| Web apps            | A managed web UI for working with files in S3 from a browser (integrated with S3 Access Grants + IAM Identity Center) |
+| Logical directories | Map an S3 prefix to a virtual root per user (equivalent to chroot)                                                    |
 
 ```bash
 aws transfer create-server \

@@ -1,7 +1,5 @@
 dist
 node_modules
 coverage
-docs
-data
-*.md
 package-lock.json
+.playwright-mcp

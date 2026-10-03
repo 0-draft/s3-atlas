@@ -10,14 +10,14 @@ Twelve labs for confirming, hands-on, the mechanisms covered in earlier chapters
 
 ### 0.1 Tools
 
-| Tool | Purpose | Example install |
-| --- | --- | --- |
-| AWS CLI v2 | All labs | `brew install awscli` (this chapter was verified with v2.37.7) |
-| jq | JSON formatting | `brew install jq` |
-| Docker | Local S3-compatible server | Docker Desktop / Rancher Desktop / colima, etc. |
-| s5cmd | Lab 12 | `brew install peak/tap/s5cmd` (or the `peakcom/s5cmd` container image) |
-| warp | Lab 12 | Download the binary from GitHub Releases (`minio/warp`) (or the `minio/warp` container image) |
-| Python 3.13 + pip | Lab 5 | `brew install python@3.13` |
+| Tool              | Purpose                    | Example install                                                                               |
+| ----------------- | -------------------------- | --------------------------------------------------------------------------------------------- |
+| AWS CLI v2        | All labs                   | `brew install awscli` (this chapter was verified with v2.37.7)                                |
+| jq                | JSON formatting            | `brew install jq`                                                                             |
+| Docker            | Local S3-compatible server | Docker Desktop / Rancher Desktop / colima, etc.                                               |
+| s5cmd             | Lab 12                     | `brew install peak/tap/s5cmd` (or the `peakcom/s5cmd` container image)                        |
+| warp              | Lab 12                     | Download the binary from GitHub Releases (`minio/warp`) (or the `minio/warp` container image) |
+| Python 3.13 + pip | Lab 5                      | `brew install python@3.13`                                                                    |
 
 ### 0.2 Environment variables for real AWS
 
@@ -87,20 +87,20 @@ aws --endpoint-url http://localhost:4566 s3 ls
 
 ### 0.5 Labs by environment
 
-| Lab | Real AWS | MinIO-compatible (silo) | LocalStack |
-| --- | --- | --- | --- |
-| Lab 1 Bucket + upload + presign | OK | OK except step 2 (Block Public Access / Object Ownership return `NotImplemented`, no default encryption) | OK |
-| Lab 2 Versioning | OK | OK | OK |
-| Lab 3 Lifecycle + Intelligent-Tiering | OK | Expiration rules only (Transitions, `AbortIncompleteMultipartUpload`, the `INTELLIGENT_TIERING` class, and Intelligent-Tiering configuration are rejected) | Configuration API only |
-| Lab 4 CloudFront OAC | OK | Not possible | Partial |
-| Lab 5 Events → Lambda | OK | Not possible (webhook notifications work) | OK |
-| Lab 6 CRR | OK | Different mechanism (site replication) | Partial |
-| Lab 7 Object Lock | OK | OK (the error code on a rejected delete differs) | Partial |
-| Lab 8 Bucket policy / 403 | OK | Different mechanism (MinIO policies) | Simplified evaluation |
-| Lab 9 Manual multipart | OK | OK | OK |
-| Lab 10 Athena / S3 Tables | OK | Not possible | Not possible |
-| Lab 11 S3 Vectors | OK | Not possible | Not possible |
-| Lab 12 Benchmarking | OK | OK (measures local performance) | Not recommended |
+| Lab                                   | Real AWS | MinIO-compatible (silo)                                                                                                                                    | LocalStack             |
+| ------------------------------------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------- |
+| Lab 1 Bucket + upload + presign       | OK       | OK except step 2 (Block Public Access / Object Ownership return `NotImplemented`, no default encryption)                                                   | OK                     |
+| Lab 2 Versioning                      | OK       | OK                                                                                                                                                         | OK                     |
+| Lab 3 Lifecycle + Intelligent-Tiering | OK       | Expiration rules only (Transitions, `AbortIncompleteMultipartUpload`, the `INTELLIGENT_TIERING` class, and Intelligent-Tiering configuration are rejected) | Configuration API only |
+| Lab 4 CloudFront OAC                  | OK       | Not possible                                                                                                                                               | Partial                |
+| Lab 5 Events → Lambda                 | OK       | Not possible (webhook notifications work)                                                                                                                  | OK                     |
+| Lab 6 CRR                             | OK       | Different mechanism (site replication)                                                                                                                     | Partial                |
+| Lab 7 Object Lock                     | OK       | OK (the error code on a rejected delete differs)                                                                                                           | Partial                |
+| Lab 8 Bucket policy / 403             | OK       | Different mechanism (MinIO policies)                                                                                                                       | Simplified evaluation  |
+| Lab 9 Manual multipart                | OK       | OK                                                                                                                                                         | OK                     |
+| Lab 10 Athena / S3 Tables             | OK       | Not possible                                                                                                                                               | Not possible           |
+| Lab 11 S3 Vectors                     | OK       | Not possible                                                                                                                                               | Not possible           |
+| Lab 12 Benchmarking                   | OK       | OK (measures local performance)                                                                                                                            | Not recommended        |
 
 The silo column was verified by actually running the labs on 2026-10-03 (Labs 1–3, 7, 9, and 12). Labs 4, 5, 6, 8, 10, and 11 were not run on real AWS; only their CLI arguments were checked by sending the same commands to a local mock (moto 5.2.3 server) to confirm that the AWS CLI accepts them. The LocalStack column was not verified (see 0.4).
 

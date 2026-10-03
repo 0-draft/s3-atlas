@@ -35,13 +35,13 @@ timeline
 
 ### 1.2 Five factors behind standardization
 
-| Factor | Details | Why it worked |
-| --- | --- | --- |
-| First mover | 2006, earlier than GCS (2010) and Azure Blob (2008 preview / 2010 GA) | S3 became the first mental model of "a place for files in the cloud" |
-| Simple API | Bucket + key + HTTP verbs (PUT/GET/DELETE/LIST) | Anyone can implement it, and anyone can write a client |
-| Strict backward compatibility | AWS says "S3 code written in 2006 still runs today without changes" | Investment in tools and knowledge does not go stale |
-| SDK and tooling ecosystem | AWS SDKs for every language, boto3, rclone, s3fs, Hadoop S3A, Spark, DuckDB, Arrow, Iceberg | "Supports S3 = supports tools worldwide" |
-| An "S3-compatible" market | Ceph RGW, MinIO, R2, B2, Wasabi, various on-prem products | Network effect: the more compatible vendors, the more valuable the S3 API |
+| Factor                        | Details                                                                                     | Why it worked                                                             |
+| ----------------------------- | ------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| First mover                   | 2006, earlier than GCS (2010) and Azure Blob (2008 preview / 2010 GA)                       | S3 became the first mental model of "a place for files in the cloud"      |
+| Simple API                    | Bucket + key + HTTP verbs (PUT/GET/DELETE/LIST)                                             | Anyone can implement it, and anyone can write a client                    |
+| Strict backward compatibility | AWS says "S3 code written in 2006 still runs today without changes"                         | Investment in tools and knowledge does not go stale                       |
+| SDK and tooling ecosystem     | AWS SDKs for every language, boto3, rclone, s3fs, Hadoop S3A, Spark, DuckDB, Arrow, Iceberg | "Supports S3 = supports tools worldwide"                                  |
+| An "S3-compatible" market     | Ceph RGW, MinIO, R2, B2, Wasabi, various on-prem products                                   | Network effect: the more compatible vendors, the more valuable the S3 API |
 
 ### 1.3 The "S3-compatible" category
 
@@ -80,13 +80,13 @@ Conversely, the benefit to users is that **you can change where your data lives 
 
 Synergy's definition is IaaS + PaaS + hosted private cloud. It cannot be compared directly with the "cloud" revenue in each company's earnings (which may include SaaS).
 
-| Quarter | Market size ($B) | AWS | Microsoft | Google | Others | Notes |
-| --- | --- | --- | --- | --- | --- | --- |
-| 2025 Q2 | 98.8 | 30% | 20% | 13% | 37% | Per-company shares from secondary reports citing Synergy |
-| 2025 Q3 | 106.9 | 29% | 20% | 13% | 38% | |
-| 2025 Q4 | 119.1 | 28% | 21% | 14% | 37% | Some reports put Google at 15% |
-| 2026 Q1 | 128.6 | 28% | 21% | 14% | 37% | Oracle 4%, neoclouds combined 5% |
-| 2026 Q2 | 143 | 28% | 20% | 15% | 37% | +43% YoY, highest growth rate in 8 years |
+| Quarter | Market size ($B) | AWS | Microsoft | Google | Others | Notes                                                    |
+| ------- | ---------------- | --- | --------- | ------ | ------ | -------------------------------------------------------- |
+| 2025 Q2 | 98.8             | 30% | 20%       | 13%    | 37%    | Per-company shares from secondary reports citing Synergy |
+| 2025 Q3 | 106.9            | 29% | 20%       | 13%    | 38%    |                                                          |
+| 2025 Q4 | 119.1            | 28% | 21%       | 14%    | 37%    | Some reports put Google at 15%                           |
+| 2026 Q1 | 128.6            | 28% | 21%       | 14%    | 37%    | Oracle 4%, neoclouds combined 5%                         |
+| 2026 Q2 | 143              | 28% | 20%       | 15%    | 37%    | +43% YoY, highest growth rate in 8 years                 |
 
 ```mermaid
 xychart-beta
@@ -117,13 +117,13 @@ How to read it:
 
 ### 2.2 AWS revenue
 
-| Quarter | AWS revenue ($B) | YoY | AWS operating income ($B) |
-| --- | --- | --- | --- |
-| 2025 Q2 | 30.9 | +17.5% | 10.2 |
-| 2025 Q3 | 33.0 | +20% | 11.4 |
-| 2025 Q4 | 35.6 | +24% | 12.5 |
-| 2026 Q1 | 37.6 | +28% | 14.2 |
-| 2026 Q2 | 42.2 | +37% | 16.6 |
+| Quarter | AWS revenue ($B) | YoY    | AWS operating income ($B) |
+| ------- | ---------------- | ------ | ------------------------- |
+| 2025 Q2 | 30.9             | +17.5% | 10.2                      |
+| 2025 Q3 | 33.0             | +20%   | 11.4                      |
+| 2025 Q4 | 35.6             | +24%   | 12.5                      |
+| 2026 Q1 | 37.6             | +28%   | 14.2                      |
+| 2026 Q2 | 42.2             | +37%   | 16.6                      |
 
 ```mermaid
 xychart-beta
@@ -142,13 +142,13 @@ xychart-beta
 
 Each research firm uses a different definition (cloud services only / software / including hardware), so **estimates for the same year differ by more than 10x**.
 
-| Source | Definition | Base-year value | Forecast | CAGR |
-| --- | --- | --- | --- | --- |
-| Research and Markets | Cloud Object Storage | 2025: $9.44B | 2026: $10.97B, 2030: $18.79B | 14.4% for 2026-2030 |
-| Strategic Market Research | Object-based storage | 2024: $9.7B | 2030: $19.8B | 12.4% |
-| Mordor Intelligence | Object-based storage (narrow) | 2025: $1.67B | 2030: $2.74B | 10.41% |
-| IndustryARC | Object based storage | 2023: $2.8B | 2030: $7B | 12% |
-| Market Data Forecast | Object-based storage | 2024: $7.60B | 2033: $23.76B | 13.5% |
+| Source                    | Definition                    | Base-year value | Forecast                     | CAGR                |
+| ------------------------- | ----------------------------- | --------------- | ---------------------------- | ------------------- |
+| Research and Markets      | Cloud Object Storage          | 2025: $9.44B    | 2026: $10.97B, 2030: $18.79B | 14.4% for 2026-2030 |
+| Strategic Market Research | Object-based storage          | 2024: $9.7B     | 2030: $19.8B                 | 12.4%               |
+| Mordor Intelligence       | Object-based storage (narrow) | 2025: $1.67B    | 2030: $2.74B                 | 10.41%              |
+| IndustryARC               | Object based storage          | 2023: $2.8B     | 2030: $7B                    | 12%                 |
+| Market Data Forecast      | Object-based storage          | 2024: $7.60B    | 2033: $23.76B                | 13.5%               |
 
 ```mermaid
 xychart-beta
@@ -162,17 +162,17 @@ xychart-beta
 
 ### 2.4 S3 scale (AWS published figures)
 
-| Metric | Value | As of | Source |
-| --- | --- | --- | --- |
-| Stored objects | More than 500 trillion | 2026-03 | AWS 20th-anniversary blog |
-| Requests | More than 200 million per second | 2026-03 | Same as above |
-| Stored data | Hundreds of EB | 2026-03 | Same as above |
-| Footprint | 39 Regions / 123 AZs | 2026-03 | Same as above |
-| Maximum object size | 50 TB (5 GB at launch) | 2025-12 | re:Invent 2025 |
-| Unit price | $0.15/GB → just over 2 cents (about 85% lower) | 2006 → 2026 | AWS 20th-anniversary blog |
-| Cumulative customer savings from Intelligent-Tiering | More than $6B | 2026-03 | Same as above |
-| S3 Vectors (July-December 2025) | More than 250,000 indexes, more than 40 billion vectors, more than 1 billion queries | 2025 | Same as above |
-| Configuration at launch | About 1 PB, about 400 nodes, 15 racks, 3 DCs, 15 Gbps total bandwidth | 2006 | Same as above |
+| Metric                                               | Value                                                                                | As of       | Source                    |
+| ---------------------------------------------------- | ------------------------------------------------------------------------------------ | ----------- | ------------------------- |
+| Stored objects                                       | More than 500 trillion                                                               | 2026-03     | AWS 20th-anniversary blog |
+| Requests                                             | More than 200 million per second                                                     | 2026-03     | Same as above             |
+| Stored data                                          | Hundreds of EB                                                                       | 2026-03     | Same as above             |
+| Footprint                                            | 39 Regions / 123 AZs                                                                 | 2026-03     | Same as above             |
+| Maximum object size                                  | 50 TB (5 GB at launch)                                                               | 2025-12     | re:Invent 2025            |
+| Unit price                                           | $0.15/GB → just over 2 cents (about 85% lower)                                       | 2006 → 2026 | AWS 20th-anniversary blog |
+| Cumulative customer savings from Intelligent-Tiering | More than $6B                                                                        | 2026-03     | Same as above             |
+| S3 Vectors (July-December 2025)                      | More than 250,000 indexes, more than 40 billion vectors, more than 1 billion queries | 2025        | Same as above             |
+| Configuration at launch                              | About 1 PB, about 400 nodes, 15 racks, 3 DCs, 15 Gbps total bandwidth                | 2006        | Same as above             |
 
 For reference, AWS cited "more than 350 trillion objects and more than 100 million requests per second" in its S3 Express One Zone GA press release (2023-11-28). The 100 million requests per second figure goes back to Pi Day 2022, and "more than 400 trillion objects" first appeared in 2024-12. From 2023-11 to 2026-03 (about 2 years and 4 months), objects grew about 1.4x and requests 2x, so growth has not slowed.
 
@@ -218,27 +218,27 @@ flowchart TB
 
 ### 3.2 S3 in AI/ML
 
-| Use case | How S3 is used | Related features |
-| --- | --- | --- |
-| Training datasets | Massively parallel reads of Parquet / WebDataset / JSONL | Mountpoint for S3, S3 Connector for PyTorch, S3 Express One Zone |
-| Checkpoints | Periodic writes of hundreds of GB to TB | Multipart upload, Express One Zone (low latency) |
-| Model weight distribution | Bulk download when inference nodes start | CloudFront; Tigris / R2 elsewhere |
-| RAG / vectors | Storing and searching embedding vectors | S3 Vectors (GA 2025-12, up to 2 billion vectors per index) |
-| Logs and evaluation data | Accumulating inference logs and evaluation results | Lifecycle, Intelligent-Tiering |
+| Use case                  | How S3 is used                                           | Related features                                                 |
+| ------------------------- | -------------------------------------------------------- | ---------------------------------------------------------------- |
+| Training datasets         | Massively parallel reads of Parquet / WebDataset / JSONL | Mountpoint for S3, S3 Connector for PyTorch, S3 Express One Zone |
+| Checkpoints               | Periodic writes of hundreds of GB to TB                  | Multipart upload, Express One Zone (low latency)                 |
+| Model weight distribution | Bulk download when inference nodes start                 | CloudFront; Tigris / R2 elsewhere                                |
+| RAG / vectors             | Storing and searching embedding vectors                  | S3 Vectors (GA 2025-12, up to 2 billion vectors per index)       |
+| Logs and evaluation data  | Accumulating inference logs and evaluation results       | Lifecycle, Intelligent-Tiering                                   |
 
 **Tension with GPU neoclouds**: when you train on GPU clouds such as CoreWeave / Nebius, data that lives in S3 incurs egress every time. This is a tailwind for the neoclouds' own storage (S3-compatible, such as VAST) and for egress-free storage like R2. Backblaze entered a Master Strategic Agreement with CoreWeave effective 2026-06-16, with an estimated total contract value of about $335M over the initial order forms (5- and 7-year terms), per its 8-K.
 
 ### 3.3 Concepts S3 established in the industry
 
-| Concept | Introduced in S3 | Industry spillover |
-| --- | --- | --- |
-| Flat bucket + key namespace | At launch in 2006 | The understanding that "directories are just prefixes" became common. Commit protocols such as Hadoop S3A were redesigned on this premise |
-| Presigned URLs | From the start | The standard design for direct uploads from browsers/mobile. R2 and GCS have equivalent features |
-| Storage classes and Lifecycle | From Glacier in 2012 onward | Tiering that "prices by access frequency" became a standard menu item across cloud storage |
-| Eleven nines (99.999999999%) | As the durability design target | Competitors adopted the same number, making it the industry's common language for durability |
-| Event-driven (S3 → Lambda) | Around Lambda's launch in 2014 | The prototype of serverless "process a file when it lands". GCS → Pub/Sub and R2 → Queues follow the same pattern |
-| Object Lock (WORM) | 2018 | Immutable backups against ransomware became a must-have for S3-compatible storage |
-| Tables / vectors on storage | 2024-2025 | The starting point of competition where "storage providers offer up to the database layer" |
+| Concept                       | Introduced in S3                | Industry spillover                                                                                                                        |
+| ----------------------------- | ------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| Flat bucket + key namespace   | At launch in 2006               | The understanding that "directories are just prefixes" became common. Commit protocols such as Hadoop S3A were redesigned on this premise |
+| Presigned URLs                | From the start                  | The standard design for direct uploads from browsers/mobile. R2 and GCS have equivalent features                                          |
+| Storage classes and Lifecycle | From Glacier in 2012 onward     | Tiering that "prices by access frequency" became a standard menu item across cloud storage                                                |
+| Eleven nines (99.999999999%)  | As the durability design target | Competitors adopted the same number, making it the industry's common language for durability                                              |
+| Event-driven (S3 → Lambda)    | Around Lambda's launch in 2014  | The prototype of serverless "process a file when it lands". GCS → Pub/Sub and R2 → Queues follow the same pattern                         |
+| Object Lock (WORM)            | 2018                            | Immutable backups against ransomware became a must-have for S3-compatible storage                                                         |
+| Tables / vectors on storage   | 2024-2025                       | The starting point of competition where "storage providers offer up to the database layer"                                                |
 
 **Key point**: new S3 features tend to become industry standards 2-5 years later. When reading a compatible vendor's feature list, a useful yardstick for maturity is "how many years behind S3 is the newest S3 feature it supports?"
 
@@ -262,15 +262,15 @@ timeline
 
 ### 4.2 Representative systems
 
-| System | Type | How it uses S3 | Significance |
-| --- | --- | --- | --- |
-| WarpStream | Kafka-compatible streaming | Makes brokers stateless and writes all data directly to S3 | Cuts cross-AZ replication charges. Acquired by Confluent in 2024-09 (IBM reportedly completed its acquisition of Confluent in 2026) |
-| Apache Kafka Diskless Topics (KIP-1150) | Kafka itself | Writes messages directly to object storage; broker disks act as cache | Accepted on 2026-03-02. The implementation KIPs (1163/1164) are under discussion and not GA as of 2026-08 |
-| Neon | Serverless Postgres | Persists WAL via Safekeepers and pages via Pageservers to S3 | Separates storage and compute; branches are created instantly. Acquired by Databricks for about $1B |
-| turbopuffer | Vector + full-text search | S3 as the primary store, NVMe and memory as cache tiers | Over an order of magnitude cheaper than the "keep the whole vector DB in memory" model. Relies on S3 strong consistency and CAS |
-| SlateDB | Embedded KV (LSM) | Writes everything, including the WAL, to object storage | "Bottomless" storage, Apache 2.0 |
-| LanceDB / Lance | Vector DB / columnar format | Queries Lance files on S3 directly | Aimed at multimodal AI data |
-| Iceberg / Delta | Table formats | Keeps all metadata and data on S3; commits are arbitrated by conditional writes or a catalog | Rebuilds the DWH on top of S3 |
+| System                                  | Type                        | How it uses S3                                                                               | Significance                                                                                                                        |
+| --------------------------------------- | --------------------------- | -------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| WarpStream                              | Kafka-compatible streaming  | Makes brokers stateless and writes all data directly to S3                                   | Cuts cross-AZ replication charges. Acquired by Confluent in 2024-09 (IBM reportedly completed its acquisition of Confluent in 2026) |
+| Apache Kafka Diskless Topics (KIP-1150) | Kafka itself                | Writes messages directly to object storage; broker disks act as cache                        | Accepted on 2026-03-02. The implementation KIPs (1163/1164) are under discussion and not GA as of 2026-08                           |
+| Neon                                    | Serverless Postgres         | Persists WAL via Safekeepers and pages via Pageservers to S3                                 | Separates storage and compute; branches are created instantly. Acquired by Databricks for about $1B                                 |
+| turbopuffer                             | Vector + full-text search   | S3 as the primary store, NVMe and memory as cache tiers                                      | Over an order of magnitude cheaper than the "keep the whole vector DB in memory" model. Relies on S3 strong consistency and CAS     |
+| SlateDB                                 | Embedded KV (LSM)           | Writes everything, including the WAL, to object storage                                      | "Bottomless" storage, Apache 2.0                                                                                                    |
+| LanceDB / Lance                         | Vector DB / columnar format | Queries Lance files on S3 directly                                                           | Aimed at multimodal AI data                                                                                                         |
+| Iceberg / Delta                         | Table formats               | Keeps all metadata and data on S3; commits are arbitrated by conditional writes or a catalog | Rebuilds the DWH on top of S3                                                                                                       |
 
 ### 4.3 Why now
 
@@ -301,11 +301,11 @@ flowchart LR
 
 ### 5.1 Major incidents
 
-| Date | Scope | Cause | Duration | Lesson for the industry |
-| --- | --- | --- | --- | --- |
-| 2008-07-20 | S3 (US/EU) | Message corruption (a single-bit error) in server-to-server gossip polluted state propagation | About 8 hours (contemporary reports) | Reliability issues of the early cloud; the importance of checksums |
-| 2017-02-28 | S3 us-east-1 | While debugging the billing system, an operator mistyped a command input and removed more servers than intended. The index and placement subsystems had to restart | 9:37-13:54 PST, about 4 hours 17 minutes | "Half the internet went down". AWS's own Service Health Dashboard depended on S3 and could not be updated |
-| 2025-10-19 to 20 | us-east-1 (originating in DynamoDB) | A race condition in DynamoDB's DNS automation (Planner/Enactor) left the endpoint's DNS record empty | DNS about 3 hours; full recovery about 14-15 hours due to knock-on effects on EC2/NLB and others | Not an S3 outage itself, but it exposed the chain of internal dependencies in us-east-1 |
+| Date             | Scope                               | Cause                                                                                                                                                              | Duration                                                                                         | Lesson for the industry                                                                                   |
+| ---------------- | ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------- |
+| 2008-07-20       | S3 (US/EU)                          | Message corruption (a single-bit error) in server-to-server gossip polluted state propagation                                                                      | About 8 hours (contemporary reports)                                                             | Reliability issues of the early cloud; the importance of checksums                                        |
+| 2017-02-28       | S3 us-east-1                        | While debugging the billing system, an operator mistyped a command input and removed more servers than intended. The index and placement subsystems had to restart | 9:37-13:54 PST, about 4 hours 17 minutes                                                         | "Half the internet went down". AWS's own Service Health Dashboard depended on S3 and could not be updated |
+| 2025-10-19 to 20 | us-east-1 (originating in DynamoDB) | A race condition in DynamoDB's DNS automation (Planner/Enactor) left the endpoint's DNS record empty                                                               | DNS about 3 hours; full recovery about 14-15 hours due to knock-on effects on EC2/NLB and others | Not an S3 outage itself, but it exposed the chain of internal dependencies in us-east-1                   |
 
 ### 5.2 The 2017 S3 outage in detail
 
@@ -362,10 +362,10 @@ timeline
 
 ### 6.2 EU Data Act
 
-| Period | Treatment of switching charges |
-| --- | --- |
+| Period                   | Treatment of switching charges                                                                      |
+| ------------------------ | --------------------------------------------------------------------------------------------------- |
 | 2024-01-11 to 2027-01-12 | Allowed, but capped at the provider's direct costs (egress, etc.) and disclosed before the contract |
-| From 2027-01-12 | Article 29 bans switching charges (including egress) for the switching process |
+| From 2027-01-12          | Article 29 bans switching charges (including egress) for the switching process                      |
 
 - It covers IaaS / PaaS / SaaS **provided to EU customers**. It can apply even if the Region is in the US, as long as the customer is in the EU.
 - **Everyday egress (delivery to users, cross-Region replication) is out of scope**. Running multiple clouds in parallel is also generally interpreted as "operations" and out of scope.
@@ -389,9 +389,9 @@ timeline
 
 ## 7. SWOT analysis (S3)
 
-| | Positive | Negative |
-| --- | --- | --- |
-| Internal | **Strengths**: owner of the API standard / 20 years of backward compatibility / a track record of 500 trillion objects and an 11-nines design / the widest range of storage classes / integration with all AWS services / fast feature expansion through S3 Tables, Vectors, and Express | **Weaknesses**: egress at $0.09/GB / complex billing dimensions / hot-tier unit price about 3x that of alt-clouds / structural concentration in us-east-1 / low transparency since S3 revenue alone is not disclosed |
+|          | Positive                                                                                                                                                                                                                                                                                          | Negative                                                                                                                                                                                                                                                   |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Internal | **Strengths**: owner of the API standard / 20 years of backward compatibility / a track record of 500 trillion objects and an 11-nines design / the widest range of storage classes / integration with all AWS services / fast feature expansion through S3 Tables, Vectors, and Express          | **Weaknesses**: egress at $0.09/GB / complex billing dimensions / hot-tier unit price about 3x that of alt-clouds / structural concentration in us-east-1 / low transparency since S3 revenue alone is not disclosed                                       |
 | External | **Opportunities**: the explosion of AI training and inference data / lakehouse standardization (Iceberg) / S3 becoming the primary store through "S3 as database" / generalization of vector search / economies of scale amid 2026 hardware price spikes (alt-clouds raise prices, S3 holds them) | **Threats**: egress regulation (EU Data Act, CMA) / zero-egress players such as R2 / GPU neoclouds' own storage / 37signals-style repatriation / data sovereignty (European demand for sovereign clouds) / lower switching costs thanks to compatible APIs |
 
 ```mermaid
@@ -421,16 +421,16 @@ Coordinates are the author's subjective assessment.
 
 ### 8.1 Predictions
 
-| Theme | Outlook | Confidence (author's view) |
-| --- | --- | --- |
-| Storage becoming a "database" | S3 Tables / Vectors / Metadata keep expanding and the number of "bucket types" grows (general purpose, directory, table, vector...) | High |
-| Egress fees | Free exit becomes the norm. List prices for everyday egress stay put, handled instead by "off-list price cuts" such as CloudFront bundles and EU discounts | Medium |
-| Pricing | With HDD/NAND price spikes in 2026-2027, alt-clouds raise prices further. Hyperscalers hold standard-tier prices and adjust through minimum storage durations, retrieval fees, and the like | Medium |
-| Fragmentation of S3 compatibility | The ability to keep up with conditional writes and table/vector APIs makes the differences between compatible vendors clear | High |
-| Going diskless | "State in S3, stateless compute" becomes the standard design for Kafka (KIP-1150 implementation), Postgres, search, and time-series DBs | High |
-| Self-hosting | Ceph, Garage, SeaweedFS, and MinIO forks split the gap left by MinIO. Commercial S3-compatible storage (VAST, Everpure, etc.) grows on AI demand | Medium |
-| Regulation | With the EU Data Act's 2027-01-12 provisions in effect, more "switching" cases originate in Europe. In the UK, the focus is on how well the voluntary commitments are honored | Medium |
-| Sovereign cloud | Models that place the operating entity inside the EU, such as the AWS European Sovereign Cloud, expand | Medium |
+| Theme                             | Outlook                                                                                                                                                                                     | Confidence (author's view) |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------- |
+| Storage becoming a "database"     | S3 Tables / Vectors / Metadata keep expanding and the number of "bucket types" grows (general purpose, directory, table, vector...)                                                         | High                       |
+| Egress fees                       | Free exit becomes the norm. List prices for everyday egress stay put, handled instead by "off-list price cuts" such as CloudFront bundles and EU discounts                                  | Medium                     |
+| Pricing                           | With HDD/NAND price spikes in 2026-2027, alt-clouds raise prices further. Hyperscalers hold standard-tier prices and adjust through minimum storage durations, retrieval fees, and the like | Medium                     |
+| Fragmentation of S3 compatibility | The ability to keep up with conditional writes and table/vector APIs makes the differences between compatible vendors clear                                                                 | High                       |
+| Going diskless                    | "State in S3, stateless compute" becomes the standard design for Kafka (KIP-1150 implementation), Postgres, search, and time-series DBs                                                     | High                       |
+| Self-hosting                      | Ceph, Garage, SeaweedFS, and MinIO forks split the gap left by MinIO. Commercial S3-compatible storage (VAST, Everpure, etc.) grows on AI demand                                            | Medium                     |
+| Regulation                        | With the EU Data Act's 2027-01-12 provisions in effect, more "switching" cases originate in Europe. In the UK, the focus is on how well the voluntary commitments are honored               | Medium                     |
+| Sovereign cloud                   | Models that place the operating entity inside the EU, such as the AWS European Sovereign Cloud, expand                                                                                      | Medium                     |
 
 ### 8.2 Author's conclusion
 
@@ -442,13 +442,13 @@ At the same time, S3's weakness is clear, and it lies not in technology but in i
 
 `data/market.json` contains the following (strings are bilingual `{ "en", "ja" }`).
 
-| Key | Contents | Recommended chart |
-| --- | --- | --- |
-| `cloudShare` | Synergy share and market size, 2025 Q2 to 2026 Q2 | Line (share trend), donut (latest quarter) |
-| `awsRevenue` | AWS revenue, growth rate, and operating income for the same period | Bar + line (growth rate) |
-| `s3Stats` | S3 scale metrics published by AWS | KPI tiles |
-| `objectStorageMarket` | Market size estimates by research firm (`segment` distinguishes definitions) | Bars with a separate series per segment |
-| `notes` | Caveats about the data | Footnotes |
+| Key                   | Contents                                                                     | Recommended chart                          |
+| --------------------- | ---------------------------------------------------------------------------- | ------------------------------------------ |
+| `cloudShare`          | Synergy share and market size, 2025 Q2 to 2026 Q2                            | Line (share trend), donut (latest quarter) |
+| `awsRevenue`          | AWS revenue, growth rate, and operating income for the same period           | Bar + line (growth rate)                   |
+| `s3Stats`             | S3 scale metrics published by AWS                                            | KPI tiles                                  |
+| `objectStorageMarket` | Market size estimates by research firm (`segment` distinguishes definitions) | Bars with a separate series per segment    |
+| `notes`               | Caveats about the data                                                       | Footnotes                                  |
 
 ## References
 

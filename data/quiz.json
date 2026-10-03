@@ -37,18 +37,8 @@
       "ja": "2026 年時点で、S3 の 1 オブジェクトの最大サイズはどれか。"
     },
     "choices": {
-      "en": [
-        "50 TB",
-        "5 TB",
-        "5 GB",
-        "Unlimited"
-      ],
-      "ja": [
-        "50 TB",
-        "5 TB",
-        "5 GB",
-        "無制限"
-      ]
+      "en": ["50 TB", "5 TB", "5 GB", "Unlimited"],
+      "ja": ["50 TB", "5 TB", "5 GB", "無制限"]
     },
     "answer": 0,
     "explanation": {
@@ -68,18 +58,8 @@
       "ja": "1 回の PutObject リクエストでアップロードできる最大サイズはどれか。"
     },
     "choices": {
-      "en": [
-        "100 MB",
-        "50 TB",
-        "5 TB",
-        "5 GB"
-      ],
-      "ja": [
-        "100 MB",
-        "50 TB",
-        "5 TB",
-        "5 GB"
-      ]
+      "en": ["100 MB", "50 TB", "5 TB", "5 GB"],
+      "ja": ["100 MB", "50 TB", "5 TB", "5 GB"]
     },
     "answer": 3,
     "explanation": {
@@ -99,18 +79,8 @@
       "ja": "マルチパートアップロードで、最後以外の各パートの最小サイズはどれか。"
     },
     "choices": {
-      "en": [
-        "1 MiB",
-        "5 MiB",
-        "16 MiB",
-        "100 MiB"
-      ],
-      "ja": [
-        "1 MiB",
-        "5 MiB",
-        "16 MiB",
-        "100 MiB"
-      ]
+      "en": ["1 MiB", "5 MiB", "16 MiB", "100 MiB"],
+      "ja": ["1 MiB", "5 MiB", "16 MiB", "100 MiB"]
     },
     "answer": 1,
     "explanation": {
@@ -130,18 +100,8 @@
       "ja": "1 つのマルチパートアップロードの最大パート数はどれか。"
     },
     "choices": {
-      "en": [
-        "1,000",
-        "5,000",
-        "10,000",
-        "100,000"
-      ],
-      "ja": [
-        "1,000",
-        "5,000",
-        "10,000",
-        "100,000"
-      ]
+      "en": ["1,000", "5,000", "10,000", "100,000"],
+      "ja": ["1,000", "5,000", "10,000", "100,000"]
     },
     "answer": 2,
     "explanation": {
@@ -161,18 +121,8 @@
       "ja": "S3 がプレフィックスあたり最低限サポートする GET/HEAD リクエスト数 (毎秒) はどれか。"
     },
     "choices": {
-      "en": [
-        "5,500",
-        "3,500",
-        "100",
-        "55,000"
-      ],
-      "ja": [
-        "5,500",
-        "3,500",
-        "100",
-        "55,000"
-      ]
+      "en": ["5,500", "3,500", "100", "55,000"],
+      "ja": ["5,500", "3,500", "100", "55,000"]
     },
     "answer": 0,
     "explanation": {
@@ -285,18 +235,8 @@
       "ja": "s3:GetObject はあるが s3:ListBucket がないユーザーが、存在しないキーを GET した。返る HTTP ステータスはどれか。"
     },
     "choices": {
-      "en": [
-        "403 Forbidden",
-        "200 with an empty body",
-        "404 Not Found",
-        "410 Gone"
-      ],
-      "ja": [
-        "403 Forbidden",
-        "200 (空のボディ)",
-        "404 Not Found",
-        "410 Gone"
-      ]
+      "en": ["403 Forbidden", "200 with an empty body", "404 Not Found", "410 Gone"],
+      "ja": ["403 Forbidden", "200 (空のボディ)", "404 Not Found", "410 Gone"]
     },
     "answer": 0,
     "explanation": {
@@ -378,18 +318,8 @@
       "ja": "SSE-KMS で暗号化されたオブジェクトをダウンロードするために、呼び出し元に必要な KMS 権限はどれか。"
     },
     "choices": {
-      "en": [
-        "kms:Encrypt",
-        "kms:CreateGrant",
-        "kms:Decrypt",
-        "kms:ScheduleKeyDeletion"
-      ],
-      "ja": [
-        "kms:Encrypt",
-        "kms:CreateGrant",
-        "kms:Decrypt",
-        "kms:ScheduleKeyDeletion"
-      ]
+      "en": ["kms:Encrypt", "kms:CreateGrant", "kms:Decrypt", "kms:ScheduleKeyDeletion"],
+      "ja": ["kms:Encrypt", "kms:CreateGrant", "kms:Decrypt", "kms:ScheduleKeyDeletion"]
     },
     "answer": 2,
     "explanation": {
@@ -564,18 +494,8 @@
       "ja": "S3 Glacier Deep Archive の最低保存期間 (課金) はどれか。"
     },
     "choices": {
-      "en": [
-        "30 days",
-        "90 days",
-        "365 days",
-        "180 days"
-      ],
-      "ja": [
-        "30 日",
-        "90 日",
-        "365 日",
-        "180 日"
-      ]
+      "en": ["30 days", "90 days", "365 days", "180 days"],
+      "ja": ["30 日", "90 日", "365 日", "180 日"]
     },
     "answer": 3,
     "explanation": {
@@ -601,12 +521,7 @@
         "Free, because they are small",
         "As 1 MB"
       ],
-      "ja": [
-        "40 KB として",
-        "128 KB として (最小課金サイズ)",
-        "小さいので無料",
-        "1 MB として"
-      ]
+      "ja": ["40 KB として", "128 KB として (最小課金サイズ)", "小さいので無料", "1 MB として"]
     },
     "answer": 1,
     "explanation": {
@@ -688,18 +603,8 @@
       "ja": "Glacier Flexible Retrieval のオブジェクトを復元せずに GET した。返るエラーはどれか。"
     },
     "choices": {
-      "en": [
-        "NoSuchKey",
-        "EntityTooLarge",
-        "SlowDown",
-        "InvalidObjectState"
-      ],
-      "ja": [
-        "NoSuchKey",
-        "EntityTooLarge",
-        "SlowDown",
-        "InvalidObjectState"
-      ]
+      "en": ["NoSuchKey", "EntityTooLarge", "SlowDown", "InvalidObjectState"],
+      "ja": ["NoSuchKey", "EntityTooLarge", "SlowDown", "InvalidObjectState"]
     },
     "answer": 3,
     "explanation": {
@@ -719,18 +624,8 @@
       "ja": "S3 Glacier Deep Archive で利用できない取り出しオプションはどれか。"
     },
     "choices": {
-      "en": [
-        "Standard",
-        "Expedited",
-        "Bulk",
-        "Restore via S3 Batch Operations"
-      ],
-      "ja": [
-        "Standard",
-        "Expedited",
-        "Bulk",
-        "S3 Batch Operations による復元"
-      ]
+      "en": ["Standard", "Expedited", "Bulk", "Restore via S3 Batch Operations"],
+      "ja": ["Standard", "Expedited", "Bulk", "S3 Batch Operations による復元"]
     },
     "answer": 1,
     "explanation": {
@@ -843,12 +738,7 @@
       "ja": "Object Lock の Compliance モードでロックされたバージョンの保持期間を短縮できるのは誰か。"
     },
     "choices": {
-      "en": [
-        "The root user",
-        "No one",
-        "AWS Support on request",
-        "Users with s3:BypassGovernanceRetention"
-      ],
+      "en": ["The root user", "No one", "AWS Support on request", "Users with s3:BypassGovernanceRetention"],
       "ja": [
         "root ユーザー",
         "誰もできない",
@@ -874,18 +764,8 @@
       "ja": "AWS Backup の S3 継続バックアップでは、どこまで遡って任意の時点に復元できるか。"
     },
     "choices": {
-      "en": [
-        "24 hours",
-        "7 days",
-        "35 days",
-        "1 year"
-      ],
-      "ja": [
-        "24 時間",
-        "7 日",
-        "35 日",
-        "1 年"
-      ]
+      "en": ["24 hours", "7 days", "35 days", "1 year"],
+      "ja": ["24 時間", "7 日", "35 日", "1 年"]
     },
     "answer": 2,
     "explanation": {
@@ -1060,18 +940,8 @@
       "ja": "S3 Standard の Usage Type「Requests-Tier1」に含まれるリクエストはどれか。"
     },
     "choices": {
-      "en": [
-        "GET and HEAD",
-        "Lifecycle transitions to Glacier",
-        "DELETE only",
-        "PUT, COPY, POST, and LIST"
-      ],
-      "ja": [
-        "GET と HEAD",
-        "Glacier へのライフサイクル遷移",
-        "DELETE のみ",
-        "PUT、COPY、POST、LIST"
-      ]
+      "en": ["GET and HEAD", "Lifecycle transitions to Glacier", "DELETE only", "PUT, COPY, POST, and LIST"],
+      "ja": ["GET と HEAD", "Glacier へのライフサイクル遷移", "DELETE のみ", "PUT、COPY、POST、LIST"]
     },
     "answer": 3,
     "explanation": {

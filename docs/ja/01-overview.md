@@ -47,14 +47,14 @@ S3 は **HTTP(S) の REST API でアクセスする、リージョン単位の�
 
 S3 の位置付けを他の AWS ストレージと比べると次のとおり。
 
-| 観点 | S3 (オブジェクト) | EBS (ブロック) | EFS / FSx (ファイル) |
-| --- | --- | --- | --- |
-| アクセス方法 | HTTP REST API / SDK | OS のブロックデバイス | NFS / SMB / POSIX |
-| 単位 | オブジェクト (最大 50 TB) | ブロック (ボリューム) | ファイル / ディレクトリ |
-| 部分更新 | 不可 (上書き。Express One Zone のみ append 可) | 可 | 可 |
-| スコープ | リージョン (AZ 冗長) | 単一 AZ | リージョン or AZ |
-| 容量確保 | 不要 (無制限) | 事前にサイズ指定 | 自動拡張 (EFS) |
-| 同時アクセス | 事実上無制限のクライアント | 基本 1 インスタンス (Multi-Attach 例外) | 多数クライアント |
+| 観点         | S3 (オブジェクト)                              | EBS (ブロック)                          | EFS / FSx (ファイル)    |
+| ------------ | ---------------------------------------------- | --------------------------------------- | ----------------------- |
+| アクセス方法 | HTTP REST API / SDK                            | OS のブロックデバイス                   | NFS / SMB / POSIX       |
+| 単位         | オブジェクト (最大 50 TB)                      | ブロック (ボリューム)                   | ファイル / ディレクトリ |
+| 部分更新     | 不可 (上書き。Express One Zone のみ append 可) | 可                                      | 可                      |
+| スコープ     | リージョン (AZ 冗長)                           | 単一 AZ                                 | リージョン or AZ        |
+| 容量確保     | 不要 (無制限)                                  | 事前にサイズ指定                        | 自動拡張 (EFS)          |
+| 同時アクセス | 事実上無制限のクライアント                     | 基本 1 インスタンス (Multi-Attach 例外) | 多数クライアント        |
 
 なお 2026-04 に **S3 Files** (S3 バケットを POSIX ファイルシステムとしてマウントできる EFS ベースのサービス) が GA になり、「S3 はファイルシステムではない」という境界は少しずつ曖昧になりつつある。ただし S3 そのもののセマンティクス (オブジェクト API) は変わっていない。
 
@@ -66,36 +66,36 @@ S3 は **2006-03-14** (Pi Day) に米国で一般提供された、AWS で最初
 
 20 周年記事 (2026-03-13 公開) によると、ローンチ時の S3 は次の規模だった。
 
-| 項目 | 2006 年ローンチ時 | 2026 年 |
-| --- | --- | --- |
-| 総容量 | 約 1 PB | 数百 EB (hundreds of exabytes) |
-| ストレージノード | 約 400 ノード / 15 ラック / 3 データセンター | 公表値なし (数千万台規模の HDD とされる) |
-| 総帯域 | 15 Gbps | ピーク約 1 PB/s とされる (後述、出典注意) |
-| 最大オブジェクトサイズ | 5 GB | 50 TB (10,000 倍) |
-| ストレージ単価 | 15 セント / GB-月 | 2 セント強 / GB-月 (約 85% 減) |
-| 規模 | — | 500 兆超オブジェクト、2 億 req/s 超、39 リージョン 123 AZ |
+| 項目                   | 2006 年ローンチ時                            | 2026 年                                                   |
+| ---------------------- | -------------------------------------------- | --------------------------------------------------------- |
+| 総容量                 | 約 1 PB                                      | 数百 EB (hundreds of exabytes)                            |
+| ストレージノード       | 約 400 ノード / 15 ラック / 3 データセンター | 公表値なし (数千万台規模の HDD とされる)                  |
+| 総帯域                 | 15 Gbps                                      | ピーク約 1 PB/s とされる (後述、出典注意)                 |
+| 最大オブジェクトサイズ | 5 GB                                         | 50 TB (10,000 倍)                                         |
+| ストレージ単価         | 15 セント / GB-月                            | 2 セント強 / GB-月 (約 85% 減)                            |
+| 規模                   | —                                            | 500 兆超オブジェクト、2 億 req/s 超、39 リージョン 123 AZ |
 
 ### 2.2 主要マイルストーン
 
 詳細な年表 (日付・URL つき) は `data/timeline.json` にある。ここでは「S3 の性格を変えた」転換点だけ抜き出す。
 
-| 年 | 出来事 | 意味 |
-| --- | --- | --- |
-| 2006 | S3 ローンチ | シンプルな PUT/GET/DELETE/LIST のオブジェクトストア |
-| 2010 | Versioning、Reduced Redundancy Storage、Multipart Upload | データ保護と大容量アップロードの基盤 |
-| 2011 | 静的 Web サイトホスティング、SSE (サーバー側暗号化) | Web 配信と暗号化 |
-| 2012 | Amazon Glacier、ライフサイクルによる Glacier アーカイブ | ホット/コールドの階層化が始まる |
-| 2014 | イベント通知 | S3 がイベント駆動アーキテクチャの起点に |
-| 2015 | Standard-IA、クロスリージョンレプリケーション、VPC エンドポイント | ストレージクラスの多様化 |
-| 2017 | us-east-1 大規模障害 (2017-02-28) | 運用ツールの安全装置強化のきっかけ |
-| 2018 | Block Public Access、Intelligent-Tiering、Object Lock、One Zone-IA | 「バケット公開事故」対策と自動階層化 |
-| 2019 | Glacier Deep Archive、Batch Operations、Access Points | テープ代替価格帯、大規模一括操作 |
-| 2020 | **強い一貫性 (strong read-after-write)**、Storage Lens、Bucket Keys | 「結果整合性の S3」が終わった年 |
-| 2021 | Object Lambda、Multi-Region Access Points、Glacier Instant Retrieval、ACL 無効化 | アクセス制御の簡素化 |
-| 2023 | 全新規オブジェクトの既定暗号化 (SSE-S3)、新規バケット既定で BPA + ACL 無効、**Express One Zone**、Mountpoint | セキュア・バイ・デフォルト、低レイテンシ層 |
-| 2024 | 無許可 403 リクエストの非課金化、**条件付き書き込み**、バケット上限 10,000、**S3 Tables**、S3 Metadata (preview) | S3 が「分析・データ基盤」へ |
-| 2025 | S3 Metadata GA、Express One Zone 大幅値下げ、**S3 Vectors** (preview → GA)、**最大オブジェクト 50 TB** | AI 時代のストレージへ |
-| 2026 | アカウントリージョナル名前空間、**S3 Files**、SSE-C 既定無効化、Annotations、IA 遷移の 30 日要件撤廃、Iceberg V3 | バケット名衝突問題の解消、ファイル/AI 連携 |
+| 年   | 出来事                                                                                                           | 意味                                                |
+| ---- | ---------------------------------------------------------------------------------------------------------------- | --------------------------------------------------- |
+| 2006 | S3 ローンチ                                                                                                      | シンプルな PUT/GET/DELETE/LIST のオブジェクトストア |
+| 2010 | Versioning、Reduced Redundancy Storage、Multipart Upload                                                         | データ保護と大容量アップロードの基盤                |
+| 2011 | 静的 Web サイトホスティング、SSE (サーバー側暗号化)                                                              | Web 配信と暗号化                                    |
+| 2012 | Amazon Glacier、ライフサイクルによる Glacier アーカイブ                                                          | ホット/コールドの階層化が始まる                     |
+| 2014 | イベント通知                                                                                                     | S3 がイベント駆動アーキテクチャの起点に             |
+| 2015 | Standard-IA、クロスリージョンレプリケーション、VPC エンドポイント                                                | ストレージクラスの多様化                            |
+| 2017 | us-east-1 大規模障害 (2017-02-28)                                                                                | 運用ツールの安全装置強化のきっかけ                  |
+| 2018 | Block Public Access、Intelligent-Tiering、Object Lock、One Zone-IA                                               | 「バケット公開事故」対策と自動階層化                |
+| 2019 | Glacier Deep Archive、Batch Operations、Access Points                                                            | テープ代替価格帯、大規模一括操作                    |
+| 2020 | **強い一貫性 (strong read-after-write)**、Storage Lens、Bucket Keys                                              | 「結果整合性の S3」が終わった年                     |
+| 2021 | Object Lambda、Multi-Region Access Points、Glacier Instant Retrieval、ACL 無効化                                 | アクセス制御の簡素化                                |
+| 2023 | 全新規オブジェクトの既定暗号化 (SSE-S3)、新規バケット既定で BPA + ACL 無効、**Express One Zone**、Mountpoint     | セキュア・バイ・デフォルト、低レイテンシ層          |
+| 2024 | 無許可 403 リクエストの非課金化、**条件付き書き込み**、バケット上限 10,000、**S3 Tables**、S3 Metadata (preview) | S3 が「分析・データ基盤」へ                         |
+| 2025 | S3 Metadata GA、Express One Zone 大幅値下げ、**S3 Vectors** (preview → GA)、**最大オブジェクト 50 TB**           | AI 時代のストレージへ                               |
+| 2026 | アカウントリージョナル名前空間、**S3 Files**、SSE-C 既定無効化、Annotations、IA 遷移の 30 日要件撤廃、Iceberg V3 | バケット名衝突問題の解消、ファイル/AI 連携          |
 
 ### 2.3 2017-02-28 us-east-1 障害の要点
 
@@ -134,16 +134,16 @@ classDiagram
     Bucket "1" --> "many" Object
 ```
 
-| 要素 | 説明 | 主な制約 |
-| --- | --- | --- |
-| Bucket | オブジェクトのコンテナ。リージョンに属する | 名前 3〜63 文字。作成後に名前・リージョン変更不可 |
-| Object | データ本体 + メタデータ | 0 B〜約 50 TB (48.8 TiB) |
-| Key | バケット内でオブジェクトを一意に識別する文字列 | UTF-8 で最大 1,024 bytes |
-| Prefix | key の先頭部分。LIST の絞り込み・性能分割の単位 | 論理的な概念 (実体はない) |
-| Metadata | system-defined (Content-Type 等) と user-defined (`x-amz-meta-*`) | user-defined は 2 KB まで (PUT ヘッダ全体は 8 KB) |
-| Tags | key-value。IAM 条件・ライフサイクル・コスト配分に使える | 1 オブジェクト 10 個まで |
-| Version ID | バージョニング有効時にオブジェクトの各版を識別 | 無効時は `null` |
-| ETag | オブジェクト内容のハッシュ的な識別子 | MD5 とは限らない (後述) |
+| 要素        | 説明                                                              | 主な制約                                                                |
+| ----------- | ----------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| Bucket      | オブジェクトのコンテナ。リージョンに属する                        | 名前 3〜63 文字。作成後に名前・リージョン変更不可                       |
+| Object      | データ本体 + メタデータ                                           | 0 B〜約 50 TB (48.8 TiB)                                                |
+| Key         | バケット内でオブジェクトを一意に識別する文字列                    | UTF-8 で最大 1,024 bytes                                                |
+| Prefix      | key の先頭部分。LIST の絞り込み・性能分割の単位                   | 論理的な概念 (実体はない)                                               |
+| Metadata    | system-defined (Content-Type 等) と user-defined (`x-amz-meta-*`) | user-defined は 2 KB まで (PUT ヘッダ全体は 8 KB)                       |
+| Tags        | key-value。IAM 条件・ライフサイクル・コスト配分に使える           | 1 オブジェクト 10 個まで                                                |
+| Version ID  | バージョニング有効時にオブジェクトの各版を識別                    | 無効時は `null`                                                         |
+| ETag        | オブジェクト内容のハッシュ的な識別子                              | MD5 とは限らない (後述)                                                 |
 | Annotations | 2026-06 追加。オブジェクトに後付けする JSON/XML/YAML の文脈データ | ドキュメント上 1 annotation 最大 1 MB、発表では 1 オブジェクト最大 1 GB |
 
 オブジェクトの「住所」は **bucket + key (+ versionId)** の組で一意に決まる。
@@ -190,13 +190,13 @@ general purpose バケットでは、**パーティション化された prefix 
 
 ### 3.4 メタデータの種類
 
-| 種類 | 例 | 変更可否 |
-| --- | --- | --- |
-| system-defined (システム制御) | `Date`, `Last-Modified`, `Content-Length`, `x-amz-version-id` | 不可 |
-| system-defined (ユーザー制御) | `Content-Type`, `Cache-Control`, `x-amz-storage-class`, `x-amz-server-side-encryption`, `x-amz-website-redirect-location` | アップロード時に指定。後から変えるにはコピー |
-| user-defined | `x-amz-meta-author: alice` | アップロード時のみ。変更はコピーで新オブジェクト扱い |
-| object tags | `project=atlas` | 後から PutObjectTagging で変更可 |
-| annotations (2026-) | 要約・分類・AI 生成の説明 | 後から作成・更新・削除可 |
+| 種類                          | 例                                                                                                                        | 変更可否                                             |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
+| system-defined (システム制御) | `Date`, `Last-Modified`, `Content-Length`, `x-amz-version-id`                                                             | 不可                                                 |
+| system-defined (ユーザー制御) | `Content-Type`, `Cache-Control`, `x-amz-storage-class`, `x-amz-server-side-encryption`, `x-amz-website-redirect-location` | アップロード時に指定。後から変えるにはコピー         |
+| user-defined                  | `x-amz-meta-author: alice`                                                                                                | アップロード時のみ。変更はコピーで新オブジェクト扱い |
+| object tags                   | `project=atlas`                                                                                                           | 後から PutObjectTagging で変更可                     |
+| annotations (2026-)           | 要約・分類・AI 生成の説明                                                                                                 | 後から作成・更新・削除可                             |
 
 ユーザー定義メタデータは **オブジェクト作成後に変更できない** (コピーして作り直す)。頻繁に変わる属性はタグか annotations、もしくは外部 DB / S3 Metadata テーブルで持つのが定石。
 
@@ -204,11 +204,11 @@ general purpose バケットでは、**パーティション化された prefix 
 
 バケットのバージョニング状態は 3 つ。
 
-| 状態 | 挙動 |
-| --- | --- |
-| Unversioned (既定) | 同じ key への PUT は上書き。DELETE で即消える。version ID は `null` |
-| Enabled | PUT のたびに新しい version ID が付与され、旧版は noncurrent version として残る。DELETE は **delete marker** を積むだけ |
-| Suspended | 新規 PUT は version ID `null` で作られ、既存の `null` 版を上書き。過去の版は残る |
+| 状態               | 挙動                                                                                                                   |
+| ------------------ | ---------------------------------------------------------------------------------------------------------------------- |
+| Unversioned (既定) | 同じ key への PUT は上書き。DELETE で即消える。version ID は `null`                                                    |
+| Enabled            | PUT のたびに新しい version ID が付与され、旧版は noncurrent version として残る。DELETE は **delete marker** を積むだけ |
+| Suspended          | 新規 PUT は version ID `null` で作られ、既存の `null` 版を上書き。過去の版は残る                                       |
 
 一度 Enabled にしたバケットは Unversioned に戻せない (Suspended にはできる)。
 
@@ -228,11 +228,11 @@ noncurrent version も課金対象。ライフサイクルの `NoncurrentVersion
 
 ETag は「オブジェクトの MD5」と説明されがちだが、正確には条件つき。
 
-| オブジェクトの作り方 | ETag |
-| --- | --- |
-| PutObject / POST / Copy で作成、暗号化なし or SSE-S3 | オブジェクトデータの MD5 ダイジェスト |
-| SSE-C または SSE-KMS で暗号化 | MD5 ではない |
-| Multipart Upload や Part Copy で作成 | 暗号化方式に関係なく MD5 ではない (各パートの MD5 を連結してハッシュしたもの + `-パート数` という形が知られているが、仕様としては保証されない) |
+| オブジェクトの作り方                                 | ETag                                                                                                                                           |
+| ---------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| PutObject / POST / Copy で作成、暗号化なし or SSE-S3 | オブジェクトデータの MD5 ダイジェスト                                                                                                          |
+| SSE-C または SSE-KMS で暗号化                        | MD5 ではない                                                                                                                                   |
+| Multipart Upload や Part Copy で作成                 | 暗号化方式に関係なく MD5 ではない (各パートの MD5 を連結してハッシュしたもの + `-パート数` という形が知られているが、仕様としては保証されない) |
 
 整合性チェックには ETag ではなく **追加チェックサム** (CRC64NVME, CRC32, CRC32C, SHA-1, SHA-256、さらに 2026-04 に MD5, XXHash3/64/128, SHA-512 が追加され計 10 種) を使うのが現在の推奨。2024-12 以降、最新 SDK はアップロード時に既定で CRC 系チェックサムを計算・送信し、S3 が検証して保存する。
 
@@ -242,12 +242,12 @@ ETag は **条件付きリクエスト** (`If-Match` / `If-None-Match`) の比�
 
 2026 年時点で、S3 には **4 種類のバケット** がある。名前は同じ「バケット」でも、API・名前空間・内部構造がかなり違う。
 
-| 種類 | 登場 | 用途 | 名前の例 / 識別 | API 名前空間 | 冗長性 |
-| --- | --- | --- | --- | --- | --- |
-| General purpose bucket | 2006 | 汎用。ほぼすべてのユースケース | `my-bucket` / `my-bucket-111122223333-us-east-1-an` | `s3` | 複数 AZ (One Zone-IA は 1 AZ) |
-| Directory bucket | 2023-11 | S3 Express One Zone (低レイテンシ)、Local Zones でのデータレジデンシー | `name--use1-az4--x-s3` | `s3` (Zonal / Regional エンドポイント) | 単一 AZ (または Local Zone) |
-| Table bucket | 2024-12 | Apache Iceberg テーブル (S3 Tables) | ARN で識別。`--table-s3` は予約サフィックス | `s3tables` | 複数 AZ |
-| Vector bucket | 2025-07 (preview) / 2025-12 (GA) | ベクトル埋め込みの保存と類似検索 (S3 Vectors) | ARN で識別 | `s3vectors` | S3 と同等の耐久性・可用性をうたう |
+| 種類                   | 登場                             | 用途                                                                   | 名前の例 / 識別                                     | API 名前空間                           | 冗長性                            |
+| ---------------------- | -------------------------------- | ---------------------------------------------------------------------- | --------------------------------------------------- | -------------------------------------- | --------------------------------- |
+| General purpose bucket | 2006                             | 汎用。ほぼすべてのユースケース                                         | `my-bucket` / `my-bucket-111122223333-us-east-1-an` | `s3`                                   | 複数 AZ (One Zone-IA は 1 AZ)     |
+| Directory bucket       | 2023-11                          | S3 Express One Zone (低レイテンシ)、Local Zones でのデータレジデンシー | `name--use1-az4--x-s3`                              | `s3` (Zonal / Regional エンドポイント) | 単一 AZ (または Local Zone)       |
+| Table bucket           | 2024-12                          | Apache Iceberg テーブル (S3 Tables)                                    | ARN で識別。`--table-s3` は予約サフィックス         | `s3tables`                             | 複数 AZ                           |
+| Vector bucket          | 2025-07 (preview) / 2025-12 (GA) | ベクトル埋め込みの保存と類似検索 (S3 Vectors)                          | ARN で識別                                          | `s3vectors`                            | S3 と同等の耐久性・可用性をうたう |
 
 ### 4.1 General purpose bucket
 
@@ -324,11 +324,11 @@ base-name--zoneid--x-s3
 
 ### 6.2 URL の 2 方式
 
-| 方式 | 形式 | 状態 |
-| --- | --- | --- |
-| Virtual-hosted style | `https://BUCKET.s3.REGION.amazonaws.com/KEY` | 推奨 |
-| Path style | `https://s3.REGION.amazonaws.com/BUCKET/KEY` | 非推奨。2019-05 に「2020-09-30 以降作成のバケットで廃止」と発表されたが延期され、現在も利用可能 |
-| レガシーグローバル | `https://BUCKET.s3.amazonaws.com/KEY` | us-east-1 にルーティング。2019-03-20 以降に開設されたリージョンのバケットへはリダイレクトされない |
+| 方式                 | 形式                                         | 状態                                                                                              |
+| -------------------- | -------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| Virtual-hosted style | `https://BUCKET.s3.REGION.amazonaws.com/KEY` | 推奨                                                                                              |
+| Path style           | `https://s3.REGION.amazonaws.com/BUCKET/KEY` | 非推奨。2019-05 に「2020-09-30 以降作成のバケットで廃止」と発表されたが延期され、現在も利用可能   |
+| レガシーグローバル   | `https://BUCKET.s3.amazonaws.com/KEY`        | us-east-1 にルーティング。2019-03-20 以降に開設されたリージョンのバケットへはリダイレクトされない |
 
 ```text
 virtual-hosted:  https://my-bucket.s3.ap-northeast-1.amazonaws.com/photos/cat.jpg
@@ -342,18 +342,18 @@ virtual-hosted が推奨される理由は、バケット名が DNS ホスト名
 
 ### 6.3 その他のエンドポイント
 
-| エンドポイント | 形式例 | 用途 |
-| --- | --- | --- |
-| Dualstack (IPv4 + IPv6) | `BUCKET.s3.dualstack.REGION.amazonaws.com` | IPv6 クライアント |
-| FIPS | `BUCKET.s3-fips.REGION.amazonaws.com` (dualstack 版は `s3-fips.dualstack`) | FIPS 140 検証済み暗号モジュールが必要な米国政府系ワークロード |
-| Transfer Acceleration | `BUCKET.s3-accelerate.amazonaws.com` (`s3-accelerate.dualstack` もあり) | CloudFront エッジ経由の長距離高速転送 |
-| 静的 Web サイト | `BUCKET.s3-website-REGION.amazonaws.com` または `BUCKET.s3-website.REGION.amazonaws.com` (リージョンにより異なる) | HTTP のみ、index/error ドキュメント、リダイレクト |
-| Access Point | `ACCESSPOINT-ACCOUNTID.s3-accesspoint.REGION.amazonaws.com` | アプリ別のアクセス制御 |
-| Multi-Region Access Point | `ALIAS.accesspoint.s3-global.amazonaws.com` | 複数リージョンへの近接ルーティング |
-| Directory bucket (Zonal) | `BUCKET.s3express-use1-az4.us-east-1.amazonaws.com` | Express One Zone のデータプレーン |
-| Directory bucket (Regional) | `s3express-control.us-east-1.amazonaws.com` | CreateBucket など制御プレーン |
-| Gateway VPC endpoint | (DNS は通常の S3 名のまま、ルートテーブルで誘導) | VPC 内から無料で S3 に到達 |
-| Interface VPC endpoint (PrivateLink) | `bucket.vpce-xxxx.s3.REGION.vpce.amazonaws.com` | オンプレミスや他 VPC からプライベート IP で到達 (有料) |
+| エンドポイント                       | 形式例                                                                                                            | 用途                                                          |
+| ------------------------------------ | ----------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
+| Dualstack (IPv4 + IPv6)              | `BUCKET.s3.dualstack.REGION.amazonaws.com`                                                                        | IPv6 クライアント                                             |
+| FIPS                                 | `BUCKET.s3-fips.REGION.amazonaws.com` (dualstack 版は `s3-fips.dualstack`)                                        | FIPS 140 検証済み暗号モジュールが必要な米国政府系ワークロード |
+| Transfer Acceleration                | `BUCKET.s3-accelerate.amazonaws.com` (`s3-accelerate.dualstack` もあり)                                           | CloudFront エッジ経由の長距離高速転送                         |
+| 静的 Web サイト                      | `BUCKET.s3-website-REGION.amazonaws.com` または `BUCKET.s3-website.REGION.amazonaws.com` (リージョンにより異なる) | HTTP のみ、index/error ドキュメント、リダイレクト             |
+| Access Point                         | `ACCESSPOINT-ACCOUNTID.s3-accesspoint.REGION.amazonaws.com`                                                       | アプリ別のアクセス制御                                        |
+| Multi-Region Access Point            | `ALIAS.accesspoint.s3-global.amazonaws.com`                                                                       | 複数リージョンへの近接ルーティング                            |
+| Directory bucket (Zonal)             | `BUCKET.s3express-use1-az4.us-east-1.amazonaws.com`                                                               | Express One Zone のデータプレーン                             |
+| Directory bucket (Regional)          | `s3express-control.us-east-1.amazonaws.com`                                                                       | CreateBucket など制御プレーン                                 |
+| Gateway VPC endpoint                 | (DNS は通常の S3 名のまま、ルートテーブルで誘導)                                                                  | VPC 内から無料で S3 に到達                                    |
+| Interface VPC endpoint (PrivateLink) | `bucket.vpce-xxxx.s3.REGION.vpce.amazonaws.com`                                                                   | オンプレミスや他 VPC からプライベート IP で到達 (有料)        |
 
 ## 7. REST API の形
 
@@ -361,20 +361,20 @@ virtual-hosted が推奨される理由は、バケット名が DNS ホスト名
 
 S3 の API は HTTP の動詞にほぼ素直にマッピングされている。
 
-| HTTP | 対象 | 主な操作 |
-| --- | --- | --- |
-| `PUT` | `/key` | PutObject (単一 PUT は最大 5 GB)、CopyObject (`x-amz-copy-source`)、UploadPart |
-| `GET` | `/key` | GetObject (Range ヘッダで部分取得可) |
-| `HEAD` | `/key` | HeadObject (メタデータのみ) |
-| `DELETE` | `/key` | DeleteObject |
-| `POST` | `/?delete` | DeleteObjects (最大 1,000 key を一括削除) |
-| `POST` | `/key?uploads` | CreateMultipartUpload |
-| `POST` | `/key?uploadId=...` | CompleteMultipartUpload |
-| `POST` | `/key?restore` | RestoreObject (Glacier 系から一時復元) |
-| `POST` | `/` (フォーム) | ブラウザからの POST Object (署名付きポリシー) |
-| `GET` | `/?list-type=2` | ListObjectsV2 |
-| `GET` | `/?versions` | ListObjectVersions |
-| `PUT` / `GET` / `DELETE` | `/?policy`, `/?lifecycle`, `/?versioning` ... | バケットのサブリソース設定 |
+| HTTP                     | 対象                                          | 主な操作                                                                       |
+| ------------------------ | --------------------------------------------- | ------------------------------------------------------------------------------ |
+| `PUT`                    | `/key`                                        | PutObject (単一 PUT は最大 5 GB)、CopyObject (`x-amz-copy-source`)、UploadPart |
+| `GET`                    | `/key`                                        | GetObject (Range ヘッダで部分取得可)                                           |
+| `HEAD`                   | `/key`                                        | HeadObject (メタデータのみ)                                                    |
+| `DELETE`                 | `/key`                                        | DeleteObject                                                                   |
+| `POST`                   | `/?delete`                                    | DeleteObjects (最大 1,000 key を一括削除)                                      |
+| `POST`                   | `/key?uploads`                                | CreateMultipartUpload                                                          |
+| `POST`                   | `/key?uploadId=...`                           | CompleteMultipartUpload                                                        |
+| `POST`                   | `/key?restore`                                | RestoreObject (Glacier 系から一時復元)                                         |
+| `POST`                   | `/` (フォーム)                                | ブラウザからの POST Object (署名付きポリシー)                                  |
+| `GET`                    | `/?list-type=2`                               | ListObjectsV2                                                                  |
+| `GET`                    | `/?versions`                                  | ListObjectVersions                                                             |
+| `PUT` / `GET` / `DELETE` | `/?policy`, `/?lifecycle`, `/?versioning` ... | バケットのサブリソース設定                                                     |
 
 例: 素の HTTP で見た PutObject。
 
@@ -415,14 +415,14 @@ aws s3api list-objects-v2 \
   --max-keys 1000
 ```
 
-| パラメータ | 意味 |
-| --- | --- |
-| `prefix` | この文字列で始まる key だけ |
-| `delimiter` | 区切り文字。これより後ろは `CommonPrefixes` にまとめる |
-| `max-keys` | 1 ページの最大件数 (上限 1,000) |
-| `continuation-token` | 前ページの `NextContinuationToken` |
-| `start-after` | この key より後ろから列挙 |
-| `fetch-owner` | Owner 情報を含めるか |
+| パラメータ           | 意味                                                   |
+| -------------------- | ------------------------------------------------------ |
+| `prefix`             | この文字列で始まる key だけ                            |
+| `delimiter`          | 区切り文字。これより後ろは `CommonPrefixes` にまとめる |
+| `max-keys`           | 1 ページの最大件数 (上限 1,000)                        |
+| `continuation-token` | 前ページの `NextContinuationToken`                     |
+| `start-after`        | この key より後ろから列挙                              |
+| `fetch-owner`        | Owner 情報を含めるか                                   |
 
 性質:
 
@@ -459,36 +459,36 @@ sequenceDiagram
 
 ### 7.4 条件付きリクエスト
 
-| ヘッダ | 読み取り (GET/HEAD) | 書き込み (PUT / CompleteMultipartUpload) |
-| --- | --- | --- |
-| `If-Match: <ETag>` | ETag が一致すれば返す | 2024-11 から対応。一致しなければ `412 Precondition Failed` (楽観ロック) |
-| `If-None-Match: *` | — | 2024-08 から対応。同じ key が既に存在すれば `412` (create-if-not-exists) |
-| `If-None-Match: <ETag>` | 一致しなければ返す (一致なら 304) | — |
-| `If-Modified-Since` / `If-Unmodified-Since` | 日時で条件分岐 | — |
+| ヘッダ                                      | 読み取り (GET/HEAD)               | 書き込み (PUT / CompleteMultipartUpload)                                 |
+| ------------------------------------------- | --------------------------------- | ------------------------------------------------------------------------ |
+| `If-Match: <ETag>`                          | ETag が一致すれば返す             | 2024-11 から対応。一致しなければ `412 Precondition Failed` (楽観ロック)  |
+| `If-None-Match: *`                          | —                                 | 2024-08 から対応。同じ key が既に存在すれば `412` (create-if-not-exists) |
+| `If-None-Match: <ETag>`                     | 一致しなければ返す (一致なら 304) | —                                                                        |
+| `If-Modified-Since` / `If-Unmodified-Since` | 日時で条件分岐                    | —                                                                        |
 
 条件付き書き込みにより、S3 単体で「排他的な作成」「Compare-And-Swap 的な更新」ができるようになった。Iceberg / Delta Lake のコミットや分散ロックの実装で外部 DB (DynamoDB 等) が不要になるケースが増えた。2024-11 にはバケットポリシーで条件付き書き込みを **強制** することもできるようになった。
 
 ### 7.5 主なエラー
 
-| ステータス | コード例 | 意味 |
-| --- | --- | --- |
-| 301 / 307 | `PermanentRedirect` / `TemporaryRedirect` | 別リージョンのエンドポイントに投げている |
-| 400 | `InvalidRequest`, `EntityTooLarge` | パラメータ不正 / 単一 PUT で 5 GB 超など |
-| 403 | `AccessDenied` | 権限なし (アカウント/組織外からの 403 は 2024 年以降非課金) |
-| 404 | `NoSuchKey`, `NoSuchBucket` | 存在しない |
-| 409 | `BucketAlreadyExists`, `OperationAborted` | 名前衝突 / 競合中 |
-| 412 | `PreconditionFailed` | 条件付きリクエストの条件不一致 |
-| 416 | `InvalidRange` | Range 不正 |
-| 503 | `SlowDown` | リクエストレート超過。バックオフしてリトライ |
+| ステータス | コード例                                  | 意味                                                        |
+| ---------- | ----------------------------------------- | ----------------------------------------------------------- |
+| 301 / 307  | `PermanentRedirect` / `TemporaryRedirect` | 別リージョンのエンドポイントに投げている                    |
+| 400        | `InvalidRequest`, `EntityTooLarge`        | パラメータ不正 / 単一 PUT で 5 GB 超など                    |
+| 403        | `AccessDenied`                            | 権限なし (アカウント/組織外からの 403 は 2024 年以降非課金) |
+| 404        | `NoSuchKey`, `NoSuchBucket`               | 存在しない                                                  |
+| 409        | `BucketAlreadyExists`, `OperationAborted` | 名前衝突 / 競合中                                           |
+| 412        | `PreconditionFailed`                      | 条件付きリクエストの条件不一致                              |
+| 416        | `InvalidRange`                            | Range 不正                                                  |
+| 503        | `SlowDown`                                | リクエストレート超過。バックオフしてリトライ                |
 
 ## 8. 一貫性モデル
 
 ### 8.1 2020-12 以前と以後
 
-| 時期 | 新規 PUT 後の GET | 上書き/削除後の GET | LIST |
-| --- | --- | --- | --- |
-| 〜2020-11 | read-after-write (ただし事前に 404 を GET していると結果整合) | 結果整合 (古いデータが返り得る) | 結果整合 |
-| 2020-12-01〜 | **強い一貫性** | **強い一貫性** | **強い一貫性** |
+| 時期         | 新規 PUT 後の GET                                             | 上書き/削除後の GET             | LIST           |
+| ------------ | ------------------------------------------------------------- | ------------------------------- | -------------- |
+| 〜2020-11    | read-after-write (ただし事前に 404 を GET していると結果整合) | 結果整合 (古いデータが返り得る) | 結果整合       |
+| 2020-12-01〜 | **強い一貫性**                                                | **強い一貫性**                  | **強い一貫性** |
 
 2020-12 の re:Invent で、S3 は **全リージョン・全オブジェクト (既存含む) で追加料金・性能劣化なしに strong read-after-write consistency** を提供開始した。
 
@@ -523,9 +523,9 @@ Client ──PUT──▶ Front end ──▶ Metadata     Client ──GET─�
 
 99.999999999% (11 nines) の年間耐久性とは、AWS の説明では「1,000 万オブジェクトを保存すると、平均して 1 万年に 1 個失う程度」という設計目標。**SLA ではなく設計値** であり、SLA が保証するのは可用性 (月間稼働率) の方。
 
-| 指標 | 意味 | S3 Standard |
-| --- | --- | --- |
-| 耐久性 (durability) | データが失われない確率 | 99.999999999% (設計値) |
+| 指標                  | 意味                       | S3 Standard                   |
+| --------------------- | -------------------------- | ----------------------------- |
+| 耐久性 (durability)   | データが失われない確率     | 99.999999999% (設計値)        |
 | 可用性 (availability) | リクエストに応答できる確率 | 99.99% (設計値) / 99.9% (SLA) |
 
 注意: 耐久性は **AWS 側のハードウェア故障などからの保護** であって、利用者自身の誤削除・上書き・ランサムウェアからは守ってくれない。それはバージョニング、Object Lock、レプリケーション、AWS Backup の役割。
@@ -545,16 +545,16 @@ flowchart TB
     G --> D1
 ```
 
-| 仕組み | 内容 | 出典 |
-| --- | --- | --- |
-| 複数 AZ への分散 | Standard 等は 3 つ以上の AZ に冗長保存。AZ 1 つの喪失に耐える | ストレージクラス比較表 |
-| Erasure coding | Reed-Solomon 系の符号化で、複製より少ない容量オーバーヘッドで冗長性を確保。複製と併用 | Warfield (FAST '23 基調講演の記事) |
-| 書き込み確認後に成功応答 | 冗長に保存し終わってから 200 を返す | S3 FAQ |
-| チェックサム | 転送中・保存時のデータをチェックサムで検証。2024-12 から SDK が既定で CRC を送る | What's New 2024-12 |
-| 継続的監査と自動修復 | 全バイトを継続的に検査するマイクロサービス群、劣化を見つけると自動修復 | 20 周年記事 |
-| 形式手法 | ShardStore (ストレージノードの KV ストア) を lightweight formal methods で検証 | SOSP 2021 論文 |
-| Rust | 性能クリティカルなコードを 8 年かけて段階的に Rust で書き直し | 20 周年記事 |
-| Durability review | 変更ごとに「データを失う可能性」を脅威モデリング的にレビューする文化 | Warfield 記事 |
+| 仕組み                   | 内容                                                                                  | 出典                               |
+| ------------------------ | ------------------------------------------------------------------------------------- | ---------------------------------- |
+| 複数 AZ への分散         | Standard 等は 3 つ以上の AZ に冗長保存。AZ 1 つの喪失に耐える                         | ストレージクラス比較表             |
+| Erasure coding           | Reed-Solomon 系の符号化で、複製より少ない容量オーバーヘッドで冗長性を確保。複製と併用 | Warfield (FAST '23 基調講演の記事) |
+| 書き込み確認後に成功応答 | 冗長に保存し終わってから 200 を返す                                                   | S3 FAQ                             |
+| チェックサム             | 転送中・保存時のデータをチェックサムで検証。2024-12 から SDK が既定で CRC を送る      | What's New 2024-12                 |
+| 継続的監査と自動修復     | 全バイトを継続的に検査するマイクロサービス群、劣化を見つけると自動修復                | 20 周年記事                        |
+| 形式手法                 | ShardStore (ストレージノードの KV ストア) を lightweight formal methods で検証        | SOSP 2021 論文                     |
+| Rust                     | 性能クリティカルなコードを 8 年かけて段階的に Rust で書き直し                         | 20 周年記事                        |
+| Durability review        | 変更ごとに「データを失う可能性」を脅威モデリング的にレビューする文化                  | Warfield 記事                      |
 
 ### 9.3 ShardStore と lightweight formal methods
 
@@ -573,58 +573,58 @@ S3 のストレージノード上で shard (データ片) を管理するキー�
 
 ### 10.1 オブジェクト
 
-| 項目 | 値 | 備考 |
-| --- | --- | --- |
-| 最大オブジェクトサイズ | **50 TB** (クォータ表では 48.828125 TB、User Guide では 48.8 TiB) | 2025-12 に 5 TB から 10 倍に拡大。全リージョン・全ストレージクラス |
-| 単一 PUT の最大サイズ | 5 GB | これを超えるなら Multipart Upload 必須 |
-| コンソールからのアップロード上限 | 160 GB | |
-| Multipart のパート数 | 最大 10,000 | パート番号 1〜10,000 |
-| パートサイズ | 5 MiB〜5 GiB | 最後のパートは下限なし。5 GiB × 10,000 ≒ 48.8 TiB が最大サイズの根拠 |
-| ListParts / ListMultipartUploads の 1 応答 | 最大 1,000 | |
-| Key の長さ | 1,024 bytes (UTF-8) | |
-| ユーザー定義メタデータ | 2 KB | PUT リクエストヘッダ全体は 8 KB |
-| オブジェクトタグ | 10 個 | |
-| Annotations | 1 annotation 最大 1 MB (User Guide) / 1 オブジェクト最大 1 GB (発表) | 2026-06 追加 |
-| DeleteObjects 1 回の key 数 | 1,000 | |
+| 項目                                       | 値                                                                   | 備考                                                                 |
+| ------------------------------------------ | -------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| 最大オブジェクトサイズ                     | **50 TB** (クォータ表では 48.828125 TB、User Guide では 48.8 TiB)    | 2025-12 に 5 TB から 10 倍に拡大。全リージョン・全ストレージクラス   |
+| 単一 PUT の最大サイズ                      | 5 GB                                                                 | これを超えるなら Multipart Upload 必須                               |
+| コンソールからのアップロード上限           | 160 GB                                                               |                                                                      |
+| Multipart のパート数                       | 最大 10,000                                                          | パート番号 1〜10,000                                                 |
+| パートサイズ                               | 5 MiB〜5 GiB                                                         | 最後のパートは下限なし。5 GiB × 10,000 ≒ 48.8 TiB が最大サイズの根拠 |
+| ListParts / ListMultipartUploads の 1 応答 | 最大 1,000                                                           |                                                                      |
+| Key の長さ                                 | 1,024 bytes (UTF-8)                                                  |                                                                      |
+| ユーザー定義メタデータ                     | 2 KB                                                                 | PUT リクエストヘッダ全体は 8 KB                                      |
+| オブジェクトタグ                           | 10 個                                                                |                                                                      |
+| Annotations                                | 1 annotation 最大 1 MB (User Guide) / 1 オブジェクト最大 1 GB (発表) | 2026-06 追加                                                         |
+| DeleteObjects 1 回の key 数                | 1,000                                                                |                                                                      |
 
 ### 10.2 バケット・アカウント
 
-| 項目 | 既定値 | 調整可否 |
-| --- | --- | --- |
-| General purpose バケット数 | 10,000 / アカウント | 可 (最大 100 万) |
-| Directory バケット数 | 100 / アカウント | 可 |
-| Table バケット数 | 100 / リージョン / アカウント (2026-10 に 10 から引き上げ) | サポートに依頼 |
-| バケットあたりのオブジェクト数 | 無制限 | — |
-| バケットあたりの容量 | 無制限 | — |
-| バケットポリシーのサイズ | 20 KB | 不可 |
-| バケットタグ | 50 | 不可 |
-| ライフサイクルルール | 1,000 / バケット | 不可 |
-| イベント通知設定 | 100 / バケット | 不可 |
-| Access Points | 10,000 / リージョン / アカウント | 可 |
-| Multi-Region Access Points | 100 / アカウント、1 MRAP あたり 20 リージョン | 不可 |
+| 項目                           | 既定値                                                     | 調整可否         |
+| ------------------------------ | ---------------------------------------------------------- | ---------------- |
+| General purpose バケット数     | 10,000 / アカウント                                        | 可 (最大 100 万) |
+| Directory バケット数           | 100 / アカウント                                           | 可               |
+| Table バケット数               | 100 / リージョン / アカウント (2026-10 に 10 から引き上げ) | サポートに依頼   |
+| バケットあたりのオブジェクト数 | 無制限                                                     | —                |
+| バケットあたりの容量           | 無制限                                                     | —                |
+| バケットポリシーのサイズ       | 20 KB                                                      | 不可             |
+| バケットタグ                   | 50                                                         | 不可             |
+| ライフサイクルルール           | 1,000 / バケット                                           | 不可             |
+| イベント通知設定               | 100 / バケット                                             | 不可             |
+| Access Points                  | 10,000 / リージョン / アカウント                           | 可               |
+| Multi-Region Access Points     | 100 / アカウント、1 MRAP あたり 20 リージョン              | 不可             |
 
 ### 10.3 性能
 
-| 項目 | 値 |
-| --- | --- |
-| prefix あたり書き込み | 少なくとも 3,500 PUT/COPY/POST/DELETE req/s |
-| prefix あたり読み取り | 少なくとも 5,500 GET/HEAD req/s |
-| prefix の数 | 無制限 |
-| Directory bucket あたり | 最大 200 万 GET TPS / 20 万 PUT TPS |
-| Glacier 復元リクエスト | 1,000 TPS / アカウント |
-| Glacier 復元スループット | 1〜2 PB/日 / アカウント |
+| 項目                     | 値                                          |
+| ------------------------ | ------------------------------------------- |
+| prefix あたり書き込み    | 少なくとも 3,500 PUT/COPY/POST/DELETE req/s |
+| prefix あたり読み取り    | 少なくとも 5,500 GET/HEAD req/s             |
+| prefix の数              | 無制限                                      |
+| Directory bucket あたり  | 最大 200 万 GET TPS / 20 万 PUT TPS         |
+| Glacier 復元リクエスト   | 1,000 TPS / アカウント                      |
+| Glacier 復元スループット | 1〜2 PB/日 / アカウント                     |
 
 ## 11. 公開されているスケール統計
 
 S3 の規模は AWS が節目ごとに公表している。年と出典を必ずセットで扱うこと。
 
-| 時点 | オブジェクト数 | リクエスト | データ量 | 出典 |
-| --- | --- | --- | --- | --- |
-| 2006 (ローンチ) | — | — | 約 1 PB の総容量 | AWS News Blog 20 周年記事 (2026-03-13) |
-| 2022-03 | 200 兆超 | 平均 1 億 req/s 超 | — | AWS News Blog (Pi Day 2022) |
-| 2023-07 | 280 兆超 | 平均 1 億 req/s 超 | 数百万台のドライブ | Werner Vogels, All Things Distributed (Warfield 寄稿, 2023-07-27) |
-| 2025 | 500 兆超 | 数億 TPS (hundreds of millions) | 数百 EB | Pragmatic Engineer の Mai-Lan Tomsen Bukovec インタビュー (二次情報) |
-| 2026-03 | **500 兆超** | **2 億 req/s 超** | **数百 EB** | AWS News Blog 20 周年記事 |
+| 時点            | オブジェクト数 | リクエスト                      | データ量           | 出典                                                                 |
+| --------------- | -------------- | ------------------------------- | ------------------ | -------------------------------------------------------------------- |
+| 2006 (ローンチ) | —              | —                               | 約 1 PB の総容量   | AWS News Blog 20 周年記事 (2026-03-13)                               |
+| 2022-03         | 200 兆超       | 平均 1 億 req/s 超              | —                  | AWS News Blog (Pi Day 2022)                                          |
+| 2023-07         | 280 兆超       | 平均 1 億 req/s 超              | 数百万台のドライブ | Werner Vogels, All Things Distributed (Warfield 寄稿, 2023-07-27)    |
+| 2025            | 500 兆超       | 数億 TPS (hundreds of millions) | 数百 EB            | Pragmatic Engineer の Mai-Lan Tomsen Bukovec インタビュー (二次情報) |
+| 2026-03         | **500 兆超**   | **2 億 req/s 超**               | **数百 EB**        | AWS News Blog 20 周年記事                                            |
 
 補足:
 
@@ -661,13 +661,13 @@ S3 の内部構造は非公開部分が多いが、Andy Warfield (Amazon の VP 
 └───────────────────────────────────────────────────────────────────────┘
 ```
 
-| 層 | 役割 | 補足 |
-| --- | --- | --- |
-| Front end | HTTP 受付、SigV4 認証、IAM/バケットポリシー評価、リクエストのルーティング | DNS でバケット単位に振り分けるため virtual-hosted が推奨 |
-| Namespace (index) | key からデータの所在へのマッピング、バージョン、メタデータ | 2017 年障害報告で言う「index subsystem」。強い一貫性の witness もここに関わる |
-| Placement | 新しいデータをどのディスクに置くか決める | 2017 年障害報告の「placement subsystem」 |
-| Storage fleet | 実データ (shard) を HDD 上に保存。ノード上の KV ストアが ShardStore | Rust 製。lightweight formal methods で検証 |
-| Background | 監査・修復、レプリケーション、ライフサイクル、ストレージクラス移行など | 利用者からは見えない |
+| 層                | 役割                                                                      | 補足                                                                          |
+| ----------------- | ------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| Front end         | HTTP 受付、SigV4 認証、IAM/バケットポリシー評価、リクエストのルーティング | DNS でバケット単位に振り分けるため virtual-hosted が推奨                      |
+| Namespace (index) | key からデータの所在へのマッピング、バージョン、メタデータ                | 2017 年障害報告で言う「index subsystem」。強い一貫性の witness もここに関わる |
+| Placement         | 新しいデータをどのディスクに置くか決める                                  | 2017 年障害報告の「placement subsystem」                                      |
+| Storage fleet     | 実データ (shard) を HDD 上に保存。ノード上の KV ストアが ShardStore       | Rust 製。lightweight formal methods で検証                                    |
+| Background        | 監査・修復、レプリケーション、ライフサイクル、ストレージクラス移行など    | 利用者からは見えない                                                          |
 
 組織面でも、これらの構成要素ごとにチームがあり「独立したビジネスのように」運営されている (Warfield)。
 
@@ -744,17 +744,17 @@ PUT の場合は逆向きで、
 
 ## 14. よくある誤解
 
-| 誤解 | 実際 |
-| --- | --- |
-| S3 にはフォルダがある | 名前空間はフラット。フォルダは prefix と delimiter による見せ方 (directory bucket を除く) |
-| S3 は結果整合性 | 2020-12 以降は強い一貫性。ただしバケット設定とレプリケーションは非同期 |
-| 最大オブジェクトは 5 TB | 2025-12 以降は 50 TB。単一 PUT は今も 5 GB まで |
-| バケットはアカウントあたり 100 個まで | 2024-11 以降の既定は 10,000、申請で 100 万 |
-| ETag は MD5 | multipart や SSE-KMS/SSE-C では MD5 ではない |
-| 11 nines だからバックアップ不要 | 誤削除・上書き・悪意ある削除には無力。バージョニング / Object Lock / レプリケーションが必要 |
-| バケット名はグローバル一意 | 基本はそうだが、2026-03 以降はアカウントリージョナル名前空間も選べる |
-| 403 を返す攻撃的リクエストでも課金される | 2024 年以降、アカウント / 組織外からの 403 はリクエスト料金・転送料金とも非課金 |
-| S3 はファイルシステムとしてマウントできない | Mountpoint for S3 (2023) や S3 Files (2026) で可能。ただしセマンティクスの違いに注意 |
+| 誤解                                        | 実際                                                                                        |
+| ------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| S3 にはフォルダがある                       | 名前空間はフラット。フォルダは prefix と delimiter による見せ方 (directory bucket を除く)   |
+| S3 は結果整合性                             | 2020-12 以降は強い一貫性。ただしバケット設定とレプリケーションは非同期                      |
+| 最大オブジェクトは 5 TB                     | 2025-12 以降は 50 TB。単一 PUT は今も 5 GB まで                                             |
+| バケットはアカウントあたり 100 個まで       | 2024-11 以降の既定は 10,000、申請で 100 万                                                  |
+| ETag は MD5                                 | multipart や SSE-KMS/SSE-C では MD5 ではない                                                |
+| 11 nines だからバックアップ不要             | 誤削除・上書き・悪意ある削除には無力。バージョニング / Object Lock / レプリケーションが必要 |
+| バケット名はグローバル一意                  | 基本はそうだが、2026-03 以降はアカウントリージョナル名前空間も選べる                        |
+| 403 を返す攻撃的リクエストでも課金される    | 2024 年以降、アカウント / 組織外からの 403 はリクエスト料金・転送料金とも非課金             |
+| S3 はファイルシステムとしてマウントできない | Mountpoint for S3 (2023) や S3 Files (2026) で可能。ただしセマンティクスの違いに注意        |
 
 ## 参考文献
 

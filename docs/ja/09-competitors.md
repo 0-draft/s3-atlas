@@ -18,14 +18,14 @@ _最終確認: 2026-10-03_
 
 ### 1.1 カテゴリ分け
 
-| カテゴリ | 代表 | 収益モデル | S3 に対する主戦場 |
-| --- | --- | --- | --- |
-| ハイパースケーラー | Google Cloud Storage, Azure Blob, OCI, IBM COS, Alibaba OSS | コンピュート + データの囲い込み | 「同じクラウド内のデータ置き場」として |
-| エッジ / CDN 系 | Cloudflare R2, Akamai Object Storage | ネットワーク事業の付加価値 | egress 無料・格安で配信系を奪う |
-| 低価格専業 (alt-cloud) | Backblaze B2, Wasabi, Hetzner, DigitalOcean Spaces | 容量単価の安さ | バックアップ / アーカイブ / 中小アプリ |
-| 新興グローバル分散 | Tigris, Storj | アーキテクチャ差別化 | マルチリージョン配信、AI 推論 |
-| セルフホスト OSS | MinIO (AIStor), Ceph RGW, SeaweedFS, Garage | サポート / 商用版 | オンプレ・エッジ・開発環境 |
-| オンプレ商用 | VAST Data, Everpure (旧 Pure Storage) FlashBlade, NetApp StorageGRID, Dell ObjectScale/ECS | ハード + サブスク | リパトリエーション、AI 学習基盤 |
+| カテゴリ               | 代表                                                                                       | 収益モデル                      | S3 に対する主戦場                      |
+| ---------------------- | ------------------------------------------------------------------------------------------ | ------------------------------- | -------------------------------------- |
+| ハイパースケーラー     | Google Cloud Storage, Azure Blob, OCI, IBM COS, Alibaba OSS                                | コンピュート + データの囲い込み | 「同じクラウド内のデータ置き場」として |
+| エッジ / CDN 系        | Cloudflare R2, Akamai Object Storage                                                       | ネットワーク事業の付加価値      | egress 無料・格安で配信系を奪う        |
+| 低価格専業 (alt-cloud) | Backblaze B2, Wasabi, Hetzner, DigitalOcean Spaces                                         | 容量単価の安さ                  | バックアップ / アーカイブ / 中小アプリ |
+| 新興グローバル分散     | Tigris, Storj                                                                              | アーキテクチャ差別化            | マルチリージョン配信、AI 推論          |
+| セルフホスト OSS       | MinIO (AIStor), Ceph RGW, SeaweedFS, Garage                                                | サポート / 商用版               | オンプレ・エッジ・開発環境             |
+| オンプレ商用           | VAST Data, Everpure (旧 Pure Storage) FlashBlade, NetApp StorageGRID, Dell ObjectScale/ECS | ハード + サブスク               | リパトリエーション、AI 学習基盤        |
 
 ### 1.2 ポジショニング (主観的評価)
 
@@ -66,22 +66,22 @@ quadrantChart
 
 単位は USD。`保存` は GB-月、`egress` はインターネット向け最初の課金ティア、リクエストは 1,000 件あたり。
 
-| サービス | 保存 $/GB-月 | egress $/GB | PUT $/1k | GET $/1k | 最低保存期間 | 無料 egress の条件 |
-| --- | --- | --- | --- | --- | --- | --- |
-| AWS S3 Standard (us-east-1) | 0.023 (50TB 超で 0.022, 500TB 超で 0.021) | 0.09 (最初の 10TB) | 0.005 | 0.0004 | なし | 月 100GB (全サービス合算)、CloudFront 向けは無料 |
-| Google Cloud Storage Standard (us-central1) | 0.020 | 0.12 (0〜10TiB) | 0.005 | 0.0004 | なし | 月 100GB (北米発、Always Free) |
-| Azure Blob Hot LRS (East US) | 0.0208 | 0.087 (100GB 超〜10TB) | 0.005 | 0.0004 | なし | 月 100GB |
-| Cloudflare R2 Standard | 0.015 | 0 | 0.0045 | 0.00036 | なし | 常に無料 |
-| Backblaze B2 | 0.00695 | 0.01 (超過分) | 0 | 0 | なし | 平均保存量の 3 倍まで |
-| Wasabi | 0.00799 | 0 | 0 | 0 | 90 日 | 月間 egress ≤ 保存量 (公正利用) |
-| OCI Object Storage Standard | 0.0255 | 0.0085 | 0.00034 | 0.00034 | なし | 月 10TB |
-| IBM COS Standard (Regional, us-south) | 0.023 (500TB 以上 0.0209) | 0.09 (0〜50TB) | 0.0052 | 0.00042 | なし | なし |
-| Alibaba OSS Standard LRS (US Virginia) | 0.016 (最初の 5GB 無料) | 0.076 (100GB〜10TB) | 0.0014 (1 億件まで無料) | 0.0001 (5 億件まで無料) | なし | 月 100GB |
-| DigitalOcean Spaces | $5/月に 250GiB 込み、超過 0.02 | 0.01 (1TiB 超) | 0 | 0 | なし | 1TiB/月 込み |
-| Akamai Object Storage | $5/月に 250GB 込み、超過 0.02 | 0.005 (1TB 超) | 0 | 0 | なし | 1TB/月 込み (転送プール) |
-| Hetzner Object Storage | 基本 $7.99 (EUR 6.49)/月に 1TB 込み、超過 $0.0123/TB-時 (≈ 0.00898/GB-月) | 0.0012 (超過 $1.20/TB、EUR 1.00/TB) | 0 | 0 | なし | 1TB/月 込み |
-| Tigris Standard | 0.02 | 0 | 0.005 | 0.0005 | なし | 常に無料 |
-| Storj Standard | 0.007 | 0.007 | 0 | 0 | 30 日 | なし |
+| サービス                                    | 保存 $/GB-月                                                              | egress $/GB                         | PUT $/1k                | GET $/1k                | 最低保存期間 | 無料 egress の条件                               |
+| ------------------------------------------- | ------------------------------------------------------------------------- | ----------------------------------- | ----------------------- | ----------------------- | ------------ | ------------------------------------------------ |
+| AWS S3 Standard (us-east-1)                 | 0.023 (50TB 超で 0.022, 500TB 超で 0.021)                                 | 0.09 (最初の 10TB)                  | 0.005                   | 0.0004                  | なし         | 月 100GB (全サービス合算)、CloudFront 向けは無料 |
+| Google Cloud Storage Standard (us-central1) | 0.020                                                                     | 0.12 (0〜10TiB)                     | 0.005                   | 0.0004                  | なし         | 月 100GB (北米発、Always Free)                   |
+| Azure Blob Hot LRS (East US)                | 0.0208                                                                    | 0.087 (100GB 超〜10TB)              | 0.005                   | 0.0004                  | なし         | 月 100GB                                         |
+| Cloudflare R2 Standard                      | 0.015                                                                     | 0                                   | 0.0045                  | 0.00036                 | なし         | 常に無料                                         |
+| Backblaze B2                                | 0.00695                                                                   | 0.01 (超過分)                       | 0                       | 0                       | なし         | 平均保存量の 3 倍まで                            |
+| Wasabi                                      | 0.00799                                                                   | 0                                   | 0                       | 0                       | 90 日        | 月間 egress ≤ 保存量 (公正利用)                  |
+| OCI Object Storage Standard                 | 0.0255                                                                    | 0.0085                              | 0.00034                 | 0.00034                 | なし         | 月 10TB                                          |
+| IBM COS Standard (Regional, us-south)       | 0.023 (500TB 以上 0.0209)                                                 | 0.09 (0〜50TB)                      | 0.0052                  | 0.00042                 | なし         | なし                                             |
+| Alibaba OSS Standard LRS (US Virginia)      | 0.016 (最初の 5GB 無料)                                                   | 0.076 (100GB〜10TB)                 | 0.0014 (1 億件まで無料) | 0.0001 (5 億件まで無料) | なし         | 月 100GB                                         |
+| DigitalOcean Spaces                         | $5/月に 250GiB 込み、超過 0.02                                            | 0.01 (1TiB 超)                      | 0                       | 0                       | なし         | 1TiB/月 込み                                     |
+| Akamai Object Storage                       | $5/月に 250GB 込み、超過 0.02                                             | 0.005 (1TB 超)                      | 0                       | 0                       | なし         | 1TB/月 込み (転送プール)                         |
+| Hetzner Object Storage                      | 基本 $7.99 (EUR 6.49)/月に 1TB 込み、超過 $0.0123/TB-時 (≈ 0.00898/GB-月) | 0.0012 (超過 $1.20/TB、EUR 1.00/TB) | 0                       | 0                       | なし         | 1TB/月 込み                                      |
+| Tigris Standard                             | 0.02                                                                      | 0                                   | 0.005                   | 0.0005                  | なし         | 常に無料                                         |
+| Storj Standard                              | 0.007                                                                     | 0.007                               | 0                       | 0                       | 30 日        | なし                                             |
 
 注意点:
 
@@ -117,18 +117,18 @@ xychart-beta
 
 ### 2.4 ハイパースケーラーのアーカイブ層
 
-| サービス | 層 | 保存 $/GB-月 | 最低保存期間 | 取り出し |
-| --- | --- | --- | --- | --- |
-| AWS | S3 Standard-IA | 0.0125 | 30 日 | $0.01/GB |
-| AWS | S3 Glacier Instant Retrieval | 0.004 | 90 日 | ミリ秒、$0.03/GB |
-| AWS | S3 Glacier Flexible Retrieval | 0.0036 | 90 日 | 分〜時間 |
-| AWS | S3 Glacier Deep Archive | 0.00099 | 180 日 | 12〜48 時間 |
-| Google | Nearline / Coldline / Archive (us-central1) | 0.010 / 0.004 / 0.0012 | 30 / 90 / 365 日 | 即時 (取り出し料金あり) |
-| Azure | Archive LRS (East US) | 0.00099 | 180 日 | rehydrate 数時間、$0.02/GB (優先 $0.10/GB) |
-| OCI | Archive | 0.0026 | 90 日 | 要復元。復元リクエストから最初のバイト取得まで最大 1 時間 (Oracle 公式ドキュメント) |
-| Cloudflare R2 | Infrequent Access | 0.01 | 30 日 | $0.01/GB |
-| Tigris | Archive | 0.004 | 90 日 | 復元型 |
-| DigitalOcean | Spaces Cold | 0.007/GiB | 早期削除課金あり | $0.01/GiB |
+| サービス      | 層                                          | 保存 $/GB-月           | 最低保存期間     | 取り出し                                                                            |
+| ------------- | ------------------------------------------- | ---------------------- | ---------------- | ----------------------------------------------------------------------------------- |
+| AWS           | S3 Standard-IA                              | 0.0125                 | 30 日            | $0.01/GB                                                                            |
+| AWS           | S3 Glacier Instant Retrieval                | 0.004                  | 90 日            | ミリ秒、$0.03/GB                                                                    |
+| AWS           | S3 Glacier Flexible Retrieval               | 0.0036                 | 90 日            | 分〜時間                                                                            |
+| AWS           | S3 Glacier Deep Archive                     | 0.00099                | 180 日           | 12〜48 時間                                                                         |
+| Google        | Nearline / Coldline / Archive (us-central1) | 0.010 / 0.004 / 0.0012 | 30 / 90 / 365 日 | 即時 (取り出し料金あり)                                                             |
+| Azure         | Archive LRS (East US)                       | 0.00099                | 180 日           | rehydrate 数時間、$0.02/GB (優先 $0.10/GB)                                          |
+| OCI           | Archive                                     | 0.0026                 | 90 日            | 要復元。復元リクエストから最初のバイト取得まで最大 1 時間 (Oracle 公式ドキュメント) |
+| Cloudflare R2 | Infrequent Access                           | 0.01                   | 30 日            | $0.01/GB                                                                            |
+| Tigris        | Archive                                     | 0.004                  | 90 日            | 復元型                                                                              |
+| DigitalOcean  | Spaces Cold                                 | 0.007/GiB              | 早期削除課金あり | $0.01/GiB                                                                           |
 
 AWS Glacier 系の価格は S3 価格ページ (us-east-1) で確認した既知の定価。GCS の Nearline/Coldline/Archive は公式価格ページの時間単価 ($0.000013699 / $0.000005479 / $0.000001644 per GiB-時) × 730 時間で、最低保存期間 30 / 90 / 365 日も同ページで確認した。OCI Archive の単価は Oracle 価格 API (B91633)。
 
@@ -138,30 +138,30 @@ AWS Glacier 系の価格は S3 価格ページ (us-east-1) で確認した既知
 
 凡例: ○ = あり / △ = 部分的・プレビュー・別のファーストパーティ製品経由 / × = なし、または公式の API/機能一覧に含まれない / ? = 公式ドキュメントに記載がない。全セルを 2026-10-03 に公式ドキュメントで確認した。? が残るのは Backblaze B2、DigitalOcean Spaces、Hetzner の強整合だけで、これらのドキュメントは read-after-write 整合性について何も書いていない。`data/competitors.json` では ○ と △ を `true`、× を `false`、? を `null` として扱う。
 
-| サービス | S3 互換度 | 強整合 | Versioning | Object Lock | Lifecycle | Replication | Events | Iceberg/テーブル | Vector | CDN 統合 |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| AWS S3 | ネイティブ | ○ (2020-12〜) | ○ | ○ | ○ | ○ (CRR/SRR) | ○ (EventBridge/SNS/SQS/Lambda) | ○ S3 Tables | ○ S3 Vectors | ○ CloudFront |
-| GCS | △ (XML API + HMAC) | ○ | ○ | ○ Bucket Lock / Object Retention | ○ | ○ dual/multi-region | ○ Pub/Sub | ○ BigLake | × (Vertex AI は別製品) | ○ Cloud CDN |
-| Azure Blob / ADLS Gen2 | × (独自 API) | ○ | ○ | ○ Immutable storage | ○ | ○ Object replication / GRS | ○ Event Grid | △ Fabric OneLake 経由 (Iceberg メタデータ仮想化) | × | ○ Front Door |
-| Cloudflare R2 | 高 | ○ | × | △ bucket lock (独自) | ○ | × | ○ Queues 経由 | ○ Basin Catalog | × (Vectorize は別製品) | ○ |
-| Backblaze B2 | 高 | ? (ドキュメントに記載なし) | ○ | ○ | ○ | ○ Cloud Replication | ○ (有料、利用は申請制) | × | × | × (提携 CDN のみ) |
-| Wasabi | 高 | ○ (「immediate consistency」) | ○ | ○ | ○ | ○ | ○ (AWS SNS 経由で配信) | × | × | × (提携のみ) |
-| OCI | △ | ○ | ○ | ○ Retention rules | ○ | ○ | ○ OCI Events | × (Autonomous AI Lakehouse で Iceberg をクエリ可。マネージドカタログの記載なし) | × | × |
-| IBM COS | 高 | ○ | ○ | ○ | ○ | ○ | ○ | △ watsonx.data (Iceberg REST カタログ) | × | △ IBM Cloud Internet Services 経由 |
-| Alibaba OSS | △ | ○ | ○ | ○ WORM | ○ | ○ CRR | ○ | △ OSS Tables (招待制プレビュー) | △ OSS Vectors (パブリックプレビュー) | ○ |
-| DO Spaces | 高 | ? (ドキュメントに記載なし) | ○ (API のみ) | × | △ (期限切れ削除のみ) | × | × | × | × | ○ |
-| Akamai | 高 | ○ | ○ | ○ (Governance/Compliance) | △ (期限切れ削除のみ) | × | × | × | × | ○ (Akamai CDN のオリジン) |
-| Hetzner | 高 | ? (ドキュメントに記載なし) | ○ | ○ | △ (有効期限による削除) | × | × | × | × | × |
-| Tigris | 高 | ○ (範囲はバケットのロケーション種別で決まる) | △ (スナップショット経由。PutBucketVersioning なし) | × | ○ | ○ 自動グローバル分散 | ○ (webhook) | × | × | ○ (分散キャッシュ) |
-| Storj | 高 | ○ | ○ | ○ | × (オブジェクト単位の TTL のみ) | 不要 (分散) | × | × | × | × |
-| MinIO / AIStor | 高 | ○ | ○ | ○ | ○ | ○ | ○ | ○ AIStor Tables | × | × |
-| Ceph RGW | 高 | ○ (サイト内) | ○ | ○ | ○ | ○ multisite (非同期) | ○ | × | × | × |
-| SeaweedFS | △ | ○ (レプリカ書き込み W=N) | ○ | ○ | △ (期限切れ削除のみ) | ○ | △ (filer の webhook/Kafka。S3 バケット通知はなし) | ○ S3 Table Buckets + Iceberg REST カタログ | △ Lance テーブルバケット | × |
-| Garage | △ | ○ (デフォルトの `consistency_mode`) | × | × | △ (期限切れ等) | ○ (組み込み) | × | × | × | × |
-| VAST Data | 高 | ○ | ○ | ○ | △ (ビュー単位の期限切れルール) | ○ | ○ (Kafka) | × (VAST DataBase。Iceberg カタログの記載なし) | ○ ベクトルインデックス | × |
-| Everpure FlashBlade | 高 | ○ | ○ | ○ | △ (期限切れ) | ○ | × (サポート S3 操作に含まれない) | × | × | × |
-| NetApp StorageGRID | 高 | ○ | ○ | ○ | ○ (ILM) | ○ CloudMirror | ○ (Kafka/webhook/SNS) | × | × | × |
-| Dell ObjectScale / ECS | 高 | ○ | ○ | ○ | ○ | ○ 地理複製 | ○ (webhook。4.4 から Kafka) | ○ S3 Tables (4.4 で GA) | × | × |
+| サービス               | S3 互換度          | 強整合                                       | Versioning                                         | Object Lock                      | Lifecycle                       | Replication                | Events                                            | Iceberg/テーブル                                                                | Vector                               | CDN 統合                           |
+| ---------------------- | ------------------ | -------------------------------------------- | -------------------------------------------------- | -------------------------------- | ------------------------------- | -------------------------- | ------------------------------------------------- | ------------------------------------------------------------------------------- | ------------------------------------ | ---------------------------------- |
+| AWS S3                 | ネイティブ         | ○ (2020-12〜)                                | ○                                                  | ○                                | ○                               | ○ (CRR/SRR)                | ○ (EventBridge/SNS/SQS/Lambda)                    | ○ S3 Tables                                                                     | ○ S3 Vectors                         | ○ CloudFront                       |
+| GCS                    | △ (XML API + HMAC) | ○                                            | ○                                                  | ○ Bucket Lock / Object Retention | ○                               | ○ dual/multi-region        | ○ Pub/Sub                                         | ○ BigLake                                                                       | × (Vertex AI は別製品)               | ○ Cloud CDN                        |
+| Azure Blob / ADLS Gen2 | × (独自 API)       | ○                                            | ○                                                  | ○ Immutable storage              | ○                               | ○ Object replication / GRS | ○ Event Grid                                      | △ Fabric OneLake 経由 (Iceberg メタデータ仮想化)                                | ×                                    | ○ Front Door                       |
+| Cloudflare R2          | 高                 | ○                                            | ×                                                  | △ bucket lock (独自)             | ○                               | ×                          | ○ Queues 経由                                     | ○ Basin Catalog                                                                 | × (Vectorize は別製品)               | ○                                  |
+| Backblaze B2           | 高                 | ? (ドキュメントに記載なし)                   | ○                                                  | ○                                | ○                               | ○ Cloud Replication        | ○ (有料、利用は申請制)                            | ×                                                                               | ×                                    | × (提携 CDN のみ)                  |
+| Wasabi                 | 高                 | ○ (「immediate consistency」)                | ○                                                  | ○                                | ○                               | ○                          | ○ (AWS SNS 経由で配信)                            | ×                                                                               | ×                                    | × (提携のみ)                       |
+| OCI                    | △                  | ○                                            | ○                                                  | ○ Retention rules                | ○                               | ○                          | ○ OCI Events                                      | × (Autonomous AI Lakehouse で Iceberg をクエリ可。マネージドカタログの記載なし) | ×                                    | ×                                  |
+| IBM COS                | 高                 | ○                                            | ○                                                  | ○                                | ○                               | ○                          | ○                                                 | △ watsonx.data (Iceberg REST カタログ)                                          | ×                                    | △ IBM Cloud Internet Services 経由 |
+| Alibaba OSS            | △                  | ○                                            | ○                                                  | ○ WORM                           | ○                               | ○ CRR                      | ○                                                 | △ OSS Tables (招待制プレビュー)                                                 | △ OSS Vectors (パブリックプレビュー) | ○                                  |
+| DO Spaces              | 高                 | ? (ドキュメントに記載なし)                   | ○ (API のみ)                                       | ×                                | △ (期限切れ削除のみ)            | ×                          | ×                                                 | ×                                                                               | ×                                    | ○                                  |
+| Akamai                 | 高                 | ○                                            | ○                                                  | ○ (Governance/Compliance)        | △ (期限切れ削除のみ)            | ×                          | ×                                                 | ×                                                                               | ×                                    | ○ (Akamai CDN のオリジン)          |
+| Hetzner                | 高                 | ? (ドキュメントに記載なし)                   | ○                                                  | ○                                | △ (有効期限による削除)          | ×                          | ×                                                 | ×                                                                               | ×                                    | ×                                  |
+| Tigris                 | 高                 | ○ (範囲はバケットのロケーション種別で決まる) | △ (スナップショット経由。PutBucketVersioning なし) | ×                                | ○                               | ○ 自動グローバル分散       | ○ (webhook)                                       | ×                                                                               | ×                                    | ○ (分散キャッシュ)                 |
+| Storj                  | 高                 | ○                                            | ○                                                  | ○                                | × (オブジェクト単位の TTL のみ) | 不要 (分散)                | ×                                                 | ×                                                                               | ×                                    | ×                                  |
+| MinIO / AIStor         | 高                 | ○                                            | ○                                                  | ○                                | ○                               | ○                          | ○                                                 | ○ AIStor Tables                                                                 | ×                                    | ×                                  |
+| Ceph RGW               | 高                 | ○ (サイト内)                                 | ○                                                  | ○                                | ○                               | ○ multisite (非同期)       | ○                                                 | ×                                                                               | ×                                    | ×                                  |
+| SeaweedFS              | △                  | ○ (レプリカ書き込み W=N)                     | ○                                                  | ○                                | △ (期限切れ削除のみ)            | ○                          | △ (filer の webhook/Kafka。S3 バケット通知はなし) | ○ S3 Table Buckets + Iceberg REST カタログ                                      | △ Lance テーブルバケット             | ×                                  |
+| Garage                 | △                  | ○ (デフォルトの `consistency_mode`)          | ×                                                  | ×                                | △ (期限切れ等)                  | ○ (組み込み)               | ×                                                 | ×                                                                               | ×                                    | ×                                  |
+| VAST Data              | 高                 | ○                                            | ○                                                  | ○                                | △ (ビュー単位の期限切れルール)  | ○                          | ○ (Kafka)                                         | × (VAST DataBase。Iceberg カタログの記載なし)                                   | ○ ベクトルインデックス               | ×                                  |
+| Everpure FlashBlade    | 高                 | ○                                            | ○                                                  | ○                                | △ (期限切れ)                    | ○                          | × (サポート S3 操作に含まれない)                  | ×                                                                               | ×                                    | ×                                  |
+| NetApp StorageGRID     | 高                 | ○                                            | ○                                                  | ○                                | ○ (ILM)                         | ○ CloudMirror              | ○ (Kafka/webhook/SNS)                             | ×                                                                               | ×                                    | ×                                  |
+| Dell ObjectScale / ECS | 高                 | ○                                            | ○                                                  | ○                                | ○                               | ○ 地理複製                 | ○ (webhook。4.4 から Kafka)                       | ○ S3 Tables (4.4 で GA)                                                         | ×                                    | ×                                  |
 
 R2 の S3 API 実装状況は公式ドキュメントで確認した。`GetBucketVersioning`、`PutBucketReplication`、通知設定 API、ACL、オブジェクトタグは **未実装**。一方で SSE-C と条件付きヘッダ (`If-Match` など) は実装済み。
 
@@ -169,11 +169,11 @@ R2 の S3 API 実装状況は公式ドキュメントで確認した。`GetBucke
 
 S3 互換は 0/1 ではない。筆者は次の 4 段階で見ている。
 
-| レベル | できること | 代表 | 移行時の注意 |
-| --- | --- | --- | --- |
-| L1: CRUD | PUT/GET/DELETE/List、署名 v4 | ほぼ全員 | ここまでならエンドポイント差し替えで動く |
-| L2: 大容量 | マルチパート、Range GET、presigned URL、SSE | ほぼ全員 | パートサイズ上限、ETag 計算の違いに注意 |
-| L3: データ保護 | Versioning、Object Lock (Compliance/Governance)、Lifecycle、Replication | B2, Wasabi, Ceph, MinIO, StorageGRID, FlashBlade | バックアップソフトの immutability 機能はここに依存 |
+| レベル         | できること                                                                                                  | 代表                                                | 移行時の注意                                                |
+| -------------- | ----------------------------------------------------------------------------------------------------------- | --------------------------------------------------- | ----------------------------------------------------------- |
+| L1: CRUD       | PUT/GET/DELETE/List、署名 v4                                                                                | ほぼ全員                                            | ここまでならエンドポイント差し替えで動く                    |
+| L2: 大容量     | マルチパート、Range GET、presigned URL、SSE                                                                 | ほぼ全員                                            | パートサイズ上限、ETag 計算の違いに注意                     |
+| L3: データ保護 | Versioning、Object Lock (Compliance/Governance)、Lifecycle、Replication                                     | B2, Wasabi, Ceph, MinIO, StorageGRID, FlashBlade    | バックアップソフトの immutability 機能はここに依存          |
 | L4: 新世代 API | 条件付き書き込み (`If-None-Match` / `If-Match`)、チェックサム (CRC64NVME 等)、S3 Express、S3 Tables/Vectors | AWS (全部)、R2 (条件付き書き込み)、Tigris 等 (一部) | 「S3 をデータベースとして使う」系 OSS (第 10 章) は L4 前提 |
 
 **L4 が新しい差別化軸**。2024 年に S3 が条件付き書き込みを入れて以降、WarpStream / SlateDB / turbopuffer のような「S3 の上に作るシステム」は CAS (compare-and-swap) を前提に設計するようになった。互換ストレージ側がここを実装していないと、こうした OSS が動かない。
@@ -325,12 +325,12 @@ timeline
 
 ### 4.15 オンプレ商用
 
-| 製品 | 特徴 | 典型ユースケース |
-| --- | --- | --- |
-| VAST Data | オールフラッシュの分離型 (DASE) アーキテクチャ。同じデータにファイル/オブジェクト/テーブルでアクセス。ベクトル・DB 機能も内蔵 | GPU クラウド、AI 学習データとチェックポイント |
-| Everpure (旧 Pure Storage) FlashBlade | 2026 年 2 月に社名を Everpure に変更。高速ファイル + オブジェクト。S3 互換 API | 37signals の S3 脱出先。分析・バックアップ |
-| NetApp StorageGRID | ポリシー駆動 ILM、マルチサイト分散、クラウドプールへの階層化 | NetApp 既存顧客のアーカイブ |
-| Dell ObjectScale / ECS | 長期運用のエンタープライズ向け。地理複製 | Dell 標準化企業のバックアップ/分析 |
+| 製品                                  | 特徴                                                                                                                          | 典型ユースケース                              |
+| ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------- |
+| VAST Data                             | オールフラッシュの分離型 (DASE) アーキテクチャ。同じデータにファイル/オブジェクト/テーブルでアクセス。ベクトル・DB 機能も内蔵 | GPU クラウド、AI 学習データとチェックポイント |
+| Everpure (旧 Pure Storage) FlashBlade | 2026 年 2 月に社名を Everpure に変更。高速ファイル + オブジェクト。S3 互換 API                                                | 37signals の S3 脱出先。分析・バックアップ    |
+| NetApp StorageGRID                    | ポリシー駆動 ILM、マルチサイト分散、クラウドプールへの階層化                                                                  | NetApp 既存顧客のアーカイブ                   |
+| Dell ObjectScale / ECS                | 長期運用のエンタープライズ向け。地理複製                                                                                      | Dell 標準化企業のバックアップ/分析            |
 
 Gartner の評価軸: 2025 年に Gartner は「Primary Storage」と「Distributed File Systems and Object Storage (File and Object Storage Platforms)」の 2 つの MQ を **「Enterprise Storage Platforms」MQ に統合** した (2025-09-02 公開)。Leaders は Dell, HPE, Huawei, IBM, NetApp, Pure Storage の 6 社。最後の単独版 (2024 File and Object Storage Platforms) では Dell, Pure, VAST 等が Leaders。**AWS S3 のようなパブリッククラウドストレージはこの MQ の対象外** で、AWS は「Strategic Cloud Platform Services」側で評価される。
 
@@ -421,20 +421,20 @@ Hetzner      基本 $7.99 + 保存 9 TB x $0.0123 x 730 h ≈ 80.81, egress 49 T
 Wasabi       保存 10 TB x $7.99 = 79.90 だが egress 50 TB > 保存 10 TB で公正利用ポリシー違反       → 不適合
 ```
 
-| サービス | 月額 (概算) | S3 比 |
-| --- | --- | --- |
-| GCS | $5,799 | 1.28 |
-| AWS S3 | $4,530 | 1.00 |
-| Azure Blob | $4,399 | 0.97 |
-| DO Spaces | $690 | 0.15 |
-| OCI | $599 | 0.13 |
-| Akamai | $445 | 0.10 |
-| Storj | $420 | 0.09 |
-| B2 | $270 | 0.06 |
-| Tigris | $210 | 0.05 |
-| R2 | $150 | 0.03 |
-| Hetzner | $148 (EUR 113) | 0.03 |
-| Wasabi | 不適合 | - |
+| サービス   | 月額 (概算)    | S3 比 |
+| ---------- | -------------- | ----- |
+| GCS        | $5,799         | 1.28  |
+| AWS S3     | $4,530         | 1.00  |
+| Azure Blob | $4,399         | 0.97  |
+| DO Spaces  | $690           | 0.15  |
+| OCI        | $599           | 0.13  |
+| Akamai     | $445           | 0.10  |
+| Storj      | $420           | 0.09  |
+| B2         | $270           | 0.06  |
+| Tigris     | $210           | 0.05  |
+| R2         | $150           | 0.03  |
+| Hetzner    | $148 (EUR 113) | 0.03  |
+| Wasabi     | 不適合         | -     |
 
 ```mermaid
 pie showData
@@ -498,11 +498,11 @@ Hetzner     $7.99 + 99 TB x 0.0123 x 730 ≈ 896.91      egress 9 TB x $1.20 = 1
 
 ### 5.5 シナリオのまとめ
 
-| シナリオ | 最安クラス | S3 の相対位置 | S3 を使い続ける合理的理由 |
-| --- | --- | --- | --- |
-| A: 配信型 (egress 5x) | R2 / Tigris / B2 | 最高値グループ (30 倍) | CloudFront 前提の設計、AWS 内処理が大半 |
-| B: アーカイブ | S3 Deep Archive / Azure Archive | 最安グループ | 迷わず S3 (または Azure) |
-| C: 保存中心 | B2 / Storj / Wasabi | 約 4〜4.5 倍 | 分析・ML を AWS 内で回す、Intelligent-Tiering 活用 |
+| シナリオ              | 最安クラス                      | S3 の相対位置          | S3 を使い続ける合理的理由                          |
+| --------------------- | ------------------------------- | ---------------------- | -------------------------------------------------- |
+| A: 配信型 (egress 5x) | R2 / Tigris / B2                | 最高値グループ (30 倍) | CloudFront 前提の設計、AWS 内処理が大半            |
+| B: アーカイブ         | S3 Deep Archive / Azure Archive | 最安グループ           | 迷わず S3 (または Azure)                           |
+| C: 保存中心           | B2 / Storj / Wasabi             | 約 4〜4.5 倍           | 分析・ML を AWS 内で回す、Intelligent-Tiering 活用 |
 
 ## 6. 選び方ガイド
 
@@ -528,18 +528,18 @@ flowchart TD
 
 ### 6.2 ユースケース別の推奨
 
-| ユースケース | 第 1 候補 | 第 2 候補 | 避けるべき | 理由 |
-| --- | --- | --- | --- | --- |
-| AWS 上のデータレイク / レイクハウス | S3 (+ S3 Tables) | - | 外部ストレージ | AWS 内転送無料、Athena/EMR/Glue 統合 |
-| 画像・動画の公開配信 | R2 | S3 + CloudFront | S3 直配信 | egress がコストの 9 割 |
-| バックアップ (Veeam 等) | B2 / Wasabi | S3 Glacier IR | R2 (versioning なし) | Object Lock + 安価な容量 |
-| 法定保存 7〜10 年 | S3 Glacier Deep Archive | Azure Archive | ホット 1 層しかない alt-cloud | $1/TB-月 級 |
-| AI 学習データ (GPU がクラウド) | 同じクラウドのストレージ | VAST (ネオクラウド/オンプレ) | クロスクラウド読み出し | 学習のたびの egress が致命的 |
-| モデル重みの世界配布 | Tigris / R2 | S3 + CloudFront | 単一リージョン S3 直 | 地理分散 + egress 無料 |
-| マルチクラウドの共有データ | R2 | OCI | ハイパースケーラー間直接 | egress ゼロで中立 |
-| EU データ主権 | Hetzner / 欧州系 | 各社 EU リージョン + 主権クラウド | - | 運営主体の所在が論点 |
-| 開発・CI のローカル S3 | Garage / SeaweedFS / LocalStack | Ceph (大規模) | MinIO コミュニティ版の新規採用 | 2025〜2026 年のメンテ停止 |
-| 10PB 級で安定、成長が読める | オンプレ (FlashBlade / Ceph) | 長期コミット割引の S3 | 従量課金の S3 | 37signals 型リパトリエーション |
+| ユースケース                        | 第 1 候補                       | 第 2 候補                         | 避けるべき                     | 理由                                 |
+| ----------------------------------- | ------------------------------- | --------------------------------- | ------------------------------ | ------------------------------------ |
+| AWS 上のデータレイク / レイクハウス | S3 (+ S3 Tables)                | -                                 | 外部ストレージ                 | AWS 内転送無料、Athena/EMR/Glue 統合 |
+| 画像・動画の公開配信                | R2                              | S3 + CloudFront                   | S3 直配信                      | egress がコストの 9 割               |
+| バックアップ (Veeam 等)             | B2 / Wasabi                     | S3 Glacier IR                     | R2 (versioning なし)           | Object Lock + 安価な容量             |
+| 法定保存 7〜10 年                   | S3 Glacier Deep Archive         | Azure Archive                     | ホット 1 層しかない alt-cloud  | $1/TB-月 級                          |
+| AI 学習データ (GPU がクラウド)      | 同じクラウドのストレージ        | VAST (ネオクラウド/オンプレ)      | クロスクラウド読み出し         | 学習のたびの egress が致命的         |
+| モデル重みの世界配布                | Tigris / R2                     | S3 + CloudFront                   | 単一リージョン S3 直           | 地理分散 + egress 無料               |
+| マルチクラウドの共有データ          | R2                              | OCI                               | ハイパースケーラー間直接       | egress ゼロで中立                    |
+| EU データ主権                       | Hetzner / 欧州系                | 各社 EU リージョン + 主権クラウド | -                              | 運営主体の所在が論点                 |
+| 開発・CI のローカル S3              | Garage / SeaweedFS / LocalStack | Ceph (大規模)                     | MinIO コミュニティ版の新規採用 | 2025〜2026 年のメンテ停止            |
+| 10PB 級で安定、成長が読める         | オンプレ (FlashBlade / Ceph)    | 長期コミット割引の S3             | 従量課金の S3                  | 37signals 型リパトリエーション       |
 
 ### 6.3 筆者の意見
 
@@ -552,13 +552,13 @@ flowchart TD
 
 ### 7.1 事例一覧
 
-| 年 | 企業 | 方向 | 規模 | 結果・数字 | 出典の性質 |
-| --- | --- | --- | --- | --- | --- |
-| 2015〜2016 | Dropbox | S3 → 自社 (Magic Pocket) | 約 500PB のユーザーデータの 90% 超を移行 (2015-10 時点) | IPO 前の S-1 で 2 年間の運営費削減 約 $75M | Dropbox 技術ブログ、Wired、S-1 |
-| 2023 | 37signals (Basecamp, HEY) | AWS コンピュート/DB → 自社 DC | - | クラウド費 $3.2M/年からの削減を公表 | DHH のブログ |
-| 2025 | 37signals | S3 → Pure Storage FlashBlade (2 拠点 18PB 容量) | S3 上に約 10PB、移動は約 6PB | ハード約 $1.5M、運用 $200k/年未満。S3 約 $1.3〜1.5M/年を削減。AWS が約 $250k の egress を免除。2025-10-20 に AWS アカウント削除 | DHH のブログ/X、The Register、DCD |
-| 2024〜 | 多数 | S3 → R2 (配信面) | - | Sippy / Super Slurper による段階移行 | Cloudflare |
-| 2025〜2026 | MinIO ユーザー | MinIO → Garage / Ceph / SeaweedFS / fork | - | コミュニティ版のメンテ停止が引き金 | 個人ブログ、Blocks & Files |
+| 年         | 企業                      | 方向                                            | 規模                                                    | 結果・数字                                                                                                                      | 出典の性質                        |
+| ---------- | ------------------------- | ----------------------------------------------- | ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- | --------------------------------- |
+| 2015〜2016 | Dropbox                   | S3 → 自社 (Magic Pocket)                        | 約 500PB のユーザーデータの 90% 超を移行 (2015-10 時点) | IPO 前の S-1 で 2 年間の運営費削減 約 $75M                                                                                      | Dropbox 技術ブログ、Wired、S-1    |
+| 2023       | 37signals (Basecamp, HEY) | AWS コンピュート/DB → 自社 DC                   | -                                                       | クラウド費 $3.2M/年からの削減を公表                                                                                             | DHH のブログ                      |
+| 2025       | 37signals                 | S3 → Pure Storage FlashBlade (2 拠点 18PB 容量) | S3 上に約 10PB、移動は約 6PB                            | ハード約 $1.5M、運用 $200k/年未満。S3 約 $1.3〜1.5M/年を削減。AWS が約 $250k の egress を免除。2025-10-20 に AWS アカウント削除 | DHH のブログ/X、The Register、DCD |
+| 2024〜     | 多数                      | S3 → R2 (配信面)                                | -                                                       | Sippy / Super Slurper による段階移行                                                                                            | Cloudflare                        |
+| 2025〜2026 | MinIO ユーザー            | MinIO → Garage / Ceph / SeaweedFS / fork        | -                                                       | コミュニティ版のメンテ停止が引き金                                                                                              | 個人ブログ、Blocks & Files        |
 
 ### 7.2 Dropbox Magic Pocket
 

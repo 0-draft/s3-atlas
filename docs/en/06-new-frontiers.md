@@ -90,29 +90,29 @@ In his 2026-08 post "DuckDB and the changing physics of analytics," Warfield lin
 
 ### 1.4 The strategic picture
 
-| Layer | Before | Now |
-| --- | --- | --- |
-| Storage | S3 (general purpose) | S3 general purpose + Express One Zone + table / vector buckets |
-| Table management | Self-managed Iceberg + Glue + compaction jobs | Managed by S3 Tables (compaction, snapshots, GC) |
-| Catalog | Hive Metastore / Glue | Iceberg REST endpoint (S3 Tables) + Glue / SageMaker Lakehouse |
-| Vectors | Dedicated vector DB (OpenSearch, Pinecone, etc.) | S3 Vectors for large, infrequently queried sets; OpenSearch for high QPS |
-| Files | Copy to EFS / FSx | S3 Files exposes S3 data directly as files |
-| Metadata | Exhaustive List + HEAD, self-built DB | S3 Metadata (Iceberg tables) + Annotations |
-| Engines | Spark / Athena / Redshift | + DuckDB / PyIceberg / agents |
+| Layer            | Before                                           | Now                                                                      |
+| ---------------- | ------------------------------------------------ | ------------------------------------------------------------------------ |
+| Storage          | S3 (general purpose)                             | S3 general purpose + Express One Zone + table / vector buckets           |
+| Table management | Self-managed Iceberg + Glue + compaction jobs    | Managed by S3 Tables (compaction, snapshots, GC)                         |
+| Catalog          | Hive Metastore / Glue                            | Iceberg REST endpoint (S3 Tables) + Glue / SageMaker Lakehouse           |
+| Vectors          | Dedicated vector DB (OpenSearch, Pinecone, etc.) | S3 Vectors for large, infrequently queried sets; OpenSearch for high QPS |
+| Files            | Copy to EFS / FSx                                | S3 Files exposes S3 data directly as files                               |
+| Metadata         | Exhaustive List + HEAD, self-built DB            | S3 Metadata (Iceberg tables) + Annotations                               |
+| Engines          | Spark / Athena / Redshift                        | + DuckDB / PyIceberg / agents                                            |
 
 ## 2. S3 Express One Zone
 
 Performance details are in the Express One Zone section of [05-performance](05-performance.md). Here it is framed as "a new shape of S3."
 
-| Item | Details |
-| --- | --- |
-| Announced | 2023-11 (re:Invent 2023) |
-| Essence | Single AZ, high-performance hardware, and a new bucket type: the **directory bucket** |
-| Authentication | Session credentials valid for 5 minutes, obtained via `CreateSession` |
-| Performance | Consistent single-digit ms; up to 2 million GET/s and 200,000 PUT/s per bucket (defaults: 200,000 / 100,000) |
-| Added in 2024 | Lifecycle expiration, **append** (`x-amz-write-offset-bytes` on `PutObject`), conditional writes |
-| Added in 2025 | **Price revision (2025-04)**, Access Points, tags (ABAC, cost allocation), **RenameObject (2025-06)**, AZ failure testing with AWS FIS |
-| Added in 2026 | S3 Inventory support (2026-04), 7 more Regions for 15 total (2026-09) |
+| Item           | Details                                                                                                                                |
+| -------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| Announced      | 2023-11 (re:Invent 2023)                                                                                                               |
+| Essence        | Single AZ, high-performance hardware, and a new bucket type: the **directory bucket**                                                  |
+| Authentication | Session credentials valid for 5 minutes, obtained via `CreateSession`                                                                  |
+| Performance    | Consistent single-digit ms; up to 2 million GET/s and 200,000 PUT/s per bucket (defaults: 200,000 / 100,000)                           |
+| Added in 2024  | Lifecycle expiration, **append** (`x-amz-write-offset-bytes` on `PutObject`), conditional writes                                       |
+| Added in 2025  | **Price revision (2025-04)**, Access Points, tags (ABAC, cost allocation), **RenameObject (2025-06)**, AZ failure testing with AWS FIS |
+| Added in 2026  | S3 Inventory support (2026-04), 7 more Regions for 15 total (2026-09)                                                                  |
 
 The 2025-04 price cut (us-east-1): storage $0.16 → $0.11/GB-month, PUT $0.00113/1,000, GET $0.00003/1,000, upload $0.0032/GB, retrieval $0.0006/GB.
 
@@ -163,16 +163,16 @@ flowchart TB
     DUCK[DuckDB / PyIceberg / Trino] --> IRC
 ```
 
-| Concept | Description |
-| --- | --- |
-| Table bucket | A new bucket type. ARN is `arn:aws:s3tables:...:bucket/<name>`. Default of 100 per Region from 2026-10 (previously 10); up to 1 million tables per Region |
-| Namespace | Logical grouping of tables (equivalent to an Iceberg namespace / database) |
-| Table | An Iceberg table. As an IAM resource, permissions can be granted per table |
-| Maintenance | `icebergCompaction` (strategy: `auto` / `binpack` / `sort` / `z-order`, target file size), `icebergSnapshotManagement` (minimum snapshots to keep, maximum age), unreferenced file removal |
-| Record expiration | Setting that automatically expires records older than a given number of days (`put-table-record-expiration-configuration`) |
-| Storage class | `STANDARD` or `INTELLIGENT_TIERING` (from 2025-12) |
-| Replication | Read-only replicas across Regions / accounts (from 2025-12) |
-| Encryption | SSE-S3 / SSE-KMS (per bucket or per table) |
+| Concept           | Description                                                                                                                                                                                |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Table bucket      | A new bucket type. ARN is `arn:aws:s3tables:...:bucket/<name>`. Default of 100 per Region from 2026-10 (previously 10); up to 1 million tables per Region                                  |
+| Namespace         | Logical grouping of tables (equivalent to an Iceberg namespace / database)                                                                                                                 |
+| Table             | An Iceberg table. As an IAM resource, permissions can be granted per table                                                                                                                 |
+| Maintenance       | `icebergCompaction` (strategy: `auto` / `binpack` / `sort` / `z-order`, target file size), `icebergSnapshotManagement` (minimum snapshots to keep, maximum age), unreferenced file removal |
+| Record expiration | Setting that automatically expires records older than a given number of days (`put-table-record-expiration-configuration`)                                                                 |
+| Storage class     | `STANDARD` or `INTELLIGENT_TIERING` (from 2025-12)                                                                                                                                         |
+| Replication       | Read-only replicas across Regions / accounts (from 2025-12)                                                                                                                                |
+| Encryption        | SSE-S3 / SSE-KMS (per bucket or per table)                                                                                                                                                 |
 
 Default snapshot management: "keep at least 1 snapshot, expire those older than 120 hours (5 days)" (per the AWS Big Data Blog).
 
@@ -247,33 +247,33 @@ aws s3tables put-table-bucket-storage-class \
 
 ### 3.5 Chronology (S3 Tables)
 
-| When | Event |
-| --- | --- |
-| 2024-12 | Announced (starting in us-east-1 / us-east-2 / us-west-2). Glue integration in preview |
+| When          | Event                                                                                                                                  |
+| ------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| 2024-12       | Announced (starting in us-east-1 / us-east-2 / us-west-2). Glue integration in preview                                                 |
 | 2025-01 to 06 | Region expansion: from 3 to 32 Regions (8 on 2025-01-17, 11 on 03-04, 14 on 03-21, 15 on 03-31, 19 on 04-08, 30 on 05-07, 32 on 06-25) |
-| 2025-03 | Integration with SageMaker Lakehouse / AWS analytics services (Glue Data Catalog) GA (2025-03-13) |
-| 2025-07 | Compaction charges cut by up to 90% (effective 2025-07-01) |
-| 2025-09 | Table preview in the S3 console |
-| 2025-12 | Intelligent-Tiering storage class, table replication |
-| 2026-02 | Available in GovCloud (US) |
-| 2026-05 | Available in Taipei and New Zealand |
-| 2026-06 | S3 server access logs can be delivered to S3 Tables |
-| 2026-07 | Iceberg V3 Variant type |
-| 2026-09 | All Iceberg V3 data types (geometry, geography, unknown, nanosecond timestamp, column default values) |
-| 2026-10 | Table bucket quota raised from 10 to 100 per Region |
+| 2025-03       | Integration with SageMaker Lakehouse / AWS analytics services (Glue Data Catalog) GA (2025-03-13)                                      |
+| 2025-07       | Compaction charges cut by up to 90% (effective 2025-07-01)                                                                             |
+| 2025-09       | Table preview in the S3 console                                                                                                        |
+| 2025-12       | Intelligent-Tiering storage class, table replication                                                                                   |
+| 2026-02       | Available in GovCloud (US)                                                                                                             |
+| 2026-05       | Available in Taipei and New Zealand                                                                                                    |
+| 2026-06       | S3 server access logs can be delivered to S3 Tables                                                                                    |
+| 2026-07       | Iceberg V3 Variant type                                                                                                                |
+| 2026-09       | All Iceberg V3 data types (geometry, geography, unknown, nanosecond timestamp, column default values)                                  |
+| 2026-10       | Table bucket quota raised from 10 to 100 per Region                                                                                    |
 
 Intelligent-Tiering tiers: after 30 consecutive days without access, data moves to Infrequent Access (40% cheaper than Frequent); after 90 days, to Archive Instant Access (68% cheaper; relative to Frequent Access per AWS What's New wording).
 
 ### 3.6 Pricing (us-east-1, pricing page as of 2026-10)
 
-| Item | Price |
-| --- | --- |
-| Storage (first 50 TB) | $0.0265/GB-month |
-| PUT-type requests | $0.005/1,000 |
-| GET-type requests | $0.0004/1,000 |
-| Object monitoring | $0.025/1,000 objects |
-| Compaction (objects) | $0.002/1,000 objects processed |
-| Compaction (data volume, binpack) | $0.005/GB processed |
+| Item                              | Price                          |
+| --------------------------------- | ------------------------------ |
+| Storage (first 50 TB)             | $0.0265/GB-month               |
+| PUT-type requests                 | $0.005/1,000                   |
+| GET-type requests                 | $0.0004/1,000                  |
+| Object monitoring                 | $0.025/1,000 objects           |
+| Compaction (objects)              | $0.002/1,000 objects processed |
+| Compaction (data volume, binpack) | $0.005/GB processed            |
 
 Per-GB charges for sort / z-order compaction are priced separately from binpack. The 2025-07 cut made per-object prices 50% lower and per-GB prices 90% lower for binpack and 80% lower for sort / z-order. The current sort / z-order per-GB rate is unverified: the S3 pricing page text checked for this guide (2026-10) lists only the binpack rate, and the 2025-06 sort / z-order launch post gives no price. Check the pricing calculator for estimates.
 
@@ -283,11 +283,11 @@ Per-GB charges for sort / z-order compaction are priced separately from binpack.
 
 A feature for answering "What is in this bucket?" or "Who wrote to this prefix yesterday?" with **SQL** instead of an exhaustive List + HEAD sweep. Preview in 2024-12, GA in 2025-01.
 
-| Table | Required | Contents |
-| --- | --- | --- |
-| Journal table | Required | Records object creation, deletion, and metadata updates in near real time. Record expiration (minimum 7 days) can be configured |
+| Table                | Required                | Contents                                                                                                                                                                              |
+| -------------------- | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Journal table        | Required                | Records object creation, deletion, and metadata updates in near real time. Record expiration (minimum 7 days) can be configured                                                       |
 | Live inventory table | Optional (from 2025-07) | Current state of every object / version in the bucket. Backfills existing objects when enabled (minimum 15 minutes, hours for large buckets). Updates usually reflected within 1 hour |
-| Annotation table | Optional (from 2026-06) | Makes the latest state of annotations attached to objects searchable with SQL |
+| Annotation table     | Optional (from 2026-06) | Makes the latest state of annotations attached to objects searchable with SQL                                                                                                         |
 
 Metadata tables are stored as Iceberg in an AWS managed table bucket (`aws-s3`) and can be read with Athena / EMR / DuckDB / PyIceberg, etc.
 
@@ -316,12 +316,12 @@ Pricing (us-east-1): journal updates $0.30 per million updates, live inventory b
 
 A new metadata type for handing AI agents and analytics tools the **business context** of "what this data is."
 
-| Metadata type | Size | Mutability | Use |
-| --- | --- | --- | --- |
-| System-defined metadata | Fixed | No | Size, creation time, storage class |
-| User-defined metadata (`x-amz-meta-*`) | Up to 2 KB | Only at PUT (changing requires re-copying) | Small attributes |
-| Object tags | Up to 10 | Any time | IAM, lifecycle, cost allocation |
-| **Annotations** | **Up to 1 GB per object** (JSON / XML / YAML) | Any time | Context for AI agents, data catalog information |
+| Metadata type                          | Size                                          | Mutability                                 | Use                                             |
+| -------------------------------------- | --------------------------------------------- | ------------------------------------------ | ----------------------------------------------- |
+| System-defined metadata                | Fixed                                         | No                                         | Size, creation time, storage class              |
+| User-defined metadata (`x-amz-meta-*`) | Up to 2 KB                                    | Only at PUT (changing requires re-copying) | Small attributes                                |
+| Object tags                            | Up to 10                                      | Any time                                   | IAM, lifecycle, cost allocation                 |
+| **Annotations**                        | **Up to 1 GB per object** (JSON / XML / YAML) | Any time                                   | Context for AI agents, data catalog information |
 
 Annotations have the same durability and consistency as the object, travel with it on copy and replication, and are deleted when the object is deleted. They are billed the same as S3 Standard storage and request charges.
 
@@ -359,24 +359,24 @@ flowchart LR
 
 ### 5.2 Limits (User Guide, as of 2026-10)
 
-| Item | Limit |
-| --- | --- |
-| Vector buckets / Region / account | 10,000 |
-| Indexes / vector bucket | 10,000 |
-| Vectors / index | Up to 2 billion (40x the preview at GA) |
-| Dimensions | 1-4,096 |
-| Data type | `float32` |
-| Distance | `cosine` / `euclidean` |
-| Total metadata / vector | 40 KB (of which 2 KB filterable) |
-| Metadata keys / vector | 50 |
-| Non-filterable keys / index | 10 (fixed at creation) |
-| PutVectors + DeleteVectors requests / second / index | 1,000 |
-| Vectors inserted + deleted / second / index | 2,500 |
-| Vectors per PutVectors call | 500 |
-| Per GetVectors call | 100 |
-| QueryVectors topK | **Up to 10,000** (raised in 2026-06; results are paginated, up to 100 per page) |
-| Filter conditions / query on ENHANCED indexes | 100 |
-| Request payload | 20 MiB |
+| Item                                                 | Limit                                                                           |
+| ---------------------------------------------------- | ------------------------------------------------------------------------------- |
+| Vector buckets / Region / account                    | 10,000                                                                          |
+| Indexes / vector bucket                              | 10,000                                                                          |
+| Vectors / index                                      | Up to 2 billion (40x the preview at GA)                                         |
+| Dimensions                                           | 1-4,096                                                                         |
+| Data type                                            | `float32`                                                                       |
+| Distance                                             | `cosine` / `euclidean`                                                          |
+| Total metadata / vector                              | 40 KB (of which 2 KB filterable)                                                |
+| Metadata keys / vector                               | 50                                                                              |
+| Non-filterable keys / index                          | 10 (fixed at creation)                                                          |
+| PutVectors + DeleteVectors requests / second / index | 1,000                                                                           |
+| Vectors inserted + deleted / second / index          | 2,500                                                                           |
+| Vectors per PutVectors call                          | 500                                                                             |
+| Per GetVectors call                                  | 100                                                                             |
+| QueryVectors topK                                    | **Up to 10,000** (raised in 2026-06; results are paginated, up to 100 per page) |
+| Filter conditions / query on ENHANCED indexes        | 100                                                                             |
+| Request payload                                      | 20 MiB                                                                          |
 
 Performance: under 1 second for infrequent queries, around 100 ms for frequent ones (GA announcement). For sustained hundreds to thousands of QPS, OpenSearch is the better fit.
 
@@ -384,9 +384,9 @@ Performance: under 1 second for infrequent queries, around 100 ms for frequent o
 
 **Metadata pre-filtering** arrived in 2026-09.
 
-| Mode | Behavior | Characteristics |
-| --- | --- | --- |
-| `CLASSIC` | Applies filters **during** vector search | Highly selective filters can return fewer results than topK |
+| Mode       | Behavior                                 | Characteristics                                                                                                |
+| ---------- | ---------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| `CLASSIC`  | Applies filters **during** vector search | Highly selective filters can return fewer results than topK                                                    |
 | `ENHANCED` | Applies filters **before** vector search | Returns up to 5x more matches with selective filters (better recall). Also supports the `$startsWith` operator |
 
 According to the CLI help (v2.37.7), `CLASSIC` can be specified **only for indexes in vector buckets created before 2026-09-30**. Existing indexes can be switched to ENHANCED in place with `update-index-mode`, and before switching you can compare per query with `query-vectors --query-mode`.
@@ -417,21 +417,21 @@ aws s3vectors update-index-mode --vector-bucket-name kb-vectors \
 
 ### 5.5 Integrations
 
-| Integration | Usage |
-| --- | --- |
-| Amazon Bedrock Knowledge Bases | Choose S3 Vectors as the vector store to lower RAG costs |
-| Amazon OpenSearch Service | Hybrid setup using S3 Vectors as a low-cost storage tier with hot data in OpenSearch / hybrid search |
-| SageMaker Unified Studio | Use from agents and notebooks |
+| Integration                    | Usage                                                                                                |
+| ------------------------------ | ---------------------------------------------------------------------------------------------------- |
+| Amazon Bedrock Knowledge Bases | Choose S3 Vectors as the vector store to lower RAG costs                                             |
+| Amazon OpenSearch Service      | Hybrid setup using S3 Vectors as a low-cost storage tier with hot data in OpenSearch / hybrid search |
+| SageMaker Unified Studio       | Use from agents and notebooks                                                                        |
 
 ### 5.6 Pricing (us-east-1, as listed on the pricing page)
 
-| Item | Price |
-| --- | --- |
-| Storage | $0.06/GB-month |
-| PUT | $0.20/GB (minimum 128 KB billed per request) |
-| Query API | $2.5 per million queries |
+| Item                 | Price                                                                                                                                                                                         |
+| -------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Storage              | $0.06/GB-month                                                                                                                                                                                |
+| PUT                  | $0.20/GB (minimum 128 KB billed per request)                                                                                                                                                  |
+| Query API            | $2.5 per million queries                                                                                                                                                                      |
 | Query data processed | Tiered by index size: $0.004/TB for the first 100,000 vectors, $0.002/TB for 100,000-10 million, $0.0004/TB over 10 million. Indexes over 10 million vectors got up to 80% cheaper in 2026-06 |
-| Data returned | With the larger topK, a small charge applies to returned data beyond 512 KB per query |
+| Data returned        | With the larger topK, a small charge applies to returned data beyond 512 KB per query                                                                                                         |
 
 Query data processed is billed per TB of vector data scanned, so the bill depends on index size and query count. Use the official pricing page and the pricing calculator for estimates.
 
@@ -441,14 +441,14 @@ Query data processed is billed per TB of vector data scanned, so the bill depend
 
 A service that lets you mount an S3 bucket (or prefix) as a **network file system with full file system semantics**. Built on Amazon EFS; data never leaves S3. GA in 34 Regions.
 
-| Item | Details |
-| --- | --- |
-| Scope | All S3 data, existing and new |
-| Concurrent connections | Simultaneous access from thousands of compute resources |
-| Throughput | Up to multiple TB/s of aggregate read |
-| Caching | Caches active data for low latency |
-| Concurrent access | The same data via both the file system API and the S3 API |
-| Supported compute | EC2, containers (ECS: Fargate / Managed Instances, plus the EC2 launch type from 2026-09), Lambda |
+| Item                   | Details                                                                                           |
+| ---------------------- | ------------------------------------------------------------------------------------------------- |
+| Scope                  | All S3 data, existing and new                                                                     |
+| Concurrent connections | Simultaneous access from thousands of compute resources                                           |
+| Throughput             | Up to multiple TB/s of aggregate read                                                             |
+| Caching                | Caches active data for low latency                                                                |
+| Concurrent access      | The same data via both the file system API and the S3 API                                         |
+| Supported compute      | EC2, containers (ECS: Fargate / Managed Instances, plus the EC2 launch type from 2026-09), Lambda |
 
 ### 6.2 Design points (from Warfield's post)
 
@@ -473,13 +473,13 @@ The post describes AWS internal engineering teams using Kiro and Claude Code who
 
 ### 7.1 Conditional writes
 
-| When | Feature |
-| --- | --- |
-| 2020-12 | Strong read-after-write consistency (all requests) |
+| When    | Feature                                                                                                             |
+| ------- | ------------------------------------------------------------------------------------------------------------------- |
+| 2020-12 | Strong read-after-write consistency (all requests)                                                                  |
 | 2024-08 | `If-None-Match: *` (write only if absent). PutObject / CompleteMultipartUpload, general purpose / directory buckets |
-| 2024-11 | `If-Match: <ETag>` (write only if unchanged) |
-| 2024-11 | **Enforce** conditional writes via bucket policy (`s3:if-none-match` / `s3:if-match` condition keys) |
-| 2025-10 | Conditional copy (If-Match / If-None-Match on CopyObject) |
+| 2024-11 | `If-Match: <ETag>` (write only if unchanged)                                                                        |
+| 2024-11 | **Enforce** conditional writes via bucket policy (`s3:if-none-match` / `s3:if-match` condition keys)                |
+| 2025-10 | Conditional copy (If-Match / If-None-Match on CopyObject)                                                           |
 
 S3 alone now supports **optimistic locking** and **write-once (create-only)** semantics. These can be used directly for Iceberg / Delta commits, distributed locks, leader election, and idempotent ingestion.
 
@@ -498,58 +498,58 @@ If another operation runs concurrently, you may get `409 ConditionalRequestConfl
 
 ### 7.2 Checksums
 
-| When | Details |
-| --- | --- |
-| 2022-02 | Additional checksums (CRC32, CRC32C, SHA-1, SHA-256) |
+| When    | Details                                                                                                                                                                                                     |
+| ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2022-02 | Additional checksums (CRC32, CRC32C, SHA-1, SHA-256)                                                                                                                                                        |
 | 2024-12 | **Default data integrity protections**: the latest SDKs automatically compute and send CRC-based checksums, and S3 validates them. The full-object CRC is stored in metadata. CRC64NVME added (the default) |
-| 2025-08 | Batch Operations compute checksum jobs (verify stored data without restoring or downloading it) |
-| 2026-04 | 5 algorithms added: MD5, XXHash3, XXHash64, XXHash128, SHA-512 (10 total) |
+| 2025-08 | Batch Operations compute checksum jobs (verify stored data without restoring or downloading it)                                                                                                             |
+| 2026-04 | 5 algorithms added: MD5, XXHash3, XXHash64, XXHash128, SHA-512 (10 total)                                                                                                                                   |
 
 ### 7.3 Other foundational changes
 
-| When | Details |
-| --- | --- |
-| 2023-01 | New objects encrypted with SSE-S3 by default |
-| 2023-04 | New buckets default to Block Public Access enabled and ACLs disabled |
-| 2024-11 | Default general purpose bucket quota per account raised from 100 to 10,000 (up to 1 million on request) |
-| 2025-10 | End of support for Email Grantee ACLs (noted in the CLI help) |
-| 2025-11 | ABAC (tag-based access control, `PutBucketAbac`) |
-| 2025-11 | Post-quantum TLS key exchange (ML-KEM) on Regional / S3 Tables / Express One Zone endpoints |
-| 2025-12 | Organization-wide Block Public Access via Organizations policies |
-| 2026-01 | `UpdateObjectEncryption`: change the server-side encryption type of existing objects, e.g. SSE-S3 → SSE-KMS, without moving data (What's New 2026-01-29, all Regions) |
+| When    | Details                                                                                                                                                                              |
+| ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 2023-01 | New objects encrypted with SSE-S3 by default                                                                                                                                         |
+| 2023-04 | New buckets default to Block Public Access enabled and ACLs disabled                                                                                                                 |
+| 2024-11 | Default general purpose bucket quota per account raised from 100 to 10,000 (up to 1 million on request)                                                                              |
+| 2025-10 | End of support for Email Grantee ACLs (noted in the CLI help)                                                                                                                        |
+| 2025-11 | ABAC (tag-based access control, `PutBucketAbac`)                                                                                                                                     |
+| 2025-11 | Post-quantum TLS key exchange (ML-KEM) on Regional / S3 Tables / Express One Zone endpoints                                                                                          |
+| 2025-12 | Organization-wide Block Public Access via Organizations policies                                                                                                                     |
+| 2026-01 | `UpdateObjectEncryption`: change the server-side encryption type of existing objects, e.g. SSE-S3 → SSE-KMS, without moving data (What's New 2026-01-29, all Regions)                |
 | 2026-03 | **Account regional namespaces** (bucket names of the form `<prefix>-<accountId>-<region>-an` that only your account can create; `create-bucket --bucket-namespace account-regional`) |
-| 2026-03 | Lifecycle transitions and expirations paused for objects that failed to replicate |
-| 2026-04 | SSE-C disabled by default on new and existing buckets (except existing buckets in accounts with prior SSE-C usage) |
-| 2026-07 | 30-day minimum for transitions to Standard-IA / One Zone-IA removed |
-| 2026-07 | Event notifications include system-generated tags |
+| 2026-03 | Lifecycle transitions and expirations paused for objects that failed to replicate                                                                                                    |
+| 2026-04 | SSE-C disabled by default on new and existing buckets (except existing buckets in accounts with prior SSE-C usage)                                                                   |
+| 2026-07 | 30-day minimum for transitions to Standard-IA / One Zone-IA removed                                                                                                                  |
+| 2026-07 | Event notifications include system-generated tags                                                                                                                                    |
 
 ## 8. S3 at re:Invent 2025 (2025-12-01 to 05)
 
-| Announcement | Key points |
-| --- | --- |
-| S3 Vectors GA | 2 billion vectors per index (40x the preview), 14 Regions, SSE-KMS, tags |
-| Maximum object size 50 TB | 10x up from 5 TB. All storage classes and features supported |
-| S3 Tables Intelligent-Tiering | Automatically moves data across 3 tiers based on access patterns, up to 80% cost savings |
-| S3 Tables replication | Read-only replicas across Regions / accounts |
-| Storage Lens enhancements | Performance metrics, analysis of billions of prefixes, export to S3 Tables |
-| Faster Batch Operations | Up to 10x faster for jobs of up to 20 billion objects |
-| FSx for NetApp ONTAP integration with S3 | ONTAP data usable from analytics and ML services via the S3 API |
-| Security | ABAC (2025-11), organization-wide BPA, advance notice of SSE-C being disabled |
+| Announcement                             | Key points                                                                               |
+| ---------------------------------------- | ---------------------------------------------------------------------------------------- |
+| S3 Vectors GA                            | 2 billion vectors per index (40x the preview), 14 Regions, SSE-KMS, tags                 |
+| Maximum object size 50 TB                | 10x up from 5 TB. All storage classes and features supported                             |
+| S3 Tables Intelligent-Tiering            | Automatically moves data across 3 tiers based on access patterns, up to 80% cost savings |
+| S3 Tables replication                    | Read-only replicas across Regions / accounts                                             |
+| Storage Lens enhancements                | Performance metrics, analysis of billions of prefixes, export to S3 Tables               |
+| Faster Batch Operations                  | Up to 10x faster for jobs of up to 20 billion objects                                    |
+| FSx for NetApp ONTAP integration with S3 | ONTAP data usable from analytics and ML services via the S3 API                          |
+| Security                                 | ABAC (2025-11), organization-wide BPA, advance notice of SSE-C being disabled            |
 
 ## 9. S3 in 2026 (through October)
 
-| Month | Announcements |
-| --- | --- |
-| 01 | Storage Lens in GovCloud (US) |
-| 02 | Source Region information in server access logs, S3 Tables in GovCloud |
-| 03 | Account regional namespaces, lifecycle pause on replication failure |
-| 04 | **S3 Files**, mounting S3 Files from Lambda, 5 new checksums, SSE-C disabled by default, S3 Inventory for Express One Zone |
-| 05 | S3 Tables in Taipei and New Zealand |
-| 06 | **Annotations**, access logs to CloudWatch Logs / S3 Tables, S3 Vectors topK up to 10,000, S3 Vectors query charges cut up to 80% |
-| 07 | S3 Tables Variant type, 30-day minimum for IA transitions removed, system-generated tags in event notifications |
-| 08 | DuckLabs becomes an AWS subsidiary (announced in Warfield's post) |
-| 09 | S3 Vectors metadata pre-filtering (ENHANCED), S3 Tables supports all Iceberg V3 types, Express One Zone in 7 more Regions, S3 Files on ECS on EC2 |
-| 10 | Table bucket quota 100 per Region |
+| Month | Announcements                                                                                                                                     |
+| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 01    | Storage Lens in GovCloud (US)                                                                                                                     |
+| 02    | Source Region information in server access logs, S3 Tables in GovCloud                                                                            |
+| 03    | Account regional namespaces, lifecycle pause on replication failure                                                                               |
+| 04    | **S3 Files**, mounting S3 Files from Lambda, 5 new checksums, SSE-C disabled by default, S3 Inventory for Express One Zone                        |
+| 05    | S3 Tables in Taipei and New Zealand                                                                                                               |
+| 06    | **Annotations**, access logs to CloudWatch Logs / S3 Tables, S3 Vectors topK up to 10,000, S3 Vectors query charges cut up to 80%                 |
+| 07    | S3 Tables Variant type, 30-day minimum for IA transitions removed, system-generated tags in event notifications                                   |
+| 08    | DuckLabs becomes an AWS subsidiary (announced in Warfield's post)                                                                                 |
+| 09    | S3 Vectors metadata pre-filtering (ENHANCED), S3 Tables supports all Iceberg V3 types, Express One Zone in 7 more Regions, S3 Files on ECS on EC2 |
+| 10    | Table bucket quota 100 per Region                                                                                                                 |
 
 (This aims to be comprehensive, but not every What's New entry was checked systematically. Some may be missing.)
 
@@ -596,17 +596,17 @@ flowchart TB
 
 ## 11. Which one to use
 
-| Goal | Option |
-| --- | --- |
-| Analyze structured data with SQL, including updates and deletes | S3 Tables (also consider migrating from self-managed Iceberg) |
-| Inventory and audit the contents of general purpose buckets with SQL | S3 Metadata (journal + live inventory) |
-| Tell agents what the data means | Annotations + annotation table |
-| Store large volumes of embeddings cheaply and search them occasionally | S3 Vectors |
-| Search embeddings at constant high QPS | OpenSearch (alongside S3 Vectors) |
-| Single-digit ms object access, ML training | Express One Zone |
-| Run POSIX apps as-is on S3 data | S3 Files |
-| Cheap, read-heavy, large-scale file access | Mountpoint |
-| Distributed locks / idempotent writes | Conditional writes (If-None-Match / If-Match) |
+| Goal                                                                   | Option                                                        |
+| ---------------------------------------------------------------------- | ------------------------------------------------------------- |
+| Analyze structured data with SQL, including updates and deletes        | S3 Tables (also consider migrating from self-managed Iceberg) |
+| Inventory and audit the contents of general purpose buckets with SQL   | S3 Metadata (journal + live inventory)                        |
+| Tell agents what the data means                                        | Annotations + annotation table                                |
+| Store large volumes of embeddings cheaply and search them occasionally | S3 Vectors                                                    |
+| Search embeddings at constant high QPS                                 | OpenSearch (alongside S3 Vectors)                             |
+| Single-digit ms object access, ML training                             | Express One Zone                                              |
+| Run POSIX apps as-is on S3 data                                        | S3 Files                                                      |
+| Cheap, read-heavy, large-scale file access                             | Mountpoint                                                    |
+| Distributed locks / idempotent writes                                  | Conditional writes (If-None-Match / If-Match)                 |
 
 ## 12. Summary
 

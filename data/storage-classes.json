@@ -269,16 +269,8 @@
     "getPer1k": 0.001,
     "monitoringPer1kObjects": null,
     "useCases": {
-      "en": [
-        "Backups",
-        "Disaster recovery copies",
-        "Older infrequently read data"
-      ],
-      "ja": [
-        "バックアップ",
-        "DR 用コピー",
-        "稀に読む古いデータ"
-      ]
+      "en": ["Backups", "Disaster recovery copies", "Older infrequently read data"],
+      "ja": ["バックアップ", "DR 用コピー", "稀に読む古いデータ"]
     },
     "notes": {
       "en": "Since 2026-07-16, lifecycle rules can transition objects to Standard-IA from day 0 (the former 30-days-in-Standard prerequisite was removed); the 30-day minimum storage duration and 128 KB minimum billable size still apply. Break-even with Standard is roughly one full read per month.",
@@ -326,11 +318,7 @@
         "Cross-Region Replication replicas",
         "Secondary copies of on-premises data"
       ],
-      "ja": [
-        "サムネイルなど再作成可能なデータ",
-        "CRR のレプリカ",
-        "オンプレデータの二次コピー"
-      ]
+      "ja": ["サムネイルなど再作成可能なデータ", "CRR のレプリカ", "オンプレデータの二次コピー"]
     },
     "notes": {
       "en": "Stored in a single AZ; data is lost if the AZ is destroyed. Like Standard-IA, transitions are allowed from day 0 since 2026-07-16, but the 30-day minimum storage duration remains.",
@@ -373,16 +361,8 @@
     "getPer1k": 0.01,
     "monitoringPer1kObjects": null,
     "useCases": {
-      "en": [
-        "Medical images",
-        "News media archives",
-        "Quarterly-accessed user content"
-      ],
-      "ja": [
-        "医療画像",
-        "ニュースメディアのアーカイブ",
-        "四半期に 1 回程度読まれるユーザーコンテンツ"
-      ]
+      "en": ["Medical images", "News media archives", "Quarterly-accessed user content"],
+      "ja": ["医療画像", "ニュースメディアのアーカイブ", "四半期に 1 回程度読まれるユーザーコンテンツ"]
     },
     "notes": {
       "en": "Archive pricing with millisecond GET; no restore step required. Lifecycle transition requests cost $0.02 per 1,000.",
@@ -447,16 +427,8 @@
     "getPer1k": 0.0004,
     "monitoringPer1kObjects": null,
     "useCases": {
-      "en": [
-        "Long-term backups",
-        "Media asset archives",
-        "Audit data read once or twice a year"
-      ],
-      "ja": [
-        "バックアップの長期保管",
-        "メディアアセットのアーカイブ",
-        "年 1〜2 回の監査用データ"
-      ]
+      "en": ["Long-term backups", "Media asset archives", "Audit data read once or twice a year"],
+      "ja": ["バックアップの長期保管", "メディアアセットのアーカイブ", "年 1〜2 回の監査用データ"]
     },
     "notes": {
       "en": "API value is GLACIER. retrievalFeePerGB is the Standard tier. Request fees: Expedited $10 per 1,000, Standard $0.05 per 1,000, Bulk free. Each object adds 40 KB overhead (8 KB billed at Standard, 32 KB at this class). Provisioned Capacity $100/unit/month.",
@@ -517,11 +489,7 @@
         "Tape replacement",
         "Raw data that may never be read again"
       ],
-      "ja": [
-        "規制対応の 7〜10 年保管",
-        "テープの置き換え",
-        "二度と読まないかもしれない生データ"
-      ]
+      "ja": ["規制対応の 7〜10 年保管", "テープの置き換え", "二度と読まないかもしれない生データ"]
     },
     "notes": {
       "en": "Lowest-cost class. retrievalFeePerGB is the Standard tier. Request fees: Standard $0.10 per 1,000, Bulk $0.025 per 1,000. No Expedited option. Same 40 KB per-object overhead as Glacier Flexible Retrieval.",
@@ -554,12 +522,8 @@
     "getPer1k": 0.0004,
     "monitoringPer1kObjects": null,
     "useCases": {
-      "en": [
-        "Not recommended for new data"
-      ],
-      "ja": [
-        "新規データには非推奨"
-      ]
+      "en": ["Not recommended for new data"],
+      "ja": ["新規データには非推奨"]
     },
     "notes": {
       "en": "AWS recommends against using RRS; S3 Standard is cheaper. Price shown is the first 1 TB tier. Lost objects return HTTP 405. Cannot be a lifecycle transition target. putPer1k/getPer1k match Standard: the Price List API (us-east-1, published 2026-09-28) has no RRS-specific request SKU, only the generic Requests-Tier1 ($0.005/1k) and Requests-Tier2 ($0.0004/1k) that Standard also uses.",
@@ -590,14 +554,8 @@
     "getPer1k": null,
     "monitoringPer1kObjects": null,
     "useCases": {
-      "en": [
-        "Data residency requirements",
-        "Local processing at factories, hospitals, and branches"
-      ],
-      "ja": [
-        "データレジデンシー要件",
-        "工場・病院・拠点でのローカル処理"
-      ]
+      "en": ["Data residency requirements", "Local processing at factories, hospitals, and branches"],
+      "ja": ["データレジデンシー要件", "工場・病院・拠点でのローカル処理"]
     },
     "notes": {
       "en": "Only usable in buckets on AWS Outposts. Always encrypted with SSE-S3 (SSE-C optional, SSE-KMS unsupported). Priced as part of Outposts capacity, not a public per-GB-month rate.",

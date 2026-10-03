@@ -479,16 +479,16 @@ Counterexamples matter just as much. In both cases, the premise was not that "S3
 
 ### 10.1 Patterns by industry
 
-| Industry | Typical data | Common S3 features | Representative cases |
-| --- | --- | --- | --- |
-| Media and social | Photos, videos, UGC; hot only right after creation | Glacier IR, lifecycle, Storage Class Analysis | Snap, Canva, BBC, TV Tokyo |
-| Finance and regulation | Long-term retention of all trade data plus audit queries | Data lake, Glacier, Object Lock, Intelligent-Tiering | FINRA, Nasdaq, BMLL, Capital One |
-| Public sector and science | Open data; unpredictable readers | Intelligent-Tiering, Open Data | NASA |
-| Life sciences | Research and real-world data, read in bulk occasionally | Data lake, Glacier | Moderna, Ancestry |
-| Automotive and manufacturing | Vehicle telemetry, 10 TB per day or more | Data lake + Glue/Athena/Lake Formation | BMW, Toyota Connected |
-| E-commerce and SaaS | Logs and customer assets | Intelligent-Tiering, Iceberg / S3 Tables | Zalando, Bynder, Salesforce, Indeed, Grab |
-| AI | Training data, model weights, vectors | Storage Lens, Intelligent-Tiering, Express One Zone, S3 Vectors | Anthropic, Hugging Face, Pinterest, March Networks |
-| Data platform products | The product's own storage layer | Standard S3, conditional writes, Express One Zone | Snowflake, Databricks, WarpStream, turbopuffer, Neon |
+| Industry                     | Typical data                                             | Common S3 features                                              | Representative cases                                 |
+| ---------------------------- | -------------------------------------------------------- | --------------------------------------------------------------- | ---------------------------------------------------- |
+| Media and social             | Photos, videos, UGC; hot only right after creation       | Glacier IR, lifecycle, Storage Class Analysis                   | Snap, Canva, BBC, TV Tokyo                           |
+| Finance and regulation       | Long-term retention of all trade data plus audit queries | Data lake, Glacier, Object Lock, Intelligent-Tiering            | FINRA, Nasdaq, BMLL, Capital One                     |
+| Public sector and science    | Open data; unpredictable readers                         | Intelligent-Tiering, Open Data                                  | NASA                                                 |
+| Life sciences                | Research and real-world data, read in bulk occasionally  | Data lake, Glacier                                              | Moderna, Ancestry                                    |
+| Automotive and manufacturing | Vehicle telemetry, 10 TB per day or more                 | Data lake + Glue/Athena/Lake Formation                          | BMW, Toyota Connected                                |
+| E-commerce and SaaS          | Logs and customer assets                                 | Intelligent-Tiering, Iceberg / S3 Tables                        | Zalando, Bynder, Salesforce, Indeed, Grab            |
+| AI                           | Training data, model weights, vectors                    | Storage Lens, Intelligent-Tiering, Express One Zone, S3 Vectors | Anthropic, Hugging Face, Pinterest, March Networks   |
+| Data platform products       | The product's own storage layer                          | Standard S3, conditional writes, Express One Zone               | Snowflake, Databricks, WarpStream, turbopuffer, Neon |
 
 ### 10.2 Common architecture A: S3 data lake / lakehouse
 
@@ -578,27 +578,27 @@ flowchart LR
 
 Benefits and costs of this structure:
 
-| Aspect | Benefit | Cost |
-| --- | --- | --- |
-| Durability | Uses S3's 11 nines and multi-AZ redundancy as is | None (left to S3) |
-| Cost | Removes triple-replicated local disks and cross-AZ transfer charges | Request charges rise, so batching is required |
-| Operations | Nodes are stateless, so there is no rebalancing | The metadata layer is hard to design |
-| Latency | Milliseconds on a cache hit | Cold starts take hundreds of ms (p50 874 ms for turbopuffer) |
+| Aspect     | Benefit                                                             | Cost                                                         |
+| ---------- | ------------------------------------------------------------------- | ------------------------------------------------------------ |
+| Durability | Uses S3's 11 nines and multi-AZ redundancy as is                    | None (left to S3)                                            |
+| Cost       | Removes triple-replicated local disks and cross-AZ transfer charges | Request charges rise, so batching is required                |
+| Operations | Nodes are stateless, so there is no rebalancing                     | The metadata layer is hard to design                         |
+| Latency    | Milliseconds on a cache hit                                         | Cold starts take hundreds of ms (p50 874 ms for turbopuffer) |
 
 ### 10.5 Adoption by feature
 
-| Feature | Cases | Typical results |
-| --- | --- | --- |
-| Intelligent-Tiering | Zalando, Bynder, Salesforce, NASA, BMLL, BBC, Indeed, Anthropic, Capital One | 37–65% storage savings (Zalando 37%, Bynder 65%, NASA estimated 60%) |
-| Glacier Instant Retrieval | Snap, Canva, BBC, CyberAgent | Snap tens of millions of dollars, Canva $3.6M per year |
-| Glacier Flexible Retrieval / Deep Archive | Pinterest, Capital One, Ancestry, TV Tokyo, BMLL, NAVITIME (failure) | Pinterest millions of dollars per year, BMLL $3M per year |
-| Lifecycle (deletion and version cleanup) | Duolingo, CyberAgent, Capital One, Canva | CyberAgent about ¥12M per year |
-| Storage Lens / Storage Class Analysis / Inventory | Pinterest, Canva, Anthropic | Evidence for migration decisions |
-| Open table formats (Iceberg) | Netflix, Grab, Indeed | Grab cut S3 API cost by up to 95% |
-| S3 Tables | Indeed | 10% cost reduction, more than 1,000 engineering hours saved per year |
-| Express One Zone | Pinterest (MemQ), WarpStream (Lightning Topics) | More than 10x lower latency at Pinterest |
-| S3 Vectors | March Networks | Up to 80% lower long-term video storage cost (combined with Glacier) |
-| Versioning | Zalando (recovered from accidental deletion), Capital One (enabled on more than 90% of buckets) | Recovery from accidental deletion, but noncurrent versions must be managed |
+| Feature                                           | Cases                                                                                           | Typical results                                                            |
+| ------------------------------------------------- | ----------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| Intelligent-Tiering                               | Zalando, Bynder, Salesforce, NASA, BMLL, BBC, Indeed, Anthropic, Capital One                    | 37–65% storage savings (Zalando 37%, Bynder 65%, NASA estimated 60%)       |
+| Glacier Instant Retrieval                         | Snap, Canva, BBC, CyberAgent                                                                    | Snap tens of millions of dollars, Canva $3.6M per year                     |
+| Glacier Flexible Retrieval / Deep Archive         | Pinterest, Capital One, Ancestry, TV Tokyo, BMLL, NAVITIME (failure)                            | Pinterest millions of dollars per year, BMLL $3M per year                  |
+| Lifecycle (deletion and version cleanup)          | Duolingo, CyberAgent, Capital One, Canva                                                        | CyberAgent about ¥12M per year                                             |
+| Storage Lens / Storage Class Analysis / Inventory | Pinterest, Canva, Anthropic                                                                     | Evidence for migration decisions                                           |
+| Open table formats (Iceberg)                      | Netflix, Grab, Indeed                                                                           | Grab cut S3 API cost by up to 95%                                          |
+| S3 Tables                                         | Indeed                                                                                          | 10% cost reduction, more than 1,000 engineering hours saved per year       |
+| Express One Zone                                  | Pinterest (MemQ), WarpStream (Lightning Topics)                                                 | More than 10x lower latency at Pinterest                                   |
+| S3 Vectors                                        | March Networks                                                                                  | Up to 80% lower long-term video storage cost (combined with Glacier)       |
+| Versioning                                        | Zalando (recovered from accidental deletion), Capital One (enabled on more than 90% of buckets) | Recovery from accidental deletion, but noncurrent versions must be managed |
 
 ### 10.6 Patterns of failures and pitfalls
 
@@ -641,62 +641,62 @@ Put the other way, if any of these three is missing, staying on S3 is usually th
 
 ## 11. Summary of all cases
 
-| Company | Industry | Type | Scale (year) | Main features | Results |
-| --- | --- | --- | --- | --- | --- |
-| Netflix | Video streaming | adopter | About 1 EB data lake (2023) | Iceberg, data lake | About 300 PB still in Hive, migrated to Iceberg |
-| Snap | Social media | adopter | 2 EB / 1.5 trillion files (2022) | Glacier IR | Tens of millions of dollars saved |
-| Canva | Design SaaS | adopter | 230 PB / 300 billion objects (2023) | Glacier IR, lifecycle, Storage Class Analysis | $3.6M saved per year |
-| Pinterest | Social media | adopter | About 1 EB (2021) | Deep Archive, Storage Lens, Inventory, Batch Operations | Millions of dollars saved per year |
-| Pinterest (MemQ) | Social media | adopter | GB/s-class pub/sub (2022) | S3 Standard, Express One Zone | More than 90% cheaper than Kafka |
-| BBC | Broadcasting | adopter | 25 PB (2023) | Glacier IR, Intelligent-Tiering | Physical infrastructure halved |
-| Twitch | Live streaming | adopter | More than 100 PB (2023) | Data lake | Not disclosed |
-| Epic Games | Gaming | adopter | 14 PB, growing 2 PB per month (2018) | Data lake, Kinesis, EMR | Not disclosed |
-| Duolingo | Education | adopter | Not disclosed (2024) | Lifecycle, versioning | Cloud spend cut 20% annualized |
-| FINRA | Financial regulation | adopter | 37 billion records per day, 300 million objects (2017) | Data lake, EMR | Multiple workloads on the same data |
-| Nasdaq | Exchange | adopter | 70 billion records per day (2019) | Data lake, Redshift Spectrum | RI cost cut 75% |
-| Capital One | Banking | adopter | Hundreds of buckets (2021) | Lifecycle, Glacier, Deep Archive, versioning | Not disclosed |
-| BMLL | Financial data | adopter | More than 20 PB (2025) | Intelligent-Tiering, Glacier, Object Lock, Replication | $3.5M saved per year |
-| NASA Earthdata | Public sector and science | adopter | More than 170 PB (2026) | Intelligent-Tiering, Open Data | Estimated 60% saved |
-| Moderna | Biotech | adopter | Not disclosed (2023) | Data lake | Extraction and analysis 70% faster |
-| Ancestry | Genealogy | adopter | Hundreds of TB (2023) | Glacier | Restores went from days to hours |
-| BMW Group | Automotive | adopter | More than 20 PB, 20M+ vehicles (2026) | Data lake, Lake Formation | Company-wide data platform |
-| Toyota Connected | Automotive | adopter | PB scale (2022) | Data lake, EMR, Athena | Processing from 27 minutes to 30 seconds |
-| Zalando | E-commerce | adopter | 15 PB (2020) | Intelligent-Tiering, versioning | 37% saved per year |
-| Bynder | SaaS | adopter | 18 PB / 175 million assets (2024) | Intelligent-Tiering | 65% saved |
-| Salesforce | SaaS | adopter | More than 100 PB (2023) | Intelligent-Tiering, EMR | Millions of dollars saved per year |
-| Indeed | HR tech | adopter | 101 PB (2026) | S3 Tables, Replication, Intelligent-Tiering | 10% saved, more than 1,000 hours per year |
-| Grab | Super app | adopter | PB scale / billions of objects (2026) | Iceberg | S3 API cost cut by up to 95% |
-| Anthropic | AI | adopter | Hundreds of PB (2023) | Storage Lens, Intelligent-Tiering | Not given in the talk description |
-| Hugging Face | AI | adopter | 20 PB / 500,000 repos moved to Xet (2025) | S3 Standard, presigned URLs | Chunk-level deduplication |
-| March Networks | Video surveillance | adopter | Billions of vectors (2025) | S3 Vectors, Glacier | Up to 80% saved (5 years) |
-| TV Tokyo | Broadcasting | adopter | 13 PB (2020) | S3, Glacier, lifecycle, Direct Connect | Tens of millions of yen saved per year |
-| NTT DOCOMO | Telecommunications | adopter | About 90 million members (2023) | Data lake | 13x more user accounts |
-| Cookpad | Recipes | adopter | About 300 log tables (2020) | Redshift Spectrum, Parquet | Disk usage below 50% |
-| CyberAgent | Advertising | adopter | More than 100 TB deleted or moved (2022) | Lifecycle, Standard-IA, Glacier IR | About ¥12M saved per year |
-| NAVITIME JAPAN | Navigation | adopter | Not disclosed (2023) | Deep Archive | Cost rose more than ¥1M per month (cautionary tale) |
-| Snowflake | Data platform product | built-on-s3 | — (2016 paper) | S3 Standard | Storage and compute separation |
-| Databricks | Data platform product | built-on-s3 | — (2026) | S3 Standard, IAM | Data kept in customer buckets |
-| WarpStream | Streaming | built-on-s3 | — (2023) | S3 Standard, Express One Zone | 5–10x cheaper than self-hosted Kafka (vendor claim) |
-| turbopuffer | Search DB | built-on-s3 | — (2025) | S3 Standard | p50 14 ms when cached |
-| Neon | Serverless Postgres | built-on-s3 | — (2023) | S3 Standard | Scale-to-zero, branching |
-| Dropbox | Cloud storage | migrated-away | 500 PB (2016) | — | More than 90% moved to in-house infrastructure |
-| 37signals | SaaS | migrated-away | About 6 PB moved (2025) | — | About $5M expected savings over 5 years |
+| Company          | Industry                  | Type          | Scale (year)                                           | Main features                                           | Results                                             |
+| ---------------- | ------------------------- | ------------- | ------------------------------------------------------ | ------------------------------------------------------- | --------------------------------------------------- |
+| Netflix          | Video streaming           | adopter       | About 1 EB data lake (2023)                            | Iceberg, data lake                                      | About 300 PB still in Hive, migrated to Iceberg     |
+| Snap             | Social media              | adopter       | 2 EB / 1.5 trillion files (2022)                       | Glacier IR                                              | Tens of millions of dollars saved                   |
+| Canva            | Design SaaS               | adopter       | 230 PB / 300 billion objects (2023)                    | Glacier IR, lifecycle, Storage Class Analysis           | $3.6M saved per year                                |
+| Pinterest        | Social media              | adopter       | About 1 EB (2021)                                      | Deep Archive, Storage Lens, Inventory, Batch Operations | Millions of dollars saved per year                  |
+| Pinterest (MemQ) | Social media              | adopter       | GB/s-class pub/sub (2022)                              | S3 Standard, Express One Zone                           | More than 90% cheaper than Kafka                    |
+| BBC              | Broadcasting              | adopter       | 25 PB (2023)                                           | Glacier IR, Intelligent-Tiering                         | Physical infrastructure halved                      |
+| Twitch           | Live streaming            | adopter       | More than 100 PB (2023)                                | Data lake                                               | Not disclosed                                       |
+| Epic Games       | Gaming                    | adopter       | 14 PB, growing 2 PB per month (2018)                   | Data lake, Kinesis, EMR                                 | Not disclosed                                       |
+| Duolingo         | Education                 | adopter       | Not disclosed (2024)                                   | Lifecycle, versioning                                   | Cloud spend cut 20% annualized                      |
+| FINRA            | Financial regulation      | adopter       | 37 billion records per day, 300 million objects (2017) | Data lake, EMR                                          | Multiple workloads on the same data                 |
+| Nasdaq           | Exchange                  | adopter       | 70 billion records per day (2019)                      | Data lake, Redshift Spectrum                            | RI cost cut 75%                                     |
+| Capital One      | Banking                   | adopter       | Hundreds of buckets (2021)                             | Lifecycle, Glacier, Deep Archive, versioning            | Not disclosed                                       |
+| BMLL             | Financial data            | adopter       | More than 20 PB (2025)                                 | Intelligent-Tiering, Glacier, Object Lock, Replication  | $3.5M saved per year                                |
+| NASA Earthdata   | Public sector and science | adopter       | More than 170 PB (2026)                                | Intelligent-Tiering, Open Data                          | Estimated 60% saved                                 |
+| Moderna          | Biotech                   | adopter       | Not disclosed (2023)                                   | Data lake                                               | Extraction and analysis 70% faster                  |
+| Ancestry         | Genealogy                 | adopter       | Hundreds of TB (2023)                                  | Glacier                                                 | Restores went from days to hours                    |
+| BMW Group        | Automotive                | adopter       | More than 20 PB, 20M+ vehicles (2026)                  | Data lake, Lake Formation                               | Company-wide data platform                          |
+| Toyota Connected | Automotive                | adopter       | PB scale (2022)                                        | Data lake, EMR, Athena                                  | Processing from 27 minutes to 30 seconds            |
+| Zalando          | E-commerce                | adopter       | 15 PB (2020)                                           | Intelligent-Tiering, versioning                         | 37% saved per year                                  |
+| Bynder           | SaaS                      | adopter       | 18 PB / 175 million assets (2024)                      | Intelligent-Tiering                                     | 65% saved                                           |
+| Salesforce       | SaaS                      | adopter       | More than 100 PB (2023)                                | Intelligent-Tiering, EMR                                | Millions of dollars saved per year                  |
+| Indeed           | HR tech                   | adopter       | 101 PB (2026)                                          | S3 Tables, Replication, Intelligent-Tiering             | 10% saved, more than 1,000 hours per year           |
+| Grab             | Super app                 | adopter       | PB scale / billions of objects (2026)                  | Iceberg                                                 | S3 API cost cut by up to 95%                        |
+| Anthropic        | AI                        | adopter       | Hundreds of PB (2023)                                  | Storage Lens, Intelligent-Tiering                       | Not given in the talk description                   |
+| Hugging Face     | AI                        | adopter       | 20 PB / 500,000 repos moved to Xet (2025)              | S3 Standard, presigned URLs                             | Chunk-level deduplication                           |
+| March Networks   | Video surveillance        | adopter       | Billions of vectors (2025)                             | S3 Vectors, Glacier                                     | Up to 80% saved (5 years)                           |
+| TV Tokyo         | Broadcasting              | adopter       | 13 PB (2020)                                           | S3, Glacier, lifecycle, Direct Connect                  | Tens of millions of yen saved per year              |
+| NTT DOCOMO       | Telecommunications        | adopter       | About 90 million members (2023)                        | Data lake                                               | 13x more user accounts                              |
+| Cookpad          | Recipes                   | adopter       | About 300 log tables (2020)                            | Redshift Spectrum, Parquet                              | Disk usage below 50%                                |
+| CyberAgent       | Advertising               | adopter       | More than 100 TB deleted or moved (2022)               | Lifecycle, Standard-IA, Glacier IR                      | About ¥12M saved per year                           |
+| NAVITIME JAPAN   | Navigation                | adopter       | Not disclosed (2023)                                   | Deep Archive                                            | Cost rose more than ¥1M per month (cautionary tale) |
+| Snowflake        | Data platform product     | built-on-s3   | — (2016 paper)                                         | S3 Standard                                             | Storage and compute separation                      |
+| Databricks       | Data platform product     | built-on-s3   | — (2026)                                               | S3 Standard, IAM                                        | Data kept in customer buckets                       |
+| WarpStream       | Streaming                 | built-on-s3   | — (2023)                                               | S3 Standard, Express One Zone                           | 5–10x cheaper than self-hosted Kafka (vendor claim) |
+| turbopuffer      | Search DB                 | built-on-s3   | — (2025)                                               | S3 Standard                                             | p50 14 ms when cached                               |
+| Neon             | Serverless Postgres       | built-on-s3   | — (2023)                                               | S3 Standard                                             | Scale-to-zero, branching                            |
+| Dropbox          | Cloud storage             | migrated-away | 500 PB (2016)                                          | —                                                       | More than 90% moved to in-house infrastructure      |
+| 37signals        | SaaS                      | migrated-away | About 6 PB moved (2025)                                | —                                                       | About $5M expected savings over 5 years             |
 
 ## 12. Companies researched but not included
 
 The following came up as candidates but were left out of the main text because no primary source (official case study, engineering blog, or talk) showing concretely how they use S3 was found, or the information was too old.
 
-| Company | Reason for exclusion |
-| --- | --- |
-| Airbnb | There is an AWS case study, but it only has an early figure of 10 TB of user photos on S3, with no year |
-| Zoom | There are integration samples that send recordings to S3, but no AWS case study or Zoom publication describing Zoom's own storage platform was found (AWS's case study index has no Zoom entry), so this is unverified |
-| Shopify | No primary source on S3 found. Shopify Engineering (March 2018) says Shopify was moving from its own data centers to Google Cloud and had migrated over 50% of its data center workloads |
-| Riot Games | Only a mention (in an Alation case study) that its Databricks lakehouse runs on S3, with no numbers or year |
-| Woven by Toyota | Only a mention of writing Step Functions results to S3. No AWS case study or Woven by Toyota publication giving data lake scale was found, so scale is unverified |
-| Peloton, Pfizer, Nintendo | No public case study specific to S3 found |
-| Sony (aibo) | S3 is one of the components, but there is no S3-specific scale or result |
-| Mercari | A 2019 blog post says S3 is used for product images and backups, but gives no scale figures |
-| SmartNews, freee, Nikkei | They mention using S3, but there is no S3-specific scale or result, or the material is old |
+| Company                   | Reason for exclusion                                                                                                                                                                                                   |
+| ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Airbnb                    | There is an AWS case study, but it only has an early figure of 10 TB of user photos on S3, with no year                                                                                                                |
+| Zoom                      | There are integration samples that send recordings to S3, but no AWS case study or Zoom publication describing Zoom's own storage platform was found (AWS's case study index has no Zoom entry), so this is unverified |
+| Shopify                   | No primary source on S3 found. Shopify Engineering (March 2018) says Shopify was moving from its own data centers to Google Cloud and had migrated over 50% of its data center workloads                               |
+| Riot Games                | Only a mention (in an Alation case study) that its Databricks lakehouse runs on S3, with no numbers or year                                                                                                            |
+| Woven by Toyota           | Only a mention of writing Step Functions results to S3. No AWS case study or Woven by Toyota publication giving data lake scale was found, so scale is unverified                                                      |
+| Peloton, Pfizer, Nintendo | No public case study specific to S3 found                                                                                                                                                                              |
+| Sony (aibo)               | S3 is one of the components, but there is no S3-specific scale or result                                                                                                                                               |
+| Mercari                   | A 2019 blog post says S3 is used for product images and backups, but gives no scale figures                                                                                                                            |
+| SmartNews, freee, Nikkei  | They mention using S3, but there is no S3-specific scale or result, or the material is old                                                                                                                             |
 
 ## References
 

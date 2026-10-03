@@ -66,17 +66,17 @@ flowchart TB
     EN --> BO
 ```
 
-| 目的 | 第一選択 | 補助 |
-| --- | --- | --- |
-| 誤削除・上書きからの復旧 | バージョニング | AWS Backup (PITR 35 日)、Object Lock |
-| コスト削減 | Lifecycle、Intelligent-Tiering | Storage Lens、Storage Class Analysis |
-| DR / リージョン冗長 | CRR (+ RTC) | MRAP、AWS Backup クロスリージョンコピー |
-| 数十億オブジェクトへの一括操作 | Batch Operations | Inventory / Metadata でマニフェスト生成 |
-| オブジェクト一覧の把握 | S3 Metadata live inventory、Inventory | ListObjectsV2 (小規模のみ) |
-| 変更検知 | イベント通知 / EventBridge | S3 Metadata journal テーブル |
-| データ整合性 | チェックサム | Batch Operations の Compute checksums |
-| 楽観的排他 | 条件付き書き込み / 削除 | バージョン ID |
-| ファイル API が必要 | S3 Files (NFS)、Mountpoint | Storage Gateway、FSx |
+| 目的                           | 第一選択                              | 補助                                    |
+| ------------------------------ | ------------------------------------- | --------------------------------------- |
+| 誤削除・上書きからの復旧       | バージョニング                        | AWS Backup (PITR 35 日)、Object Lock    |
+| コスト削減                     | Lifecycle、Intelligent-Tiering        | Storage Lens、Storage Class Analysis    |
+| DR / リージョン冗長            | CRR (+ RTC)                           | MRAP、AWS Backup クロスリージョンコピー |
+| 数十億オブジェクトへの一括操作 | Batch Operations                      | Inventory / Metadata でマニフェスト生成 |
+| オブジェクト一覧の把握         | S3 Metadata live inventory、Inventory | ListObjectsV2 (小規模のみ)              |
+| 変更検知                       | イベント通知 / EventBridge            | S3 Metadata journal テーブル            |
+| データ整合性                   | チェックサム                          | Batch Operations の Compute checksums   |
+| 楽観的排他                     | 条件付き書き込み / 削除               | バージョン ID                           |
+| ファイル API が必要            | S3 Files (NFS)、Mountpoint            | Storage Gateway、FSx                    |
 
 ## 2. バージョニング
 
@@ -92,11 +92,11 @@ stateDiagram-v2
     Suspended --> Enabled: PutBucketVersioning Enabled
 ```
 
-| 状態 | 新規 PUT のバージョン ID | 上書き時 | DELETE (バージョン ID なし) |
-| --- | --- | --- | --- |
-| Unversioned | `null` | 旧データは消える | オブジェクトが消える |
-| Enabled | 一意な ID を採番 | 旧バージョンは非現行 (noncurrent) として残る | 削除マーカーを作る (データは残る) |
-| Suspended | `null` | `null` バージョンを上書き (他のバージョンは残る) | `null` バージョンの削除マーカーを作る |
+| 状態        | 新規 PUT のバージョン ID | 上書き時                                         | DELETE (バージョン ID なし)           |
+| ----------- | ------------------------ | ------------------------------------------------ | ------------------------------------- |
+| Unversioned | `null`                   | 旧データは消える                                 | オブジェクトが消える                  |
+| Enabled     | 一意な ID を採番         | 旧バージョンは非現行 (noncurrent) として残る     | 削除マーカーを作る (データは残る)     |
+| Suspended   | `null`                   | `null` バージョンを上書き (他のバージョンは残る) | `null` バージョンの削除マーカーを作る |
 
 ### 2.2 バージョンスタックと削除マーカー
 
@@ -144,16 +144,16 @@ aws s3api delete-object --bucket amzn-s3-demo-bucket \
 
 ### 3.1 Lifecycle ルールの構成要素
 
-| 要素 | 説明 |
-| --- | --- |
-| Filter | Prefix、Tag (複数は And)、ObjectSizeGreaterThan / ObjectSizeLessThan。空フィルタはバケット全体 |
-| Status | Enabled / Disabled |
-| Transitions | 現行バージョンを N 日後 (または日付) に別ストレージクラスへ |
-| Expiration | 現行バージョンを N 日後に期限切れ (バージョニング有効時は削除マーカー化) |
-| NoncurrentVersionTransitions | 非現行になってから N 日後に遷移。NewerNoncurrentVersions で「最新 N 個は残す」 |
-| NoncurrentVersionExpiration | 非現行になってから N 日後に完全削除 |
-| ExpiredObjectDeleteMarker | 期限切れオブジェクト削除マーカーを削除 |
-| AbortIncompleteMultipartUpload | 開始から N 日経った未完了 MPU を中止 (パートの料金を止める) |
+| 要素                           | 説明                                                                                           |
+| ------------------------------ | ---------------------------------------------------------------------------------------------- |
+| Filter                         | Prefix、Tag (複数は And)、ObjectSizeGreaterThan / ObjectSizeLessThan。空フィルタはバケット全体 |
+| Status                         | Enabled / Disabled                                                                             |
+| Transitions                    | 現行バージョンを N 日後 (または日付) に別ストレージクラスへ                                    |
+| Expiration                     | 現行バージョンを N 日後に期限切れ (バージョニング有効時は削除マーカー化)                       |
+| NoncurrentVersionTransitions   | 非現行になってから N 日後に遷移。NewerNoncurrentVersions で「最新 N 個は残す」                 |
+| NoncurrentVersionExpiration    | 非現行になってから N 日後に完全削除                                                            |
+| ExpiredObjectDeleteMarker      | 期限切れオブジェクト削除マーカーを削除                                                         |
+| AbortIncompleteMultipartUpload | 開始から N 日経った未完了 MPU を中止 (パートの料金を止める)                                    |
 
 1 バケットあたり最大 1,000 ルール。ルールは非同期に (通常 1 日 1 回程度) 評価され、期限到来から実際の削除・遷移までタイムラグがある。ただし期限到来以降は課金が止まる (Expiration の場合)。
 
@@ -239,11 +239,11 @@ S3 Glacier Deep Archive
       "Filter": {
         "And": {
           "Prefix": "media/",
-          "Tags": [ { "Key": "class", "Value": "archive" } ],
+          "Tags": [{ "Key": "class", "Value": "archive" }],
           "ObjectSizeGreaterThan": 1048576
         }
       },
-      "Transitions": [ { "Days": 0, "StorageClass": "DEEP_ARCHIVE" } ]
+      "Transitions": [{ "Days": 0, "StorageClass": "DEEP_ARCHIVE" }]
     }
   ]
 }
@@ -258,7 +258,7 @@ S3 Glacier Deep Archive
       "ID": "to-intelligent-tiering",
       "Status": "Enabled",
       "Filter": { "ObjectSizeGreaterThan": 131072 },
-      "Transitions": [ { "Days": 0, "StorageClass": "INTELLIGENT_TIERING" } ]
+      "Transitions": [{ "Days": 0, "StorageClass": "INTELLIGENT_TIERING" }]
     }
   ]
 }
@@ -286,14 +286,14 @@ aws s3api get-bucket-lifecycle-configuration --bucket amzn-s3-demo-bucket
 
 ### 4.1 種類
 
-| 種類 | 説明 |
-| --- | --- |
-| SRR (Same-Region Replication) | 同一リージョン内の別バケットへ。ログ集約、本番/検証の分離、アカウント分離 |
-| CRR (Cross-Region Replication) | 別リージョンへ。DR、レイテンシ、データ主権要件 |
-| Live replication | 設定後の新規・更新オブジェクトを非同期に複製 |
-| Batch Replication | 既存オブジェクト、過去に失敗したオブジェクト、レプリカの再複製 (Batch Operations ジョブ) |
-| 双方向 (two-way) | 2 バケット間で相互に複製 + replica modification sync。MRAP の Active-Active 構成で使う |
-| マルチデスティネーション | 1 ソースから複数宛先へ (ルールごとに宛先) |
+| 種類                           | 説明                                                                                     |
+| ------------------------------ | ---------------------------------------------------------------------------------------- |
+| SRR (Same-Region Replication)  | 同一リージョン内の別バケットへ。ログ集約、本番/検証の分離、アカウント分離                |
+| CRR (Cross-Region Replication) | 別リージョンへ。DR、レイテンシ、データ主権要件                                           |
+| Live replication               | 設定後の新規・更新オブジェクトを非同期に複製                                             |
+| Batch Replication              | 既存オブジェクト、過去に失敗したオブジェクト、レプリカの再複製 (Batch Operations ジョブ) |
+| 双方向 (two-way)               | 2 バケット間で相互に複製 + replica modification sync。MRAP の Active-Active 構成で使う   |
+| マルチデスティネーション       | 1 ソースから複数宛先へ (ルールごとに宛先)                                                |
 
 前提条件。
 
@@ -305,18 +305,18 @@ aws s3api get-bucket-lifecycle-configuration --bucket amzn-s3-demo-bucket
 
 ### 4.2 何が複製され、何が複製されないか
 
-| 対象 | 既定 | 備考 |
-| --- | --- | --- |
-| 設定後の新規オブジェクト | 複製 | |
-| 設定前の既存オブジェクト | 複製しない | Batch Replication を使う |
-| メタデータ、タグ、ACL、Object Lock 保持情報 | 複製 | |
-| 削除マーカー | 既定で複製しない | `DeleteMarkerReplication` で有効化 (タグベースフィルタのルールでは不可) |
-| バージョン ID 指定の削除 (完全削除) | 複製しない | 悪意ある削除の伝播を防ぐ設計 |
-| レプリカの変更 (メタデータ等) | 複製しない | `ReplicaModifications` で双方向同期 |
-| Lifecycle によるアクション | 複製しない | 宛先側にも Lifecycle を設定 |
-| SSE-C オブジェクト | 複製 (対応済み) | 宛先で SSE-C がブロックされていると 403 で失敗 (2026-04 以降の既定に注意) |
-| すでにレプリカであるオブジェクト | 複製しない (チェーンしない) | A→B→C は B のレプリカを C に送らない。Batch Replication なら可 |
-| Glacier / Deep Archive のオブジェクト | Live は可、Batch では復元が必要な場合あり | |
+| 対象                                        | 既定                                      | 備考                                                                      |
+| ------------------------------------------- | ----------------------------------------- | ------------------------------------------------------------------------- |
+| 設定後の新規オブジェクト                    | 複製                                      |                                                                           |
+| 設定前の既存オブジェクト                    | 複製しない                                | Batch Replication を使う                                                  |
+| メタデータ、タグ、ACL、Object Lock 保持情報 | 複製                                      |                                                                           |
+| 削除マーカー                                | 既定で複製しない                          | `DeleteMarkerReplication` で有効化 (タグベースフィルタのルールでは不可)   |
+| バージョン ID 指定の削除 (完全削除)         | 複製しない                                | 悪意ある削除の伝播を防ぐ設計                                              |
+| レプリカの変更 (メタデータ等)               | 複製しない                                | `ReplicaModifications` で双方向同期                                       |
+| Lifecycle によるアクション                  | 複製しない                                | 宛先側にも Lifecycle を設定                                               |
+| SSE-C オブジェクト                          | 複製 (対応済み)                           | 宛先で SSE-C がブロックされていると 403 で失敗 (2026-04 以降の既定に注意) |
+| すでにレプリカであるオブジェクト            | 複製しない (チェーンしない)               | A→B→C は B のレプリカを C に送らない。Batch Replication なら可            |
+| Glacier / Deep Archive のオブジェクト       | Live は可、Batch では復元が必要な場合あり |                                                                           |
 
 ### 4.3 S3 Replication Time Control (RTC)
 
@@ -393,11 +393,7 @@ aws s3api head-object --bucket amzn-s3-demo-bucket --key data/file.parquet \
     },
     {
       "Effect": "Allow",
-      "Action": [
-        "s3:GetObjectVersionForReplication",
-        "s3:GetObjectVersionAcl",
-        "s3:GetObjectVersionTagging"
-      ],
+      "Action": ["s3:GetObjectVersionForReplication", "s3:GetObjectVersionAcl", "s3:GetObjectVersionTagging"],
       "Resource": "arn:aws:s3:::amzn-s3-demo-bucket/*"
     },
     {
@@ -458,19 +454,19 @@ flowchart LR
 
 ### 5.2 サポートされるオペレーション (2026-10 時点)
 
-| オペレーション | 内容 | 備考 |
-| --- | --- | --- |
-| Copy | オブジェクトをコピー (メタデータ・ストレージクラス・暗号化の変更も可) | ディレクトリバケットでも可 |
-| Compute checksums (2025-08) | 保存済みオブジェクトのチェックサムを、復元やダウンロードなしに計算しレポート | SHA-1 / SHA-256 / CRC32 / CRC32C / CRC64NVME / MD5 等 |
-| Delete all object tags | タグを全削除 | |
-| Invoke AWS Lambda function | 任意処理 | ディレクトリバケットでも可 |
-| Replace all object tags | タグを一括置換 | |
-| Replace access control list (ACL) | ACL を置換 | ACL 無効バケットでは不要 |
-| Restore | Glacier Flexible / Deep Archive / Intelligent-Tiering アーカイブ層からの復元 | |
-| Update object encryption (2026-01) | データ移動なしで SSE タイプ / KMS キー / Bucket Key を変更 | 1 ジョブ最大 200 億オブジェクト |
-| Replicate (Batch Replication) | 既存・失敗オブジェクトの複製 | |
-| Object Lock retention | 保持期限・モードを設定 | |
-| Object Lock legal hold | リーガルホールドの設定・解除 | |
+| オペレーション                     | 内容                                                                         | 備考                                                  |
+| ---------------------------------- | ---------------------------------------------------------------------------- | ----------------------------------------------------- |
+| Copy                               | オブジェクトをコピー (メタデータ・ストレージクラス・暗号化の変更も可)        | ディレクトリバケットでも可                            |
+| Compute checksums (2025-08)        | 保存済みオブジェクトのチェックサムを、復元やダウンロードなしに計算しレポート | SHA-1 / SHA-256 / CRC32 / CRC32C / CRC64NVME / MD5 等 |
+| Delete all object tags             | タグを全削除                                                                 |                                                       |
+| Invoke AWS Lambda function         | 任意処理                                                                     | ディレクトリバケットでも可                            |
+| Replace all object tags            | タグを一括置換                                                               |                                                       |
+| Replace access control list (ACL)  | ACL を置換                                                                   | ACL 無効バケットでは不要                              |
+| Restore                            | Glacier Flexible / Deep Archive / Intelligent-Tiering アーカイブ層からの復元 |                                                       |
+| Update object encryption (2026-01) | データ移動なしで SSE タイプ / KMS キー / Bucket Key を変更                   | 1 ジョブ最大 200 億オブジェクト                       |
+| Replicate (Batch Replication)      | 既存・失敗オブジェクトの複製                                                 |                                                       |
+| Object Lock retention              | 保持期限・モードを設定                                                       |                                                       |
+| Object Lock legal hold             | リーガルホールドの設定・解除                                                 |                                                       |
 
 ディレクトリバケットのオブジェクトでは Copy と Invoke Lambda のみサポート。
 
@@ -478,10 +474,10 @@ Compute checksums は 2025-08 の発表時点で SHA-1 / SHA-256 / CRC32 / CRC32
 
 ### 5.3 マニフェスト
 
-| 方式 | 説明 |
-| --- | --- |
-| CSV | `bucket,key[,versionId]` の行。キーは URL エンコード |
-| S3 Inventory レポート | `manifest.json` を指定 |
+| 方式                              | 説明                                                                                                                                                                            |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| CSV                               | `bucket,key[,versionId]` の行。キーは URL エンコード                                                                                                                            |
+| S3 Inventory レポート             | `manifest.json` を指定                                                                                                                                                          |
 | 自動生成 (S3JobManifestGenerator) | ソースバケット + フィルタ (作成日、キーのプレフィックス / サフィックス / 部分一致、サイズ、ストレージクラス、暗号化タイプ `MatchAnyObjectEncryption` 等) から S3 がリストを作る |
 
 ### 5.4 ジョブのライフサイクル
@@ -518,14 +514,14 @@ aws s3control update-job-status --account-id 111122223333 \
 
 S3 Inventory はバケット (またはプレフィックス) のオブジェクト一覧と属性を、日次または週次で CSV / ORC / Parquet として出力する。数十億オブジェクトのバケットで ListObjects を回すより圧倒的に安く速い。
 
-| 項目 | 内容 |
-| --- | --- |
-| 頻度 | Daily / Weekly |
-| 形式 | CSV、Apache ORC、Apache Parquet |
-| 対象 | 現行バージョンのみ / 全バージョン |
-| 出力先 | 同一リージョンの宛先バケット (クロスアカウント可)。SSE-S3 / SSE-KMS で暗号化可 |
+| 項目                 | 内容                                                                                                                                                                                                                                                                  |
+| -------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 頻度                 | Daily / Weekly                                                                                                                                                                                                                                                        |
+| 形式                 | CSV、Apache ORC、Apache Parquet                                                                                                                                                                                                                                       |
+| 対象                 | 現行バージョンのみ / 全バージョン                                                                                                                                                                                                                                     |
+| 出力先               | 同一リージョンの宛先バケット (クロスアカウント可)。SSE-S3 / SSE-KMS で暗号化可                                                                                                                                                                                        |
 | 選択可能フィールド例 | Size、LastModifiedDate、StorageClass、ETag、IsMultipartUploaded、ReplicationStatus、EncryptionStatus、BucketKeyStatus、ObjectLockRetainUntilDate / Mode / LegalHoldStatus、IntelligentTieringAccessTier、ChecksumAlgorithm、ObjectOwner、ObjectAccessControlList など |
-| 一貫性 | 結果整合 (レポート生成時点のスナップショット。直近の変更は含まれないことがある) |
+| 一貫性               | 結果整合 (レポート生成時点のスナップショット。直近の変更は含まれないことがある)                                                                                                                                                                                       |
 
 ```bash
 aws s3api put-bucket-inventory-configuration \
@@ -565,15 +561,15 @@ GROUP BY encryption_status;
 
 組織全体 (Organizations 統合時) / アカウント / リージョン / バケット / プレフィックスの各レベルで、ストレージ使用量とアクティビティを可視化するダッシュボード。メトリクスは合計 198 種類 (ユニーク + 派生) と FAQ にある。
 
-| 項目 | 無料 (Free tier) | 有料 (Advanced metrics and recommendations) |
-| --- | --- | --- |
-| メトリクス | 使用量系 (コスト最適化、データ保護、アクセス管理、パフォーマンス、イベントの各カテゴリの使用量メトリクス) | 無料分 + アクティビティ (リクエスト数等)、詳細ステータスコード (403 等)、高度なコスト最適化・データ保護 (Lifecycle / Replication ルール数等)、高度なパフォーマンスメトリクス |
-| 履歴 | 14 日 | 15 か月 |
-| プレフィックス集計 | なし | あり (2025-12 以降、バケットあたり数十億プレフィックスまで拡張) |
-| CloudWatch 発行 | なし | あり |
-| レコメンデーション | なし | あり |
-| エクスポート | S3 (CSV / Parquet) または S3 Tables (Parquet) | 同左 |
-| Storage Lens groups | 利用不可 | 利用可 (オブジェクトタグ・サイズ・経過日数・プレフィックス等でカスタムグループを定義して集計) |
+| 項目                | 無料 (Free tier)                                                                                          | 有料 (Advanced metrics and recommendations)                                                                                                                                  |
+| ------------------- | --------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| メトリクス          | 使用量系 (コスト最適化、データ保護、アクセス管理、パフォーマンス、イベントの各カテゴリの使用量メトリクス) | 無料分 + アクティビティ (リクエスト数等)、詳細ステータスコード (403 等)、高度なコスト最適化・データ保護 (Lifecycle / Replication ルール数等)、高度なパフォーマンスメトリクス |
+| 履歴                | 14 日                                                                                                     | 15 か月                                                                                                                                                                      |
+| プレフィックス集計  | なし                                                                                                      | あり (2025-12 以降、バケットあたり数十億プレフィックスまで拡張)                                                                                                              |
+| CloudWatch 発行     | なし                                                                                                      | あり                                                                                                                                                                         |
+| レコメンデーション  | なし                                                                                                      | あり                                                                                                                                                                         |
+| エクスポート        | S3 (CSV / Parquet) または S3 Tables (Parquet)                                                             | 同左                                                                                                                                                                         |
+| Storage Lens groups | 利用不可                                                                                                  | 利用可 (オブジェクトタグ・サイズ・経過日数・プレフィックス等でカスタムグループを定義して集計)                                                                                |
 
 2025-12 のアップデートで以下が追加された (AWS China / GovCloud を除く。GovCloud には 2026-01 に Storage Lens 自体が提供開始)。
 
@@ -640,22 +636,22 @@ S3 Metadata は、汎用バケットのオブジェクトメタデータを自�
 
 ### 8.2 3 種類のテーブル
 
-| テーブル | 必須 | 内容 | 更新頻度 |
-| --- | --- | --- | --- |
-| Journal テーブル | 必須 | オブジェクトの変更イベント (アップロード、削除、メタデータ更新、Lifecycle 遷移等) を記録。設定作成以降の変更のみ。レコード有効期限 (最小 7 日) を設定可能 | ほぼリアルタイム |
-| Live inventory テーブル (2025-07) | 任意 | バケット内の全オブジェクトと全バージョンの最新状態。有効化時に既存オブジェクトのバックフィル (最低 15 分、大規模なら数時間) | 通常 1 時間以内 |
-| Annotation テーブル (2026-06) | 任意 | オブジェクトのアノテーション (後述) の最新状態。1 行 = 1 オブジェクトバージョン上の 1 アノテーション。有効化時に既存アノテーションのバックフィル (数分〜数時間、課金あり) | バックフィル完了後、通常 1 時間以内 |
+| テーブル                          | 必須 | 内容                                                                                                                                                                      | 更新頻度                            |
+| --------------------------------- | ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------- |
+| Journal テーブル                  | 必須 | オブジェクトの変更イベント (アップロード、削除、メタデータ更新、Lifecycle 遷移等) を記録。設定作成以降の変更のみ。レコード有効期限 (最小 7 日) を設定可能                 | ほぼリアルタイム                    |
+| Live inventory テーブル (2025-07) | 任意 | バケット内の全オブジェクトと全バージョンの最新状態。有効化時に既存オブジェクトのバックフィル (最低 15 分、大規模なら数時間)                                               | 通常 1 時間以内                     |
+| Annotation テーブル (2026-06)     | 任意 | オブジェクトのアノテーション (後述) の最新状態。1 行 = 1 オブジェクトバージョン上の 1 アノテーション。有効化時に既存アノテーションのバックフィル (数分〜数時間、課金あり) | バックフィル完了後、通常 1 時間以内 |
 
 初期リリースでは journal テーブルは単に「metadata table」と呼ばれていた。2025-07 の拡張で既存オブジェクト対応 (live inventory) と journal の 33% 値下げが行われた。料金は journal の記録件数ベース + live inventory のバックフィル (オブジェクト数ベース) + 10 億オブジェクト超のバケットは月額。
 
 ### 8.3 Inventory / Storage Lens / Metadata の使い分け
 
-| 観点 | S3 Inventory | Storage Lens | S3 Metadata |
-| --- | --- | --- | --- |
-| 粒度 | オブジェクト単位 | 集計値 | オブジェクト単位 + 変更イベント |
-| 鮮度 | 日次 / 週次 | 日次 | journal はほぼリアルタイム、live inventory は約 1 時間 |
-| クエリ | Athena で外部テーブル定義が必要 | ダッシュボード / エクスポート | Iceberg テーブルとしてそのまま SQL |
-| 主用途 | 監査、Batch マニフェスト | コスト・傾向分析 | データ発見、変更監査、AI/分析向けカタログ |
+| 観点   | S3 Inventory                    | Storage Lens                  | S3 Metadata                                            |
+| ------ | ------------------------------- | ----------------------------- | ------------------------------------------------------ |
+| 粒度   | オブジェクト単位                | 集計値                        | オブジェクト単位 + 変更イベント                        |
+| 鮮度   | 日次 / 週次                     | 日次                          | journal はほぼリアルタイム、live inventory は約 1 時間 |
+| クエリ | Athena で外部テーブル定義が必要 | ダッシュボード / エクスポート | Iceberg テーブルとしてそのまま SQL                     |
+| 主用途 | 監査、Batch マニフェスト        | コスト・傾向分析              | データ発見、変更監査、AI/分析向けカタログ              |
 
 ### 8.4 設定例
 
@@ -690,12 +686,12 @@ LIMIT 100;
 
 ### 9.1 4 種類の「オブジェクトを説明する情報」
 
-| 種類 | 上限 | 変更 | 用途 |
-| --- | --- | --- | --- |
-| システム定義メタデータ | - | S3 が管理 (一部は変更可: Content-Type 等はコピーで) | サイズ、作成日時、ストレージクラス、暗号化状態、チェックサム |
-| ユーザー定義メタデータ (`x-amz-meta-*`) | 合計 2 KB | 不変 (変更にはコピーが必要) | アップロード時に決まる属性 |
-| オブジェクトタグ | 10 個 / オブジェクト、キー 128 文字・値 256 文字 | いつでも変更可 (PutObjectTagging) | IAM 条件、Lifecycle / Replication フィルタ、ABAC |
-| アノテーション (2026-06) | 1 オブジェクトあたり最大 1 GB | いつでも変更・削除可 | AI エージェントや分析ツールに渡す業務コンテキスト (JSON / XML / YAML) |
+| 種類                                    | 上限                                             | 変更                                                | 用途                                                                  |
+| --------------------------------------- | ------------------------------------------------ | --------------------------------------------------- | --------------------------------------------------------------------- |
+| システム定義メタデータ                  | -                                                | S3 が管理 (一部は変更可: Content-Type 等はコピーで) | サイズ、作成日時、ストレージクラス、暗号化状態、チェックサム          |
+| ユーザー定義メタデータ (`x-amz-meta-*`) | 合計 2 KB                                        | 不変 (変更にはコピーが必要)                         | アップロード時に決まる属性                                            |
+| オブジェクトタグ                        | 10 個 / オブジェクト、キー 128 文字・値 256 文字 | いつでも変更可 (PutObjectTagging)                   | IAM 条件、Lifecycle / Replication フィルタ、ABAC                      |
+| アノテーション (2026-06)                | 1 オブジェクトあたり最大 1 GB                    | いつでも変更・削除可                                | AI エージェントや分析ツールに渡す業務コンテキスト (JSON / XML / YAML) |
 
 ### 9.2 オブジェクトタグ
 
@@ -754,30 +750,30 @@ flowchart LR
     EB --> T4["SQS / SNS / Lambda (複数)"]
 ```
 
-| 観点 | ネイティブ通知 | EventBridge |
-| --- | --- | --- |
-| 宛先 | SNS / SQS (標準) / Lambda | 20 以上のターゲット、他アカウント・他リージョンのバス |
-| フィルタ | プレフィックス / サフィックスのみ | キー、サイズ、リクエスト元、メタデータ等の高度なパターン |
-| 同一イベント種別 × 重複プレフィックスの複数宛先 | 不可 (重複する設定は拒否) | 何本でもルールを書ける |
-| アーカイブ / リプレイ | なし | あり |
-| 料金 | 無料 (宛先側の料金のみ) | EventBridge のイベント料金 |
-| 有効化 | `NotificationConfiguration` | `EventBridgeConfiguration: {}` |
+| 観点                                            | ネイティブ通知                    | EventBridge                                              |
+| ----------------------------------------------- | --------------------------------- | -------------------------------------------------------- |
+| 宛先                                            | SNS / SQS (標準) / Lambda         | 20 以上のターゲット、他アカウント・他リージョンのバス    |
+| フィルタ                                        | プレフィックス / サフィックスのみ | キー、サイズ、リクエスト元、メタデータ等の高度なパターン |
+| 同一イベント種別 × 重複プレフィックスの複数宛先 | 不可 (重複する設定は拒否)         | 何本でもルールを書ける                                   |
+| アーカイブ / リプレイ                           | なし                              | あり                                                     |
+| 料金                                            | 無料 (宛先側の料金のみ)           | EventBridge のイベント料金                               |
+| 有効化                                          | `NotificationConfiguration`       | `EventBridgeConfiguration: {}`                           |
 
 AWS Backup の S3 継続的バックアップは EventBridge 通知に依存しているため、EventBridge 連携を無効化すると継続的バックアップが停止する点に注意。
 
 ### 10.2 イベントタイプ
 
-| カテゴリ | イベント名 (ネイティブ) | EventBridge の detail-type |
-| --- | --- | --- |
-| 作成 | `s3:ObjectCreated:Put` / `Post` / `Copy` / `CompleteMultipartUpload` / `*` | Object Created |
-| 削除 | `s3:ObjectRemoved:Delete` / `DeleteMarkerCreated` / `*` | Object Deleted |
-| 復元 | `s3:ObjectRestore:Post` / `Completed` / `Delete` | Object Restore Initiated / Completed / Expired |
-| レプリケーション | `s3:Replication:OperationFailedReplication` / `OperationMissedThreshold` / `OperationReplicatedAfterThreshold` / `OperationNotTracked` | (同等のイベント) |
-| Lifecycle | `s3:LifecycleExpiration:Delete` / `DeleteMarkerCreated`、`s3:LifecycleTransition` | Object Deleted / Object Storage Class Changed |
-| Intelligent-Tiering | `s3:IntelligentTiering` | Object Access Tier Changed |
-| タグ | `s3:ObjectTagging:Put` / `Delete` | Object Tags Added / Deleted |
-| ACL | `s3:ObjectAcl:Put` | Object ACL Updated |
-| 低冗長性 | `s3:ReducedRedundancyLostObject` | - |
+| カテゴリ            | イベント名 (ネイティブ)                                                                                                                | EventBridge の detail-type                     |
+| ------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
+| 作成                | `s3:ObjectCreated:Put` / `Post` / `Copy` / `CompleteMultipartUpload` / `*`                                                             | Object Created                                 |
+| 削除                | `s3:ObjectRemoved:Delete` / `DeleteMarkerCreated` / `*`                                                                                | Object Deleted                                 |
+| 復元                | `s3:ObjectRestore:Post` / `Completed` / `Delete`                                                                                       | Object Restore Initiated / Completed / Expired |
+| レプリケーション    | `s3:Replication:OperationFailedReplication` / `OperationMissedThreshold` / `OperationReplicatedAfterThreshold` / `OperationNotTracked` | (同等のイベント)                               |
+| Lifecycle           | `s3:LifecycleExpiration:Delete` / `DeleteMarkerCreated`、`s3:LifecycleTransition`                                                      | Object Deleted / Object Storage Class Changed  |
+| Intelligent-Tiering | `s3:IntelligentTiering`                                                                                                                | Object Access Tier Changed                     |
+| タグ                | `s3:ObjectTagging:Put` / `Delete`                                                                                                      | Object Tags Added / Deleted                    |
+| ACL                 | `s3:ObjectAcl:Put`                                                                                                                     | Object ACL Updated                             |
+| 低冗長性            | `s3:ReducedRedundancyLostObject`                                                                                                       | -                                              |
 
 ### 10.3 配信保証・順序・重複
 
@@ -821,7 +817,12 @@ def handler(event, context):
       "LambdaFunctionArn": "arn:aws:lambda:ap-northeast-1:111122223333:function:make-thumbnail",
       "Events": ["s3:ObjectCreated:*"],
       "Filter": {
-        "Key": { "FilterRules": [ { "Name": "prefix", "Value": "uploads/" }, { "Name": "suffix", "Value": ".jpg" } ] }
+        "Key": {
+          "FilterRules": [
+            { "Name": "prefix", "Value": "uploads/" },
+            { "Name": "suffix", "Value": ".jpg" }
+          ]
+        }
       }
     }
   ],
@@ -858,11 +859,11 @@ GET / HEAD / LIST リクエストに Lambda を挟み、返却データを変換
 
 AWS が示す代替。
 
-| 用途 | 代替 |
-| --- | --- |
-| 画像変換 | Dynamic Image Transformation for Amazon CloudFront (AWS Solution) |
+| 用途                     | 代替                                                                |
+| ------------------------ | ------------------------------------------------------------------- |
+| 画像変換                 | Dynamic Image Transformation for Amazon CloudFront (AWS Solution)   |
 | PII マスキング、形式変換 | CloudFront / API Gateway / Lambda 関数 URL 経由で Lambda を直接呼ぶ |
-| 単純なフィルタ | クライアント側処理 |
+| 単純なフィルタ           | クライアント側処理                                                  |
 
 ### 11.2 S3 Select
 
@@ -884,16 +885,16 @@ AWS が示す代替。
 
 ### 12.2 サポートアルゴリズム (2026-04 に 10 種へ拡張)
 
-| アルゴリズム | フルオブジェクト型 (MPU) | コンポジット型 (MPU) | 備考 |
-| --- | --- | --- | --- |
-| CRC64NVME | 対応 (唯一の形式) | 非対応 | 既定 |
-| CRC32 | 対応 | 対応 | |
-| CRC32C | 対応 | 対応 | |
-| SHA-1 | 非対応 | 対応 | |
-| SHA-256 | 非対応 | 対応 | |
-| SHA-512 | 非対応 | 対応 | 2026-04 追加 |
-| MD5 | 非対応 | 対応 | 2026-04 追加 (Content-MD5 ヘッダとは別) |
-| XXHash3 / XXHash64 / XXHash128 | 非対応 | 対応 | 2026-04 追加 |
+| アルゴリズム                   | フルオブジェクト型 (MPU) | コンポジット型 (MPU) | 備考                                    |
+| ------------------------------ | ------------------------ | -------------------- | --------------------------------------- |
+| CRC64NVME                      | 対応 (唯一の形式)        | 非対応               | 既定                                    |
+| CRC32                          | 対応                     | 対応                 |                                         |
+| CRC32C                         | 対応                     | 対応                 |                                         |
+| SHA-1                          | 非対応                   | 対応                 |                                         |
+| SHA-256                        | 非対応                   | 対応                 |                                         |
+| SHA-512                        | 非対応                   | 対応                 | 2026-04 追加                            |
+| MD5                            | 非対応                   | 対応                 | 2026-04 追加 (Content-MD5 ヘッダとは別) |
+| XXHash3 / XXHash64 / XXHash128 | 非対応                   | 対応                 | 2026-04 追加                            |
 
 2026-04 追加のアルゴリズムでマルチパートアップロードする場合、`CreateMultipartUpload` で `x-amz-checksum-algorithm` を必ず指定する必要がある。フル / コンポジット対応の割り当ては「フルオブジェクトは CRC 系のみ」という公式記述に基づき、新規アルゴリズムのコンポジット対応は What's New の「パートレベルチェックサムからコンポジットを計算」の記述に基づく。
 
@@ -939,14 +940,14 @@ Batch Operations の Compute checksums オペレーションで、復元やダ�
 
 ### 13.1 タイムライン
 
-| 時期 | 機能 |
-| --- | --- |
-| 従来 | GET / HEAD / CopyObject のソース側の If-Match / If-None-Match / If-Modified-Since / If-Unmodified-Since |
-| 2024-08 | 条件付き書き込み: PutObject / CompleteMultipartUpload の `If-None-Match: *` (キーが存在しなければ書く) |
+| 時期    | 機能                                                                                                                                                                   |
+| ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 従来    | GET / HEAD / CopyObject のソース側の If-Match / If-None-Match / If-Modified-Since / If-Unmodified-Since                                                                |
+| 2024-08 | 条件付き書き込み: PutObject / CompleteMultipartUpload の `If-None-Match: *` (キーが存在しなければ書く)                                                                 |
 | 2024-11 | 条件付き書き込み: `If-Match` に ETag を指定 (一致すれば上書き = 楽観的ロック)。同月、`s3:if-none-match` / `s3:if-match` 条件キーによるバケットポリシーでの強制にも対応 |
-| 2025-06 | RenameObject で `If-None-Match: *` (ディレクトリバケット) |
-| 2025-09 | 汎用バケットの条件付き削除: DeleteObject / DeleteObjects の `If-Match` (ETag 指定または `*`) |
-| 2025-10 | 条件付きコピー: CopyObject の宛先に対する If-None-Match / If-Match (汎用・ディレクトリ両方) |
+| 2025-06 | RenameObject で `If-None-Match: *` (ディレクトリバケット)                                                                                                              |
+| 2025-09 | 汎用バケットの条件付き削除: DeleteObject / DeleteObjects の `If-Match` (ETag 指定または `*`)                                                                           |
+| 2025-10 | 条件付きコピー: CopyObject の宛先に対する If-None-Match / If-Match (汎用・ディレクトリ両方)                                                                            |
 
 条件付き削除はディレクトリバケット (S3 Express One Zone) では 2024-11-25 に先行して提供されていた。DeleteObject / DeleteObjects で `If-Match` (ETag)、`x-amz-if-match-last-modified-time`、`x-amz-if-match-size` を単独または組み合わせて指定できる。
 
@@ -966,12 +967,12 @@ sequenceDiagram
     B->>S3: GET state.json (ETag: "e2") して再試行
 ```
 
-| ヘッダ | 成功条件 | 失敗時 |
-| --- | --- | --- |
-| `If-None-Match: *` | キーが存在しない | 412 Precondition Failed |
-| `If-Match: "etag"` | 現在の ETag が一致 | 412。キーが存在しなければ 404 |
-| `If-Match: *` (削除) | キーが存在する | 412 / 404 |
-| 同時の競合 | - | 409 Conflict が返る場合があり、リトライする |
+| ヘッダ               | 成功条件           | 失敗時                                      |
+| -------------------- | ------------------ | ------------------------------------------- |
+| `If-None-Match: *`   | キーが存在しない   | 412 Precondition Failed                     |
+| `If-Match: "etag"`   | 現在の ETag が一致 | 412。キーが存在しなければ 404               |
+| `If-Match: *` (削除) | キーが存在する     | 412 / 404                                   |
+| 同時の競合           | -                  | 409 Conflict が返る場合があり、リトライする |
 
 条件付き削除は **現行バージョンにのみ** 評価される。
 
@@ -1037,13 +1038,13 @@ aws s3api delete-object --bucket amzn-s3-demo-bucket --key state.json \
 
 ### 14.1 オブジェクトサイズの上限 (2025-12 に 50 TB へ)
 
-| 項目 | 上限 |
-| --- | --- |
-| 単一オブジェクト | 50 TB (2025-12 に 5 TB から引き上げ。全ストレージクラス・全リージョン) |
-| 単一 PUT | 5 GB |
-| マルチパートのパート数 | 10,000 |
-| パートサイズ | 5 MiB〜5 GiB (最終パートを除く) |
-| CopyObject (単一リクエスト) | 5 GB。それ以上は UploadPartCopy によるマルチパートコピー |
+| 項目                        | 上限                                                                   |
+| --------------------------- | ---------------------------------------------------------------------- |
+| 単一オブジェクト            | 50 TB (2025-12 に 5 TB から引き上げ。全ストレージクラス・全リージョン) |
+| 単一 PUT                    | 5 GB                                                                   |
+| マルチパートのパート数      | 10,000                                                                 |
+| パートサイズ                | 5 MiB〜5 GiB (最終パートを除く)                                        |
+| CopyObject (単一リクエスト) | 5 GB。それ以上は UploadPartCopy によるマルチパートコピー               |
 
 50 TB 級のオブジェクトを扱うには AWS CRT ベースの S3 Transfer Manager の利用が推奨されている。パートサイズの上限は 5 GiB のまま変わっておらず (5 MiB〜5 GiB、最大 10,000 パート)、S3 User Guide のマルチパートアップロード上限表では最大オブジェクトサイズを 48.8 TiB と記載している。10,000 パート × 5 GiB = 50,000 GiB ≒ 48.8 TiB なので、最大サイズのオブジェクトは 10,000 パートすべてを上限の 5 GiB にしてちょうど収まる。AWS が「50 TB」と打ち出しているのは 50,000 GiB を 1 TB = 1,000 GB と見なして丸めた呼び方で、正確な上限は 5 GiB × 10,000 = 50,000 GiB ÷ 1,024 = 48.828125 TiB (≒ 48.8 TiB) である (10 進バイトでは 53,687,091,200,000 バイト ≒ 53.7 TB)。
 
@@ -1090,13 +1091,13 @@ CLI のパラメータ名は AWS CLI v2 (2.37.7) の `aws s3api rename-object he
 
 ### 15.1 選択肢の比較
 
-| 方式 | プロトコル | 書き込み | POSIX 互換 | キャッシュ | 典型用途 |
-| --- | --- | --- | --- | --- | --- |
-| Mountpoint for Amazon S3 | FUSE (クライアント) | 新規ファイルの逐次書き込み、(設定により) 追記 / 上書き。ランダム書き込み不可 | 限定的 (ディレクトリ rename 不可、シンボリックリンク不可等) | ローカルキャッシュ / S3 Express One Zone キャッシュ | 大規模並列読み取り (ML 学習、ゲノミクス、ログ処理) |
-| Mountpoint CSI ドライバ | Kubernetes CSI | 同上 | 同上 | 同上 | EKS のポッドから S3 をマウント |
-| Amazon S3 Files (2026-04 GA) | NFS v4.1+ | フル (作成・読み取り・更新・削除) | フルファイルシステムセマンティクス | 高性能ストレージ層に自動キャッシュ | 既存のファイルベースアプリ、共有ファイルシステム、エージェント AI |
-| Storage Gateway (S3 File Gateway) | NFS / SMB (オンプレ VM) | フル | ゲートウェイ依存 | ローカルキャッシュ | オンプレからの S3 利用 |
-| FSx for Lustre (S3 連携) | Lustre | フル | フル | ファイルシステムそのもの | HPC、S3 データのインポート / エクスポート |
+| 方式                              | プロトコル              | 書き込み                                                                     | POSIX 互換                                                  | キャッシュ                                          | 典型用途                                                          |
+| --------------------------------- | ----------------------- | ---------------------------------------------------------------------------- | ----------------------------------------------------------- | --------------------------------------------------- | ----------------------------------------------------------------- |
+| Mountpoint for Amazon S3          | FUSE (クライアント)     | 新規ファイルの逐次書き込み、(設定により) 追記 / 上書き。ランダム書き込み不可 | 限定的 (ディレクトリ rename 不可、シンボリックリンク不可等) | ローカルキャッシュ / S3 Express One Zone キャッシュ | 大規模並列読み取り (ML 学習、ゲノミクス、ログ処理)                |
+| Mountpoint CSI ドライバ           | Kubernetes CSI          | 同上                                                                         | 同上                                                        | 同上                                                | EKS のポッドから S3 をマウント                                    |
+| Amazon S3 Files (2026-04 GA)      | NFS v4.1+               | フル (作成・読み取り・更新・削除)                                            | フルファイルシステムセマンティクス                          | 高性能ストレージ層に自動キャッシュ                  | 既存のファイルベースアプリ、共有ファイルシステム、エージェント AI |
+| Storage Gateway (S3 File Gateway) | NFS / SMB (オンプレ VM) | フル                                                                         | ゲートウェイ依存                                            | ローカルキャッシュ                                  | オンプレからの S3 利用                                            |
+| FSx for Lustre (S3 連携)          | Lustre                  | フル                                                                         | フル                                                        | ファイルシステムそのもの                            | HPC、S3 データのインポート / エクスポート                         |
 
 ### 15.2 Mountpoint for Amazon S3
 
@@ -1121,18 +1122,18 @@ umount /mnt/data
 
 2026-04 に GA した新サービスで、**汎用 S3 バケットをそのままファイルシステムとしてアクセス可能にする**。AWS News Blog は「S3 はフル機能かつ高性能なファイルシステムアクセスを提供する最初で唯一のクラウドオブジェクトストア」と表現している。
 
-| 特徴 | 内容 |
-| --- | --- |
-| 基盤 | Amazon EFS の技術で構築 |
-| プロトコル | NFS v4.1+ の全操作 (作成・読み取り・更新・削除) |
-| 対象 | 新規・既存の任意の汎用バケット (データ移行不要)。プレフィックスでスコープ指定可 |
-| 同期 | ファイルシステム上の変更は自動的に S3 バケットへ反映。同期の細かい制御が可能 |
-| 性能 | よく使うファイルのメタデータ・内容は高性能ストレージ層に配置して低レイテンシ。大きな逐次読み取りは S3 から直接配信。集約読み取りスループットは最大で毎秒数 TB |
-| 同時接続 | 数千のコンピュートリソースから同時マウント |
-| コンピュート | EC2、ECS、EKS、Lambda |
-| 併用 | ファイルシステムと S3 API の同時アクセスをサポート |
-| リージョン | GA 時点で 34 リージョン |
-| ネットワーク | マウントターゲット経由。セキュリティグループで NFS (TCP 2049) を許可 |
+| 特徴         | 内容                                                                                                                                                          |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 基盤         | Amazon EFS の技術で構築                                                                                                                                       |
+| プロトコル   | NFS v4.1+ の全操作 (作成・読み取り・更新・削除)                                                                                                               |
+| 対象         | 新規・既存の任意の汎用バケット (データ移行不要)。プレフィックスでスコープ指定可                                                                               |
+| 同期         | ファイルシステム上の変更は自動的に S3 バケットへ反映。同期の細かい制御が可能                                                                                  |
+| 性能         | よく使うファイルのメタデータ・内容は高性能ストレージ層に配置して低レイテンシ。大きな逐次読み取りは S3 から直接配信。集約読み取りスループットは最大で毎秒数 TB |
+| 同時接続     | 数千のコンピュートリソースから同時マウント                                                                                                                    |
+| コンピュート | EC2、ECS、EKS、Lambda                                                                                                                                         |
+| 併用         | ファイルシステムと S3 API の同時アクセスをサポート                                                                                                            |
+| リージョン   | GA 時点で 34 リージョン                                                                                                                                       |
+| ネットワーク | マウントターゲット経由。セキュリティグループで NFS (TCP 2049) を許可                                                                                          |
 
 ```text
  [EC2] [ECS] [EKS] [Lambda]
@@ -1156,13 +1157,13 @@ umount /mnt/data
 
 ### 16.1 AWS Backup for Amazon S3
 
-| 項目 | 継続的バックアップ | 定期バックアップ (スナップショット) |
-| --- | --- | --- |
-| 復元粒度 | 過去 35 日以内の任意の時点 (PITR) | スナップショット時点 |
-| 保持 | 最大 35 日 | 最大 99 年 |
-| 頻度 | 継続 | 1 時間 / 12 時間 / 1 日 / 1 週 / 1 か月 / オンデマンド |
-| 前提 | バージョニング必須、EventBridge 通知に依存 | バージョニング必須 |
-| コピー | クロスアカウント / クロスリージョン可 (コピーは PITR 不可) | 可 |
+| 項目     | 継続的バックアップ                                         | 定期バックアップ (スナップショット)                    |
+| -------- | ---------------------------------------------------------- | ------------------------------------------------------ |
+| 復元粒度 | 過去 35 日以内の任意の時点 (PITR)                          | スナップショット時点                                   |
+| 保持     | 最大 35 日                                                 | 最大 99 年                                             |
+| 頻度     | 継続                                                       | 1 時間 / 12 時間 / 1 日 / 1 週 / 1 か月 / オンデマンド |
+| 前提     | バージョニング必須、EventBridge 通知に依存                 | バージョニング必須                                     |
+| コピー   | クロスアカウント / クロスリージョン可 (コピーは PITR 不可) | 可                                                     |
 
 - 対象はオブジェクトデータ、タグ、ACL、ユーザー定義メタデータ。
 - 初回はフル、以降はオブジェクトレベルの増分。
@@ -1198,14 +1199,14 @@ aws backup start-backup-job \
 
 S3 (または EFS) をバックエンドにしたマネージドなファイル転送サービス。
 
-| 機能 | 内容 |
-| --- | --- |
-| サーバー | SFTP、FTPS、FTP (VPC 内のみ)、AS2 |
-| 認証 | サービス管理ユーザー (SSH 鍵)、AWS Directory Service、カスタム IdP (Lambda / API Gateway) |
-| SFTP コネクタ | AWS から外部の SFTP サーバーへ送受信 |
-| マネージドワークフロー | アップロード後のコピー・タグ付け・復号 (PGP)・Lambda 処理 |
-| Web アプリ | ブラウザから S3 にファイル操作できるマネージド Web UI (S3 Access Grants + IAM Identity Center と統合) |
-| 論理ディレクトリ | ユーザーごとに S3 のプレフィックスを仮想ルートにマッピング (chroot 相当) |
+| 機能                   | 内容                                                                                                  |
+| ---------------------- | ----------------------------------------------------------------------------------------------------- |
+| サーバー               | SFTP、FTPS、FTP (VPC 内のみ)、AS2                                                                     |
+| 認証                   | サービス管理ユーザー (SSH 鍵)、AWS Directory Service、カスタム IdP (Lambda / API Gateway)             |
+| SFTP コネクタ          | AWS から外部の SFTP サーバーへ送受信                                                                  |
+| マネージドワークフロー | アップロード後のコピー・タグ付け・復号 (PGP)・Lambda 処理                                             |
+| Web アプリ             | ブラウザから S3 にファイル操作できるマネージド Web UI (S3 Access Grants + IAM Identity Center と統合) |
+| 論理ディレクトリ       | ユーザーごとに S3 のプレフィックスを仮想ルートにマッピング (chroot 相当)                              |
 
 ```bash
 aws transfer create-server \

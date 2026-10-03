@@ -25,12 +25,12 @@ flowchart LR
 
 Performance bottlenecks fall into four broad categories.
 
-| Layer | Typical symptom | Main remedies |
-| --- | --- | --- |
-| Request rate (index layer) | `503 Slow Down` errors | Spread across prefixes, ramp up gradually, exponential backoff |
-| Single-connection throughput | Transfer of one file plateaus at tens to ~100 MB/s | Multipart, Range GET, parallel connections |
-| Client resources | 100% CPU, out of memory, GC | CRT client, optimized checksum computation, instance selection |
-| Network | NIC bandwidth saturated, NAT GW charges, latency | Gateway Endpoint, same-Region placement, ENA Express etc., Transfer Acceleration |
+| Layer                        | Typical symptom                                    | Main remedies                                                                    |
+| ---------------------------- | -------------------------------------------------- | -------------------------------------------------------------------------------- |
+| Request rate (index layer)   | `503 Slow Down` errors                             | Spread across prefixes, ramp up gradually, exponential backoff                   |
+| Single-connection throughput | Transfer of one file plateaus at tens to ~100 MB/s | Multipart, Range GET, parallel connections                                       |
+| Client resources             | 100% CPU, out of memory, GC                        | CRT client, optimized checksum computation, instance selection                   |
+| Network                      | NIC bandwidth saturated, NAT GW charges, latency   | Gateway Endpoint, same-Region placement, ENA Express etc., Transfer Acceleration |
 
 ## 1. Request rate and prefixes
 
@@ -71,13 +71,13 @@ So the correct understanding is: **"Hashing is not required, but at very high ra
 
 ### 1.3 Prefix design patterns
 
-| Pattern | Example | Pros | Cons |
-| --- | --- | --- | --- |
-| Date hierarchy | `logs/2026/10/03/host-a.gz` | Works well with Athena/Glue partitions, easy lifecycle management | Writes concentrate on the latest date |
-| Leading shard number | `logs/shard=07/2026/10/03/...` | Parallelizes writes N ways | Readers must scan N prefixes |
-| Leading short hash | `a3f/2026/10/03/object.bin` | Maximum distribution | Not human-readable, hard to browse together with ListObjects |
-| Leading tenant ID | `tenant=123/...` | Natural distribution for multi-tenant | A huge tenant becomes a hotspot |
-| Reversed timestamp | `9999999999-epoch/...` | Avoids monotonic increase | Less readable |
+| Pattern              | Example                        | Pros                                                              | Cons                                                         |
+| -------------------- | ------------------------------ | ----------------------------------------------------------------- | ------------------------------------------------------------ |
+| Date hierarchy       | `logs/2026/10/03/host-a.gz`    | Works well with Athena/Glue partitions, easy lifecycle management | Writes concentrate on the latest date                        |
+| Leading shard number | `logs/shard=07/2026/10/03/...` | Parallelizes writes N ways                                        | Readers must scan N prefixes                                 |
+| Leading short hash   | `a3f/2026/10/03/object.bin`    | Maximum distribution                                              | Not human-readable, hard to browse together with ListObjects |
+| Leading tenant ID    | `tenant=123/...`               | Natural distribution for multi-tenant                             | A huge tenant becomes a hotspot                              |
+| Reversed timestamp   | `9999999999-epoch/...`         | Avoids monotonic increase                                         | Less readable                                                |
 
 Recommendation: **use an analysis-friendly hierarchy by default, and if the write rate looks likely to consistently exceed 3,500 PUT/s per prefix, add a shard number at a higher level**.
 
@@ -113,11 +113,11 @@ sequenceDiagram
 
 The AWS SDKs and CLI have three retry modes.
 
-| Mode | Behavior | Default max attempts |
-| --- | --- | --- |
-| `legacy` | Older per-SDK implementation | Varies by SDK |
-| `standard` | Exponential backoff + jitter, retry quota (token bucket) | 3 |
-| `adaptive` | standard + client-side rate limiting (throttles the send rate itself when throttling is detected) | 3 |
+| Mode       | Behavior                                                                                          | Default max attempts |
+| ---------- | ------------------------------------------------------------------------------------------------- | -------------------- |
+| `legacy`   | Older per-SDK implementation                                                                      | Varies by SDK        |
+| `standard` | Exponential backoff + jitter, retry quota (token bucket)                                          | 3                    |
+| `adaptive` | standard + client-side rate limiting (throttles the send rate itself when throttling is detected) | 3                    |
 
 ```bash
 # Set in ~/.aws/config
@@ -157,12 +157,12 @@ s3 = boto3.client("s3", config=cfg)
 
 ### 2.4 Causes of slowness other than 503
 
-| Symptom | Cause | Fix |
-| --- | --- | --- |
-| `ThrottlingException` with SSE-KMS | KMS request quota | Enable **S3 Bucket Key** (greatly reduces KMS calls) |
-| Slow TLS handshake every time | Connections not reused | HTTP connection pool, Keep-Alive |
-| Traffic concentrated on a single IP | DNS caching, pinned IP | Re-resolve DNS periodically; CRT spreads across multiple IPs automatically |
-| `ListObjectsV2` is slow | 1,000 keys per page, sequential paging | Parallel List per prefix, replace with S3 Inventory / S3 Metadata tables |
+| Symptom                             | Cause                                  | Fix                                                                        |
+| ----------------------------------- | -------------------------------------- | -------------------------------------------------------------------------- |
+| `ThrottlingException` with SSE-KMS  | KMS request quota                      | Enable **S3 Bucket Key** (greatly reduces KMS calls)                       |
+| Slow TLS handshake every time       | Connections not reused                 | HTTP connection pool, Keep-Alive                                           |
+| Traffic concentrated on a single IP | DNS caching, pinned IP                 | Re-resolve DNS periodically; CRT spreads across multiple IPs automatically |
+| `ListObjectsV2` is slow             | 1,000 keys per page, sequential paging | Parallel List per prefix, replace with S3 Inventory / S3 Metadata tables   |
 
 ## 3. Multipart upload
 
@@ -170,16 +170,16 @@ s3 = boto3.client("s3", config=cfg)
 
 In December 2025 (re:Invent 2025), the **maximum object size was raised from 5 TB to 50 TB**. The User Guide lists the following.
 
-| Item | Value |
-| --- | --- |
-| Maximum object size | 48.8 TiB (≈ 50 TB) |
-| Maximum size for a single PUT | 5 GB (multipart required beyond that) |
-| Maximum number of parts | 10,000 |
-| Part numbers | 1–10,000 |
-| Part size | 5 MiB–5 GiB (no minimum for the last part) |
-| Max returned per ListParts call | 1,000 |
-| Max returned per ListMultipartUploads call | 1,000 |
-| Recommendation | Consider multipart for objects over 100 MB |
+| Item                                       | Value                                      |
+| ------------------------------------------ | ------------------------------------------ |
+| Maximum object size                        | 48.8 TiB (≈ 50 TB)                         |
+| Maximum size for a single PUT              | 5 GB (multipart required beyond that)      |
+| Maximum number of parts                    | 10,000                                     |
+| Part numbers                               | 1–10,000                                   |
+| Part size                                  | 5 MiB–5 GiB (no minimum for the last part) |
+| Max returned per ListParts call            | 1,000                                      |
+| Max returned per ListMultipartUploads call | 1,000                                      |
+| Recommendation                             | Consider multipart for objects over 100 MB |
 
 Calculation: 10,000 parts × 5 GiB = 48.8 TiB. So creating a 50 TB-class object requires a **part size near the 5 GiB maximum**.
 
@@ -211,12 +211,12 @@ Key points:
 
 ### 3.3 Choosing part size and chunk size
 
-| Object size | Suggested part size | Reason |
-| --- | --- | --- |
-| Up to 100 MB | Single PUT or 8–16 MiB | Low overhead |
-| 100 MB–10 GB | 8–64 MiB | Balance between parallelism and request count (8 MiB × 10,000 ≈ 78 GiB) |
-| 10 GB–600 GiB | 64–256 MiB | Fits within 64 MiB × 10,000 = 625 GiB |
-| 600 GiB–4.8 TiB | 512 MiB–1 GiB | Fits within 512 MiB × 10,000 = 5,000 GiB ≈ 4.88 TiB |
+| Object size      | Suggested part size        | Reason                                                                                |
+| ---------------- | -------------------------- | ------------------------------------------------------------------------------------- |
+| Up to 100 MB     | Single PUT or 8–16 MiB     | Low overhead                                                                          |
+| 100 MB–10 GB     | 8–64 MiB                   | Balance between parallelism and request count (8 MiB × 10,000 ≈ 78 GiB)               |
+| 10 GB–600 GiB    | 64–256 MiB                 | Fits within 64 MiB × 10,000 = 625 GiB                                                 |
+| 600 GiB–4.8 TiB  | 512 MiB–1 GiB              | Fits within 512 MiB × 10,000 = 5,000 GiB ≈ 4.88 TiB                                   |
 | 4.8 TiB–48.8 TiB | `ceil(size / 10000)`–5 GiB | 1 GiB × 10,000 ≈ 9.77 TiB, 5 GiB × 10,000 ≈ 48.8 TiB. Exactly 48.8 TiB requires 5 GiB |
 
 The minimum part size is `ceil(object_size / 10000)`. For example, 1 TiB needs at least 1,048,576 MiB / 10,000 ≈ 105 MiB per part; 64 MiB would exceed 10,000 parts. The CLI automatically adjusts `multipart_chunksize` if the part count would exceed the limit.
@@ -225,10 +225,10 @@ The minimum part size is `ceil(object_size / 10000)`. For example, 1 TiB needs a
 
 Since December 2024, the latest SDKs compute and send CRC-based checksums by default, and S3 validates them. The default algorithm is **CRC64NVME**. In April 2026, MD5, XXHash3, XXHash64, XXHash128, and SHA-512 were added, bringing the total to 10 algorithms.
 
-| Type | Description | Supported algorithms |
-| --- | --- | --- |
+| Type          | Description                                                            | Supported algorithms                          |
+| ------------- | ---------------------------------------------------------------------- | --------------------------------------------- |
 | `FULL_OBJECT` | Checksum of the whole object. Part CRCs can be combined mathematically | CRC64NVME (always full object), CRC32, CRC32C |
-| `COMPOSITE` | Checksum of per-part checksums. Takes the form `xxxx-N` | SHA-1, SHA-256, CRC32, CRC32C, etc. |
+| `COMPOSITE`   | Checksum of per-part checksums. Takes the form `xxxx-N`                | SHA-1, SHA-256, CRC32, CRC32C, etc.           |
 
 ```bash
 # Specify the algorithm and type when starting the multipart upload
@@ -264,25 +264,25 @@ Official guidance:
 
 ### 4.2 When Range GET helps
 
-| Use case | Benefit |
-| --- | --- |
-| Downloading huge files | Parallelism pushes throughput up to the NIC limit |
-| Parquet / ORC analytics | Read the footer (metadata) first, then fetch only the needed column chunks |
-| Video seeking | Fetch only the bytes at the playback position |
-| Part of a ZIP / tar archive | Read only the central directory |
-| ML random access | Fetch a single sample within a shard file |
+| Use case                    | Benefit                                                                    |
+| --------------------------- | -------------------------------------------------------------------------- |
+| Downloading huge files      | Parallelism pushes throughput up to the NIC limit                          |
+| Parquet / ORC analytics     | Read the footer (metadata) first, then fetch only the needed column chunks |
+| Video seeking               | Fetch only the bytes at the playback position                              |
+| Part of a ZIP / tar archive | Read only the central directory                                            |
+| ML random access            | Fetch a single sample within a shard file                                  |
 
 ## 5. Per-connection throughput and the road to 100 Gbps
 
 ### 5.1 Rule-of-thumb numbers
 
-| Metric | Value | Source / caveat |
-| --- | --- | --- |
-| Throughput per connection | ~85–90 MB/s (older whitepaper); a re:Invent 2025 talk gave a rough "~100 MB/s per connection" | Rule of thumb, not an SLA |
-| Parallelism needed to saturate a 10 Gbps NIC | ~15 requests | 1,250 MB/s ÷ 85 MB/s |
-| Achievable from a single EC2 instance | Up to 100 Gb/s (official User Guide) | 200 Gbps-class instances exist in practice |
-| Small-object latency (S3 Standard) | Roughly 100–200 ms (official) | Includes first-byte latency |
-| S3 Express One Zone latency | Consistent single-digit ms | When accessed from the same AZ |
+| Metric                                       | Value                                                                                         | Source / caveat                            |
+| -------------------------------------------- | --------------------------------------------------------------------------------------------- | ------------------------------------------ |
+| Throughput per connection                    | ~85–90 MB/s (older whitepaper); a re:Invent 2025 talk gave a rough "~100 MB/s per connection" | Rule of thumb, not an SLA                  |
+| Parallelism needed to saturate a 10 Gbps NIC | ~15 requests                                                                                  | 1,250 MB/s ÷ 85 MB/s                       |
+| Achievable from a single EC2 instance        | Up to 100 Gb/s (official User Guide)                                                          | 200 Gbps-class instances exist in practice |
+| Small-object latency (S3 Standard)           | Roughly 100–200 ms (official)                                                                 | Includes first-byte latency                |
+| S3 Express One Zone latency                  | Consistent single-digit ms                                                                    | When accessed from the same AZ             |
 
 Formula:
 
@@ -308,14 +308,14 @@ Required parallelism ≈ target throughput (MB/s) / per-connection (≈85–100 
 
 ### 5.3 EC2 networking caveats
 
-| Item | Details |
-| --- | --- |
-| ENA | Enhanced networking required on all current instances. Keep the driver up to date |
-| Per-flow limit | EC2 caps **bandwidth per flow (5-tuple)** (around 5 Gbps outside the same placement group). That's why parallel connections are essential |
-| Burst bandwidth | "Up to X Gbps" on small instances is a burst value. Sustained bandwidth is lower |
-| NAT Gateway | A single NAT GW also has a bandwidth limit. For S3, Gateway Endpoint is the only sensible choice |
-| Interface Endpoint (PrivateLink) | For private access from on-premises or other Regions. Billed per hour and per data processed |
-| DNS | S3 returns many IPs via DNS. Caching a single IP forever defeats load balancing |
+| Item                             | Details                                                                                                                                   |
+| -------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| ENA                              | Enhanced networking required on all current instances. Keep the driver up to date                                                         |
+| Per-flow limit                   | EC2 caps **bandwidth per flow (5-tuple)** (around 5 Gbps outside the same placement group). That's why parallel connections are essential |
+| Burst bandwidth                  | "Up to X Gbps" on small instances is a burst value. Sustained bandwidth is lower                                                          |
+| NAT Gateway                      | A single NAT GW also has a bandwidth limit. For S3, Gateway Endpoint is the only sensible choice                                          |
+| Interface Endpoint (PrivateLink) | For private access from on-premises or other Regions. Billed per hour and per data processed                                              |
+| DNS                              | S3 returns many IPs via DNS. Caching a single IP forever defeats load balancing                                                           |
 
 ## 6. CRT-based clients
 
@@ -423,17 +423,17 @@ umount ~/mnt
 
 Mountpoint's design principle: **file operations that can't be implemented efficiently with S3's object APIs are not supported**.
 
-| Operation | General purpose bucket | Directory bucket (Express One Zone) |
-| --- | --- | --- |
-| Read (sequential/random) | Yes | Yes |
-| Create new file | Yes (sequential writes from the start only) | Yes |
-| Overwrite existing file | Only with `--allow-overwrite` + `O_TRUNC` | Same |
-| Append | No | Yes with `--incremental-upload` (sequential writes at the end) |
-| Rename file | No | Yes (atomic rename via RenameObject) |
-| Rename directory | No | No |
-| Delete | Only with `--allow-delete` | Same |
-| chmod/chown/symlinks | No (set uniformly for the whole mount via `--uid`/`--gid`/`--file-mode`) | No |
-| Random writes | No | No |
+| Operation                | General purpose bucket                                                   | Directory bucket (Express One Zone)                            |
+| ------------------------ | ------------------------------------------------------------------------ | -------------------------------------------------------------- |
+| Read (sequential/random) | Yes                                                                      | Yes                                                            |
+| Create new file          | Yes (sequential writes from the start only)                              | Yes                                                            |
+| Overwrite existing file  | Only with `--allow-overwrite` + `O_TRUNC`                                | Same                                                           |
+| Append                   | No                                                                       | Yes with `--incremental-upload` (sequential writes at the end) |
+| Rename file              | No                                                                       | Yes (atomic rename via RenameObject)                           |
+| Rename directory         | No                                                                       | No                                                             |
+| Delete                   | Only with `--allow-delete`                                               | Same                                                           |
+| chmod/chown/symlinks     | No (set uniformly for the whole mount via `--uid`/`--gid`/`--file-mode`) | No                                                             |
+| Random writes            | No                                                                       | No                                                             |
 
 Consistency: new uploads are atomic, and the whole object becomes visible to other clients once `close` (or `fsync`) succeeds. With `--incremental-upload`, partial writes are visible along the way.
 
@@ -453,15 +453,15 @@ mount-s3 amzn-s3-demo-bucket ~/mnt \
 mount-s3 amzn-s3-demo-bucket ~/mnt --cache /mnt/nvme/c --metadata-ttl indefinite
 ```
 
-| Flag | Meaning |
-| --- | --- |
-| `--metadata-ttl <seconds\|minimal\|indefinite>` | Cache TTL for metadata (existence, size, ETag). Default is `minimal` (when caching is disabled) |
-| `--cache <DIR>` | Local cache of object contents. When enabled, the metadata TTL defaults to 60 seconds |
-| `--max-cache-size <MiB>` | Upper limit of the local cache |
-| `--cache-xz <directory-bucket>` | Shared cache in Express One Zone (for small objects read repeatedly from many instances) |
-| `--maximum-throughput-gbps` | Target bandwidth. Defaults to instance bandwidth on EC2, 10 Gbps elsewhere |
-| `--max-threads` | Number of concurrent file operations (default 16) |
-| `--read-part-size` / `--write-part-size` | Part size (default 8 MiB). Maximum write size is 10,000 × write-part-size, about 78 GiB by default |
+| Flag                                            | Meaning                                                                                            |
+| ----------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| `--metadata-ttl <seconds\|minimal\|indefinite>` | Cache TTL for metadata (existence, size, ETag). Default is `minimal` (when caching is disabled)    |
+| `--cache <DIR>`                                 | Local cache of object contents. When enabled, the metadata TTL defaults to 60 seconds              |
+| `--max-cache-size <MiB>`                        | Upper limit of the local cache                                                                     |
+| `--cache-xz <directory-bucket>`                 | Shared cache in Express One Zone (for small objects read repeatedly from many instances)           |
+| `--maximum-throughput-gbps`                     | Target bandwidth. Defaults to instance bandwidth on EC2, 10 Gbps elsewhere                         |
+| `--max-threads`                                 | Number of concurrent file operations (default 16)                                                  |
+| `--read-part-size` / `--write-part-size`        | Part size (default 8 MiB). Maximum write size is 10,000 × write-part-size, about 78 GiB by default |
 
 Mountpoint never deletes entries from the shared cache (`--cache-xz`), so always attach a **lifecycle expiration rule** to the directory bucket.
 
@@ -469,12 +469,12 @@ Mountpoint never deletes entries from the shared cache (`--cache-xz`), so always
 
 In April 2026, **Amazon S3 Files** (an EFS-based managed service that presents an S3 bucket as a full-featured file system) became GA. See [06-new-frontiers](06-new-frontiers.md) for details.
 
-| Aspect | Mountpoint | S3 Files |
-| --- | --- | --- |
-| Form | Client-side FUSE (OSS, free) | Managed network file system (paid) |
-| POSIX compatibility | Limited (no rename or random writes) | Full file system semantics |
-| Best suited for | Large-scale sequential reads, ML training data, read-heavy workloads | Existing file-based apps, shared writes, agent workspaces |
-| Write-back | Directly to S3 on `close` | Accumulated in the EFS cache and committed to S3 in batches |
+| Aspect              | Mountpoint                                                           | S3 Files                                                    |
+| ------------------- | -------------------------------------------------------------------- | ----------------------------------------------------------- |
+| Form                | Client-side FUSE (OSS, free)                                         | Managed network file system (paid)                          |
+| POSIX compatibility | Limited (no rename or random writes)                                 | Full file system semantics                                  |
+| Best suited for     | Large-scale sequential reads, ML training data, read-heavy workloads | Existing file-based apps, shared writes, agent workspaces   |
+| Write-back          | Directly to S3 on `close`                                            | Accumulated in the EFS cache and committed to S3 in batches |
 
 ## 8. Other connectors
 
@@ -514,14 +514,14 @@ Because it uses CRT, it is far faster than GETting samples one at a time with pl
 
 S3A is Apache Hadoop's S3 connector (`s3a://`). On EMR, EMRFS (`s3://`) is the default. Commonly tuned S3A parameters:
 
-| Property | Meaning |
-| --- | --- |
-| `fs.s3a.connection.maximum` | HTTP connection pool limit. Increase it to match parallelism |
-| `fs.s3a.threads.max` | Number of threads for uploads etc. |
-| `fs.s3a.multipart.size` | Multipart part size |
-| `fs.s3a.fast.upload.buffer` | `disk` / `array` / `bytebuffer` |
-| `fs.s3a.experimental.input.fadvise` | `random` (Parquet/ORC) / `sequential` / `normal` |
-| `fs.s3a.committer.name` | `magic` / `directory` / `partitioned` (S3A committers that avoid rename) |
+| Property                            | Meaning                                                                  |
+| ----------------------------------- | ------------------------------------------------------------------------ |
+| `fs.s3a.connection.maximum`         | HTTP connection pool limit. Increase it to match parallelism             |
+| `fs.s3a.threads.max`                | Number of threads for uploads etc.                                       |
+| `fs.s3a.multipart.size`             | Multipart part size                                                      |
+| `fs.s3a.fast.upload.buffer`         | `disk` / `array` / `bytebuffer`                                          |
+| `fs.s3a.experimental.input.fadvise` | `random` (Parquet/ORC) / `sequential` / `normal`                         |
+| `fs.s3a.committer.name`             | `magic` / `directory` / `partitioned` (S3A committers that avoid rename) |
 
 Because rename on S3 is copy + delete, Hadoop's traditional "write to a temporary directory and commit by rename" is slow and unsafe. Use the **S3A committers** (or a table format such as Iceberg).
 
@@ -529,10 +529,10 @@ In December 2024, AWS announced the **Analytics Accelerator Library for Amazon S
 
 ### 8.4 Two different things called s3fs
 
-| Name | What it is | Use |
-| --- | --- | --- |
-| `s3fs-fuse` | FUSE file system written in C++ | Long-standing, POSIX-leaning mount. Slower than Mountpoint but emulates rename etc. |
-| Python `s3fs` | fsspec-based Python library (`s3fs.S3FileSystem`) | Opening `s3://` from pandas / Dask / xarray |
+| Name          | What it is                                        | Use                                                                                 |
+| ------------- | ------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| `s3fs-fuse`   | FUSE file system written in C++                   | Long-standing, POSIX-leaning mount. Slower than Mountpoint but emulates rename etc. |
+| Python `s3fs` | fsspec-based Python library (`s3fs.S3FileSystem`) | Opening `s3://` from pandas / Dask / xarray                                         |
 
 ```python
 import pandas as pd
@@ -558,13 +558,13 @@ aws s3 cp big.bin s3://amzn-s3-demo-bucket/ \
   --endpoint-url https://s3-accelerate.amazonaws.com
 ```
 
-| Item | Details |
-| --- | --- |
-| Endpoint | `bucket.s3-accelerate.amazonaws.com` (dual-stack: `s3-accelerate.dualstack.amazonaws.com`) |
-| Constraints | No dots in the bucket name (DNS-compatible); up to about 30 minutes to take effect after enabling |
-| Pricing | Added on top of normal transfer charges. No extra charge for transfers that weren't accelerated |
-| Good for | Regular uploads of large files from distant locations, concentrated uploads from around the world |
-| Not good for | From EC2 in the same Region, large numbers of small files |
+| Item         | Details                                                                                           |
+| ------------ | ------------------------------------------------------------------------------------------------- |
+| Endpoint     | `bucket.s3-accelerate.amazonaws.com` (dual-stack: `s3-accelerate.dualstack.amazonaws.com`)        |
+| Constraints  | No dots in the bucket name (DNS-compatible); up to about 30 minutes to take effect after enabling |
+| Pricing      | Added on top of normal transfer charges. No extra charge for transfers that weren't accelerated   |
+| Good for     | Regular uploads of large files from distant locations, concentrated uploads from around the world |
+| Not good for | From EC2 in the same Region, large numbers of small files                                         |
 
 You can measure the benefit beforehand with the Speed Comparison tool.
 
@@ -606,29 +606,29 @@ When using SSE-KMS, the KMS key policy must also allow `kms:Decrypt` for `cloudf
 
 ### 11.1 Key facts
 
-| Item | Value / details |
-| --- | --- |
-| Announced | re:Invent 2023 |
-| Latency | Consistent single-digit ms (up to 10x faster than S3 Standard) |
-| Redundancy | Single AZ (you choose the AZ; place it in the same AZ as compute) |
-| Bucket type | **Directory bucket** (named in the form `name--usw2-az1--x-s3`) |
-| TPS | Up to 2 million GET/s and 200,000 PUT/s per directory bucket. **Defaults are 200,000 reads/s and 100,000 writes/s**; request a limit increase from Support for more |
-| Authentication | Session-based auth via `CreateSession` (temporary credentials expire after 5 minutes; the SDK refreshes them automatically) |
-| Append | Append to the end of existing objects (since November 2024; `--write-offset-bytes`) |
-| Rename | Atomic rename with `RenameObject` (since June 2025) |
-| Regions | 15 Regions total after 7 were added in September 2026 |
+| Item           | Value / details                                                                                                                                                     |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Announced      | re:Invent 2023                                                                                                                                                      |
+| Latency        | Consistent single-digit ms (up to 10x faster than S3 Standard)                                                                                                      |
+| Redundancy     | Single AZ (you choose the AZ; place it in the same AZ as compute)                                                                                                   |
+| Bucket type    | **Directory bucket** (named in the form `name--usw2-az1--x-s3`)                                                                                                     |
+| TPS            | Up to 2 million GET/s and 200,000 PUT/s per directory bucket. **Defaults are 200,000 reads/s and 100,000 writes/s**; request a limit increase from Support for more |
+| Authentication | Session-based auth via `CreateSession` (temporary credentials expire after 5 minutes; the SDK refreshes them automatically)                                         |
+| Append         | Append to the end of existing objects (since November 2024; `--write-offset-bytes`)                                                                                 |
+| Rename         | Atomic rename with `RenameObject` (since June 2025)                                                                                                                 |
+| Regions        | 15 Regions total after 7 were added in September 2026                                                                                                               |
 
 ### 11.2 April 2025 price reduction (us-east-1)
 
 Announced on the AWS News Blog, effective April 10, 2025.
 
-| Item | Old | New | Reduction |
-| --- | --- | --- | --- |
-| Storage (GB-month) | $0.16 | $0.11 | 31% |
-| PUT (per 1,000 requests) | $0.0025 (up to 512 KB) | $0.00113 | 55% |
-| GET (per 1,000 requests) | $0.0002 (up to 512 KB) | $0.00003 | 85% |
-| Data upload (GB) | $0.008 | $0.0032 | 60% |
-| Data retrieval (GB) | $0.0015 | $0.0006 | 60% |
+| Item                     | Old                    | New      | Reduction |
+| ------------------------ | ---------------------- | -------- | --------- |
+| Storage (GB-month)       | $0.16                  | $0.11    | 31%       |
+| PUT (per 1,000 requests) | $0.0025 (up to 512 KB) | $0.00113 | 55%       |
+| GET (per 1,000 requests) | $0.0002 (up to 512 KB) | $0.00003 | 85%       |
+| Data upload (GB)         | $0.008                 | $0.0032  | 60%       |
+| Data retrieval (GB)      | $0.0015                | $0.0006  | 60%       |
 
 At the same time, per-byte transfer charges changed to apply to **all bytes**, rather than only the portion above 512 KB.
 
@@ -686,25 +686,25 @@ flowchart TB
     B1 <-. "CRR (bidirectional replication)" .-> B2
 ```
 
-| Item | Details |
-| --- | --- |
-| Routing | Proximity-based, over the AWS global network |
-| Failover | Active-active or active-passive. Manual switching via failover controls |
-| Signing | Requires **SigV4A** (multi-Region signing). SDKs often depend on CRT for it |
+| Item             | Details                                                                                                 |
+| ---------------- | ------------------------------------------------------------------------------------------------------- |
+| Routing          | Proximity-based, over the AWS global network                                                            |
+| Failover         | Active-active or active-passive. Manual switching via failover controls                                 |
+| Signing          | Requires **SigV4A** (multi-Region signing). SDKs often depend on CRT for it                             |
 | Data consistency | MRAP itself does not replicate. **Configure replication separately** (RTC can also add a 15-minute SLA) |
-| Pricing | Data routing charges + acceleration charges (when over the internet) |
+| Pricing          | Data routing charges + acceleration charges (when over the internet)                                    |
 
 Performance-wise, steering clients worldwide to the nearest Region lowers latency. Note that when writes land in multiple Regions, data may be inconsistent during replication lag.
 
 ## 13. Benchmarking tools
 
-| Tool | Characteristics | Example |
-| --- | --- | --- |
-| `warp` (MinIO) | S3-compatible benchmark. Scenarios such as GET/PUT/mixed/list, distributed execution | `warp get --host s3.us-east-1.amazonaws.com --tls --bucket b --obj.size 64MiB --concurrent 64` |
-| `s5cmd` | Very fast CLI written in Go. Parallel `cp`/`rm`, wildcards | `s5cmd --numworkers 256 cp 's3://b/data/*' /mnt/nvme/` |
-| `elbencho` | Distributed storage benchmark. Measures files, block devices, and S3 with one tool | `elbencho --s3endpoints https://s3.us-east-1.amazonaws.com --s3key ... -w -t 32 -n 0 -N 100 -s 64M b` |
-| AWS CLI + CRT | Comparison close to real-world usage | `time aws s3 cp s3://b/50G.bin /dev/null` |
-| `fio` + Mountpoint | Measures as file I/O | `fio --filename=~/mnt/x --rw=read --bs=1M --numjobs=16` |
+| Tool               | Characteristics                                                                      | Example                                                                                               |
+| ------------------ | ------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------- |
+| `warp` (MinIO)     | S3-compatible benchmark. Scenarios such as GET/PUT/mixed/list, distributed execution | `warp get --host s3.us-east-1.amazonaws.com --tls --bucket b --obj.size 64MiB --concurrent 64`        |
+| `s5cmd`            | Very fast CLI written in Go. Parallel `cp`/`rm`, wildcards                           | `s5cmd --numworkers 256 cp 's3://b/data/*' /mnt/nvme/`                                                |
+| `elbencho`         | Distributed storage benchmark. Measures files, block devices, and S3 with one tool   | `elbencho --s3endpoints https://s3.us-east-1.amazonaws.com --s3key ... -w -t 32 -n 0 -N 100 -s 64M b` |
+| AWS CLI + CRT      | Comparison close to real-world usage                                                 | `time aws s3 cp s3://b/50G.bin /dev/null`                                                             |
+| `fio` + Mountpoint | Measures as file I/O                                                                 | `fio --filename=~/mnt/x --rw=read --bs=1M --numjobs=16`                                               |
 
 Benchmarking ground rules:
 
@@ -739,34 +739,34 @@ s5cmd run cmds.txt
 
 ## 14. Observability and troubleshooting
 
-| Tool | What to look at |
-| --- | --- |
-| CloudWatch request metrics (paid, per filter) | `AllRequests`, `4xxErrors`, `5xxErrors`, `FirstByteLatency`, `TotalRequestLatency`, `BytesDownloaded` |
-| S3 Storage Lens advanced metrics | 503 error counts, request origins, the **performance metrics** added in December 2025 (access patterns, cross-Region requests, object access counts), analysis across billions of prefixes |
-| Server access logs | `Turn-Around Time`, `Total Time`, HTTP status, key. Source Region information since February 2026; delivery to CloudWatch Logs / S3 Tables since June 2026 |
-| CloudTrail data events | Who called what (more for auditing than performance analysis) |
-| SDK metrics / logs | Retry counts, latency distribution |
+| Tool                                          | What to look at                                                                                                                                                                            |
+| --------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| CloudWatch request metrics (paid, per filter) | `AllRequests`, `4xxErrors`, `5xxErrors`, `FirstByteLatency`, `TotalRequestLatency`, `BytesDownloaded`                                                                                      |
+| S3 Storage Lens advanced metrics              | 503 error counts, request origins, the **performance metrics** added in December 2025 (access patterns, cross-Region requests, object access counts), analysis across billions of prefixes |
+| Server access logs                            | `Turn-Around Time`, `Total Time`, HTTP status, key. Source Region information since February 2026; delivery to CloudWatch Logs / S3 Tables since June 2026                                 |
+| CloudTrail data events                        | Who called what (more for auditing than performance analysis)                                                                                                                              |
+| SDK metrics / logs                            | Retry counts, latency distribution                                                                                                                                                         |
 
 A large gap between `FirstByteLatency` (from S3 receiving the request to returning the first byte) and `TotalRequestLatency` → the network or client-side receiving is slow. High `FirstByteLatency` itself → suspect the S3 side (or throttling).
 
 ## 15. Performance design patterns cheat sheet
 
-| Goal | Pattern | Features / tools |
-| --- | --- | --- |
-| Upload huge files as fast as possible | Parallel multipart, CRC64NVME | CRT (CLI/boto3/Java), s5cmd |
-| Download huge files as fast as possible | Parallel Range GETs aligned to part boundaries | CRT, `--part-number` |
-| Tens of thousands of PUTs per second | Prefix distribution + ramp-up + backoff | Shard prefixes, standard/adaptive retries |
-| Low-latency small objects | Express One Zone in the same AZ, or CloudFront/ElastiCache | Directory buckets |
-| Global distribution | CDN caching | CloudFront + OAC |
-| Uploads from around the world | Receive at the edge | Transfer Acceleration, MRAP |
-| Loading ML training data | Sharding (tar/WebDataset/Parquet), sequential reads | PyTorch Connector, Mountpoint (+ cache) |
-| Saving checkpoints | Parallel multipart, stage first in Express One Zone | S3Checkpoint, DCP |
-| Faster analytics queries | Columnar + partitioning + right-sized files (128 MB–1 GB) | Parquet, Iceberg, S3 Tables automatic compaction |
-| Bulk processing of many objects | Manifest-driven instead of List | S3 Batch Operations, S3 Inventory, S3 Metadata |
-| Escaping small-file hell | Combine files (compaction) | S3 Tables, repartition with Spark |
-| Avoiding KMS throttling | Bucket key | S3 Bucket Key |
-| Avoiding NAT cost and bottlenecks | VPC Gateway Endpoint | S3 prefix list in the route table |
-| Existing apps that require a file API | Managed file system | S3 Files, FSx for Lustre (S3 integration) |
+| Goal                                    | Pattern                                                    | Features / tools                                 |
+| --------------------------------------- | ---------------------------------------------------------- | ------------------------------------------------ |
+| Upload huge files as fast as possible   | Parallel multipart, CRC64NVME                              | CRT (CLI/boto3/Java), s5cmd                      |
+| Download huge files as fast as possible | Parallel Range GETs aligned to part boundaries             | CRT, `--part-number`                             |
+| Tens of thousands of PUTs per second    | Prefix distribution + ramp-up + backoff                    | Shard prefixes, standard/adaptive retries        |
+| Low-latency small objects               | Express One Zone in the same AZ, or CloudFront/ElastiCache | Directory buckets                                |
+| Global distribution                     | CDN caching                                                | CloudFront + OAC                                 |
+| Uploads from around the world           | Receive at the edge                                        | Transfer Acceleration, MRAP                      |
+| Loading ML training data                | Sharding (tar/WebDataset/Parquet), sequential reads        | PyTorch Connector, Mountpoint (+ cache)          |
+| Saving checkpoints                      | Parallel multipart, stage first in Express One Zone        | S3Checkpoint, DCP                                |
+| Faster analytics queries                | Columnar + partitioning + right-sized files (128 MB–1 GB)  | Parquet, Iceberg, S3 Tables automatic compaction |
+| Bulk processing of many objects         | Manifest-driven instead of List                            | S3 Batch Operations, S3 Inventory, S3 Metadata   |
+| Escaping small-file hell                | Combine files (compaction)                                 | S3 Tables, repartition with Spark                |
+| Avoiding KMS throttling                 | Bucket key                                                 | S3 Bucket Key                                    |
+| Avoiding NAT cost and bottlenecks       | VPC Gateway Endpoint                                       | S3 prefix list in the route table                |
+| Existing apps that require a file API   | Managed file system                                        | S3 Files, FSx for Lustre (S3 integration)        |
 
 ## 16. Anti-patterns
 

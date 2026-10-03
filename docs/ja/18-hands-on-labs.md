@@ -10,14 +10,14 @@ _最終確認: 2026-10-03_
 
 ### 0.1 ツール
 
-| ツール | 用途 | 入れ方の例 |
-| --- | --- | --- |
-| AWS CLI v2 | 全ラボ | `brew install awscli` (本章は v2.37.7 で確認) |
-| jq | JSON 整形 | `brew install jq` |
-| Docker | ローカル S3 互換サーバー | Docker Desktop / Rancher Desktop / colima など |
-| s5cmd | Lab 12 | `brew install peak/tap/s5cmd` (または `peakcom/s5cmd` コンテナイメージ) |
-| warp | Lab 12 | GitHub Releases (`minio/warp`) からバイナリ取得 (または `minio/warp` コンテナイメージ) |
-| Python 3.13 + pip | Lab 5 | `brew install python@3.13` |
+| ツール            | 用途                     | 入れ方の例                                                                             |
+| ----------------- | ------------------------ | -------------------------------------------------------------------------------------- |
+| AWS CLI v2        | 全ラボ                   | `brew install awscli` (本章は v2.37.7 で確認)                                          |
+| jq                | JSON 整形                | `brew install jq`                                                                      |
+| Docker            | ローカル S3 互換サーバー | Docker Desktop / Rancher Desktop / colima など                                         |
+| s5cmd             | Lab 12                   | `brew install peak/tap/s5cmd` (または `peakcom/s5cmd` コンテナイメージ)                |
+| warp              | Lab 12                   | GitHub Releases (`minio/warp`) からバイナリ取得 (または `minio/warp` コンテナイメージ) |
+| Python 3.13 + pip | Lab 5                    | `brew install python@3.13`                                                             |
 
 ### 0.2 実 AWS 用の環境変数
 
@@ -87,20 +87,20 @@ aws --endpoint-url http://localhost:4566 s3 ls
 
 ### 0.5 ラボとローカル環境の対応
 
-| ラボ | 実 AWS | MinIO 互換 (silo) | LocalStack |
-| --- | --- | --- | --- |
-| Lab 1 バケット + アップロード + Presign | OK | 手順 2 以外 OK (Block Public Access / Object Ownership は `NotImplemented`、デフォルト暗号化なし) | OK |
-| Lab 2 バージョニング | OK | OK | OK |
-| Lab 3 ライフサイクル + Intelligent-Tiering | OK | 失効ルールのみ (Transitions、`AbortIncompleteMultipartUpload`、`INTELLIGENT_TIERING` クラス、Intelligent-Tiering 設定は拒否される) | 設定 API のみ |
-| Lab 4 CloudFront OAC | OK | 不可 | 一部 |
-| Lab 5 イベント → Lambda | OK | 不可 (Webhook 通知は可) | OK |
-| Lab 6 CRR | OK | 別方式 (サイトレプリケーション) | 一部 |
-| Lab 7 Object Lock | OK | OK (削除拒否時のエラーコードが異なる) | 一部 |
-| Lab 8 バケットポリシー / 403 | OK | 別方式 (MinIO ポリシー) | 評価は簡略 |
-| Lab 9 手動マルチパート | OK | OK | OK |
-| Lab 10 Athena / S3 Tables | OK | 不可 | 不可 |
-| Lab 11 S3 Vectors | OK | 不可 | 不可 |
-| Lab 12 ベンチマーク | OK | OK (ローカル性能になる) | 非推奨 |
+| ラボ                                       | 実 AWS | MinIO 互換 (silo)                                                                                                                  | LocalStack    |
+| ------------------------------------------ | ------ | ---------------------------------------------------------------------------------------------------------------------------------- | ------------- |
+| Lab 1 バケット + アップロード + Presign    | OK     | 手順 2 以外 OK (Block Public Access / Object Ownership は `NotImplemented`、デフォルト暗号化なし)                                  | OK            |
+| Lab 2 バージョニング                       | OK     | OK                                                                                                                                 | OK            |
+| Lab 3 ライフサイクル + Intelligent-Tiering | OK     | 失効ルールのみ (Transitions、`AbortIncompleteMultipartUpload`、`INTELLIGENT_TIERING` クラス、Intelligent-Tiering 設定は拒否される) | 設定 API のみ |
+| Lab 4 CloudFront OAC                       | OK     | 不可                                                                                                                               | 一部          |
+| Lab 5 イベント → Lambda                    | OK     | 不可 (Webhook 通知は可)                                                                                                            | OK            |
+| Lab 6 CRR                                  | OK     | 別方式 (サイトレプリケーション)                                                                                                    | 一部          |
+| Lab 7 Object Lock                          | OK     | OK (削除拒否時のエラーコードが異なる)                                                                                              | 一部          |
+| Lab 8 バケットポリシー / 403               | OK     | 別方式 (MinIO ポリシー)                                                                                                            | 評価は簡略    |
+| Lab 9 手動マルチパート                     | OK     | OK                                                                                                                                 | OK            |
+| Lab 10 Athena / S3 Tables                  | OK     | 不可                                                                                                                               | 不可          |
+| Lab 11 S3 Vectors                          | OK     | 不可                                                                                                                               | 不可          |
+| Lab 12 ベンチマーク                        | OK     | OK (ローカル性能になる)                                                                                                            | 非推奨        |
 
 silo 列は 2026-10-03 に実際にラボを実行して確認した (Lab 1〜3、7、9、12)。Lab 4、5、6、8、10、11 は実 AWS では実行しておらず、同じコマンドをローカルのモック (moto 5.2.3 サーバー)に送って AWS CLI が引数を受け付けることだけを確認した。LocalStack 列は未検証 (0.4 参照)。
 

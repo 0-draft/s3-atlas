@@ -18,14 +18,14 @@ _Last verified: 2026-10-03_
 
 ### 1.1 Categories
 
-| Category | Representatives | Revenue model | Main battleground against S3 |
-| --- | --- | --- | --- |
-| Hyperscalers | Google Cloud Storage, Azure Blob, OCI, IBM COS, Alibaba OSS | Lock-in of compute + data | As "the data store inside the same cloud" |
-| Edge / CDN | Cloudflare R2, Akamai Object Storage | Added value for the network business | Win delivery workloads with free or cheap egress |
-| Low-cost specialists (alt-cloud) | Backblaze B2, Wasabi, Hetzner, DigitalOcean Spaces | Low price per unit of capacity | Backup / archive / small and mid-sized apps |
-| Emerging globally distributed | Tigris, Storj | Architectural differentiation | Multi-region delivery, AI inference |
-| Self-hosted OSS | MinIO (AIStor), Ceph RGW, SeaweedFS, Garage | Support / commercial edition | On-prem, edge, development environments |
-| Commercial on-prem | VAST Data, Everpure (formerly Pure Storage) FlashBlade, NetApp StorageGRID, Dell ObjectScale/ECS | Hardware + subscription | Repatriation, AI training infrastructure |
+| Category                         | Representatives                                                                                  | Revenue model                        | Main battleground against S3                     |
+| -------------------------------- | ------------------------------------------------------------------------------------------------ | ------------------------------------ | ------------------------------------------------ |
+| Hyperscalers                     | Google Cloud Storage, Azure Blob, OCI, IBM COS, Alibaba OSS                                      | Lock-in of compute + data            | As "the data store inside the same cloud"        |
+| Edge / CDN                       | Cloudflare R2, Akamai Object Storage                                                             | Added value for the network business | Win delivery workloads with free or cheap egress |
+| Low-cost specialists (alt-cloud) | Backblaze B2, Wasabi, Hetzner, DigitalOcean Spaces                                               | Low price per unit of capacity       | Backup / archive / small and mid-sized apps      |
+| Emerging globally distributed    | Tigris, Storj                                                                                    | Architectural differentiation        | Multi-region delivery, AI inference              |
+| Self-hosted OSS                  | MinIO (AIStor), Ceph RGW, SeaweedFS, Garage                                                      | Support / commercial edition         | On-prem, edge, development environments          |
+| Commercial on-prem               | VAST Data, Everpure (formerly Pure Storage) FlashBlade, NetApp StorageGRID, Dell ObjectScale/ECS | Hardware + subscription              | Repatriation, AI training infrastructure         |
 
 ### 1.2 Positioning (subjective assessment)
 
@@ -66,22 +66,22 @@ How to read it:
 
 Units are USD. `Storage` is per GB-month, `egress` is the first paid internet-egress tier, and requests are per 1,000.
 
-| Service | Storage $/GB-month | Egress $/GB | PUT $/1k | GET $/1k | Minimum storage duration | Free egress condition |
-| --- | --- | --- | --- | --- | --- | --- |
-| AWS S3 Standard (us-east-1) | 0.023 (0.022 above 50TB, 0.021 above 500TB) | 0.09 (first 10TB) | 0.005 | 0.0004 | None | 100GB/month (aggregated across all services), free to CloudFront |
-| Google Cloud Storage Standard (us-central1) | 0.020 | 0.12 (0 to 10TiB) | 0.005 | 0.0004 | None | 100GB/month (from North America, Always Free) |
-| Azure Blob Hot LRS (East US) | 0.0208 | 0.087 (100GB to 10TB) | 0.005 | 0.0004 | None | 100GB/month |
-| Cloudflare R2 Standard | 0.015 | 0 | 0.0045 | 0.00036 | None | Always free |
-| Backblaze B2 | 0.00695 | 0.01 (overage) | 0 | 0 | None | Up to 3x average stored volume |
-| Wasabi | 0.00799 | 0 | 0 | 0 | 90 days | Monthly egress ≤ stored volume (fair use) |
-| OCI Object Storage Standard | 0.0255 | 0.0085 | 0.00034 | 0.00034 | None | 10TB/month |
-| IBM COS Standard (Regional, us-south) | 0.023 (0.0209 at 500TB+) | 0.09 (0 to 50TB) | 0.0052 | 0.00042 | None | None |
-| Alibaba OSS Standard LRS (US Virginia) | 0.016 (first 5GB free) | 0.076 (100GB to 10TB) | 0.0014 (free up to 100 million) | 0.0001 (free up to 500 million) | None | 100GB/month |
-| DigitalOcean Spaces | 250GiB included in $5/month, 0.02 overage | 0.01 (above 1TiB) | 0 | 0 | None | 1TiB/month included |
-| Akamai Object Storage | 250GB included in $5/month, 0.02 overage | 0.005 (above 1TB) | 0 | 0 | None | 1TB/month included (transfer pool) |
-| Hetzner Object Storage | 1TB included in base $7.99 (EUR 6.49)/month, $0.0123/TB-hour overage (≈ 0.00898/GB-month) | 0.0012 (overage $1.20/TB, EUR 1.00/TB) | 0 | 0 | None | 1TB/month included |
-| Tigris Standard | 0.02 | 0 | 0.005 | 0.0005 | None | Always free |
-| Storj Standard | 0.007 | 0.007 | 0 | 0 | 30 days | None |
+| Service                                     | Storage $/GB-month                                                                        | Egress $/GB                            | PUT $/1k                        | GET $/1k                        | Minimum storage duration | Free egress condition                                            |
+| ------------------------------------------- | ----------------------------------------------------------------------------------------- | -------------------------------------- | ------------------------------- | ------------------------------- | ------------------------ | ---------------------------------------------------------------- |
+| AWS S3 Standard (us-east-1)                 | 0.023 (0.022 above 50TB, 0.021 above 500TB)                                               | 0.09 (first 10TB)                      | 0.005                           | 0.0004                          | None                     | 100GB/month (aggregated across all services), free to CloudFront |
+| Google Cloud Storage Standard (us-central1) | 0.020                                                                                     | 0.12 (0 to 10TiB)                      | 0.005                           | 0.0004                          | None                     | 100GB/month (from North America, Always Free)                    |
+| Azure Blob Hot LRS (East US)                | 0.0208                                                                                    | 0.087 (100GB to 10TB)                  | 0.005                           | 0.0004                          | None                     | 100GB/month                                                      |
+| Cloudflare R2 Standard                      | 0.015                                                                                     | 0                                      | 0.0045                          | 0.00036                         | None                     | Always free                                                      |
+| Backblaze B2                                | 0.00695                                                                                   | 0.01 (overage)                         | 0                               | 0                               | None                     | Up to 3x average stored volume                                   |
+| Wasabi                                      | 0.00799                                                                                   | 0                                      | 0                               | 0                               | 90 days                  | Monthly egress ≤ stored volume (fair use)                        |
+| OCI Object Storage Standard                 | 0.0255                                                                                    | 0.0085                                 | 0.00034                         | 0.00034                         | None                     | 10TB/month                                                       |
+| IBM COS Standard (Regional, us-south)       | 0.023 (0.0209 at 500TB+)                                                                  | 0.09 (0 to 50TB)                       | 0.0052                          | 0.00042                         | None                     | None                                                             |
+| Alibaba OSS Standard LRS (US Virginia)      | 0.016 (first 5GB free)                                                                    | 0.076 (100GB to 10TB)                  | 0.0014 (free up to 100 million) | 0.0001 (free up to 500 million) | None                     | 100GB/month                                                      |
+| DigitalOcean Spaces                         | 250GiB included in $5/month, 0.02 overage                                                 | 0.01 (above 1TiB)                      | 0                               | 0                               | None                     | 1TiB/month included                                              |
+| Akamai Object Storage                       | 250GB included in $5/month, 0.02 overage                                                  | 0.005 (above 1TB)                      | 0                               | 0                               | None                     | 1TB/month included (transfer pool)                               |
+| Hetzner Object Storage                      | 1TB included in base $7.99 (EUR 6.49)/month, $0.0123/TB-hour overage (≈ 0.00898/GB-month) | 0.0012 (overage $1.20/TB, EUR 1.00/TB) | 0                               | 0                               | None                     | 1TB/month included                                               |
+| Tigris Standard                             | 0.02                                                                                      | 0                                      | 0.005                           | 0.0005                          | None                     | Always free                                                      |
+| Storj Standard                              | 0.007                                                                                     | 0.007                                  | 0                               | 0                               | 30 days                  | None                                                             |
 
 Caveats:
 
@@ -117,18 +117,18 @@ xychart-beta
 
 ### 2.4 Hyperscaler archive tiers
 
-| Service | Tier | Storage $/GB-month | Minimum storage duration | Retrieval |
-| --- | --- | --- | --- | --- |
-| AWS | S3 Standard-IA | 0.0125 | 30 days | $0.01/GB |
-| AWS | S3 Glacier Instant Retrieval | 0.004 | 90 days | Milliseconds, $0.03/GB |
-| AWS | S3 Glacier Flexible Retrieval | 0.0036 | 90 days | Minutes to hours |
-| AWS | S3 Glacier Deep Archive | 0.00099 | 180 days | 12 to 48 hours |
-| Google | Nearline / Coldline / Archive (us-central1) | 0.010 / 0.004 / 0.0012 | 30 / 90 / 365 days | Immediate (retrieval fees apply) |
-| Azure | Archive LRS (East US) | 0.00099 | 180 days | Rehydration takes hours, $0.02/GB (priority $0.10/GB) |
-| OCI | Archive | 0.0026 | 90 days | Restore required; at most 1 hour from the restore request to the first byte (Oracle docs) |
-| Cloudflare R2 | Infrequent Access | 0.01 | 30 days | $0.01/GB |
-| Tigris | Archive | 0.004 | 90 days | Restore-based |
-| DigitalOcean | Spaces Cold | 0.007/GiB | Early deletion charges apply | $0.01/GiB |
+| Service       | Tier                                        | Storage $/GB-month     | Minimum storage duration     | Retrieval                                                                                 |
+| ------------- | ------------------------------------------- | ---------------------- | ---------------------------- | ----------------------------------------------------------------------------------------- |
+| AWS           | S3 Standard-IA                              | 0.0125                 | 30 days                      | $0.01/GB                                                                                  |
+| AWS           | S3 Glacier Instant Retrieval                | 0.004                  | 90 days                      | Milliseconds, $0.03/GB                                                                    |
+| AWS           | S3 Glacier Flexible Retrieval               | 0.0036                 | 90 days                      | Minutes to hours                                                                          |
+| AWS           | S3 Glacier Deep Archive                     | 0.00099                | 180 days                     | 12 to 48 hours                                                                            |
+| Google        | Nearline / Coldline / Archive (us-central1) | 0.010 / 0.004 / 0.0012 | 30 / 90 / 365 days           | Immediate (retrieval fees apply)                                                          |
+| Azure         | Archive LRS (East US)                       | 0.00099                | 180 days                     | Rehydration takes hours, $0.02/GB (priority $0.10/GB)                                     |
+| OCI           | Archive                                     | 0.0026                 | 90 days                      | Restore required; at most 1 hour from the restore request to the first byte (Oracle docs) |
+| Cloudflare R2 | Infrequent Access                           | 0.01                   | 30 days                      | $0.01/GB                                                                                  |
+| Tigris        | Archive                                     | 0.004                  | 90 days                      | Restore-based                                                                             |
+| DigitalOcean  | Spaces Cold                                 | 0.007/GiB              | Early deletion charges apply | $0.01/GiB                                                                                 |
 
 AWS Glacier prices are known list prices confirmed on the S3 pricing page (us-east-1). GCS Nearline/Coldline/Archive values are the official pricing page's hourly rates ($0.000013699 / $0.000005479 / $0.000001644 per GiB-hour) × 730 hours, and the 30 / 90 / 365-day minimum durations were confirmed on the same page. The OCI Archive price is from the Oracle price API (B91633).
 
@@ -138,30 +138,30 @@ AWS Glacier prices are known list prices confirmed on the S3 pricing page (us-ea
 
 Legend: ○ = supported / △ = partial, preview, or via a separate first-party product / × = not supported, or absent from the official API/feature list / ? = the official documentation does not say. Every cell was checked against official documentation on 2026-10-03; the only cells left as ? are strong consistency for Backblaze B2, DigitalOcean Spaces, and Hetzner, whose docs make no statement about read-after-write consistency. In `data/competitors.json`, ○ and △ map to `true`, × to `false`, and ? to `null`.
 
-| Service | S3 compatibility | Strong consistency | Versioning | Object Lock | Lifecycle | Replication | Events | Iceberg/tables | Vector | CDN integration |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| AWS S3 | Native | ○ (since 2020-12) | ○ | ○ | ○ | ○ (CRR/SRR) | ○ (EventBridge/SNS/SQS/Lambda) | ○ S3 Tables | ○ S3 Vectors | ○ CloudFront |
-| GCS | △ (XML API + HMAC) | ○ | ○ | ○ Bucket Lock / Object Retention | ○ | ○ dual/multi-region | ○ Pub/Sub | ○ BigLake | × (Vertex AI is a separate product) | ○ Cloud CDN |
-| Azure Blob / ADLS Gen2 | × (proprietary API) | ○ | ○ | ○ Immutable storage | ○ | ○ Object replication / GRS | ○ Event Grid | △ via Fabric OneLake (Iceberg metadata virtualization) | × | ○ Front Door |
-| Cloudflare R2 | High | ○ | × | △ bucket lock (proprietary) | ○ | × | ○ via Queues | ○ Basin Catalog | × (Vectorize is a separate product) | ○ |
-| Backblaze B2 | High | ? (not stated in the docs) | ○ | ○ | ○ | ○ Cloud Replication | ○ (paid, access on request) | × | × | × (partner CDNs only) |
-| Wasabi | High | ○ ("immediate consistency") | ○ | ○ | ○ | ○ | ○ (delivered via AWS SNS) | × | × | × (partners only) |
-| OCI | △ | ○ | ○ | ○ Retention rules | ○ | ○ | ○ OCI Events | × (Autonomous AI Lakehouse queries Iceberg; no managed catalog documented) | × | × |
-| IBM COS | High | ○ | ○ | ○ | ○ | ○ | ○ | △ watsonx.data (Iceberg REST catalog) | × | △ via IBM Cloud Internet Services |
-| Alibaba OSS | △ | ○ | ○ | ○ WORM | ○ | ○ CRR | ○ | △ OSS Tables (invitational preview) | △ OSS Vectors (public preview) | ○ |
-| DO Spaces | High | ? (not stated in the docs) | ○ (API only) | × | △ (expiration only) | × | × | × | × | ○ |
-| Akamai | High | ○ | ○ | ○ (Governance/Compliance) | △ (expiration only) | × | × | × | × | ○ (origin for Akamai CDN) |
-| Hetzner | High | ? (not stated in the docs) | ○ | ○ | △ (expiry-based deletion) | × | × | × | × | × |
-| Tigris | High | ○ (scope set by bucket location type) | △ (via snapshots; no PutBucketVersioning) | × | ○ | ○ automatic global distribution | ○ (webhooks) | × | × | ○ (distributed cache) |
-| Storj | High | ○ | ○ | ○ | × (per-object TTL only) | Not needed (distributed) | × | × | × | × |
-| MinIO / AIStor | High | ○ | ○ | ○ | ○ | ○ | ○ | ○ AIStor Tables | × | × |
-| Ceph RGW | High | ○ (within a site) | ○ | ○ | ○ | ○ multisite (asynchronous) | ○ | × | × | × |
-| SeaweedFS | △ | ○ (replica writes W=N) | ○ | ○ | △ (expiration only) | ○ | △ (filer webhook/Kafka, no S3 bucket notifications) | ○ S3 Table Buckets + Iceberg REST catalog | △ Lance table buckets | × |
-| Garage | △ | ○ (default `consistency_mode`) | × | × | △ (expiration, etc.) | ○ (built in) | × | × | × | × |
-| VAST Data | High | ○ | ○ | ○ | △ (expiration rules per view) | ○ | ○ (Kafka) | × (VAST DataBase; no Iceberg catalog documented) | ○ vector indexing | × |
-| Everpure FlashBlade | High | ○ | ○ | ○ | △ (expiration) | ○ | × (not in the supported S3 operations) | × | × | × |
-| NetApp StorageGRID | High | ○ | ○ | ○ | ○ (ILM) | ○ CloudMirror | ○ (Kafka/webhook/SNS) | × | × | × |
-| Dell ObjectScale / ECS | High | ○ | ○ | ○ | ○ | ○ geo-replication | ○ (webhook; Kafka from 4.4) | ○ S3 Tables (GA in 4.4) | × | × |
+| Service                | S3 compatibility    | Strong consistency                    | Versioning                                | Object Lock                      | Lifecycle                     | Replication                     | Events                                              | Iceberg/tables                                                             | Vector                              | CDN integration                   |
+| ---------------------- | ------------------- | ------------------------------------- | ----------------------------------------- | -------------------------------- | ----------------------------- | ------------------------------- | --------------------------------------------------- | -------------------------------------------------------------------------- | ----------------------------------- | --------------------------------- |
+| AWS S3                 | Native              | ○ (since 2020-12)                     | ○                                         | ○                                | ○                             | ○ (CRR/SRR)                     | ○ (EventBridge/SNS/SQS/Lambda)                      | ○ S3 Tables                                                                | ○ S3 Vectors                        | ○ CloudFront                      |
+| GCS                    | △ (XML API + HMAC)  | ○                                     | ○                                         | ○ Bucket Lock / Object Retention | ○                             | ○ dual/multi-region             | ○ Pub/Sub                                           | ○ BigLake                                                                  | × (Vertex AI is a separate product) | ○ Cloud CDN                       |
+| Azure Blob / ADLS Gen2 | × (proprietary API) | ○                                     | ○                                         | ○ Immutable storage              | ○                             | ○ Object replication / GRS      | ○ Event Grid                                        | △ via Fabric OneLake (Iceberg metadata virtualization)                     | ×                                   | ○ Front Door                      |
+| Cloudflare R2          | High                | ○                                     | ×                                         | △ bucket lock (proprietary)      | ○                             | ×                               | ○ via Queues                                        | ○ Basin Catalog                                                            | × (Vectorize is a separate product) | ○                                 |
+| Backblaze B2           | High                | ? (not stated in the docs)            | ○                                         | ○                                | ○                             | ○ Cloud Replication             | ○ (paid, access on request)                         | ×                                                                          | ×                                   | × (partner CDNs only)             |
+| Wasabi                 | High                | ○ ("immediate consistency")           | ○                                         | ○                                | ○                             | ○                               | ○ (delivered via AWS SNS)                           | ×                                                                          | ×                                   | × (partners only)                 |
+| OCI                    | △                   | ○                                     | ○                                         | ○ Retention rules                | ○                             | ○                               | ○ OCI Events                                        | × (Autonomous AI Lakehouse queries Iceberg; no managed catalog documented) | ×                                   | ×                                 |
+| IBM COS                | High                | ○                                     | ○                                         | ○                                | ○                             | ○                               | ○                                                   | △ watsonx.data (Iceberg REST catalog)                                      | ×                                   | △ via IBM Cloud Internet Services |
+| Alibaba OSS            | △                   | ○                                     | ○                                         | ○ WORM                           | ○                             | ○ CRR                           | ○                                                   | △ OSS Tables (invitational preview)                                        | △ OSS Vectors (public preview)      | ○                                 |
+| DO Spaces              | High                | ? (not stated in the docs)            | ○ (API only)                              | ×                                | △ (expiration only)           | ×                               | ×                                                   | ×                                                                          | ×                                   | ○                                 |
+| Akamai                 | High                | ○                                     | ○                                         | ○ (Governance/Compliance)        | △ (expiration only)           | ×                               | ×                                                   | ×                                                                          | ×                                   | ○ (origin for Akamai CDN)         |
+| Hetzner                | High                | ? (not stated in the docs)            | ○                                         | ○                                | △ (expiry-based deletion)     | ×                               | ×                                                   | ×                                                                          | ×                                   | ×                                 |
+| Tigris                 | High                | ○ (scope set by bucket location type) | △ (via snapshots; no PutBucketVersioning) | ×                                | ○                             | ○ automatic global distribution | ○ (webhooks)                                        | ×                                                                          | ×                                   | ○ (distributed cache)             |
+| Storj                  | High                | ○                                     | ○                                         | ○                                | × (per-object TTL only)       | Not needed (distributed)        | ×                                                   | ×                                                                          | ×                                   | ×                                 |
+| MinIO / AIStor         | High                | ○                                     | ○                                         | ○                                | ○                             | ○                               | ○                                                   | ○ AIStor Tables                                                            | ×                                   | ×                                 |
+| Ceph RGW               | High                | ○ (within a site)                     | ○                                         | ○                                | ○                             | ○ multisite (asynchronous)      | ○                                                   | ×                                                                          | ×                                   | ×                                 |
+| SeaweedFS              | △                   | ○ (replica writes W=N)                | ○                                         | ○                                | △ (expiration only)           | ○                               | △ (filer webhook/Kafka, no S3 bucket notifications) | ○ S3 Table Buckets + Iceberg REST catalog                                  | △ Lance table buckets               | ×                                 |
+| Garage                 | △                   | ○ (default `consistency_mode`)        | ×                                         | ×                                | △ (expiration, etc.)          | ○ (built in)                    | ×                                                   | ×                                                                          | ×                                   | ×                                 |
+| VAST Data              | High                | ○                                     | ○                                         | ○                                | △ (expiration rules per view) | ○                               | ○ (Kafka)                                           | × (VAST DataBase; no Iceberg catalog documented)                           | ○ vector indexing                   | ×                                 |
+| Everpure FlashBlade    | High                | ○                                     | ○                                         | ○                                | △ (expiration)                | ○                               | × (not in the supported S3 operations)              | ×                                                                          | ×                                   | ×                                 |
+| NetApp StorageGRID     | High                | ○                                     | ○                                         | ○                                | ○ (ILM)                       | ○ CloudMirror                   | ○ (Kafka/webhook/SNS)                               | ×                                                                          | ×                                   | ×                                 |
+| Dell ObjectScale / ECS | High                | ○                                     | ○                                         | ○                                | ○                             | ○ geo-replication               | ○ (webhook; Kafka from 4.4)                         | ○ S3 Tables (GA in 4.4)                                                    | ×                                   | ×                                 |
 
 R2's S3 API implementation status was confirmed in the official documentation. `GetBucketVersioning`, `PutBucketReplication`, the notification configuration APIs, ACLs, and object tagging are **not implemented**. On the other hand, SSE-C and conditional headers (`If-Match`, etc.) are implemented.
 
@@ -169,12 +169,12 @@ R2's S3 API implementation status was confirmed in the official documentation. `
 
 S3 compatibility is not binary. The author looks at it in the following four levels.
 
-| Level | What it covers | Representatives | Migration caveats |
-| --- | --- | --- | --- |
-| L1: CRUD | PUT/GET/DELETE/List, Signature v4 | Almost everyone | Up to this level, swapping the endpoint is enough |
-| L2: Large objects | Multipart, Range GET, presigned URLs, SSE | Almost everyone | Watch for part size limits and differences in ETag calculation |
-| L3: Data protection | Versioning, Object Lock (Compliance/Governance), Lifecycle, Replication | B2, Wasabi, Ceph, MinIO, StorageGRID, FlashBlade | Backup software immutability features depend on this level |
-| L4: New-generation APIs | Conditional writes (`If-None-Match` / `If-Match`), checksums (CRC64NVME, etc.), S3 Express, S3 Tables/Vectors | AWS (all), R2 (conditional writes), Tigris and others (partial) | OSS that "uses S3 as a database" (Chapter 10) assumes L4 |
+| Level                   | What it covers                                                                                                | Representatives                                                 | Migration caveats                                              |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------- | -------------------------------------------------------------- |
+| L1: CRUD                | PUT/GET/DELETE/List, Signature v4                                                                             | Almost everyone                                                 | Up to this level, swapping the endpoint is enough              |
+| L2: Large objects       | Multipart, Range GET, presigned URLs, SSE                                                                     | Almost everyone                                                 | Watch for part size limits and differences in ETag calculation |
+| L3: Data protection     | Versioning, Object Lock (Compliance/Governance), Lifecycle, Replication                                       | B2, Wasabi, Ceph, MinIO, StorageGRID, FlashBlade                | Backup software immutability features depend on this level     |
+| L4: New-generation APIs | Conditional writes (`If-None-Match` / `If-Match`), checksums (CRC64NVME, etc.), S3 Express, S3 Tables/Vectors | AWS (all), R2 (conditional writes), Tigris and others (partial) | OSS that "uses S3 as a database" (Chapter 10) assumes L4       |
 
 **L4 is the new axis of differentiation**. Since S3 added conditional writes in 2024, "systems built on top of S3" such as WarpStream / SlateDB / turbopuffer have been designed around CAS (compare-and-swap). If a compatible store does not implement this, such OSS will not run on it.
 
@@ -325,12 +325,12 @@ timeline
 
 ### 4.15 Commercial on-prem
 
-| Product | Characteristics | Typical use cases |
-| --- | --- | --- |
-| VAST Data | All-flash disaggregated (DASE) architecture. The same data is accessible as file/object/table. Also has built-in vector and DB features | GPU clouds, AI training data and checkpoints |
-| Everpure (formerly Pure Storage) FlashBlade | Renamed to Everpure in February 2026. High-speed file + object. S3-compatible API | Where 37signals moved after leaving S3. Analytics and backup |
-| NetApp StorageGRID | Policy-driven ILM, multi-site distribution, tiering to cloud pools | Archives for existing NetApp customers |
-| Dell ObjectScale / ECS | For long-running enterprise operations. Geo-replication | Backup/analytics for companies standardized on Dell |
+| Product                                     | Characteristics                                                                                                                         | Typical use cases                                            |
+| ------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| VAST Data                                   | All-flash disaggregated (DASE) architecture. The same data is accessible as file/object/table. Also has built-in vector and DB features | GPU clouds, AI training data and checkpoints                 |
+| Everpure (formerly Pure Storage) FlashBlade | Renamed to Everpure in February 2026. High-speed file + object. S3-compatible API                                                       | Where 37signals moved after leaving S3. Analytics and backup |
+| NetApp StorageGRID                          | Policy-driven ILM, multi-site distribution, tiering to cloud pools                                                                      | Archives for existing NetApp customers                       |
+| Dell ObjectScale / ECS                      | For long-running enterprise operations. Geo-replication                                                                                 | Backup/analytics for companies standardized on Dell          |
 
 Gartner's evaluation framework: In 2025, Gartner **merged** its two MQs, "Primary Storage" and "Distributed File Systems and Object Storage (File and Object Storage Platforms)", **into the "Enterprise Storage Platforms" MQ** (published 2025-09-02). The Leaders are six companies: Dell, HPE, Huawei, IBM, NetApp, and Pure Storage. In the last standalone edition (2024 File and Object Storage Platforms), Dell, Pure, VAST, and others were Leaders. **Public cloud storage such as AWS S3 is out of scope for this MQ**; AWS is evaluated under "Strategic Cloud Platform Services" instead.
 
@@ -421,20 +421,20 @@ Hetzner      base $7.99 + storage 9 TB x $0.0123 x 730 h ≈ 80.81, egress 49 TB
 Wasabi       storage 10 TB x $7.99 = 79.90, but egress 50 TB > stored 10 TB violates fair use policy  -> not suitable
 ```
 
-| Service | Monthly (approx.) | Ratio to S3 |
-| --- | --- | --- |
-| GCS | $5,799 | 1.28 |
-| AWS S3 | $4,530 | 1.00 |
-| Azure Blob | $4,399 | 0.97 |
-| DO Spaces | $690 | 0.15 |
-| OCI | $599 | 0.13 |
-| Akamai | $445 | 0.10 |
-| Storj | $420 | 0.09 |
-| B2 | $270 | 0.06 |
-| Tigris | $210 | 0.05 |
-| R2 | $150 | 0.03 |
-| Hetzner | $148 (EUR 113) | 0.03 |
-| Wasabi | Not suitable | - |
+| Service    | Monthly (approx.) | Ratio to S3 |
+| ---------- | ----------------- | ----------- |
+| GCS        | $5,799            | 1.28        |
+| AWS S3     | $4,530            | 1.00        |
+| Azure Blob | $4,399            | 0.97        |
+| DO Spaces  | $690              | 0.15        |
+| OCI        | $599              | 0.13        |
+| Akamai     | $445              | 0.10        |
+| Storj      | $420              | 0.09        |
+| B2         | $270              | 0.06        |
+| Tigris     | $210              | 0.05        |
+| R2         | $150              | 0.03        |
+| Hetzner    | $148 (EUR 113)    | 0.03        |
+| Wasabi     | Not suitable      | -           |
 
 ```mermaid
 pie showData
@@ -498,11 +498,11 @@ Hetzner     $7.99 + 99 TB x 0.0123 x 730 ≈ 896.91      egress 9 TB x $1.20 = 1
 
 ### 5.5 Scenario summary
 
-| Scenario | Cheapest class | S3's relative position | Rational reasons to stay on S3 |
-| --- | --- | --- | --- |
-| A: Delivery (egress 5x) | R2 / Tigris / B2 | Most expensive group (30x) | Design built around CloudFront, most processing happens inside AWS |
-| B: Archive | S3 Deep Archive / Azure Archive | Cheapest group | Go with S3 (or Azure) without hesitation |
-| C: Storage-centric | B2 / Storj / Wasabi | about 4 to 4.5x | Analytics and ML run inside AWS, use of Intelligent-Tiering |
+| Scenario                | Cheapest class                  | S3's relative position     | Rational reasons to stay on S3                                     |
+| ----------------------- | ------------------------------- | -------------------------- | ------------------------------------------------------------------ |
+| A: Delivery (egress 5x) | R2 / Tigris / B2                | Most expensive group (30x) | Design built around CloudFront, most processing happens inside AWS |
+| B: Archive              | S3 Deep Archive / Azure Archive | Cheapest group             | Go with S3 (or Azure) without hesitation                           |
+| C: Storage-centric      | B2 / Storj / Wasabi             | about 4 to 4.5x            | Analytics and ML run inside AWS, use of Intelligent-Tiering        |
 
 ## 6. Selection guide
 
@@ -528,18 +528,18 @@ flowchart TD
 
 ### 6.2 Recommendations by use case
 
-| Use case | First choice | Second choice | Avoid | Reason |
-| --- | --- | --- | --- | --- |
-| Data lake / lakehouse on AWS | S3 (+ S3 Tables) | - | External storage | Free transfer within AWS, Athena/EMR/Glue integration |
-| Public delivery of images and video | R2 | S3 + CloudFront | Serving directly from S3 | Egress is 90% of the cost |
-| Backup (Veeam, etc.) | B2 / Wasabi | S3 Glacier IR | R2 (no versioning) | Object Lock + cheap capacity |
-| Statutory retention for 7 to 10 years | S3 Glacier Deep Archive | Azure Archive | Alt-clouds with only a single hot tier | Around $1/TB-month |
-| AI training data (GPUs in the cloud) | Storage in the same cloud | VAST (neocloud/on-prem) | Cross-cloud reads | Egress on every training run is fatal |
-| Global distribution of model weights | Tigris / R2 | S3 + CloudFront | Direct single-region S3 | Geo-distribution + free egress |
-| Shared data across multiple clouds | R2 | OCI | Direct transfer between hyperscalers | Neutral with zero egress |
-| EU data sovereignty | Hetzner / European providers | Each provider's EU regions + sovereign clouds | - | The operator's jurisdiction is the key issue |
-| Local S3 for development and CI | Garage / SeaweedFS / LocalStack | Ceph (large scale) | New adoption of MinIO community edition | Maintenance stopped in 2025 to 2026 |
-| 10PB scale, stable, predictable growth | On-prem (FlashBlade / Ceph) | S3 with long-term commitment discounts | Pay-as-you-go S3 | 37signals-style repatriation |
+| Use case                               | First choice                    | Second choice                                 | Avoid                                   | Reason                                                |
+| -------------------------------------- | ------------------------------- | --------------------------------------------- | --------------------------------------- | ----------------------------------------------------- |
+| Data lake / lakehouse on AWS           | S3 (+ S3 Tables)                | -                                             | External storage                        | Free transfer within AWS, Athena/EMR/Glue integration |
+| Public delivery of images and video    | R2                              | S3 + CloudFront                               | Serving directly from S3                | Egress is 90% of the cost                             |
+| Backup (Veeam, etc.)                   | B2 / Wasabi                     | S3 Glacier IR                                 | R2 (no versioning)                      | Object Lock + cheap capacity                          |
+| Statutory retention for 7 to 10 years  | S3 Glacier Deep Archive         | Azure Archive                                 | Alt-clouds with only a single hot tier  | Around $1/TB-month                                    |
+| AI training data (GPUs in the cloud)   | Storage in the same cloud       | VAST (neocloud/on-prem)                       | Cross-cloud reads                       | Egress on every training run is fatal                 |
+| Global distribution of model weights   | Tigris / R2                     | S3 + CloudFront                               | Direct single-region S3                 | Geo-distribution + free egress                        |
+| Shared data across multiple clouds     | R2                              | OCI                                           | Direct transfer between hyperscalers    | Neutral with zero egress                              |
+| EU data sovereignty                    | Hetzner / European providers    | Each provider's EU regions + sovereign clouds | -                                       | The operator's jurisdiction is the key issue          |
+| Local S3 for development and CI        | Garage / SeaweedFS / LocalStack | Ceph (large scale)                            | New adoption of MinIO community edition | Maintenance stopped in 2025 to 2026                   |
+| 10PB scale, stable, predictable growth | On-prem (FlashBlade / Ceph)     | S3 with long-term commitment discounts        | Pay-as-you-go S3                        | 37signals-style repatriation                          |
 
 ### 6.3 Author's opinion
 
@@ -552,13 +552,13 @@ flowchart TD
 
 ### 7.1 Case list
 
-| Year | Company | Direction | Scale | Outcome / numbers | Nature of sources |
-| --- | --- | --- | --- | --- | --- |
-| 2015 to 2016 | Dropbox | S3 → in-house (Magic Pocket) | Over 90% of about 500PB of user data moved (as of 2015-10) | Pre-IPO S-1 showed about $75M in opex reduction over two years | Dropbox tech blog, Wired, S-1 |
-| 2023 | 37signals (Basecamp, HEY) | AWS compute/DB → own DC | - | Announced savings from a $3.2M/year cloud bill | DHH's blog |
-| 2025 | 37signals | S3 → Pure Storage FlashBlade (18PB capacity across 2 sites) | About 10PB on S3, about 6PB moved | About $1.5M in hardware, under $200k/year to operate. Cut about $1.3 to 1.5M/year of S3 spend. AWS waived about $250k in egress. AWS account deleted on 2025-10-20 | DHH's blog/X, The Register, DCD |
-| 2024 onward | Many | S3 → R2 (delivery surface) | - | Incremental migration with Sippy / Super Slurper | Cloudflare |
-| 2025 to 2026 | MinIO users | MinIO → Garage / Ceph / SeaweedFS / fork | - | Triggered by the end of community edition maintenance | Personal blogs, Blocks & Files |
+| Year         | Company                   | Direction                                                   | Scale                                                      | Outcome / numbers                                                                                                                                                  | Nature of sources               |
+| ------------ | ------------------------- | ----------------------------------------------------------- | ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------- |
+| 2015 to 2016 | Dropbox                   | S3 → in-house (Magic Pocket)                                | Over 90% of about 500PB of user data moved (as of 2015-10) | Pre-IPO S-1 showed about $75M in opex reduction over two years                                                                                                     | Dropbox tech blog, Wired, S-1   |
+| 2023         | 37signals (Basecamp, HEY) | AWS compute/DB → own DC                                     | -                                                          | Announced savings from a $3.2M/year cloud bill                                                                                                                     | DHH's blog                      |
+| 2025         | 37signals                 | S3 → Pure Storage FlashBlade (18PB capacity across 2 sites) | About 10PB on S3, about 6PB moved                          | About $1.5M in hardware, under $200k/year to operate. Cut about $1.3 to 1.5M/year of S3 spend. AWS waived about $250k in egress. AWS account deleted on 2025-10-20 | DHH's blog/X, The Register, DCD |
+| 2024 onward  | Many                      | S3 → R2 (delivery surface)                                  | -                                                          | Incremental migration with Sippy / Super Slurper                                                                                                                   | Cloudflare                      |
+| 2025 to 2026 | MinIO users               | MinIO → Garage / Ceph / SeaweedFS / fork                    | -                                                          | Triggered by the end of community edition maintenance                                                                                                              | Personal blogs, Blocks & Files  |
 
 ### 7.2 Dropbox Magic Pocket
 
