@@ -171,6 +171,7 @@ export default function Compare() {
                   </ul>
                 </div>
               </div>
+              {c.pricingNote && <p className="muted small">{t(c.pricingNote)}</p>}
               <p className="muted small">
                 {t(UI.verified)}: {c.verifiedDate}
               </p>

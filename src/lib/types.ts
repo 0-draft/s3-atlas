@@ -82,6 +82,7 @@ export type Competitor = {
   weaknesses: TxtList;
   bestFor: Txt;
   pricingUrl: string;
+  pricingNote?: Txt;
   verifiedDate: string;
 };
 
