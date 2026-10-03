@@ -4,7 +4,7 @@ _Last verified: 2026-10-03_
 
 This chapter is the entry point to s3-atlas. It covers what S3 (Amazon Simple Storage Service) is, what shape it has, how it works, and how far it scales. Individual features (storage classes, security, pricing, and so on) are covered in depth in later chapters.
 
-Every number here was checked against official AWS documentation, the AWS News Blog, What's New posts, or published papers. Anything that could not be confirmed is marked "unverified".
+Numbers here were primarily checked against official AWS documentation, the AWS News Blog, What's New posts, or published papers. Numbers that rely on secondary sources (such as interview articles) are labelled "secondary source", and anything that could not be confirmed in a primary source is marked "unverified".
 
 ## Contents
 
@@ -645,8 +645,8 @@ Much of S3's internal structure is not public, but a rough picture emerges from 
 │                                                                       │
 │  ┌──────────────┐   ┌──────────────────────┐   ┌────────────────────┐ │
 │  │  Front end   │   │  Namespace / Index   │   │   Storage fleet    │ │
-│  │  fleet       │──▶│  (metadata: key →    │   │  (millions of      │ │
-│  │  DNS, LB,    │   │   data location)     │   │   HDDs + ShardStore│ │
+│  │  fleet       │──▶│  (metadata: key →    │   │  (tens of millions │ │
+│  │  DNS, LB,    │   │   data location)     │   │  of HDDs+ShardStore│ │
 │  │  REST API,   │──────────────────────────────▶│  erasure-coded     │ │
 │  │  authN/authZ │   └──────────────────────┘   │  shards            │ │
 │  └──────────────┘            ▲                 └────────────────────┘ │

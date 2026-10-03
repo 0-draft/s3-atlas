@@ -214,11 +214,12 @@ Key points:
 | Object size | Suggested part size | Reason |
 | --- | --- | --- |
 | Up to 100 MB | Single PUT or 8–16 MiB | Low overhead |
-| 100 MB–10 GB | 8–64 MiB | Balance between parallelism and request count |
-| 10 GB–1 TB | 64–256 MiB | Keeps the part count at or below 10,000 |
-| 1 TB–48.8 TiB | 1–5 GiB | Watch the part limit (must be at least `size / 10000`) |
+| 100 MB–10 GB | 8–64 MiB | Balance between parallelism and request count (8 MiB × 10,000 ≈ 78 GiB) |
+| 10 GB–600 GiB | 64–256 MiB | Fits within 64 MiB × 10,000 = 625 GiB |
+| 600 GiB–4.8 TiB | 512 MiB–1 GiB | Fits within 512 MiB × 10,000 = 5,000 GiB ≈ 4.88 TiB |
+| 4.8 TiB–48.8 TiB | `ceil(size / 10000)`–5 GiB | 1 GiB × 10,000 ≈ 9.77 TiB, 5 GiB × 10,000 ≈ 48.8 TiB. Exactly 48.8 TiB requires 5 GiB |
 
-The minimum part size is `ceil(object_size / 10000)`. The CLI automatically adjusts `multipart_chunksize` if the part count would exceed the limit.
+The minimum part size is `ceil(object_size / 10000)`. For example, 1 TiB needs at least 1,048,576 MiB / 10,000 ≈ 105 MiB per part; 64 MiB would exceed 10,000 parts. The CLI automatically adjusts `multipart_chunksize` if the part count would exceed the limit.
 
 ### 3.4 Checksums and multipart
 

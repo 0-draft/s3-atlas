@@ -461,7 +461,7 @@ A single job can process billions of objects and exabytes of data, with progress
 | Operation | What it does | Notes |
 | --- | --- | --- |
 | Copy | Copies objects (can also change metadata, storage class, and encryption) | Also works on directory buckets |
-| Compute checksums (2025-08) | Computes and reports checksums of stored objects without restoring or downloading them | SHA-1 / SHA-256 / CRC32 / CRC32C / CRC64 / MD5, etc. |
+| Compute checksums (2025-08) | Computes and reports checksums of stored objects without restoring or downloading them | SHA-1 / SHA-256 / CRC32 / CRC32C / CRC64NVME / MD5, etc. |
 | Delete all object tags | Removes all tags | |
 | Invoke AWS Lambda function | Arbitrary processing | Also works on directory buckets |
 | Replace all object tags | Replaces tags in bulk | |
@@ -474,7 +474,7 @@ A single job can process billions of objects and exabytes of data, with progress
 
 For objects in directory buckets, only Copy and Invoke Lambda are supported.
 
-At its 2025-08 announcement, Compute checksums supported SHA-1 / SHA-256 / CRC32 / CRC32C / CRC64 / MD5. It also supports SHA-512 and the XXHash family added in 2026-04: in the current API reference (`S3ComputeObjectChecksumOperation`), the valid values of `ChecksumAlgorithm` are the ten values `CRC32` / `CRC32C` / `CRC64NVME` / `MD5` / `SHA1` / `SHA256` / `SHA512` / `XXHASH64` / `XXHASH3` / `XXHASH128` (`ChecksumType` is `FULL_OBJECT` / `COMPOSITE`).
+At its 2025-08 announcement, Compute checksums supported SHA-1 / SHA-256 / CRC32 / CRC32C / CRC64NVME / MD5. It also supports SHA-512 and the XXHash family added in 2026-04: in the current API reference (`S3ComputeObjectChecksumOperation`), the valid values of `ChecksumAlgorithm` are the ten values `CRC32` / `CRC32C` / `CRC64NVME` / `MD5` / `SHA1` / `SHA256` / `SHA512` / `XXHASH64` / `XXHASH3` / `XXHASH128` (`ChecksumType` is `FULL_OBJECT` / `COMPOSITE`).
 
 ### 5.3 Manifests
 
@@ -1045,7 +1045,7 @@ An example that enforces conditional deletes (based on the example in the offici
 | Part size | 5 MiB to 5 GiB (except the last part) |
 | CopyObject (single request) | 5 GB. Larger objects require a multipart copy with UploadPartCopy |
 
-For objects around 50 TB, AWS recommends the AWS CRT-based S3 Transfer Manager. The part size limit has not changed (5 MiB to 5 GiB, up to 10,000 parts), and the multipart upload limits table in the S3 User Guide lists the maximum object size as 48.8 TiB. Because 10,000 parts × 5 GiB = 50,000 GiB ≈ 48.8 TiB, an object of the maximum size fits exactly when all 10,000 parts are at the 5 GiB maximum.
+For objects around 50 TB, AWS recommends the AWS CRT-based S3 Transfer Manager. The part size limit has not changed (5 MiB to 5 GiB, up to 10,000 parts), and the multipart upload limits table in the S3 User Guide lists the maximum object size as 48.8 TiB. Because 10,000 parts × 5 GiB = 50,000 GiB ≈ 48.8 TiB, an object of the maximum size fits exactly when all 10,000 parts are at the 5 GiB maximum. AWS markets this as "50 TB" by treating 50,000 GiB as 50 TB at 1 TB = 1,000 GB; the exact limit is 5 GiB × 10,000 = 50,000 GiB ÷ 1,024 = 48.828125 TiB (≈ 48.8 TiB), which is 53,687,091,200,000 bytes ≈ 53.7 TB in decimal units.
 
 ### 14.2 There is no real "rename"
 

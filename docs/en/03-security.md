@@ -19,7 +19,7 @@ Dated facts (for example, "SSE-C disabled by default in 2026-04") were checked a
 - Chapter 9 Network boundaries: VPC endpoints and data perimeters
 - Chapter 10 Logging, monitoring, and detection
 - Chapter 11 Common incident patterns
-- Chapter 12 Ready-to-use policies (14 policies)
+- Chapter 12 Ready-to-use policies (17 policies)
 - Chapter 13 Security checklist
 - References
 
@@ -377,7 +377,7 @@ aws s3api put-bucket-encryption \
   }'
 ```
 
-For background: in 2025-01 the AWS Security Blog reported an increase in activity where valid stolen credentials were used to run large numbers of SSE-C `CopyObject` calls that re-encrypted customer data under the attacker's key, and recommended blocking SSE-C unless an application needs it (Halcyon reported the same technique at the same time; see 11.4). However, the AWS Storage Blog notice of the 2026-04 default change (2025-11-19), the What's New post, and the FAQ do not mention this attack. The reasons AWS gives are that "there was no longer a practical security benefit to use SSE-C" after AWS KMS launched, that most modern workloads do not use SSE-C because it lacks flexibility, and "to streamline the encryption options that customers need to consider".
+For background: in 2025-01 the AWS Security Blog reported an increase in activity where valid stolen credentials were used to run large numbers of SSE-C `CopyObject` calls that re-encrypted customer data under the attacker's key, and recommended blocking SSE-C unless an application needs it (Halcyon reported the same technique at the same time; see 11.4). However, the AWS Storage Blog notice of the 2026-04 default change (2025-11-19), the What's New post, and the FAQ do not mention this attack. The reasons AWS gives are that "there was no longer a practical security benefit to use SSE-C" after AWS KMS launched, that "Most modern workloads do not use SSE-C encryption because it lacks the flexibility of SSE-KMS", and "to streamline the encryption options that customers need to consider".
 
 ### 5.7 Changing the encryption type after the fact: UpdateObjectEncryption (2026-01)
 

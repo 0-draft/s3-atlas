@@ -362,7 +362,7 @@ Associated costs when choosing Deep Archive:
 | Keeping the restored copy for 7 days | 102,400 GB × $0.023 × 7/30 | About $550 |
 | Using Standard retrieval for the restore instead | 102,400 GB × $0.02 | About $2,048 (8x Bulk) |
 
-Lesson: archive costs come down to two things: **bundle objects into large units** (at a 1 GB average, the 40 KB overhead is noise) and **use Bulk for restores that are not urgent**. If you instead had 10 billion objects averaging 100 KB, the overhead alone would be 8 KB × 10 billion ≈ 75 TB billed at the Standard rate (about $1,700/month).
+Lesson: archive costs come down to two things: **bundle objects into large units** (at a 1 GB average, the 40 KB overhead is noise) and **use Bulk for restores that are not urgent**. If you instead had 10 billion objects averaging 100 KB, the overhead alone would be (1) 8 KB × 10 billion ≈ 74.5 TiB (76,294 GB) at the Standard rate, 51,200 GB × $0.023 + 25,094 GB × $0.022 ≈ $1,730/month, plus (2) 32 KB × 10 billion ≈ 298 TiB (305,176 GB) at the Deep Archive rate, 305,176 GB × $0.00099 ≈ $302/month, for a total of about $2,030/month.
 
 ### 10.3 Example 3: a LIST-heavy data lake
 

@@ -461,7 +461,7 @@ flowchart LR
 | オペレーション | 内容 | 備考 |
 | --- | --- | --- |
 | Copy | オブジェクトをコピー (メタデータ・ストレージクラス・暗号化の変更も可) | ディレクトリバケットでも可 |
-| Compute checksums (2025-08) | 保存済みオブジェクトのチェックサムを、復元やダウンロードなしに計算しレポート | SHA-1 / SHA-256 / CRC32 / CRC32C / CRC64 / MD5 等 |
+| Compute checksums (2025-08) | 保存済みオブジェクトのチェックサムを、復元やダウンロードなしに計算しレポート | SHA-1 / SHA-256 / CRC32 / CRC32C / CRC64NVME / MD5 等 |
 | Delete all object tags | タグを全削除 | |
 | Invoke AWS Lambda function | 任意処理 | ディレクトリバケットでも可 |
 | Replace all object tags | タグを一括置換 | |
@@ -474,7 +474,7 @@ flowchart LR
 
 ディレクトリバケットのオブジェクトでは Copy と Invoke Lambda のみサポート。
 
-Compute checksums は 2025-08 の発表時点で SHA-1 / SHA-256 / CRC32 / CRC32C / CRC64 / MD5 をサポートしていた。2026-04 に追加された SHA-512・XXHash 系にも対応しており、現行 API リファレンス (`S3ComputeObjectChecksumOperation`) の `ChecksumAlgorithm` の有効値は `CRC32` / `CRC32C` / `CRC64NVME` / `MD5` / `SHA1` / `SHA256` / `SHA512` / `XXHASH64` / `XXHASH3` / `XXHASH128` の 10 種類 (`ChecksumType` は `FULL_OBJECT` / `COMPOSITE`)。
+Compute checksums は 2025-08 の発表時点で SHA-1 / SHA-256 / CRC32 / CRC32C / CRC64NVME / MD5 をサポートしていた。2026-04 に追加された SHA-512・XXHash 系にも対応しており、現行 API リファレンス (`S3ComputeObjectChecksumOperation`) の `ChecksumAlgorithm` の有効値は `CRC32` / `CRC32C` / `CRC64NVME` / `MD5` / `SHA1` / `SHA256` / `SHA512` / `XXHASH64` / `XXHASH3` / `XXHASH128` の 10 種類 (`ChecksumType` は `FULL_OBJECT` / `COMPOSITE`)。
 
 ### 5.3 マニフェスト
 
@@ -1045,7 +1045,7 @@ aws s3api delete-object --bucket amzn-s3-demo-bucket --key state.json \
 | パートサイズ | 5 MiB〜5 GiB (最終パートを除く) |
 | CopyObject (単一リクエスト) | 5 GB。それ以上は UploadPartCopy によるマルチパートコピー |
 
-50 TB 級のオブジェクトを扱うには AWS CRT ベースの S3 Transfer Manager の利用が推奨されている。パートサイズの上限は 5 GiB のまま変わっておらず (5 MiB〜5 GiB、最大 10,000 パート)、S3 User Guide のマルチパートアップロード上限表では最大オブジェクトサイズを 48.8 TiB と記載している。10,000 パート × 5 GiB = 50,000 GiB ≒ 48.8 TiB なので、最大サイズのオブジェクトは 10,000 パートすべてを上限の 5 GiB にしてちょうど収まる。
+50 TB 級のオブジェクトを扱うには AWS CRT ベースの S3 Transfer Manager の利用が推奨されている。パートサイズの上限は 5 GiB のまま変わっておらず (5 MiB〜5 GiB、最大 10,000 パート)、S3 User Guide のマルチパートアップロード上限表では最大オブジェクトサイズを 48.8 TiB と記載している。10,000 パート × 5 GiB = 50,000 GiB ≒ 48.8 TiB なので、最大サイズのオブジェクトは 10,000 パートすべてを上限の 5 GiB にしてちょうど収まる。AWS が「50 TB」と打ち出しているのは 50,000 GiB を 1 TB = 1,000 GB と見なして丸めた呼び方で、正確な上限は 5 GiB × 10,000 = 50,000 GiB ÷ 1,024 = 48.828125 TiB (≒ 48.8 TiB) である (10 進バイトでは 53,687,091,200,000 バイト ≒ 53.7 TB)。
 
 ### 14.2 「リネーム」は本来存在しない
 

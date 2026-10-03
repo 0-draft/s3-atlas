@@ -1291,7 +1291,7 @@ console.log(await res.Body.transformToString());
 
 ### 19.3 Go (AWS SDK for Go v2)
 
-2026-01-30 に `feature/s3/transfermanager` が GA となり、旧 `feature/s3/manager` は deprecated (まだ v0.x なので破壊的変更に注意)。
+2026-01-30 に新しい `feature/s3/transfermanager` が本番利用向けに GA となり、旧 `feature/s3/manager` は deprecated になった (pkg.go.dev 上の表記は "superceded by feature/s3/transfermanager")。ただしモジュールのバージョンは GA 後も v0.x のまま (2026-10-01 時点で v0.4.13)。Go の semver 慣習では v0 は API 互換性を保証しないので、マイナー更新でも破壊的変更がありうる前提でバージョンを固定し、更新時は CHANGELOG を確認する。旧 `feature/s3/manager` は v1.x (2026-09-30 時点で v1.23.11) で、deprecated だがリリースは続いている。
 
 ```go
 package main
@@ -1762,6 +1762,7 @@ aws s3api put-object --generate-cli-skeleton  # 入力 JSON の雛形
 - [AWS SDK for JavaScript v3: @aws-sdk/lib-storage](https://github.com/aws/aws-sdk-js-v3/tree/main/lib/lib-storage)
 - [AWS SDK for Go v2: feature/s3/transfermanager](https://pkg.go.dev/github.com/aws/aws-sdk-go-v2/feature/s3/transfermanager)
 - [S3 Transfer Manager v2 for Go GA (discussion #3306)](https://github.com/aws/aws-sdk-go-v2/discussions/3306)
+- [AWS SDK for Go v2: feature/s3/manager (deprecated)](https://pkg.go.dev/github.com/aws/aws-sdk-go-v2/feature/s3/manager)
 - [Terraform AWS provider: aws_s3_bucket](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket)
 - [AWS::S3::Bucket (CloudFormation)](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-s3-bucket.html)
 - [aws-cdk-lib.aws_s3.Bucket](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_s3.Bucket.html)
