@@ -844,7 +844,7 @@ curl -sI https://amzn-s3-demo-bucket.s3.ap-northeast-1.amazonaws.com/public.txt 
 
 ## 9. S3 on Outposts と S3 Files のオペレーション
 
-API Reference の Actions ページには上記 4 系統に加えて **S3 on Outposts** (`s3outposts`、エンドポイント管理のみ) と **S3 Files** (`s3files`、S3 バケットを EFS ベースのファイルシステムとしてマウントする新サービス) も載っている。`data/api.json` は 4 サービス (`s3` / `s3control` / `s3tables` / `s3vectors`) に限定しているため、この 2 つは本章の表だけに載せる。
+API Reference の Actions ページには上記 4 系統に加えて **S3 on Outposts** (`s3outposts`、エンドポイント管理のみ) と **S3 Files** (`s3files`、S3 バケットを EFS ベースのファイルシステムとしてマウントする新サービス) も載っている。`data/api.json` にはこの 2 つも `s3outposts` / `s3files` として含めている (全 309 オペレーション)。
 
 ### 9.1 S3 on Outposts (s3outposts)
 

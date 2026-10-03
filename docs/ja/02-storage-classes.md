@@ -423,7 +423,7 @@ flowchart TD
 
 ### 7.5 典型的なライフサイクル設定例
 
-ログを「30 日 Standard → 90 日まで Standard-IA → 1 年まで Glacier Flexible → 7 年で削除」、さらに未完了 multipart と古いバージョンを掃除する設定:
+ログを「30 日 Standard → 120 日まで Standard-IA → 1 年まで Glacier Flexible → 7 年まで Deep Archive → 削除」、さらに未完了 multipart と古いバージョンを掃除する設定:
 
 ```json
 {

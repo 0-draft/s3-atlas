@@ -11,7 +11,7 @@ All prices are **us-east-1 (N. Virginia), USD, verified 2026-10-03**. Sources ar
 ```text
 Access frequency  high ◀───────────────────────────────────────────────────▶ low
 Latency           short ◀──────────────────────────────────────────────────▶ long
-Storage price     high ◀───────────────────────────────────────────────────▶ cheap
+Storage price     high ◀───────────────────────────────────────────────────▶ low
 
  Express One Zone   Standard   Intelligent-Tiering   Standard-IA   Glacier IR   Glacier Flexible   Deep Archive
    $0.11            $0.023     $0.023–$0.00099        $0.0125       $0.004       $0.0036            $0.00099
@@ -140,7 +140,7 @@ DELETE and CANCEL are free. For Glacier Flexible / Deep Archive, the GET price a
 
 Additional notes:
 
-- Glacier Flexible Expedited requests may be rejected when demand is high. If you need them to be reliable, buy **Provisioned Capacity** ($100 / unit / month; each unit guarantees at least 3 Expedited retrievals every 5 minutes and up to 300 MB/s)
+- Glacier Flexible Expedited requests may be rejected when demand is high. If you need them to be reliable, buy **Provisioned Capacity** ($100 / unit / month; each unit provides at least 3 Expedited retrievals every 5 minutes and up to 300 MB/s of throughput)
 - With Expedited, objects under 250 MB are typically retrieved in 1–5 minutes; objects of 250 MB or more are retrieved at up to 300 MB/s
 - A restored copy exists for the number of days you specify, and during that time it is **also billed at the Standard rate** (on top of the archive's own charge)
 - Per account, expect about 1,000 TPS for restore requests and 1–2 PB/day of throughput
@@ -164,7 +164,7 @@ Moving objects between classes with lifecycle rules is billed as **one transitio
 The default storage class. If in doubt, start here.
 
 - Millisecond latency, high throughput
-- No minimum storage duration, no minimum billable size, no retrieval fee. Delete it whenever, make it as small as you like, read it as often as you like: you pay only storage and request charges
+- No minimum storage duration, no minimum billable size, no retrieval fee. Delete any time, store objects of any size, and read as often as you like: you pay only storage and request charges
 - Stored redundantly across three or more AZs
 - Typical uses: static assets for web/mobile, frequently read application data, the hot zone of a data lake, recent logs
 
@@ -224,7 +224,7 @@ Rough break-even for the monitoring fee: monitoring costs $0.0000025 per object 
 
 ### 5.4 S3 Standard-IA (`STANDARD_IA`)
 
-For data you rarely read but need immediately when you do.
+For data you read infrequently but need immediately when you do.
 
 - Storage is about half the price of Standard ($0.0125)
 - **Retrieval costs $0.01/GB**; PUT is 2x Standard and GET is 2.5x
@@ -328,7 +328,7 @@ Preconditions to check before using the flowchart:
 
 - If many **objects are smaller than 128 KB**, IA / GIR are costly because of the minimum billable size, and Glacier Flexible / Deep Archive are costly because of the 40 KB overhead. Staying in Standard is the safe choice (even Intelligent-Tiering pins objects under 128 KB to the Frequent tier). Alternatively, aggregate them with tar, Parquet, and so on before storing
 - If the **retention period is shorter than the minimum storage duration**, do not use that class
-- If **read volume (GB)** is high, estimate the retrieval fees. Choosing on storage price alone leads to nasty surprises
+- If **read volume (GB)** is high, estimate the retrieval fees. Choosing on storage price alone can lead to costly surprises
 
 ## 7. Lifecycle transition rules
 
@@ -378,7 +378,7 @@ Not allowed:
 - Upward transitions (for example, Standard-IA → Standard, Glacier → Standard). If needed, **restore (for Glacier classes) and then overwrite with CopyObject, specifying the class**
 - One Zone-IA → Standard-IA / Intelligent-Tiering / Glacier IR
 - Transitions to Reduced Redundancy from any class
-- **Express One Zone (directory buckets) cannot be a lifecycle transition target**. Lifecycle on directory buckets supports expiration only
+- **Express One Zone (directory buckets) does not support lifecycle transitions**. Lifecycle on directory buckets supports expiration only
 - Transitions of objects whose replication status is `Pending` / `Failed` in versioning-enabled buckets
 
 ### 7.2 The 30-day rule (removed 2026-07-16)
@@ -388,7 +388,7 @@ Not allowed:
 | Before 2026-07-16 | Only objects **at least 30 days old** could transition (you could not create an IA transition rule with `Days` under 30) |
 | From 2026-07-16 | **Transitions allowed from the day of creation (day 0)** (all Regions) |
 
-- The old rule existed because freshly created data tends to be accessed, which makes IA retrieval fees likely to cost you
+- The old rule existed because newly created data is often accessed, so IA retrieval fees were likely to make the move a net loss
 - Even after the removal, IA's **30-day minimum storage duration** and **128 KB minimum billable size** still apply. You can move objects sooner, but deleting them within 30 days of the move still triggers early deletion fees
 - Older articles (re:Post Knowledge Center and others) may still describe the 30-day rule, so watch out
 - Transitions to Intelligent-Tiering or Glacier classes never had this restriction (day 0 transitions are allowed)
@@ -423,7 +423,7 @@ Overhead:         10M × 8 KB at the Standard rate        ≈ 76 GB × $0.023 �
 
 ### 7.5 Typical lifecycle configuration example
 
-A configuration that moves logs "Standard for 30 days → Standard-IA until day 90 → Glacier Flexible until year 1 → delete at 7 years", and also cleans up incomplete multipart uploads and old versions:
+A configuration that moves logs "Standard for 30 days → Standard-IA until day 120 → Glacier Flexible until year 1 → Deep Archive until year 7 → delete", and also cleans up incomplete multipart uploads and old versions:
 
 ```json
 {

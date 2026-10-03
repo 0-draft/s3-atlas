@@ -39,7 +39,7 @@ Under the S3 name there are six separate APIs, each with its own protocol and en
 | Style | URL | Notes |
 | --- | --- | --- |
 | Virtual-hosted-style | `https://amzn-s3-demo-bucket.s3.ap-northeast-1.amazonaws.com/photos/cat.jpg` | Recommended. The bucket name goes in the hostname |
-| Path-style | `https://s3.ap-northeast-1.amazonaws.com/amzn-s3-demo-bucket/photos/cat.jpg` | For compatibility. AWS has announced its deprecation, so don't use it in new code. It survives in cases such as bucket names containing dots over TLS |
+| Path-style | `https://s3.ap-northeast-1.amazonaws.com/amzn-s3-demo-bucket/photos/cat.jpg` | For compatibility. AWS has announced its deprecation, so don't use it in new code. It is still used in cases such as bucket names that contain dots accessed over TLS |
 | Dual-stack (IPv6) | `https://amzn-s3-demo-bucket.s3.dualstack.ap-northeast-1.amazonaws.com` | Supports both IPv4 and IPv6 |
 | FIPS | `https://amzn-s3-demo-bucket.s3-fips.us-east-1.amazonaws.com` | FIPS 140 validated endpoint (supported Regions only) |
 | Transfer Acceleration | `https://amzn-s3-demo-bucket.s3-accelerate.amazonaws.com` | Routed through CloudFront edges. Must be enabled with `PutBucketAccelerateConfiguration` |
@@ -140,7 +140,7 @@ const sig = crypto.createHmac('sha256', key).update(stringToSign).digest('hex');
 // => f0e8bdb87c964420e857bd35b5d6ed310bd44f0170aba48dd91039c6036bdb41
 ```
 
-The signing key depends only on the date, Region, and service, so you can cache and reuse it for requests on the same day.
+The signing key is determined by the date, Region, and service, so you can cache and reuse it for requests on the same day.
 
 ### 3.5 Step 5: Authorization header
 
@@ -251,13 +251,13 @@ https://examplebucket.s3.amazonaws.com/test.txt
 | `x-amz-content-sha256` | Req | Payload hash / signing mode (see 3.6) |
 | `x-amz-security-token` | Req | Session token for STS temporary credentials |
 | `x-amz-s3session-token` | Req | CreateSession token for directory buckets |
-| `x-amz-expected-bucket-owner` | Req | Account ID of the bucket owner. Returns 403 on mismatch (protects against bucket-name sniping) |
+| `x-amz-expected-bucket-owner` | Req | Account ID of the bucket owner. Returns 403 on mismatch (protects against bucket name takeover) |
 | `x-amz-request-payer: requester` | Req | Agrees to pay charges when accessing a Requester Pays bucket |
 | `x-amz-server-side-encryption` | Req / Res | `AES256` / `aws:kms` / `aws:kms:dsse` |
 | `x-amz-server-side-encryption-aws-kms-key-id` | Req / Res | Key ARN for SSE-KMS |
 | `x-amz-server-side-encryption-customer-algorithm` / `-key` / `-key-MD5` | Req | SSE-C key (SSE-C is blocked by default on new buckets) |
 | `x-amz-storage-class` | Req / Res | `STANDARD` / `INTELLIGENT_TIERING` / `GLACIER_IR`, etc. |
-| `x-amz-meta-*` | Req / Res | User-defined metadata (2 KB total) |
+| `x-amz-meta-*` | Req / Res | User-defined metadata (up to 2 KB total) |
 | `x-amz-tagging` | Req | Adds tags on PUT in `k=v&k2=v2` form |
 | `x-amz-acl` / `x-amz-grant-*` | Req | Canned ACL / explicit grants (not usable with BucketOwnerEnforced) |
 | `x-amz-copy-source` / `x-amz-copy-source-range` | Req | Source for CopyObject / UploadPartCopy |
@@ -844,13 +844,13 @@ The four deprecated operations (`GetBucketLifecycle` / `PutBucketLifecycle` / `G
 
 ## 9. S3 on Outposts and S3 Files operations
 
-In addition to the four families above, the Actions pages of the API Reference also list **S3 on Outposts** (`s3outposts`, endpoint management only) and **S3 Files** (`s3files`, a new service that mounts S3 buckets as EFS-based file systems). `data/api.json` is limited to four services (`s3` / `s3control` / `s3tables` / `s3vectors`), so these two appear only in the tables in this chapter.
+In addition to the four families above, the Actions pages of the API Reference also list **S3 on Outposts** (`s3outposts`, endpoint management only) and **S3 Files** (`s3files`, a new service that mounts S3 buckets as EFS-based file systems). `data/api.json` includes both as `s3outposts` and `s3files` (309 operations in total).
 
 ### 9.1 S3 on Outposts (s3outposts)
 
 | Operation | Method / Path | Description |
 | --- | --- | --- |
-| `CreateEndpoint` | `POST /S3Outposts/CreateEndpoint` | Creates an endpoint (an access point from a VPC) on an Outpost |
+| `CreateEndpoint` | `POST /S3Outposts/CreateEndpoint` | Creates an endpoint on an Outpost (the entry point for access from a VPC) |
 | `DeleteEndpoint` | `DELETE /S3Outposts/DeleteEndpoint` | Deletes an endpoint |
 | `ListEndpoints` | `GET /S3Outposts/ListEndpoints` | Lists an Outpost's endpoints |
 | `ListOutpostsWithS3` | `GET /S3Outposts/ListOutpostsWithS3` | Lists Outposts that have S3 on Outposts capacity |
@@ -862,7 +862,7 @@ In addition to the four families above, the Actions pages of the API Reference a
 | --- | --- | --- |
 | `CreateAccessPoint` | `PUT /access-points` | Creates a file system access point that enforces a POSIX user / root directory |
 | `CreateFileSystem` | `PUT /file-systems` | Creates an S3 file system scoped to a bucket (or prefix) |
-| `CreateMountTarget` | `PUT /mount-targets` | Creates a mount target (NFS mount point) in an AZ / VPC |
+| `CreateMountTarget` | `PUT /mount-targets` | Creates a mount target (the NFS endpoint that clients mount) in an AZ / VPC |
 | `DeleteAccessPoint` | `DELETE /access-points/{accessPointId}` | Deletes a file system access point |
 | `DeleteFileSystem` | `DELETE /file-systems/{fileSystemId}` | Deletes an S3 file system |
 | `DeleteFileSystemPolicy` | `DELETE /file-systems/{fileSystemId}/policy` | Deletes a file system's resource policy |
@@ -996,7 +996,7 @@ Authorization: AWS4-HMAC-SHA256 Credential=.../s3/aws4_request, SignedHeaders=ho
 
 ## 11. Calling S3 directly with curl `--aws-sigv4`
 
-Since 7.75, curl can do SigV4 signing itself with `--aws-sigv4`. With a local curl 8.7.1, we confirmed that it adds `x-amz-content-sha256` automatically when the `s3` service is specified, and uses your value instead if you pass that header yourself.
+curl 7.75 and later can compute SigV4 signatures itself with `--aws-sigv4`. With a local curl 8.7.1, we confirmed that it adds `x-amz-content-sha256` automatically when the `s3` service is specified, and uses your value instead if you pass that header yourself.
 
 ```bash
 export AWS_REGION=ap-northeast-1

@@ -474,7 +474,7 @@ A single job can process billions of objects and exabytes of data, with progress
 
 For objects in directory buckets, only Copy and Invoke Lambda are supported.
 
-At its 2025-08 announcement, Compute checksums supported SHA-1 / SHA-256 / CRC32 / CRC32C / CRC64 / MD5. Whether the XXHash family and SHA-512 added in 2026-04 are supported by Compute checksums is unverified.
+At its 2025-08 announcement, Compute checksums supported SHA-1 / SHA-256 / CRC32 / CRC32C / CRC64 / MD5. It also supports SHA-512 and the XXHash family added in 2026-04: in the current API reference (`S3ComputeObjectChecksumOperation`), the valid values of `ChecksumAlgorithm` are the ten values `CRC32` / `CRC32C` / `CRC64NVME` / `MD5` / `SHA1` / `SHA256` / `SHA512` / `XXHASH64` / `XXHASH3` / `XXHASH128` (`ChecksumType` is `FULL_OBJECT` / `COMPOSITE`).
 
 ### 5.3 Manifests
 
@@ -611,7 +611,7 @@ aws s3control put-storage-lens-configuration \
 }
 ```
 
-The configuration key names for the performance metrics and S3 Tables export added in 2025-12 have not been confirmed against primary sources in this guide (unverified). See the latest `StorageLensConfiguration` API reference.
+The configuration keys for the features added in 2025-12 are documented in the `StorageLensConfiguration` API reference (and in `aws s3control put-storage-lens-configuration help`). Performance metrics are set with `AdvancedPerformanceMetrics` (`IsEnabled`) under `AccountLevel` / `BucketLevel`, export to S3 Tables with `StorageLensTableDestination` (`IsEnabled` plus optional `Encryption`) under `DataExport`, and the expanded prefixes metrics report with the top-level `ExpandedPrefixesDataExport` (`S3BucketDestination` / `StorageLensTableDestination`). The delimiter used to count prefix depth is set with the top-level `PrefixDelimiter` (one character; `/` if unset).
 
 ### 7.2 Storage Class Analysis
 
@@ -636,7 +636,7 @@ aws s3api put-bucket-analytics-configuration \
 
 ### 8.1 Overview
 
-S3 Metadata automatically captures object metadata from general purpose buckets and stores it in **read-only, fully managed Apache Iceberg tables** (in the AWS managed table bucket `aws-s3`). You can query them with SQL from any Iceberg-compatible engine, such as Athena, EMR, Redshift, DuckDB, and PyIceberg. It was announced at re:Invent in 2024-12 (the exact GA date is unverified). As of 2025-07 it was available in three US Regions; in 2025-10, Frankfurt, Ireland, and Tokyo were added for a total of six Regions. Expansion after that is unverified.
+S3 Metadata automatically captures object metadata from general purpose buckets and stores it in **read-only, fully managed Apache Iceberg tables** (in the AWS managed table bucket `aws-s3`). You can query them with SQL from any Iceberg-compatible engine, such as Athena, EMR, Redshift, DuckDB, and PyIceberg. It was announced in preview at re:Invent in 2024-12 and became generally available on 2025-01-27 in three US Regions (N. Virginia, Ohio, Oregon). In 2025-10, Frankfurt, Ireland, and Tokyo were added for a total of six Regions; in 2025-11, 22 more Regions were added for a total of 28; and in 2026-08 it launched in AWS GovCloud (US-East / US-West), together with annotations. For the current Region list, see the S3 Metadata Regions page in the S3 User Guide.
 
 ### 8.2 The three tables
 
@@ -644,7 +644,7 @@ S3 Metadata automatically captures object metadata from general purpose buckets 
 | --- | --- | --- | --- |
 | Journal table | Required | Records object change events (uploads, deletes, metadata updates, Lifecycle transitions, etc.). Only changes made after the configuration is created. You can set a record expiration (minimum 7 days) | Near real time |
 | Live inventory table (2025-07) | Optional | The latest state of every object and every version in the bucket. Enabling it backfills existing objects (at least 15 minutes; hours for large buckets) | Usually within 1 hour |
-| Annotation table (2026-06) | Optional | The latest state of object annotations (described later). One row = one annotation on one object version | Unverified |
+| Annotation table (2026-06) | Optional | The latest state of object annotations (described later). One row = one annotation on one object version. Enabling it backfills existing annotations (minutes to hours, charged) | Typically within one hour after backfilling completes |
 
 In the initial release, the journal table was simply called the "metadata table". The 2025-07 expansion added support for existing objects (live inventory) and cut the journal price by 33%. Pricing is based on the number of journal records + live inventory backfill (per object) + a monthly fee for buckets with more than 1 billion objects.
 
@@ -736,7 +736,7 @@ A feature added in 2026-06 for attaching large amounts of business context to ob
 - Can be changed or deleted at any time. Annotations have the same durability and consistency as the object, move with the object during copy and replication, and are deleted when the object is deleted.
 - You can query them at scale with the S3 Metadata annotation table, and they are also searchable from SageMaker Unified Studio agents and the S3 Tables MCP server.
 - Available in all Regions (including China). The annotation table is available in Regions where S3 Metadata is offered.
-- Example related IAM actions: `s3:GetObjectAnnotation`, `s3:GetObjectVersionAnnotation` (from the S3 Metadata role configuration example). The names of the write APIs are unverified.
+- APIs: the write APIs are `PutObjectAnnotation` / `DeleteObjectAnnotation`, and the read APIs are `GetObjectAnnotation` / `ListObjectAnnotations`. The corresponding IAM actions are `s3:PutObjectAnnotation` / `s3:DeleteObjectAnnotation` / `s3:GetObjectAnnotation` / `s3:ListObjectAnnotations` (the example permissions policy for the annotation table role also grants `s3:GetObjectVersionAnnotation`). Each annotation payload is 1 byte to 1 MiB, with up to 1,000 annotations per object. The annotation table is enabled or disabled with `UpdateBucketMetadataAnnotationTableConfiguration`.
 
 ## 10. Event notifications and EventBridge
 
@@ -948,7 +948,7 @@ The Batch Operations Compute checksums operation computes checksums for objects 
 | 2025-09 | Conditional deletes for general purpose buckets: `If-Match` (an ETag or `*`) on DeleteObject / DeleteObjects |
 | 2025-10 | Conditional copies: If-None-Match / If-Match on the CopyObject destination (both general purpose and directory buckets) |
 
-Conditional deletes were available earlier for directory buckets (the launch date is unverified).
+Conditional deletes were available earlier for directory buckets (S3 Express One Zone), launched on 2024-11-25. DeleteObject / DeleteObjects accept `If-Match` (ETag), `x-amz-if-match-last-modified-time`, and `x-amz-if-match-size`, individually or together.
 
 ### 13.2 How it works
 
@@ -1045,7 +1045,7 @@ An example that enforces conditional deletes (based on the example in the offici
 | Part size | 5 MiB to 5 GiB (except the last part) |
 | CopyObject (single request) | 5 GB. Larger objects require a multipart copy with UploadPartCopy |
 
-For objects around 50 TB, AWS recommends the AWS CRT-based S3 Transfer Manager. Dividing 50 TB by 10,000 parts gives about 5 GB per part, so given the 5 GiB part size limit, you need to maximize the part size near the maximum object size (whether the part size limit has changed is unverified).
+For objects around 50 TB, AWS recommends the AWS CRT-based S3 Transfer Manager. The part size limit has not changed (5 MiB to 5 GiB, up to 10,000 parts), and the multipart upload limits table in the S3 User Guide lists the maximum object size as 48.8 TiB. Since 10,000 parts x 5 GiB = 50,000 GiB ≈ 48.8 TiB, an object of the maximum size fits only if all 10,000 parts are at the 5 GiB maximum.
 
 ### 14.2 There is no real "rename"
 
@@ -1077,7 +1077,7 @@ aws s3api rename-object \
   --rename-source logs/tmp-current.log
 ```
 
-The CLI parameter names are inferred from the API (`Key` / `RenameSource` in `RenameObject`). Check with `aws s3api rename-object help` before running it (unverified).
+The CLI parameter names were confirmed with `aws s3api rename-object help` in AWS CLI v2 (2.37.7). The required parameters are `--bucket` / `--key` (the new name) / `--rename-source` (the existing name); there are also `--destination-if-none-match` / `--destination-if-match` / `--source-if-match` and similar options for conditional renames, plus `--client-token` for idempotency.
 
 ### 14.4 Useful copy features
 
@@ -1150,7 +1150,7 @@ A new service that became GA in 2026-04 and **makes general purpose S3 buckets a
    +----------------------------+
 ```
 
-The pricing model and the details of the consistency model (how long until file writes appear in S3, and how long until changes made through the S3 API become visible in the file system) have not been examined against primary sources in this guide (unverified). Before adopting it, check "Working with Amazon S3 Files" in the S3 User Guide.
+Pricing consists of a storage rate for the active data resident on the high-performance storage layer and file system access charges for reads from and writes to that layer. Reads of 1 MiB or larger are streamed directly from S3 even when the data is on the high-performance layer, and incur only S3 GET request charges (no file read charge). Synchronization is also charged: importing data onto the high-performance layer incurs write charges, and exporting changes to S3 incurs read charges (see the S3 Files pricing page for rates). Consistency: objects added or changed in S3 are typically reflected in the file system within seconds. File writes are batched until there have been 60 seconds of write inactivity, then copied to S3 as a new object (or a new version); the FAQ says changes are exported "within minutes" by default. If the same data is changed concurrently in the file system and in S3, S3 Files treats the S3 bucket as the source of truth and moves the file to the lost and found directory. S3 Versioning must be enabled on the linked bucket.
 
 ## 16. Related services
 
@@ -1187,7 +1187,7 @@ A managed service for online data transfer.
 - Some cases require an agent (an on-premises VM); others are agentless (some transfers within AWS and between clouds).
 - In-flight and post-transfer integrity verification, bandwidth throttling, scheduling, filters, and task reports.
 - You can specify the storage class directly for S3 destinations, but writing small files directly to IA / Glacier incurs minimum billable size and minimum storage duration costs.
-- What's New reported that an "Enhanced mode" for S3-to-S3 and cross-cloud transfers (no file count limit, higher parallelism) was added in 2025, but this guide has not confirmed the details against primary sources (unverified).
+- Enhanced mode: introduced in 2024-10 for transfers between S3 locations, it provides virtually unlimited object counts, parallel listing / preparation / transfer / verification, additional metrics, and structured (JSON) logs (it verifies only the transferred data). Coverage expanded in 2025-05 to agentless transfers between other clouds (Google Cloud Storage, Azure Blob Storage, Oracle Cloud Object Storage) and S3, in 2025-12 to on-premises NFS / SMB and S3, and in 2026-07 to Amazon EFS / FSx for Lustre and, through an agent, HDFS / Azure Blob / self-managed object storage. Basic mode is subject to file count quotas and works sequentially.
 
 ### 16.3 AWS Snow Family (availability)
 
@@ -1284,14 +1284,24 @@ flowchart LR
 - [Update object encryption (Batch Operations)](https://docs.aws.amazon.com/AmazonS3/latest/userguide/batch-ops-update-encryption.html)
 - [Change the server-side encryption type of Amazon S3 objects (2026-01)](https://aws.amazon.com/about-aws/whats-new/2026/01/change-the-server-side-encryption-type-of-s3-objects/)
 - [Amazon S3 adds new feature to verify content of stored datasets (2025-08)](https://aws.amazon.com/about-aws/whats-new/2025/08/amazon-s3-verify-content-stored-datasets/)
+- [S3ComputeObjectChecksumOperation (Amazon S3 API Reference)](https://docs.aws.amazon.com/AmazonS3/latest/API/API_control_S3ComputeObjectChecksumOperation.html)
 - [Cataloging and analyzing your data with S3 Inventory](https://docs.aws.amazon.com/AmazonS3/latest/userguide/storage-inventory.html)
 - [Understanding Amazon S3 Storage Lens](https://docs.aws.amazon.com/AmazonS3/latest/userguide/storage_lens_basics_metrics_recommendations.html)
 - [Amazon S3 Storage Lens adds performance metrics, support for billions of prefixes, and export to S3 Tables (2025-12)](https://aws.amazon.com/about-aws/whats-new/2025/12/amazon-s3-storage-lens-performance-metrics-prefixes-export-tables/)
 - [Amazon S3 Storage Lens is now available in AWS GovCloud (US) Regions (2026-01)](https://aws.amazon.com/about-aws/whats-new/2026/01/s3-storage-lens-aws-govcloud-us-regions/)
+- [StorageLensConfiguration (Amazon S3 API Reference)](https://docs.aws.amazon.com/AmazonS3/latest/API/API_control_StorageLensConfiguration.html)
+- [BucketLevel (Amazon S3 API Reference)](https://docs.aws.amazon.com/AmazonS3/latest/API/API_control_BucketLevel.html)
 - [Amazon S3 analytics - Storage Class Analysis](https://docs.aws.amazon.com/AmazonS3/latest/userguide/analytics-storage-class.html)
 - [Creating metadata table configurations](https://docs.aws.amazon.com/AmazonS3/latest/userguide/metadata-tables-create-configuration.html)
+- [Discovering your data with S3 Metadata tables](https://docs.aws.amazon.com/AmazonS3/latest/userguide/metadata-tables-overview.html)
+- [Enabling or disabling annotation tables](https://docs.aws.amazon.com/AmazonS3/latest/userguide/metadata-tables-enable-disable-annotation-tables.html)
+- [S3 Metadata annotation table schema](https://docs.aws.amazon.com/AmazonS3/latest/userguide/metadata-tables-annotation-schema.html)
+- [Amazon S3 Metadata is now generally available (2025-01)](https://aws.amazon.com/about-aws/whats-new/2025/01/amazon-s3-metadata-generally-available/)
 - [Amazon S3 Metadata now supports existing objects and reduces price by up to 33% (2025-07)](https://aws.amazon.com/about-aws/whats-new/2025/07/amazon-s3-metadata-existing-objects-reduces-price/)
+- [Amazon S3 Metadata is now available in three additional AWS Regions (2025-10)](https://aws.amazon.com/about-aws/whats-new/2025/10/amazon-s3-metadata-three-additional-regions/)
+- [Amazon S3 Metadata expands to 22 additional AWS Regions (2025-11)](https://aws.amazon.com/about-aws/whats-new/2025/11/amazon-s3-metadata-expands-22-regions/)
 - [Amazon S3 adds annotations to provide AI agents and analytics tools with context (2026-06)](https://aws.amazon.com/about-aws/whats-new/2026/06/amazon-s3-annotations-business-context/)
+- [Amazon S3 Metadata and annotations are now available in AWS GovCloud (US) Regions (2026-08)](https://aws.amazon.com/about-aws/whats-new/2026/08/amazon-s3-metadata-annotations-govcloud-regions/)
 - [Analyze Amazon S3 annotations at scale with materialized views (AWS Storage Blog)](https://aws.amazon.com/blogs/storage/analyze-amazon-s3-annotations-at-scale-with-materialized-views/)
 - [How Vanderbilt University scales digital archive discovery with Amazon S3 Metadata (AWS Storage Blog)](https://aws.amazon.com/blogs/storage/how-vanderbilt-university-scales-digital-archive-discovery-with-s3-metadata/)
 - [Amazon S3 FAQs](https://aws.amazon.com/s3/faqs/)
@@ -1310,17 +1320,31 @@ flowchart LR
 - [How to perform conditional deletes](https://docs.aws.amazon.com/AmazonS3/latest/userguide/conditional-deletes.html)
 - [Enforce conditional deletes on Amazon S3 buckets](https://docs.aws.amazon.com/AmazonS3/latest/userguide/conditional-delete-enforce.html)
 - [Amazon S3 introduces conditional deletes in general purpose buckets (2025-09)](https://aws.amazon.com/about-aws/whats-new/2025/09/amazon-s3-conditional-deletes-s3-general-purpose-buckets/)
+- [Amazon S3 Express One Zone now supports conditional deletes (2024-11)](https://aws.amazon.com/about-aws/whats-new/2024/11/amazon-s3-express-one-zone-conditional-deletes/)
 - [Amazon S3 adds conditional write functionality to copy operations (2025-10)](https://aws.amazon.com/about-aws/whats-new/2025/10/amazon-s3-conditional-write-functionality-copy-operations/)
 - [Amazon S3 increases the maximum object size to 50 TB (2025-12)](https://aws.amazon.com/about-aws/whats-new/2025/12/amazon-s3-maximum-object-size-50-tb/)
+- [Amazon S3 multipart upload limits](https://docs.aws.amazon.com/AmazonS3/latest/userguide/qfacts.html)
 - [Renaming objects in directory buckets](https://docs.aws.amazon.com/AmazonS3/latest/userguide/directory-buckets-objects-rename.html)
 - [Amazon S3 Express One Zone now supports atomic renaming of objects (2025-06)](https://aws.amazon.com/about-aws/whats-new/2025/06/amazon-s3-express-one-zone-atomic-renaming-objects-api/)
+- [rename-object (AWS CLI Command Reference)](https://docs.aws.amazon.com/cli/latest/reference/s3api/rename-object.html)
 - [Mountpoint for Amazon S3](https://docs.aws.amazon.com/AmazonS3/latest/userguide/mountpoint.html)
 - [Launching S3 Files, making S3 buckets accessible as file systems (AWS News Blog)](https://aws.amazon.com/blogs/aws/launching-s3-files-making-s3-buckets-accessible-as-file-systems/)
 - [Announcing Amazon S3 Files (2026-04)](https://aws.amazon.com/about-aws/whats-new/2026/04/amazon-s3-files/)
 - [Amazon S3 Files feature page](https://aws.amazon.com/s3/features/files/)
+- [Working with Amazon S3 Files](https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-files.html)
+- [How S3 Files is metered](https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-files-metering.html)
+- [Understanding how synchronization works (S3 Files)](https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-files-synchronization.html)
+- [S3 Files performance specifications](https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-files-performance.html)
+- [S3 Files best practices](https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-files-best-practices.html)
 - [Use Amazon S3 with Amazon EC2 instances (S3 Files mount)](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AmazonS3.html)
 - [Amazon S3 backups (AWS Backup Developer Guide)](https://docs.aws.amazon.com/aws-backup/latest/devguide/s3-backups.html)
 - [AWS Backup FAQs](https://aws.amazon.com/backup/faqs/)
 - [AWS DataSync User Guide](https://docs.aws.amazon.com/datasync/latest/userguide/what-is-datasync.html)
+- [Choosing a task mode for your data transfer (AWS DataSync)](https://docs.aws.amazon.com/datasync/latest/userguide/choosing-task-mode.html)
+- [AWS DataSync increases performance and scalability for data transfers (2024-10)](https://aws.amazon.com/about-aws/whats-new/2024/10/aws-datasync-performance-scalability-data-transfers/)
+- [AWS DataSync simplifies and accelerates cross-cloud data transfers (2025-05)](https://aws.amazon.com/about-aws/whats-new/2025/05/aws-datasync-accelerates-cross-cloud-data-transfers/)
+- [AWS DataSync increases scalability and performance for on-premises file transfers (2025-12)](https://aws.amazon.com/about-aws/whats-new/2025/12/aws-datasync-scalability-performance-on-premises-file-transfers/)
+- [AWS DataSync Enhanced mode now supports Amazon EFS and Amazon FSx for Lustre (2026-07)](https://aws.amazon.com/about-aws/whats-new/2026/07/aws-datasync-amazon-efs-fsx-lustre/)
+- [AWS DataSync Enhanced mode adds HDFS, Azure Blob, and object storage locations with Hyper-V agent support (2026-07)](https://aws.amazon.com/about-aws/whats-new/2026/07/aws-datasync-hdfs-azure-blob-hyper-v/)
 - [AWS Snowball Edge availability change](https://docs.aws.amazon.com/snowball/latest/developer-guide/snowball-edge-availability-change.html)
 - [AWS Transfer Family User Guide](https://docs.aws.amazon.com/transfer/latest/userguide/what-is-aws-transfer-family.html)
