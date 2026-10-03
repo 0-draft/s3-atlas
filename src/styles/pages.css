@@ -1329,3 +1329,115 @@ html[lang='ja'] .quiz-card h2 {
 .quiz-explain strong {
   color: var(--foam);
 }
+
+/* ---------- marine snow: drifting particles behind every page ---------- */
+
+.marine-snow {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    radial-gradient(1.2px 1.2px at 12% 18%, rgb(230 241 245 / 0.55), transparent 60%),
+    radial-gradient(1px 1px at 68% 32%, rgb(230 241 245 / 0.4), transparent 60%),
+    radial-gradient(1.6px 1.6px at 34% 71%, rgb(127 212 245 / 0.45), transparent 60%),
+    radial-gradient(1px 1px at 86% 84%, rgb(230 241 245 / 0.35), transparent 60%),
+    radial-gradient(1.3px 1.3px at 52% 9%, rgb(127 212 245 / 0.35), transparent 60%),
+    radial-gradient(0.9px 0.9px at 23% 52%, rgb(230 241 245 / 0.3), transparent 60%),
+    radial-gradient(1.1px 1.1px at 77% 61%, rgb(230 241 245 / 0.4), transparent 60%),
+    radial-gradient(1.4px 1.4px at 5% 92%, rgb(127 212 245 / 0.3), transparent 60%);
+  background-size: 340px 420px;
+  animation: snowfall 90s linear infinite;
+}
+
+#root {
+  position: relative;
+  isolation: isolate;
+}
+
+@keyframes snowfall {
+  from {
+    background-position: 0 0;
+  }
+
+  to {
+    background-position: 60px 840px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marine-snow {
+    animation: none;
+  }
+}
+
+/* hero: a lit horizon where the surface meets the column */
+.hero {
+  position: relative;
+  background:
+    radial-gradient(1200px 500px at 85% -10%, rgb(79 209 230 / 0.16), transparent 60%),
+    linear-gradient(180deg, #0a2236 0%, #0b2a45 55%, #123a63 92%, #1b4f84 100%);
+  border-bottom: 1px solid rgb(127 212 245 / 0.35);
+}
+
+/* ---------- dot-matrix readouts ---------- */
+
+.dot-matrix {
+  display: block;
+  height: 1em;
+  width: auto;
+  max-width: 100%;
+  overflow: visible;
+}
+
+.dot-matrix rect.on {
+  fill: var(--dm-on, var(--glacier));
+  filter: drop-shadow(0 0 1.2px var(--dm-on, var(--glacier)));
+}
+
+.dot-matrix rect.off {
+  fill: var(--dm-off, rgb(127 212 245 / 0.07));
+}
+
+.readout {
+  padding-block: clamp(36px, 6vw, 64px);
+  border-bottom: 1px solid var(--current-soft);
+  background: linear-gradient(180deg, rgb(27 79 132 / 0.25), transparent 70%);
+}
+
+.readout-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 32px 48px;
+}
+
+.readout-cell .dot-matrix {
+  font-size: clamp(2.6rem, 5vw, 3.6rem);
+}
+
+.readout-cell p {
+  margin-top: 14px;
+  color: var(--kelp);
+}
+
+.nines-n.dot-matrix,
+.nines-y .dot-matrix {
+  font-size: clamp(2.6rem, 6vw, 4.2rem);
+}
+
+.nines-y {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  --dm-on: var(--buoy);
+  --dm-off: rgb(255 181 71 / 0.07);
+}
+
+.nines-y small {
+  font-size: 1.1rem;
+}
+
+/* single-series bars get a depth gradient instead of a flat fill */
+.price-bar span {
+  background: linear-gradient(90deg, color-mix(in srgb, var(--layer) 25%, transparent), var(--layer));
+}

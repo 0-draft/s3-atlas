@@ -59,6 +59,7 @@ export function Layout() {
       >
         {t(UI.skip)}
       </a>
+      <div className="marine-snow" aria-hidden="true" />
       <header className="site-header">
         <div className="wrap">
           <Link to="/" className="brand" aria-label="S3 Atlas home">

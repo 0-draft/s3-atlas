@@ -1,15 +1,39 @@
 import { lazy, Suspense, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { WaterColumn } from '../components/WaterColumn';
+import { DotMatrix } from '../components/DotMatrix';
 import { CHAPTERS, GROUPS } from '../lib/chapters';
 import { columnClasses } from '../lib/data/classes';
-import { market } from '../lib/data/market';
 import { compact, num, yearsPerLoss } from '../lib/format';
 import { useLang } from '../lib/i18n';
 import { UI } from '../lib/ui';
 
 // Below-the-fold sections pull in the competitor and timeline datasets; load them after first paint.
 const HomeLower = lazy(() => import('./HomeLower'));
+
+const TWENTY_YEARS = 'https://aws.amazon.com/blogs/aws/twenty-years-of-amazon-s3-and-building-whats-next/';
+
+// Headline numbers, each from AWS's own published figures.
+const READOUT = [
+  {
+    text: '500T+',
+    label: { en: 'objects stored', ja: 'オブジェクトを保存' },
+    year: 2026,
+    source: TWENTY_YEARS,
+  },
+  {
+    text: '200M+',
+    label: { en: 'requests per second at peak', ja: 'ピーク時の毎秒リクエスト' },
+    year: 2026,
+    source: TWENTY_YEARS,
+  },
+  {
+    text: '11 9s',
+    label: { en: 'designed durability (99.999999999%)', ja: '設計上の耐久性 (99.999999999%)' },
+    year: 2026,
+    source: 'https://aws.amazon.com/s3/storage-classes/',
+  },
+] as const;
 
 const TOOLS = [
   {
@@ -126,6 +150,22 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="readout" aria-label={en ? 'S3 at a glance' : 'ひと目でわかる S3'}>
+        <div className="wrap readout-grid">
+          {READOUT.map((r) => (
+            <div key={r.text} className="readout-cell">
+              <DotMatrix text={r.text} label={`${r.text} ${t(r.label)}`} />
+              <p>
+                {t(r.label)}{' '}
+                <a className="muted small" href={r.source} target="_blank" rel="noreferrer noopener">
+                  {r.year}
+                </a>
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+
       <section className="section nines">
         <div className="wrap nines-grid">
           <div>
@@ -150,14 +190,17 @@ export default function Home() {
             </label>
           </div>
           <p className="nines-readout" aria-live="polite">
-            <span className="nines-n">{compact(objects, lang)}</span>
+            <DotMatrix className="nines-n" text={compact(objects, 'en')} label={compact(objects, lang)} />
             <span className="nines-mid">
               {en
                 ? 'objects stored. Expect to lose one about once every'
                 : '個を保存すると、1個失う期待値はおよそ'}
             </span>
             <span className="nines-y">
-              {years >= 1 ? compact(years, lang) : num(years * 365, lang, 1)}
+              <DotMatrix
+                text={years >= 1 ? compact(years, 'en') : num(years * 365, 'en', 1)}
+                label={years >= 1 ? compact(years, lang) : num(years * 365, lang, 1)}
+              />
               <small>{years >= 1 ? (en ? ' years' : ' 年に1回') : en ? ' days' : ' 日に1回'}</small>
             </span>
             <span className="nines-foot muted small">
@@ -168,27 +211,6 @@ export default function Home() {
           </p>
         </div>
       </section>
-
-      {market.s3Stats.length > 0 && (
-        <section className="section sonar">
-          <div className="wrap">
-            <h2 className="section-title">{en ? 'S3 by the numbers' : '数字で見る S3'}</h2>
-            <dl className="sonar-list">
-              {market.s3Stats.slice(0, 6).map((s, i) => (
-                <div key={i}>
-                  <dt>{t(s.label)}</dt>
-                  <dd>
-                    {t(s.value)}
-                    <a className="small muted" href={s.source} target="_blank" rel="noreferrer noopener">
-                      {s.year}
-                    </a>
-                  </dd>
-                </div>
-              ))}
-            </dl>
-          </div>
-        </section>
-      )}
 
       <section className="section">
         <div className="wrap">
