@@ -45,13 +45,14 @@
       "ja": ["list を含むグローバルな強い整合性", "単一名前空間の dual-region / multi-region バケット", "BigQuery / BigLake / Vertex AI との密結合", "Autoclass による自動階層化"]
     },
     "weaknesses": {
-      "en": ["Internet egress ($0.12/GB for the first TB on Premium Tier) is higher than S3", "S3 compatibility is via the XML API with HMAC keys; not every S3 feature maps", "Multi-region and dual-region operations cost more since the 2023 repricing"],
-      "ja": ["インターネット egress (Premium Tier 最初の 1TB は $0.12/GB) は S3 より高い", "S3 互換は HMAC キー + XML API 経由で、全機能が対応するわけではない", "2023 年の価格改定以降、multi/dual-region の操作単価が高い"]
+      "en": ["Internet egress ($0.12/GB for the first 10 TiB) is higher than S3", "S3 compatibility is via the XML API with HMAC keys; not every S3 feature maps", "Multi-region and dual-region operations cost more since the 2023 repricing"],
+      "ja": ["インターネット egress (最初の 10TiB は $0.12/GB) は S3 より高い", "S3 互換は HMAC キー + XML API 経由で、全機能が対応するわけではない", "2023 年の価格改定以降、multi/dual-region の操作単価が高い"]
     },
     "bestFor": {
       "en": "Analytics and AI workloads centred on BigQuery or Vertex AI, and teams wanting simple multi-region buckets",
       "ja": "BigQuery / Vertex AI 中心の分析・AI ワークロード、シンプルな multi-region バケットが欲しいチーム"
     },
+    "pricingNote": { "en": "Official pricing page (rendered in a browser, 2026-10-03): us-central1 Standard $0.000027397/GiB-hour (= $0.020/GiB-month), internet egress $0.12/GiB for 0-10 TiB then $0.11 and $0.08, Class A $0.005 / Class B $0.0004 per 1,000 (flat namespace), no minimum storage duration. Always Free: 100 GB/month egress from North America.", "ja": "公式価格ページをブラウザで描画して確認 (2026-10-03)。us-central1 Standard $0.000027397/GiB-時 (= $0.020/GiB-月)、インターネット egress は 0〜10TiB $0.12/GiB、以降 $0.11、$0.08。Class A $0.005 / Class B $0.0004 (1,000 件、flat namespace)、最低保存期間なし。Always Free で北米発 egress 月 100GB。" },
     "pricingUrl": "https://cloud.google.com/storage/pricing",
     "verifiedDate": "2026-10-03"
   },
@@ -181,8 +182,8 @@
     "strongConsistency": true,
     "features": { "versioning": true, "objectLock": true, "lifecycle": true, "replication": true, "events": true, "iceberg": null, "vectors": false, "cdn": false },
     "strengths": {
-      "en": ["First 10 TB/month of internet egress free, then about $0.0085/GB", "Same price in every commercial region", "Archive tier around $0.0026/GB-month"],
-      "ja": ["インターネット egress は月 10TB まで無料、以降約 $0.0085/GB", "全商用リージョンで同一価格", "Archive 層は約 $0.0026/GB-月"]
+      "en": ["First 10 TB/month of internet egress free, then $0.0085/GB", "Same price in every commercial region", "Archive tier $0.0026/GB-month"],
+      "ja": ["インターネット egress は月 10TB まで無料、以降 $0.0085/GB", "全商用リージョンで同一価格", "Archive 層は $0.0026/GB-月"]
     },
     "weaknesses": {
       "en": ["S3 Compatibility API is a subset (customer secret keys, limited feature mapping)", "Hot storage list price is above S3", "Smaller third-party ecosystem"],
@@ -192,6 +193,7 @@
       "en": "Oracle Database / OCI workloads and egress-heavy workloads that still want a hyperscaler",
       "ja": "Oracle Database / OCI 上のワークロード、ハイパースケーラーで egress を抑えたいケース"
     },
+    "pricingNote": { "en": "Oracle's public price-list API (apexapps.oracle.com/pls/apex/cetools/api/v1/products, 2026-10-03): B91628 Object Storage $0.0255/GB-month (first 10 GB free), B88327 outbound transfer from North America/Europe free for the first 10 TB then $0.0085/GB, B91627 requests $0.0034 per 10,000 (first 50,000 free), B91633 Archive $0.0026.", "ja": "Oracle 公式の価格 API (apexapps.oracle.com/pls/apex/cetools/api/v1/products、2026-10-03) で確認。B91628 Object Storage $0.0255/GB-月 (最初の 10GB 無料)、B88327 北米/欧州発の outbound は最初の 10TB 無料で以降 $0.0085/GB、B91627 リクエスト $0.0034/10,000 件 (最初の 50,000 件無料)、B91633 Archive $0.0026。" },
     "pricingUrl": "https://www.oracle.com/cloud/storage/pricing/",
     "verifiedDate": "2026-10-03"
   },
@@ -200,10 +202,10 @@
     "name": "IBM Cloud Object Storage (Standard, regional)",
     "vendor": "IBM",
     "type": "hyperscaler",
-    "storagePricePerGBMonth": 0.0238,
-    "egressPricePerGB": null,
-    "putPer1k": 0.005,
-    "getPer1k": 0.0004,
+    "storagePricePerGBMonth": 0.023,
+    "egressPricePerGB": 0.09,
+    "putPer1k": 0.0052,
+    "getPer1k": 0.00042,
     "minStorageDays": 0,
     "s3Compatible": "high",
     "strongConsistency": true,
@@ -213,14 +215,15 @@
       "ja": ["Cleversafe 由来の情報分散型イレイジャーコーディング", "Smart Tier の自動料金と One-Rate プラン (2PB 以上で egress 込み USD 10/TB 定額)", "オンプレ向けソフトウェアとしても提供"]
     },
     "weaknesses": {
-      "en": ["Pricing is region/resiliency dependent and hard to verify publicly", "Smaller developer mindshare", "Few AI-native features"],
-      "ja": ["料金がリージョン/冗長性で変わり公開情報で検証しにくい", "開発者のマインドシェアが小さい", "AI ネイティブ機能が少ない"]
+      "en": ["Pricing varies by location and resiliency, and internet egress ($0.09/GB for the first 50 TB) has no free allowance", "Smaller developer mindshare", "Few AI-native features"],
+      "ja": ["料金がロケーション/冗長性で変わり、インターネット egress (最初の 50TB は $0.09/GB) に無料枠がない", "開発者のマインドシェアが小さい", "AI ネイティブ機能が少ない"]
     },
     "bestFor": {
       "en": "IBM Cloud / watsonx customers and regulated industries already on IBM",
       "ja": "IBM Cloud / watsonx の顧客、IBM 系の規制業界"
     },
-    "pricingUrl": "https://www.ibm.com/cloud/object-storage/pricing",
+    "pricingNote": { "en": "Official IBM Cloud catalog pricing tab (rendered in a browser, 2026-10-03), Standard plan, Regional, us-south (Dallas): Standard class $0.0230/GB-month for 0-499.9 TB ($0.0209 above), Class A $0.0052 per 1,000, Class B $0.0042 per 10,000 (= $0.00042 per 1,000), public outbound $0.09/GB for 0-50 TB, then $0.07 and $0.05; no minimum duration for Standard. Smart Tier Hot is $0.0219.", "ja": "IBM Cloud カタログの公式料金タブをブラウザで描画して確認 (2026-10-03)。Standard プラン、Regional、us-south (ダラス): Standard クラス $0.0230/GB-月 (0〜499.9TB、500TB 以上 $0.0209)、Class A $0.0052/1,000 件、Class B $0.0042/10,000 件 (= $0.00042/1,000 件)、パブリック outbound 0〜50TB $0.09/GB、以降 $0.07、$0.05。Standard は最低保存期間なし。Smart Tier Hot は $0.0219。" },
+    "pricingUrl": "https://cloud.ibm.com/objectstorage/create#pricing",
     "verifiedDate": "2026-10-03"
   },
   {
@@ -228,10 +231,10 @@
     "name": "Alibaba Cloud OSS (Standard LRS)",
     "vendor": "Alibaba Cloud",
     "type": "hyperscaler",
-    "storagePricePerGBMonth": 0.017,
+    "storagePricePerGBMonth": 0.016,
     "egressPricePerGB": 0.076,
-    "putPer1k": null,
-    "getPer1k": null,
+    "putPer1k": 0.0014,
+    "getPer1k": 0.0001,
     "minStorageDays": 0,
     "s3Compatible": "partial",
     "strongConsistency": true,
@@ -248,6 +251,7 @@
       "en": "Workloads serving users in mainland China or APAC",
       "ja": "中国本土や APAC のユーザー向けワークロード"
     },
+    "pricingNote": { "en": "Official OSS pricing page with region set to US (Virginia) in a browser (2026-10-03): Standard LRS $0.0160/GB-month above the first 5 GB (GB = GiB), internet outbound free for the first 100 GB then $0.0760/GB up to 10 TB, Standard write requests free up to 100 million then $0.014 per 10,000, reads free up to 500 million then $0.001 per 10,000. putPer1k/getPer1k are the rates after those free allowances.", "ja": "公式 OSS 価格ページでリージョンを US (Virginia) に切り替えて確認 (2026-10-03)。Standard LRS は最初の 5GB 無料で以降 $0.0160/GB-月 (GB = GiB)、インターネット outbound は最初の 100GB 無料で 10TB まで $0.0760/GB、Standard の書き込みリクエストは 1 億件まで無料で以降 $0.014/10,000 件、読み取りは 5 億件まで無料で以降 $0.001/10,000 件。putPer1k / getPer1k はこの無料枠を超えた後の単価。" },
     "pricingUrl": "https://www.alibabacloud.com/en/product/oss/pricing",
     "verifiedDate": "2026-10-03"
   },
@@ -312,26 +316,27 @@
     "name": "Hetzner Object Storage",
     "vendor": "Hetzner",
     "type": "alt-cloud",
-    "storagePricePerGBMonth": 0.0076,
+    "storagePricePerGBMonth": 0.00898,
     "egressPricePerGB": 0.0012,
     "putPer1k": 0,
     "getPer1k": 0,
     "minStorageDays": 0,
     "s3Compatible": "high",
     "strongConsistency": null,
-    "features": { "versioning": true, "objectLock": true, "lifecycle": null, "replication": false, "events": false, "iceberg": false, "vectors": false, "cdn": false },
+    "features": { "versioning": true, "objectLock": true, "lifecycle": true, "replication": false, "events": false, "iceberg": false, "vectors": false, "cdn": false },
     "strengths": {
-      "en": ["Base EUR 6.49/month includes 1 TB storage and 1 TB egress", "API calls and ingress free", "EU (Germany/Finland) data residency, GDPR-friendly"],
-      "ja": ["基本料金 月 EUR 6.49 で 1TB 保存と 1TB egress 込み", "API コールと ingress 無料", "EU (ドイツ/フィンランド) のデータ所在、GDPR 対応"]
+      "en": ["Base USD 7.99 (EUR 6.49)/month includes 1 TB storage and 1 TB egress", "API calls and ingress free", "EU (Germany/Finland) data residency, GDPR-friendly"],
+      "ja": ["基本料金 月 USD 7.99 (EUR 6.49) で 1TB 保存と 1TB egress 込み", "API コールと ingress 無料", "EU (ドイツ/フィンランド) のデータ所在、GDPR 対応"]
     },
     "weaknesses": {
-      "en": ["Only a few EU locations", "Bucket limits (100 TB and 50M objects per bucket)", "Prices raised about 30% on 2026-04-01", "USD per-GB figures here are estimates derived from EUR/hourly pricing"],
-      "ja": ["EU の数拠点のみ", "バケット上限 (1 バケット 100TB / 5,000 万オブジェクト)", "2026-04-01 に約 30% 値上げ", "ここの USD/GB 値は EUR 時間課金からの推定"]
+      "en": ["Only a few EU locations", "Bucket limits (100 TB and 50M objects per bucket)", "Prices raised about 30% on 2026-04-01", "The base price is billed for every hour an account has at least one bucket, even an empty one"],
+      "ja": ["EU の数拠点のみ", "バケット上限 (1 バケット 100TB / 5,000 万オブジェクト)", "2026-04-01 に約 30% 値上げ", "バケットが 1 つでもあれば空でも基本料金が毎時課金される"]
     },
     "bestFor": {
       "en": "Cost-sensitive EU workloads co-located with Hetzner servers",
       "ja": "Hetzner サーバーと同居するコスト重視の EU ワークロード"
     },
+    "pricingNote": { "en": "Official USD prices from Hetzner's website price API used by the product page (website-price-api.hetzner.com, 2026-10-03), not an EUR conversion: base $7.99/month (EUR 6.49) including 1 TB storage and 1 TB egress, storage overage $0.0123/TB-hour (EUR 0.0087), egress overage $1.20/TB (EUR 1.00). storagePricePerGBMonth = 0.0123 x 730 h / 1,000 = $0.00898; egressPricePerGB = $1.20 / 1,000 = $0.0012.", "ja": "Hetzner 製品ページが使う公式価格 API (website-price-api.hetzner.com、2026-10-03) の USD 建て定価で、EUR からの換算ではない。基本 $7.99/月 (EUR 6.49) に 1TB 保存と 1TB egress 込み、超過保存 $0.0123/TB-時 (EUR 0.0087)、超過 egress $1.20/TB (EUR 1.00)。storagePricePerGBMonth = 0.0123 x 730 時間 / 1,000 = $0.00898、egressPricePerGB = $1.20 / 1,000 = $0.0012。" },
     "pricingUrl": "https://www.hetzner.com/storage/object-storage/",
     "verifiedDate": "2026-10-03"
   },

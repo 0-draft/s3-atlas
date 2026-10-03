@@ -3,7 +3,7 @@
 _Last verified: 2026-10-03_
 
 > Goal of this chapter: be able to judge "what exists besides S3, what each costs, and when to stop using S3" along three axes: price, features, and operational risk.
-> Prices are **public list prices as of 2026-10-03 (representative US region, pay-as-you-go, excluding tax)**. Discounts, EDP, and commitment contracts are not included. Sources for the numbers are collected in the references at the end. Values available only from third parties are marked "estimated", and values that could not be confirmed are marked "unverified".
+> Prices are **public list prices as of 2026-10-03 (representative US region, pay-as-you-go, excluding tax)**. Discounts, EDP, and commitment contracts are not included. Sources for the numbers are collected in the references at the end. Unit prices for the major providers were checked on 2026-10-03 against each official pricing page (rendered in a browser where the page uses JavaScript) or an official price API. Values available only from third parties are marked "third-party information".
 
 ## TL;DR
 
@@ -69,47 +69,48 @@ Units are USD. `Storage` is per GB-month, `egress` is the first paid internet-eg
 | Service | Storage $/GB-month | Egress $/GB | PUT $/1k | GET $/1k | Minimum storage duration | Free egress condition |
 | --- | --- | --- | --- | --- | --- | --- |
 | AWS S3 Standard (us-east-1) | 0.023 (0.022 above 50TB, 0.021 above 500TB) | 0.09 (first 10TB) | 0.005 | 0.0004 | None | 100GB/month (aggregated across all services), free to CloudFront |
-| Google Cloud Storage Standard (us-central1) | 0.020 | 0.12 (first 1TB, Premium Tier) | 0.005 | 0.0004 | None | 100GB/month |
+| Google Cloud Storage Standard (us-central1) | 0.020 | 0.12 (0 to 10TiB) | 0.005 | 0.0004 | None | 100GB/month (from North America, Always Free) |
 | Azure Blob Hot LRS (East US) | 0.0208 | 0.087 (100GB to 10TB) | 0.005 | 0.0004 | None | 100GB/month |
 | Cloudflare R2 Standard | 0.015 | 0 | 0.0045 | 0.00036 | None | Always free |
 | Backblaze B2 | 0.00695 | 0.01 (overage) | 0 | 0 | None | Up to 3x average stored volume |
 | Wasabi | 0.00799 | 0 | 0 | 0 | 90 days | Monthly egress ≤ stored volume (fair use) |
 | OCI Object Storage Standard | 0.0255 | 0.0085 | 0.00034 | 0.00034 | None | 10TB/month |
-| IBM COS Standard (regional) | 0.0238 (estimated) | unverified | 0.005 (estimated) | 0.0004 (estimated) | None | unverified |
-| Alibaba OSS Standard LRS (US) | About 0.016 to 0.017 (estimated) | About 0.076 (estimated) | unverified | unverified | None | 100GB/month |
+| IBM COS Standard (Regional, us-south) | 0.023 (0.0209 at 500TB+) | 0.09 (0 to 50TB) | 0.0052 | 0.00042 | None | None |
+| Alibaba OSS Standard LRS (US Virginia) | 0.016 (first 5GB free) | 0.076 (100GB to 10TB) | 0.0014 (free up to 100 million) | 0.0001 (free up to 500 million) | None | 100GB/month |
 | DigitalOcean Spaces | 250GiB included in $5/month, 0.02 overage | 0.01 (above 1TiB) | 0 | 0 | None | 1TiB/month included |
 | Akamai Object Storage | 250GB included in $5/month, 0.02 overage | 0.005 (above 1TB) | 0 | 0 | None | 1TB/month included (transfer pool) |
-| Hetzner Object Storage | 1TB included in base EUR 6.49/month, EUR 0.0087/TB-hour overage | About EUR 1/TB (overage, unverified) | 0 | 0 | None | 1TB/month included |
+| Hetzner Object Storage | 1TB included in base $7.99 (EUR 6.49)/month, $0.0123/TB-hour overage (≈ 0.00898/GB-month) | 0.0012 (overage $1.20/TB, EUR 1.00/TB) | 0 | 0 | None | 1TB/month included |
 | Tigris Standard | 0.02 | 0 | 0.005 | 0.0005 | None | Always free |
 | Storj Standard | 0.007 | 0.007 | 0 | 0 | 30 days | None |
 
 Caveats:
 
-- The official GCS pricing page is rendered with JavaScript and could not be fetched programmatically, so these are **values cross-checked against multiple third-party sources (nOps, Finout, CloudZero, etc.)**. Some sites claim "GCS raised prices in 2026", but Google's official pricing-change announcement page shows that those changes **took effect in 2022-10 / 2023-04**; they are not a new change in 2026.
+- GCS values were read from the official pricing page rendered in a browser. Storage is an hourly rate of $0.000027397/GiB-hour, × 730 hours ≈ $0.020/GiB-month. Egress is $0.12/GiB for 0 to 10TiB, $0.11 for 10 to 150TiB, and $0.08 above 150TiB. GCS bills in GiB/TiB. Some sites claim "GCS raised prices in 2026", but Google's official pricing-change announcement page shows that those changes **took effect in 2022-10 / 2023-04**; they are not a new change in 2026.
 - Azure values were taken directly from the Retail Prices API (`prices.azure.com`). Requests are priced per 10,000 ($0.05 / $0.004) and were converted to per 1,000.
-- Hetzner is priced in EUR. The USD base price is reported to be $7.99 from 2026-04 (secondary source).
-- Storj changed its pricing structure several times in 2025 to 2026. The official page lists a minimum monthly charge of $5, while forum posts say $50 from 2026-07, so this is **unverified**.
+- OCI values come from Oracle's official price API (`apexapps.oracle.com/pls/apex/cetools/api/v1/products`), IBM values from the pricing tab of the IBM Cloud catalog (Standard plan, Regional, us-south), and Alibaba values from the official pricing page with the region switched to US (Virginia). IBM Class B ($0.0042 per 10,000) and Alibaba requests (write $0.014, read $0.001 per 10,000) were converted to per 1,000.
+- Hetzner values are the **USD list prices** from the official price API that the product page reads (a separate USD price list, not an exchange-rate conversion). The EUR list prices are base EUR 6.49, storage overage EUR 0.0087/TB-hour, and egress overage EUR 1.00/TB.
+- Storj changed its pricing structure several times in 2025 to 2026. The official pricing page (checked 2026-10-03) states a minimum monthly fee of **$5** (if usage is under $5 you are charged $5; accounts paying with USDC are exempt). The "$50 from 2026-07" figure seen in forum posts is not reflected on the official page.
 
 ### 2.2 Visualizing storage prices
 
 ```mermaid
 xychart-beta
     title "Hot storage price USD per TB-month (2026-10)"
-    x-axis ["OCI", "IBM", "S3", "Azure", "GCS", "Tigris", "DO", "Akamai", "Alibaba", "R2", "Wasabi", "Hetzner", "Storj", "B2"]
+    x-axis ["OCI", "S3", "IBM", "Azure", "GCS", "Tigris", "DO", "Akamai", "Alibaba", "R2", "Hetzner", "Wasabi", "Storj", "B2"]
     y-axis "USD per TB-month" 0 --> 30
-    bar [25.5, 23.8, 23, 20.8, 20, 20, 20, 20, 17, 15, 7.99, 7.6, 7, 6.95]
+    bar [25.5, 23, 23, 20.8, 20, 20, 20, 20, 16, 15, 8.98, 7.99, 7, 6.95]
 ```
 
-The Hetzner USD value is an estimate based on EUR hourly billing (EUR 0.0087/TB-hour × 730 hours ≈ EUR 6.35/TB). IBM / Alibaba are also estimates.
+The Hetzner value is calculated from the official USD overage rate ($0.0123/TB-hour × 730 hours ≈ $8.98/TB). The first 1TB is included in the $7.99 base price.
 
 ### 2.3 Visualizing egress prices
 
 ```mermaid
 xychart-beta
     title "Internet egress USD per GB (first paid tier)"
-    x-axis ["GCS", "S3", "Azure", "Alibaba", "B2 over 3x", "DO", "OCI", "Storj", "Akamai", "Hetzner", "R2", "Wasabi", "Tigris"]
+    x-axis ["GCS", "S3", "IBM", "Azure", "Alibaba", "B2 over 3x", "DO", "OCI", "Storj", "Akamai", "Hetzner", "R2", "Wasabi", "Tigris"]
     y-axis "USD per GB" 0 --> 0.13
-    bar [0.12, 0.09, 0.087, 0.076, 0.01, 0.01, 0.0085, 0.007, 0.005, 0.0012, 0, 0, 0]
+    bar [0.12, 0.09, 0.09, 0.087, 0.076, 0.01, 0.01, 0.0085, 0.007, 0.005, 0.0012, 0, 0, 0]
 ```
 
 **Egress at the three hyperscalers costs 10 to 100 times that of the alt-clouds**. In its 2025 final decision, the UK CMA pointed out that the major providers' egress fees are at a level "well above average cost" (see Chapter 10).
@@ -124,18 +125,18 @@ xychart-beta
 | AWS | S3 Glacier Deep Archive | 0.00099 | 180 days | 12 to 48 hours |
 | Google | Nearline / Coldline / Archive (us-central1) | 0.010 / 0.004 / 0.0012 | 30 / 90 / 365 days | Immediate (retrieval fees apply) |
 | Azure | Archive LRS (East US) | 0.00099 | 180 days | Rehydration takes hours, $0.02/GB (priority $0.10/GB) |
-| OCI | Archive | About 0.0026 | 90 days | Restore in 1 to 4 hours (third-party information) |
+| OCI | Archive | 0.0026 | 90 days | Restore in 1 to 4 hours (third-party information) |
 | Cloudflare R2 | Infrequent Access | 0.01 | 30 days | $0.01/GB |
 | Tigris | Archive | 0.004 | 90 days | Restore-based |
 | DigitalOcean | Spaces Cold | 0.007/GiB | Early deletion charges apply | $0.01/GiB |
 
-AWS Glacier prices are known list prices confirmed on the S3 pricing page (us-east-1). GCS Nearline/Coldline/Archive values are third-party information.
+AWS Glacier prices are known list prices confirmed on the S3 pricing page (us-east-1). GCS Nearline/Coldline/Archive values are the official pricing page's hourly rates ($0.000013699 / $0.000005479 / $0.000001644 per GiB-hour) × 730 hours, and the 30 / 90 / 365-day minimum durations were confirmed on the same page. The OCI Archive price is from the Oracle price API (B91633).
 
 ## 3. Feature comparison
 
 ### 3.1 Key feature matrix
 
-Legend: ○ = supported / △ = partial or proprietary API / × = not supported / ? = unverified
+Legend: ○ = supported / △ = partial or proprietary API / × = not supported / ? = not yet checked against official documentation (the 2026-10-03 primary-source check covered prices, not these feature cells; confirm in each provider's docs before adopting)
 
 | Service | S3 compatibility | Strong consistency | Versioning | Object Lock | Lifecycle | Replication | Events | Iceberg/tables | Vector | CDN integration |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -150,7 +151,7 @@ Legend: ○ = supported / △ = partial or proprietary API / × = not supported 
 | Alibaba OSS | △ | ○ | ○ | ○ WORM | ○ | ○ CRR | ○ | ? | ? | ○ |
 | DO Spaces | High | ? | ○ | ? | ○ | × | × | × | × | ○ |
 | Akamai | High | ? | ○ | ? | ○ | × | × | × | × | ○ |
-| Hetzner | High | ? | ○ | ○ | ? | × | × | × | × | × |
+| Hetzner | High | ? | ○ | ○ | △ (expiry-based deletion) | × | × | × | × | × |
 | Tigris | High | ○ (configurable) | ? | ? | ○ | ○ automatic global distribution | ○ | × | × | ○ (distributed cache) |
 | Storj | High | ? | ○ | ○ | ? | Not needed (distributed) | × | × | × | × |
 | MinIO / AIStor | High | ○ | ○ | ○ | ○ | ○ | ○ | ? (AIStor) | ? | × |
@@ -193,7 +194,7 @@ Before 2020, "S3 is eventually consistent" was common knowledge, and layers that
 ### 4.1 Google Cloud Storage
 
 - **Positioning**: The foundation of Google's data/AI platform (BigQuery, Vertex AI, Dataflow). Rather than being chosen on its own, it is mostly a case of "we use BigQuery, so GCS".
-- **Pricing**: Standard us-central1 $0.020/GB-month. Egress on the Premium Tier is $0.12 for 0 to 1TB, $0.11 for 1 to 10TB, and $0.08 above 10TB (cross-checked with third-party information). Class A $0.005/1k, Class B $0.0004/1k.
+- **Pricing**: Standard us-central1 $0.020/GiB-month. Internet egress is $0.12/GiB for 0 to 10TiB, $0.11 for 10 to 150TiB, and $0.08 above 150TiB (official pricing page). Class A $0.005/1k, Class B $0.0004/1k (flat namespace; hierarchical namespace is $0.0065 / $0.0005).
 - **Storage classes**: Standard / Nearline (30 days) / Coldline (90 days) / Archive (365 days). **Even Archive can be read in milliseconds**, which is a major difference from S3 Glacier Deep Archive. Autoclass handles automatic tiering.
 - **Unique features**: Dual-region / multi-region buckets (geo-redundancy under a single namespace), Turbo Replication (15-minute RPO), strongly consistent list.
 - **Weaknesses**: S3 compatibility is via "XML API + HMAC keys", so pointing the AWS SDK at it as-is gets stuck on details (some headers, differences in the versioning API). Its egress is the most expensive of the three. The 2023 pricing change doubled the Class A operation price for multi/dual-region.
@@ -234,20 +235,20 @@ Before 2020, "S3 is eventually consistent" was common knowledge, and layers that
 ### 4.6 Oracle OCI Object Storage
 
 - **Positioning**: The only hyperscaler that is seriously making egress cheap.
-- **Pricing**: Standard about $0.0255/GB-month (same in all regions), Infrequent Access about $0.01, Archive about $0.0026. Egress is **free for the first 10TB per month**, then about $0.0085/GB (North America/Europe). Requests about $0.0034 per 10,000. The official OCI pricing page returned 403 when fetched programmatically, so the values were cross-checked against multiple third-party sources.
+- **Pricing**: Standard $0.0255/GB-month (same in all regions, first 10GB free), Infrequent Access $0.01, Archive $0.0026. Egress is **free for the first 10TB per month**, then $0.0085/GB (originating in North America/Europe). Requests $0.0034 per 10,000 (first 50,000 free). Values were confirmed with Oracle's official price API (part numbers B91628 / B93000 / B91633 / B88327 / B91627).
 - **Weaknesses**: The S3 Compatibility API is a subset. The hot storage price is higher than S3.
 - **Good fit for**: Oracle DB / OCI workloads, and companies with fairly high egress that cannot move to an alt-cloud.
 
 ### 4.7 IBM Cloud Object Storage
 
 - **Positioning**: Originates from the distributed erasure coding of Cleversafe, acquired in 2015. Offered both as a cloud service and as on-prem software.
-- **Pricing**: Public information is split by region and redundancy, and official figures could not be fetched programmatically. Third-party information puts Standard regional at about $0.0238/GB and Smart Tier Hot at about $0.0227/GB. For 2PB and above there is a One-Rate plan at USD 10/TB including egress and API calls (IBM announcement). **The egress price is unverified**.
+- **Pricing**: The pricing tab of the IBM Cloud catalog (Standard plan, Regional, us-south) lists the Standard class at $0.0230/GB-month ($0.0209 at 500TB and above) and Smart Tier Hot at $0.0219. Class A $0.0052 per 1,000, Class B $0.0042 per 10,000. **Public egress is $0.09/GB for 0 to 50TB, $0.07 for the next 100TB, and $0.05 for the next 350TB**, with no free allowance. Prices vary by location and resiliency. There is also a One-Rate plan from USD 10/TB including egress and API calls (IBM announcement; the catalog labels it a limited-time offer).
 - **Good fit for**: Regulated industries using IBM Cloud / watsonx.
 
 ### 4.8 Alibaba Cloud OSS
 
 - **Positioning**: One of the largest in mainland China and APAC. The native API is the OSS API, and S3 compatibility is partial.
-- **Pricing**: Standard LRS is $0.016 to $0.0173/GB-month depending on region; egress is 100GB free, then about $0.076 to $0.08/GB (all estimated). Outside mainland China, transfer from OSS to Alibaba CDN is free.
+- **Pricing**: The official pricing page (US Virginia) lists Standard LRS at $0.0160/GB-month (first 5GB free, GB = GiB) and Standard ZRS at $0.02. Internet egress is free for the first 100GB, then $0.076/GB for 100GB to 10TB, $0.069 for 10 to 50TB, $0.060 for 50 to 150TB, and $0.043 above 150TB. Standard API calls are free up to 100 million writes and 500 million reads, then $0.014 / $0.001 per 10,000. Prices differ by region (for example, Hong Kong is $0.017 for storage and $0.118 for egress). Outside mainland China, transfer from OSS to Alibaba CDN is free.
 - **Good fit for**: Practically the only choice when serving users in mainland China.
 
 ### 4.9 DigitalOcean Spaces
@@ -264,7 +265,7 @@ Before 2020, "S3 is eventually consistent" was common knowledge, and layers that
 
 ### 4.11 Hetzner Object Storage
 
-- **Pricing**: Base EUR 6.49/month (revised from EUR 4.99 on 2026-04-01) for 1TB of storage + 1TB of egress. Storage overage is EUR 0.0087/TB-hour (previously EUR 0.0067). Egress overage is about EUR 1/TB (unverified officially). API calls and ingress are free.
+- **Pricing**: Base $7.99 / EUR 6.49 (monthly cap on hourly billing; the EUR price was revised from EUR 4.99 on 2026-04-01) for 1TB of storage + 1TB of egress. Storage overage is $0.0123 / EUR 0.0087 per TB-hour (EUR previously 0.0067). Egress overage is $1.20 / EUR 1.00 per TB (confirmed via the official price API). API calls and ingress are free. The base price applies as long as at least one bucket exists, even an empty one.
 - **Constraints**: Only Germany (FSN1 / NBG1) and Finland (HEL1). 100TB / 50 million objects per bucket, up to 100 buckets.
 - **Good fit for**: Cost-sensitive EU workloads co-located with Hetzner servers.
 
@@ -295,7 +296,7 @@ timeline
     2025-10 : Official community binaries and container images discontinued
     2025-12-03 : GitHub repo enters maintenance mode
     2026-02 : Repo marked no longer maintained and archived (some sources say 2026-04)
-    2026-09 : minio images reported removed from Docker Hub (single source, unverified)
+    2026-09 : minio/minio and minio/mc images gone from Docker Hub (date from a single source, absence confirmed via Docker Hub API on 2026-10-03)
 ```
 
 - The license (AGPLv3) itself has not changed. What ended was **maintenance and distribution**. The code can be forked, and community forks that restore the console have appeared.
@@ -336,7 +337,8 @@ Gartner's evaluation framework: In 2025, Gartner **merged** its two MQs, "Primar
 - Calculated with 1TB = 1,000GB in decimal units (AWS/Azure treat 1TB as either 1,000GB or 1,024GB depending on the service, which introduces an error of a few percent).
 - Pay-as-you-go list prices, representative US region, excluding tax; free tiers are deducted only where stated.
 - Only scenario A includes requests (1 million PUT / 10 million GET). B / C cover storage + egress only.
-- No EUR → USD conversion (Hetzner is shown in EUR).
+- Hetzner is calculated with its official USD list prices, with the result at its EUR list prices shown alongside (no exchange-rate conversion).
+- GCS bills in GiB/TiB; here GiB ≈ GB, except that the tier boundary follows the official 10TiB = 10,240GB.
 
 ### 5.2 Scenario A: 10TB stored + 50TB/month egress (delivery-oriented SaaS)
 
@@ -356,10 +358,11 @@ Total                                              ≈ $4,530
 
 ```text
 Storage 10,000 GB x $0.020                         = $200.00
-Egress  1,000 GB x $0.12 + 9,000 GB x $0.11 + 40,000 GB x $0.08
-        = 120 + 990 + 3,200                        = $4,310.00
+Egress  first 100 GB free (Always Free)
+        10,140 GB x $0.12  (up to 10TiB tier)      = $1,216.80
+        39,760 GB x $0.11  (10 to 150TiB tier)     = $4,373.60
 PUT/GET (same unit prices as S3)                   = $9.00
-Total                                              ≈ $4,519
+Total                                              ≈ $5,799
 ```
 
 **Azure Blob Hot LRS**:
@@ -409,14 +412,15 @@ Tigris       storage 10,000 x 0.02 = 200, PUT 1M x 0.005/1k = 5, GET 10M x 0.000
 Storj        storage 10 TB x $7 = 70, egress 50 TB x $7 = 350                                          ≈ $420
 Akamai       base 5 + storage (10,000 - 250) x 0.02 = 195, egress (50,000 - 1,000) x 0.005 = 245      ≈ $445
 DO Spaces    base 5 + storage (10,000 - 250) x 0.02 = 195, egress (50,000 - 1,024) x 0.01 ≈ 489.76    ≈ $690
-Hetzner      base EUR 6.49 + storage 9 TB x 0.0087 x 730 h ≈ EUR 57.16, egress 49 TB x EUR 1 = 49      ≈ EUR 113
+Hetzner      base $7.99 + storage 9 TB x $0.0123 x 730 h ≈ 80.81, egress 49 TB x $1.20 = 58.80          ≈ $148
+             (in EUR: 6.49 + 9 x 0.0087 x 730 ≈ 57.16 + 49 x 1.00 = 49                            ≈ EUR 113)
 Wasabi       storage 10 TB x $7.99 = 79.90, but egress 50 TB > stored 10 TB violates fair use policy  -> not suitable
 ```
 
 | Service | Monthly (approx.) | Ratio to S3 |
 | --- | --- | --- |
+| GCS | $5,799 | 1.28 |
 | AWS S3 | $4,530 | 1.00 |
-| GCS | $4,519 | 1.00 |
 | Azure Blob | $4,399 | 0.97 |
 | DO Spaces | $690 | 0.15 |
 | OCI | $599 | 0.13 |
@@ -425,7 +429,7 @@ Wasabi       storage 10 TB x $7.99 = 79.90, but egress 50 TB > stored 10 TB viol
 | B2 | $270 | 0.06 |
 | Tigris | $210 | 0.05 |
 | R2 | $150 | 0.03 |
-| Hetzner | About EUR 113 | About 0.03 (depends on exchange rate) |
+| Hetzner | $148 (EUR 113) | 0.03 |
 | Wasabi | Not suitable | - |
 
 ```mermaid
@@ -472,7 +476,7 @@ xychart-beta
 
 ```text
 AWS S3      storage 50,000 x 0.023 + 50,000 x 0.022 = 2,250   egress 9,900 x 0.09 = 891          ≈ $3,141
-GCS         storage 100,000 x 0.020 = 2,000           egress 1,000 x 0.12 + 9,000 x 0.11 = 1,110 ≈ $3,110
+GCS         storage 100,000 x 0.020 = 2,000           egress (10,000 - 100 free) x 0.12 = 1,188  ≈ $3,188
 Azure       storage 51,200 x 0.0208 + 48,800 x 0.019968 ≈ 2,039   egress 9,900 x 0.087 ≈ 861   ≈ $2,901
 OCI         storage 100,000 x 0.0255 = 2,550          egress 10 TB free = 0                      ≈ $2,550
 DO Spaces   5 + (100,000 - 250) x 0.02 = 2,000        egress (10,000 - 1,024) x 0.01 ≈ 90        ≈ $2,090
@@ -482,10 +486,11 @@ R2          storage 99,990 x 0.015 ≈ 1,500            egress 0                
 Wasabi      storage 100 TB x 7.99 = 799               egress 10 TB ≤ 100 TB, free                ≈ $799
 Storj       storage 100 TB x 7 = 700                  egress 10 TB x 7 = 70                      ≈ $770
 B2          storage 100 TB x 6.95 = 695               egress 10 TB ≤ 300 TB, free                ≈ $695
-Hetzner     EUR 6.49 + 99 TB x 0.0087 x 730 ≈ EUR 635   egress 9 TB x EUR 1 = 9                  ≈ EUR 651
+Hetzner     $7.99 + 99 TB x 0.0123 x 730 ≈ 896.91      egress 9 TB x $1.20 = 10.80               ≈ $908
+            (in EUR: 6.49 + 99 x 0.0087 x 730 ≈ 635.24   egress 9 x 1.00 = 9                  ≈ EUR 644)
 ```
 
-**Conclusion C**: In a low-egress scenario, the gap between the hyperscalers and R2/Tigris narrows to about 1.5 to 2x, and **the true cheapest options are the "about $7/TB" band of B2 / Storj / Wasabi / Hetzner** (about 1/4.5 of S3). However, S3 can also use Intelligent-Tiering to automatically move unread data down to the IA tier ($0.0125) or below, so the effective gap shrinks further.
+**Conclusion C**: In a low-egress scenario, the gap between the hyperscalers and R2/Tigris narrows to about 1.5 to 2x, and **the true cheapest options are the "$7 to $8/TB" band of B2 / Storj / Wasabi** (about 1/4 to 1/4.5 of S3), followed by Hetzner (just under $9/TB, about $908). However, S3 can also use Intelligent-Tiering to automatically move unread data down to the IA tier ($0.0125) or below, so the effective gap shrinks further.
 
 ### 5.5 Scenario summary
 
@@ -621,8 +626,10 @@ flowchart LR
 - Wasabi, Pricing: <https://wasabi.com/pricing>
 - Wasabi, May 2026: Wasabi Pricing: <https://docs.wasabi.com/docs/may-2026-wasabi-pricing>
 - Oracle, OCI Storage pricing: <https://www.oracle.com/cloud/storage/pricing/>
+- Oracle, Cloud Price List API (B91628 / B91627 / B88327 / B91633 / B93000): <https://apexapps.oracle.com/pls/apex/cetools/api/v1/products/?currencyCode=USD>
 - Finout, OCI costs overview: <https://www.finout.io/blog/oci-costs-overview>
-- IBM, Cloud Object Storage pricing: <https://www.ibm.com/cloud/object-storage/pricing>
+- IBM Cloud, Cloud Object Storage catalog pricing tab: <https://cloud.ibm.com/objectstorage/create#pricing>
+- IBM Cloud Docs, Cloud Object Storage billing (request classes): <https://cloud.ibm.com/docs/cloud-object-storage?topic=cloud-object-storage-billing>
 - IBM, reduced pricing tier announcement: <https://www.ibm.com/new/announcements/ibm-cloud-object-storage-launches-reduced-pricing-tier-for-enterprise-scale-affordability>
 - Alibaba Cloud, OSS pricing: <https://www.alibabacloud.com/en/product/oss/pricing>
 - Alibaba Cloud, OSS traffic fees: <https://www.alibabacloud.com/help/en/oss/traffic-fees>
@@ -630,6 +637,7 @@ flowchart LR
 - Akamai, Object Storage pricing: <https://techdocs.akamai.com/cloud-computing/docs/object-storage-pricing>
 - Akamai, Object Storage limits: <https://techdocs.akamai.com/cloud-computing/docs/object-storage-product-limits>
 - Hetzner, Object Storage: <https://www.hetzner.com/storage/object-storage/>
+- Hetzner, website price API (CLOUD_84 base / CLOUD_85 storage overage / CLOUD_86 egress overage): <https://website-price-api.hetzner.com/api/v1/products/CLOUD_85>
 - Hetzner, Statement on price adjustment as of April 1st 2026: <https://www.hetzner.com/pressroom/statement-price-adjustment/>
 - Tigris, Pricing: <https://www.tigrisdata.com/pricing/>
 - Storj, Pricing: <https://www.storj.io/pricing>
@@ -639,6 +647,7 @@ flowchart LR
 - Bizety, MinIO in Maintenance Mode (2025-12-06): <https://bizety.com/2025/12/06/minio-in-maintenance-mode-open-source-alternatives/>
 - Vonng, MinIO Is Dead, Long Live MinIO: <https://blog.vonng.com/en/db/minio-resurrect/>
 - Bex, MinIO Vanished From Docker Hub (2026-09-25, single source): <https://bex.co/blog/2026/09/25/minio-docker-hub-removal-quay-repoint>
+- Docker Hub API, repositories in the minio namespace (minio/minio and minio/mc absent as of 2026-10-03): <https://hub.docker.com/v2/repositories/minio/?page_size=100>
 - Matt Gerega, Migrating from MinIO to Garage: <https://www.mattgerega.com/2025/12/10/migrating-from-minio-to-garage-when-open-source-isnt-so-open-anymore/>
 - Ceph, RADOS Gateway docs: <https://docs.ceph.com/en/latest/radosgw/>
 - SeaweedFS: <https://github.com/seaweedfs/seaweedfs>

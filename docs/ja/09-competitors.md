@@ -3,7 +3,7 @@
 _最終確認: 2026-10-03_
 
 > この章のゴール: 「S3 以外に何があり、どれがいくらで、いつ S3 をやめるべきか」を、価格・機能・運用リスクの 3 軸で判断できるようになること。
-> 価格は **2026-10-03 時点の公開定価 (US 系の代表リージョン、従量課金、税抜)**。値引き・EDP・コミット契約は含まない。数字の出典は末尾の参考文献にまとめた。第三者情報しか取れなかった値は「推定」、確認できなかった値は「未確認」と明記する。
+> 価格は **2026-10-03 時点の公開定価 (US 系の代表リージョン、従量課金、税抜)**。値引き・EDP・コミット契約は含まない。数字の出典は末尾の参考文献にまとめた。主要プロバイダの単価は 2026-10-03 に各社の公式価格ページ (JavaScript 描画のページはブラウザで描画) または公式の価格 API で確認した。第三者情報しか取れなかった値は「第三者情報」と明記する。
 
 ## TL;DR
 
@@ -69,47 +69,48 @@ quadrantChart
 | サービス | 保存 $/GB-月 | egress $/GB | PUT $/1k | GET $/1k | 最低保存期間 | 無料 egress の条件 |
 | --- | --- | --- | --- | --- | --- | --- |
 | AWS S3 Standard (us-east-1) | 0.023 (50TB 超で 0.022, 500TB 超で 0.021) | 0.09 (最初の 10TB) | 0.005 | 0.0004 | なし | 月 100GB (全サービス合算)、CloudFront 向けは無料 |
-| Google Cloud Storage Standard (us-central1) | 0.020 | 0.12 (最初の 1TB、Premium Tier) | 0.005 | 0.0004 | なし | 月 100GB |
+| Google Cloud Storage Standard (us-central1) | 0.020 | 0.12 (0〜10TiB) | 0.005 | 0.0004 | なし | 月 100GB (北米発、Always Free) |
 | Azure Blob Hot LRS (East US) | 0.0208 | 0.087 (100GB 超〜10TB) | 0.005 | 0.0004 | なし | 月 100GB |
 | Cloudflare R2 Standard | 0.015 | 0 | 0.0045 | 0.00036 | なし | 常に無料 |
 | Backblaze B2 | 0.00695 | 0.01 (超過分) | 0 | 0 | なし | 平均保存量の 3 倍まで |
 | Wasabi | 0.00799 | 0 | 0 | 0 | 90 日 | 月間 egress ≤ 保存量 (公正利用) |
 | OCI Object Storage Standard | 0.0255 | 0.0085 | 0.00034 | 0.00034 | なし | 月 10TB |
-| IBM COS Standard (regional) | 0.0238 (推定) | 未確認 | 0.005 (推定) | 0.0004 (推定) | なし | 未確認 |
-| Alibaba OSS Standard LRS (US) | 約 0.016〜0.017 (推定) | 約 0.076 (推定) | 未確認 | 未確認 | なし | 月 100GB |
+| IBM COS Standard (Regional, us-south) | 0.023 (500TB 以上 0.0209) | 0.09 (0〜50TB) | 0.0052 | 0.00042 | なし | なし |
+| Alibaba OSS Standard LRS (US Virginia) | 0.016 (最初の 5GB 無料) | 0.076 (100GB〜10TB) | 0.0014 (1 億件まで無料) | 0.0001 (5 億件まで無料) | なし | 月 100GB |
 | DigitalOcean Spaces | $5/月に 250GiB 込み、超過 0.02 | 0.01 (1TiB 超) | 0 | 0 | なし | 1TiB/月 込み |
 | Akamai Object Storage | $5/月に 250GB 込み、超過 0.02 | 0.005 (1TB 超) | 0 | 0 | なし | 1TB/月 込み (転送プール) |
-| Hetzner Object Storage | 基本 EUR 6.49/月に 1TB 込み、超過 EUR 0.0087/TB-時 | 約 EUR 1/TB (超過、未確認) | 0 | 0 | なし | 1TB/月 込み |
+| Hetzner Object Storage | 基本 $7.99 (EUR 6.49)/月に 1TB 込み、超過 $0.0123/TB-時 (≈ 0.00898/GB-月) | 0.0012 (超過 $1.20/TB、EUR 1.00/TB) | 0 | 0 | なし | 1TB/月 込み |
 | Tigris Standard | 0.02 | 0 | 0.005 | 0.0005 | なし | 常に無料 |
 | Storj Standard | 0.007 | 0.007 | 0 | 0 | 30 日 | なし |
 
 注意点:
 
-- GCS の公式価格ページは JavaScript 描画で機械取得できず、**複数の第三者ソース (nOps, Finout, CloudZero 等) と照合した値**。一部サイトは「2026 年に GCS が値上げ」と書いているが、Google 公式の価格改定告知ページを読むと該当の改定は **2022-10 / 2023-04 発効** のもので、2026 年の新しい改定ではない。
+- GCS は公式価格ページをブラウザで描画して読んだ値。保存は時間単価 $0.000027397/GiB-時で、× 730 時間 ≈ $0.020/GiB-月。egress は 0〜10TiB $0.12/GiB、10〜150TiB $0.11、150TiB 超 $0.08。GCS の単位は GiB/TiB。一部サイトは「2026 年に GCS が値上げ」と書いているが、Google 公式の価格改定告知ページを読むと該当の改定は **2022-10 / 2023-04 発効** のもので、2026 年の新しい改定ではない。
 - Azure は Retail Prices API (`prices.azure.com`) から直接取得した値。リクエストは 10,000 件単位 ($0.05 / $0.004) を 1,000 件に換算した。
-- Hetzner は EUR 建て。USD 建て基本料金は 2026-04 から $7.99 と報じられている (二次情報)。
-- Storj は 2025〜2026 年に料金体系を何度も変更。最低月額は公式ページで $5、2026-07 から $50 とするフォーラム情報もあり **未確認**。
+- OCI は Oracle 公式の価格 API (`apexapps.oracle.com/pls/apex/cetools/api/v1/products`)、IBM は IBM Cloud カタログの料金タブ (Standard プラン、Regional、us-south)、Alibaba は公式価格ページでリージョンを US (Virginia) に切り替えた値。IBM の Class B ($0.0042/10,000 件) と Alibaba のリクエスト (書き込み $0.014、読み取り $0.001/10,000 件) は 1,000 件単位に換算した。
+- Hetzner は製品ページが参照する公式価格 API の **USD 建て定価** (EUR 建てとは別の定価で、為替換算ではない)。EUR 建ては基本 EUR 6.49、超過保存 EUR 0.0087/TB-時、超過 egress EUR 1.00/TB。
+- Storj は 2025〜2026 年に料金体系を何度も変更。最低月額は公式価格ページ (2026-10-03 確認) で **$5** (利用額が $5 未満なら $5 を請求、USDC 払いは対象外)。フォーラムで見られる「2026-07 から $50」という話は公式ページに反映されていない。
 
 ### 2.2 保存単価の可視化
 
 ```mermaid
 xychart-beta
     title "Hot storage price USD per TB-month (2026-10)"
-    x-axis ["OCI", "IBM", "S3", "Azure", "GCS", "Tigris", "DO", "Akamai", "Alibaba", "R2", "Wasabi", "Hetzner", "Storj", "B2"]
+    x-axis ["OCI", "S3", "IBM", "Azure", "GCS", "Tigris", "DO", "Akamai", "Alibaba", "R2", "Hetzner", "Wasabi", "Storj", "B2"]
     y-axis "USD per TB-month" 0 --> 30
-    bar [25.5, 23.8, 23, 20.8, 20, 20, 20, 20, 17, 15, 7.99, 7.6, 7, 6.95]
+    bar [25.5, 23, 23, 20.8, 20, 20, 20, 20, 16, 15, 8.98, 7.99, 7, 6.95]
 ```
 
-Hetzner の USD 値は EUR 時間課金 (EUR 0.0087/TB-時 × 730 時間 ≈ EUR 6.35/TB) を元にした推定。IBM / Alibaba も推定値。
+Hetzner は公式 USD 建ての超過単価から計算した値 ($0.0123/TB-時 × 730 時間 ≈ $8.98/TB)。最初の 1TB は基本料金 $7.99 に含まれる。
 
 ### 2.3 egress 単価の可視化
 
 ```mermaid
 xychart-beta
     title "Internet egress USD per GB (first paid tier)"
-    x-axis ["GCS", "S3", "Azure", "Alibaba", "B2 over 3x", "DO", "OCI", "Storj", "Akamai", "Hetzner", "R2", "Wasabi", "Tigris"]
+    x-axis ["GCS", "S3", "IBM", "Azure", "Alibaba", "B2 over 3x", "DO", "OCI", "Storj", "Akamai", "Hetzner", "R2", "Wasabi", "Tigris"]
     y-axis "USD per GB" 0 --> 0.13
-    bar [0.12, 0.09, 0.087, 0.076, 0.01, 0.01, 0.0085, 0.007, 0.005, 0.0012, 0, 0, 0]
+    bar [0.12, 0.09, 0.09, 0.087, 0.076, 0.01, 0.01, 0.0085, 0.007, 0.005, 0.0012, 0, 0, 0]
 ```
 
 **ハイパースケーラー 3 社の egress は alt-cloud の 10〜100 倍**。英国 CMA は 2025 年の最終決定で、大手の egress 料金が「平均コストを大きく上回る」水準にあると指摘している (第 10 章参照)。
@@ -124,18 +125,18 @@ xychart-beta
 | AWS | S3 Glacier Deep Archive | 0.00099 | 180 日 | 12〜48 時間 |
 | Google | Nearline / Coldline / Archive (us-central1) | 0.010 / 0.004 / 0.0012 | 30 / 90 / 365 日 | 即時 (取り出し料金あり) |
 | Azure | Archive LRS (East US) | 0.00099 | 180 日 | rehydrate 数時間、$0.02/GB (優先 $0.10/GB) |
-| OCI | Archive | 約 0.0026 | 90 日 | 復元 1〜4 時間 (第三者情報) |
+| OCI | Archive | 0.0026 | 90 日 | 復元 1〜4 時間 (第三者情報) |
 | Cloudflare R2 | Infrequent Access | 0.01 | 30 日 | $0.01/GB |
 | Tigris | Archive | 0.004 | 90 日 | 復元型 |
 | DigitalOcean | Spaces Cold | 0.007/GiB | 早期削除課金あり | $0.01/GiB |
 
-AWS Glacier 系の価格は S3 価格ページ (us-east-1) で確認した既知の定価。GCS の Nearline/Coldline/Archive は第三者情報。
+AWS Glacier 系の価格は S3 価格ページ (us-east-1) で確認した既知の定価。GCS の Nearline/Coldline/Archive は公式価格ページの時間単価 ($0.000013699 / $0.000005479 / $0.000001644 per GiB-時) × 730 時間で、最低保存期間 30 / 90 / 365 日も同ページで確認した。OCI Archive の単価は Oracle 価格 API (B91633)。
 
 ## 3. 機能比較
 
 ### 3.1 主要機能マトリクス
 
-凡例: ○ = あり / △ = 部分的・独自 API / × = なし / ? = 未確認
+凡例: ○ = あり / △ = 部分的・独自 API / × = なし / ? = 有無をまだ公式ドキュメントで確かめていない (2026-10-03 の一次情報確認は価格が対象で、機能セルは対象外。採用前に各社ドキュメントで確認すること)
 
 | サービス | S3 互換度 | 強整合 | Versioning | Object Lock | Lifecycle | Replication | Events | Iceberg/テーブル | Vector | CDN 統合 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -150,7 +151,7 @@ AWS Glacier 系の価格は S3 価格ページ (us-east-1) で確認した既知
 | Alibaba OSS | △ | ○ | ○ | ○ WORM | ○ | ○ CRR | ○ | ? | ? | ○ |
 | DO Spaces | 高 | ? | ○ | ? | ○ | × | × | × | × | ○ |
 | Akamai | 高 | ? | ○ | ? | ○ | × | × | × | × | ○ |
-| Hetzner | 高 | ? | ○ | ○ | ? | × | × | × | × | × |
+| Hetzner | 高 | ? | ○ | ○ | △ (有効期限による削除) | × | × | × | × | × |
 | Tigris | 高 | ○ (設定可) | ? | ? | ○ | ○ 自動グローバル分散 | ○ | × | × | ○ (分散キャッシュ) |
 | Storj | 高 | ? | ○ | ○ | ? | 不要 (分散) | × | × | × | × |
 | MinIO / AIStor | 高 | ○ | ○ | ○ | ○ | ○ | ○ | ? (AIStor) | ? | × |
@@ -193,7 +194,7 @@ timeline
 ### 4.1 Google Cloud Storage
 
 - **ポジショニング**: Google のデータ/AI 基盤 (BigQuery, Vertex AI, Dataflow) の土台。単体で選ばれるより「BigQuery を使うから GCS」というケースが大半。
-- **価格**: Standard us-central1 $0.020/GB-月。egress は Premium Tier で 0〜1TB $0.12、1〜10TB $0.11、10TB 超 $0.08 (第三者情報で照合)。Class A $0.005/1k、Class B $0.0004/1k。
+- **価格**: Standard us-central1 $0.020/GiB-月。インターネット egress は 0〜10TiB $0.12/GiB、10〜150TiB $0.11、150TiB 超 $0.08 (公式価格ページ)。Class A $0.005/1k、Class B $0.0004/1k (flat namespace。hierarchical namespace は $0.0065 / $0.0005)。
 - **ストレージクラス**: Standard / Nearline (30 日) / Coldline (90 日) / Archive (365 日)。**Archive でもミリ秒で読める** のが S3 Glacier Deep Archive との大きな違い。Autoclass で自動階層化。
 - **ユニーク機能**: dual-region / multi-region バケット (単一名前空間で地理冗長)、Turbo Replication (RPO 15 分)、強整合な list。
 - **弱点**: S3 互換は「XML API + HMAC キー」での互換で、AWS SDK をそのまま向けると細部 (一部ヘッダ、バージョニング API の差) で詰まる。egress は 3 社で最も高い。2023 年改定で multi/dual-region の Class A 操作単価が 2 倍になった。
@@ -234,20 +235,20 @@ timeline
 ### 4.6 Oracle OCI Object Storage
 
 - **ポジショニング**: ハイパースケーラーの中で唯一、egress を本気で安くしているプレイヤー。
-- **価格**: Standard 約 $0.0255/GB-月 (全リージョン同一)、Infrequent Access 約 $0.01、Archive 約 $0.0026。egress は **月 10TB 無料**、以降約 $0.0085/GB (北米/欧州)。リクエスト約 $0.0034/10,000 件。OCI 公式価格ページは機械取得で 403 となったため、値は複数の第三者ソースで照合した。
+- **価格**: Standard $0.0255/GB-月 (全リージョン同一、最初の 10GB 無料)、Infrequent Access $0.01、Archive $0.0026。egress は **月 10TB 無料**、以降 $0.0085/GB (北米/欧州発)。リクエスト $0.0034/10,000 件 (最初の 50,000 件無料)。値は Oracle 公式の価格 API (パーツ番号 B91628 / B93000 / B91633 / B88327 / B91627) で確認した。
 - **弱点**: S3 Compatibility API はサブセット。ホット保存単価は S3 より高い。
 - **向く用途**: Oracle DB / OCI ワークロード、egress がそこそこ多いが alt-cloud には行けない企業。
 
 ### 4.7 IBM Cloud Object Storage
 
 - **ポジショニング**: 2015 年に買収した Cleversafe の分散型イレイジャーコーディングが起源。クラウドとオンプレソフトの両方で提供。
-- **価格**: 公開情報が地域・冗長性ごとに分かれ、公式の数値を機械取得できなかった。第三者情報で Standard regional 約 $0.0238/GB、Smart Tier Hot 約 $0.0227/GB。2PB 以上で egress・API 込み USD 10/TB の One-Rate プランがある (IBM 発表)。**egress 単価は未確認**。
+- **価格**: IBM Cloud カタログの料金タブ (Standard プラン、Regional、us-south) で Standard クラス $0.0230/GB-月 (500TB 以上 $0.0209)、Smart Tier Hot $0.0219。Class A $0.0052/1,000 件、Class B $0.0042/10,000 件。**パブリック egress は 0〜50TB $0.09/GB、次の 100TB $0.07、次の 350TB $0.05** で無料枠なし。料金はロケーションと冗長性で変わる。egress・API 込み USD 10/TB からの One-Rate プランもある (IBM 発表、カタログでは期間限定と表記)。
 - **向く用途**: IBM Cloud / watsonx を使う規制業界。
 
 ### 4.8 Alibaba Cloud OSS
 
 - **ポジショニング**: 中国本土・APAC で最大級。ネイティブ API は OSS API で、S3 互換は部分的。
-- **価格**: Standard LRS は地域により $0.016〜0.0173/GB-月、egress は 100GB 無料、以降約 $0.076〜0.08/GB (いずれも推定)。中国本土外では OSS から Alibaba CDN への転送が無料。
+- **価格**: 公式価格ページ (US Virginia) で Standard LRS $0.0160/GB-月 (最初の 5GB 無料、GB = GiB)、Standard ZRS $0.02。インターネット egress は 100GB 無料、100GB〜10TB $0.076/GB、10〜50TB $0.069、50〜150TB $0.060、150TB 超 $0.043。Standard の API は書き込み 1 億件・読み取り 5 億件まで無料、以降 $0.014 / $0.001 (10,000 件)。料金はリージョンごとに異なる (例: 香港は保存 $0.017、egress $0.118)。中国本土外では OSS から Alibaba CDN への転送が無料。
 - **向く用途**: 中国本土のユーザーにサービスする場合はほぼ一択。
 
 ### 4.9 DigitalOcean Spaces
@@ -264,7 +265,7 @@ timeline
 
 ### 4.11 Hetzner Object Storage
 
-- **価格**: 基本 EUR 6.49/月 (2026-04-01 に EUR 4.99 から改定) で 1TB 保存 + 1TB egress。超過保存は EUR 0.0087/TB-時 (旧 EUR 0.0067)。超過 egress は約 EUR 1/TB (公式で未確認)。API と ingress は無料。
+- **価格**: 基本 $7.99 / EUR 6.49 (月額上限、時間課金。EUR は 2026-04-01 に EUR 4.99 から改定) で 1TB 保存 + 1TB egress。超過保存は $0.0123 / EUR 0.0087 per TB-時 (EUR は旧 0.0067)。超過 egress は $1.20 / EUR 1.00 per TB (公式価格 API で確認)。API と ingress は無料。バケットが 1 つでもあれば空でも基本料金がかかる。
 - **制約**: ドイツ (FSN1 / NBG1) とフィンランド (HEL1) のみ。バケットあたり 100TB / 5,000 万オブジェクト、最大 100 バケット。
 - **向く用途**: Hetzner のサーバーと同居する EU のコスト重視ワークロード。
 
@@ -295,7 +296,7 @@ timeline
     2025-10 : Official community binaries and container images discontinued
     2025-12-03 : GitHub repo enters maintenance mode
     2026-02 : Repo marked no longer maintained and archived (some sources say 2026-04)
-    2026-09 : minio images reported removed from Docker Hub (single source, unverified)
+    2026-09 : minio/minio and minio/mc images gone from Docker Hub (date from a single source, absence confirmed via Docker Hub API on 2026-10-03)
 ```
 
 - ライセンス (AGPLv3) 自体は変わっていない。終わったのは **メンテナンスと配布**。コードは fork 可能で、コンソールを復活させたコミュニティ fork も出ている。
@@ -336,7 +337,8 @@ Gartner の評価軸: 2025 年に Gartner は「Primary Storage」と「Distribu
 - 1TB = 1,000GB の 10 進換算で計算 (AWS/Azure は 1TB = 1,000GB または 1,024GB の扱いがサービスにより異なり、数 % の誤差が出る)。
 - 従量課金の定価、US 系代表リージョン、税抜、無料枠は明記したものだけ控除。
 - シナリオ A のみリクエスト (PUT 100 万 / GET 1,000 万) を含める。B / C は保存 + egress のみ。
-- EUR → USD 換算はしない (Hetzner は EUR のまま表示)。
+- Hetzner は公式の USD 建て定価で計算し、EUR 建て定価での結果も併記する (為替換算はしない)。
+- GCS は GiB/TiB 単位で課金されるが、ここでは GiB ≈ GB とみなし、ティア境界だけ公式どおり 10TiB = 10,240GB とした。
 
 ### 5.2 シナリオ A: 10TB 保存 + 50TB/月 egress (配信型 SaaS)
 
@@ -356,10 +358,11 @@ GET    10,000,000 / 1,000 x $0.0004               = $4.00
 
 ```text
 保存   10,000 GB x $0.020                         = $200.00
-egress 1,000 GB x $0.12 + 9,000 GB x $0.11 + 40,000 GB x $0.08
-       = 120 + 990 + 3,200                        = $4,310.00
+egress 最初 100 GB 無料 (Always Free)
+       10,140 GB x $0.12  (〜10TiB ティア)        = $1,216.80
+       39,760 GB x $0.11  (10〜150TiB ティア)     = $4,373.60
 PUT/GET (S3 と同単価)                              = $9.00
-合計                                              ≈ $4,519
+合計                                              ≈ $5,799
 ```
 
 **Azure Blob Hot LRS**:
@@ -409,14 +412,15 @@ Tigris       保存 10,000 x 0.02 = 200, PUT 1M x 0.005/1k = 5, GET 10M x 0.0005
 Storj        保存 10 TB x $7 = 70, egress 50 TB x $7 = 350                                          ≈ $420
 Akamai       基本 5 + 保存 (10,000 - 250) x 0.02 = 195, egress (50,000 - 1,000) x 0.005 = 245      ≈ $445
 DO Spaces    基本 5 + 保存 (10,000 - 250) x 0.02 = 195, egress (50,000 - 1,024) x 0.01 ≈ 489.76    ≈ $690
-Hetzner      基本 EUR 6.49 + 保存 9 TB x 0.0087 x 730 h ≈ EUR 57.16, egress 49 TB x EUR 1 = 49      ≈ EUR 113
+Hetzner      基本 $7.99 + 保存 9 TB x $0.0123 x 730 h ≈ 80.81, egress 49 TB x $1.20 = 58.80          ≈ $148
+             (EUR 建て: 6.49 + 9 x 0.0087 x 730 ≈ 57.16 + 49 x 1.00 = 49                         ≈ EUR 113)
 Wasabi       保存 10 TB x $7.99 = 79.90 だが egress 50 TB > 保存 10 TB で公正利用ポリシー違反       → 不適合
 ```
 
 | サービス | 月額 (概算) | S3 比 |
 | --- | --- | --- |
+| GCS | $5,799 | 1.28 |
 | AWS S3 | $4,530 | 1.00 |
-| GCS | $4,519 | 1.00 |
 | Azure Blob | $4,399 | 0.97 |
 | DO Spaces | $690 | 0.15 |
 | OCI | $599 | 0.13 |
@@ -425,7 +429,7 @@ Wasabi       保存 10 TB x $7.99 = 79.90 だが egress 50 TB > 保存 10 TB で
 | B2 | $270 | 0.06 |
 | Tigris | $210 | 0.05 |
 | R2 | $150 | 0.03 |
-| Hetzner | 約 EUR 113 | 約 0.03 (為替依存) |
+| Hetzner | $148 (EUR 113) | 0.03 |
 | Wasabi | 不適合 | - |
 
 ```mermaid
@@ -472,7 +476,7 @@ xychart-beta
 
 ```text
 AWS S3      保存 50,000 x 0.023 + 50,000 x 0.022 = 2,250   egress 9,900 x 0.09 = 891          ≈ $3,141
-GCS         保存 100,000 x 0.020 = 2,000           egress 1,000 x 0.12 + 9,000 x 0.11 = 1,110 ≈ $3,110
+GCS         保存 100,000 x 0.020 = 2,000           egress (10,000 - 100 無料) x 0.12 = 1,188  ≈ $3,188
 Azure       保存 51,200 x 0.0208 + 48,800 x 0.019968 ≈ 2,039   egress 9,900 x 0.087 ≈ 861   ≈ $2,901
 OCI         保存 100,000 x 0.0255 = 2,550          egress 10 TB 無料 = 0                      ≈ $2,550
 DO Spaces   5 + (100,000 - 250) x 0.02 = 2,000     egress (10,000 - 1,024) x 0.01 ≈ 90        ≈ $2,090
@@ -482,10 +486,11 @@ R2          保存 99,990 x 0.015 ≈ 1,500            egress 0                 
 Wasabi      保存 100 TB x 7.99 = 799               egress 10 TB ≤ 100 TB で無料               ≈ $799
 Storj       保存 100 TB x 7 = 700                  egress 10 TB x 7 = 70                      ≈ $770
 B2          保存 100 TB x 6.95 = 695               egress 10 TB ≤ 300 TB で無料               ≈ $695
-Hetzner     EUR 6.49 + 99 TB x 0.0087 x 730 ≈ EUR 635   egress 9 TB x EUR 1 = 9               ≈ EUR 651
+Hetzner     $7.99 + 99 TB x 0.0123 x 730 ≈ 896.91      egress 9 TB x $1.20 = 10.80               ≈ $908
+            (EUR 建て: 6.49 + 99 x 0.0087 x 730 ≈ 635.24   egress 9 x 1.00 = 9                ≈ EUR 644)
 ```
 
-**結論 C**: egress が少ないシナリオでは、ハイパースケーラーと R2/Tigris の差は 1.5〜2 倍程度に縮まり、**真の最安は B2 / Storj / Wasabi / Hetzner の「$7/TB 前後」帯** (S3 の約 4.5 分の 1)。ただし S3 側も Intelligent-Tiering で読まれないデータを自動で IA 層 ($0.0125) 以下に落とせるので、実効差はさらに縮む。
+**結論 C**: egress が少ないシナリオでは、ハイパースケーラーと R2/Tigris の差は 1.5〜2 倍程度に縮まり、**真の最安は B2 / Storj / Wasabi の「$7〜8/TB」帯** (S3 の約 4〜4.5 分の 1)、Hetzner ($9/TB 弱、約 $908) がそれに続く。ただし S3 側も Intelligent-Tiering で読まれないデータを自動で IA 層 ($0.0125) 以下に落とせるので、実効差はさらに縮む。
 
 ### 5.5 シナリオのまとめ
 
@@ -621,8 +626,10 @@ flowchart LR
 - Wasabi, Pricing: <https://wasabi.com/pricing>
 - Wasabi, May 2026: Wasabi Pricing: <https://docs.wasabi.com/docs/may-2026-wasabi-pricing>
 - Oracle, OCI Storage pricing: <https://www.oracle.com/cloud/storage/pricing/>
+- Oracle, Cloud Price List API (B91628 / B91627 / B88327 / B91633 / B93000): <https://apexapps.oracle.com/pls/apex/cetools/api/v1/products/?currencyCode=USD>
 - Finout, OCI costs overview: <https://www.finout.io/blog/oci-costs-overview>
-- IBM, Cloud Object Storage pricing: <https://www.ibm.com/cloud/object-storage/pricing>
+- IBM Cloud, Cloud Object Storage catalog pricing tab: <https://cloud.ibm.com/objectstorage/create#pricing>
+- IBM Cloud Docs, Cloud Object Storage billing (request classes): <https://cloud.ibm.com/docs/cloud-object-storage?topic=cloud-object-storage-billing>
 - IBM, reduced pricing tier announcement: <https://www.ibm.com/new/announcements/ibm-cloud-object-storage-launches-reduced-pricing-tier-for-enterprise-scale-affordability>
 - Alibaba Cloud, OSS pricing: <https://www.alibabacloud.com/en/product/oss/pricing>
 - Alibaba Cloud, OSS traffic fees: <https://www.alibabacloud.com/help/en/oss/traffic-fees>
@@ -630,6 +637,7 @@ flowchart LR
 - Akamai, Object Storage pricing: <https://techdocs.akamai.com/cloud-computing/docs/object-storage-pricing>
 - Akamai, Object Storage limits: <https://techdocs.akamai.com/cloud-computing/docs/object-storage-product-limits>
 - Hetzner, Object Storage: <https://www.hetzner.com/storage/object-storage/>
+- Hetzner, website price API (CLOUD_84 基本 / CLOUD_85 超過保存 / CLOUD_86 超過 egress): <https://website-price-api.hetzner.com/api/v1/products/CLOUD_85>
 - Hetzner, Statement on price adjustment as of April 1st 2026: <https://www.hetzner.com/pressroom/statement-price-adjustment/>
 - Tigris, Pricing: <https://www.tigrisdata.com/pricing/>
 - Storj, Pricing: <https://www.storj.io/pricing>
@@ -639,6 +647,7 @@ flowchart LR
 - Bizety, MinIO in Maintenance Mode (2025-12-06): <https://bizety.com/2025/12/06/minio-in-maintenance-mode-open-source-alternatives/>
 - Vonng, MinIO Is Dead, Long Live MinIO: <https://blog.vonng.com/en/db/minio-resurrect/>
 - Bex, MinIO Vanished From Docker Hub (2026-09-25, 単一ソース): <https://bex.co/blog/2026/09/25/minio-docker-hub-removal-quay-repoint>
+- Docker Hub API, minio 名前空間のリポジトリ一覧 (2026-10-03 時点で minio/minio と minio/mc が無い): <https://hub.docker.com/v2/repositories/minio/?page_size=100>
 - Matt Gerega, Migrating from MinIO to Garage: <https://www.mattgerega.com/2025/12/10/migrating-from-minio-to-garage-when-open-source-isnt-so-open-anymore/>
 - Ceph, RADOS Gateway docs: <https://docs.ceph.com/en/latest/radosgw/>
 - SeaweedFS: <https://github.com/seaweedfs/seaweedfs>
