@@ -2,11 +2,11 @@ import { isValidElement, type ReactNode } from 'react';
 import ReactMarkdown, { type Components } from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeSlug from 'rehype-slug';
-import rehypeHighlight from 'rehype-highlight';
 import { Link } from 'react-router-dom';
 import { Mermaid } from './Mermaid';
 import { CopyButton } from './CopyButton';
 import { rewriteDocHref } from '../lib/links';
+import { rehypeHighlightLite } from '../lib/highlight';
 
 function toText(node: ReactNode): string {
   if (node == null || typeof node === 'boolean') return '';
@@ -64,7 +64,7 @@ export function Markdown({ source }: { source: string }) {
     <div className="prose">
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
-        rehypePlugins={[rehypeSlug, [rehypeHighlight, { plainText: ['mermaid', 'text'], detect: false }]]}
+        rehypePlugins={[rehypeSlug, rehypeHighlightLite]}
         components={components}
       >
         {source}
