@@ -1,15 +1,15 @@
-import { useState } from 'react';
+import { lazy, Suspense, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { WaterColumn } from '../components/WaterColumn';
-import { CompetitorScatter } from '../components/charts/CompetitorScatter';
 import { CHAPTERS, GROUPS } from '../lib/chapters';
 import { columnClasses } from '../lib/data/classes';
-import { competitors } from '../lib/data/competitors';
 import { market } from '../lib/data/market';
-import { timeline } from '../lib/data/timeline';
 import { compact, num, yearsPerLoss } from '../lib/format';
 import { useLang } from '../lib/i18n';
 import { UI } from '../lib/ui';
+
+// Below-the-fold sections pull in the competitor and timeline datasets; load them after first paint.
+const HomeLower = lazy(() => import('./HomeLower'));
 
 const TOOLS = [
   {
@@ -94,7 +94,6 @@ export default function Home() {
   const [exp, setExp] = useState(7); // 10^7 objects
   const objects = 10 ** exp;
   const years = yearsPerLoss(objects);
-  const recent = timeline.slice(-6).reverse();
 
   return (
     <>
@@ -219,27 +218,6 @@ export default function Home() {
         </div>
       </section>
 
-      {competitors.length > 0 && (
-        <section className="section">
-          <div className="wrap split">
-            <div>
-              <h2 className="section-title">{en ? 'Where S3 sits on price' : '価格で見る S3 の位置'}</h2>
-              <p className="section-lede">
-                {en
-                  ? 'Storage price against internet egress price. S3 is rarely the cheapest per gigabyte; it wins on depth of features and ecosystem. Egress is where alternatives attack.'
-                  : '保存単価とインターネット転送単価。S3 は GB 単価で最安になることは少なく、機能の深さとエコシステムで勝っています。競合が攻めるのは転送料です。'}
-              </p>
-              <p style={{ marginTop: 20 }}>
-                <Link className="btn" to="/compare">
-                  {en ? 'Open the full comparison' : '比較ページを開く'}
-                </Link>
-              </p>
-            </div>
-            <CompetitorScatter items={competitors} />
-          </div>
-        </section>
-      )}
-
       <section className="section">
         <div className="wrap">
           <h2 className="section-title">{en ? 'Explore by tool' : 'ツールで探る'}</h2>
@@ -256,26 +234,9 @@ export default function Home() {
         </div>
       </section>
 
-      {recent.length > 0 && (
-        <section className="section">
-          <div className="wrap">
-            <h2 className="section-title">{en ? 'Latest on the timeline' : '年表の最新'}</h2>
-            <ol className="recent-list">
-              {recent.map((e) => (
-                <li key={e.date + t(e.title)}>
-                  <time dateTime={e.date}>{e.date}</time>
-                  <span>{t(e.title)}</span>
-                </li>
-              ))}
-            </ol>
-            <p style={{ marginTop: 20 }}>
-              <Link className="btn" to="/timeline">
-                {t(UI.navTimeline)}
-              </Link>
-            </p>
-          </div>
-        </section>
-      )}
+      <Suspense fallback={null}>
+        <HomeLower />
+      </Suspense>
     </>
   );
 }
