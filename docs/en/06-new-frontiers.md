@@ -51,7 +51,7 @@ timeline
 
 ### 1.1 Data gravity
 
-S3 holds data on the scale of hundreds of trillions of objects (AWS has stated that it exceeded 400 trillion objects as of 2025; the exact current figure is unverified). Copying data into another system every time you use it creates "data friction":
+S3 holds data on the scale of hundreds of trillions of objects (AWS first cited more than 400 trillion objects in 2024-12, and more than 500 trillion objects in its 2026-03 20th-anniversary post). Copying data into another system every time you use it creates "data friction":
 
 - The cost of copying (transfer charges, duplicate storage)
 - Freshness drift (a copy is always stale)
@@ -250,7 +250,8 @@ aws s3tables put-table-bucket-storage-class \
 | When | Event |
 | --- | --- |
 | 2024-12 | Announced (starting in us-east-1 / us-east-2 / us-west-2). Glue integration in preview |
-| H1 2025 | SageMaker Lakehouse / Glue integration GA, Region expansion (exact dates unverified) |
+| 2025-01 to 06 | Region expansion: from 3 to 32 Regions (8 on 2025-01-17, 11 on 03-04, 14 on 03-21, 15 on 03-31, 19 on 04-08, 30 on 05-07, 32 on 06-25) |
+| 2025-03 | Integration with SageMaker Lakehouse / AWS analytics services (Glue Data Catalog) GA (2025-03-13) |
 | 2025-07 | Compaction charges cut by up to 90% (effective 2025-07-01) |
 | 2025-09 | Table preview in the S3 console |
 | 2025-12 | Intelligent-Tiering storage class, table replication |
@@ -274,7 +275,7 @@ Intelligent-Tiering tiers: after 30 consecutive days without access, data moves 
 | Compaction (objects) | $0.002/1,000 objects processed |
 | Compaction (data volume, binpack) | $0.005/GB processed |
 
-Per-GB charges for sort / z-order compaction are priced separately from binpack (cut by up to 80% in 2025-07). Check the pricing page for exact current rates (current sort/z-order unit prices are unverified in this guide).
+Per-GB charges for sort / z-order compaction are priced separately from binpack. The 2025-07 cut made per-object prices 50% lower and per-GB prices 90% lower for binpack and 80% lower for sort / z-order. The current sort / z-order per-GB rate is unverified: the S3 pricing page text checked for this guide (2026-10) lists only the binpack rate, and the 2025-06 sort / z-order launch post gives no price. Check the pricing calculator for estimates.
 
 ## 4. S3 Metadata and Annotations
 
@@ -429,10 +430,10 @@ aws s3vectors update-index-mode --vector-bucket-name kb-vectors \
 | Storage | $0.06/GB-month |
 | PUT | $0.20/GB (minimum 128 KB billed per request) |
 | Query API | $2.5 per million queries |
-| Query data processed | Tiered by scale (up to 100,000 vectors / 100,000-10 million / over 10 million). Indexes over 10 million vectors got up to 80% cheaper in 2026-06 |
+| Query data processed | Tiered by index size: $0.004/TB for the first 100,000 vectors, $0.002/TB for 100,000-10 million, $0.0004/TB over 10 million. Indexes over 10 million vectors got up to 80% cheaper in 2026-06 |
 | Data returned | With the larger topK, a small charge applies to returned data beyond 512 KB per query |
 
-This guide could not accurately reproduce the pricing page's unit price ($/TB) for query data processed, so it is treated as **unverified**. Use the official pricing page and the pricing calculator for estimates.
+Query data processed is billed per TB of vector data scanned, so the bill depends on index size and query count. Use the official pricing page and the pricing calculator for estimates.
 
 ## 6. S3 Files (2026-04)
 
@@ -515,9 +516,9 @@ If another operation runs concurrently, you may get `409 ConditionalRequestConfl
 | 2025-11 | ABAC (tag-based access control, `PutBucketAbac`) |
 | 2025-11 | Post-quantum TLS key exchange (ML-KEM) on Regional / S3 Tables / Express One Zone endpoints |
 | 2025-12 | Organization-wide Block Public Access via Organizations policies |
+| 2026-01 | `UpdateObjectEncryption`: change the server-side encryption type of existing objects, e.g. SSE-S3 → SSE-KMS, without moving data (What's New 2026-01-29, all Regions) |
 | 2026-03 | **Account regional namespaces** (bucket names of the form `<prefix>-<accountId>-<region>-an` that only your account can create; `create-bucket --bucket-namespace account-regional`) |
 | 2026-04 | SSE-C disabled by default on new and existing buckets (except existing buckets in accounts with prior SSE-C usage) |
-| 2026 | `UpdateObjectEncryption`: change encryption of existing objects, e.g. SSE-S3 → SSE-KMS, without moving data (confirmed in the CLI; announcement date unverified) |
 | 2026-03 | Lifecycle transitions and expirations paused for objects that failed to replicate |
 | 2026-07 | 30-day minimum for transitions to Standard-IA / One Zone-IA removed |
 | 2026-07 | Event notifications include system-generated tags |
@@ -669,3 +670,10 @@ flowchart TB
 - [S3 server access logs to CloudWatch Logs and S3 Tables (2026-06)](https://aws.amazon.com/about-aws/whats-new/2026/06/amazon-s3-cloudwatch-logs-tables/)
 - [S3 Event Notifications system-generated tags (2026-07)](https://aws.amazon.com/about-aws/whats-new/2026/07/amazon-s3-event-notifications-system-generated-tags/)
 - [Data Engineering Podcast: S3 Tables and Vectors (Andy Warfield)](https://www.dataengineeringpodcast.com/episodepage/s3-tables-and-vectors-episode-475)
+- [Amazon S3 expands capabilities with managed Apache Iceberg tables (press release, 2024-12-03; "more than 400 trillion objects")](https://press.aboutamazon.com/2024/12/amazon-s3-expands-capabilities-with-managed-apache-iceberg-tables-for-faster-data-lake-analytics-and-automatic-metadata-generation-to-simplify-data-discovery-and-understanding)
+- [Twenty years of Amazon S3 and building what's next (2026-03)](https://aws.amazon.com/blogs/aws/twenty-years-of-amazon-s3-and-building-whats-next/)
+- [Amazon S3 Tables in five additional Regions (2025-01)](https://aws.amazon.com/about-aws/whats-new/2025/01/amazon-s3-tables-additional-aws-regions/)
+- [Amazon S3 Tables in two additional Regions (2025-06)](https://aws.amazon.com/about-aws/whats-new/2025/06/amazon-s3-tables-two-additional-aws-regions/)
+- [Amazon SageMaker Lakehouse integration with S3 Tables generally available (2025-03-13)](https://aws.amazon.com/about-aws/whats-new/2025/03/amazon-sagemaker-lakehouse-integration-s3-tables-generally-available/)
+- [Amazon S3 Tables reduces compaction costs (2025-07)](https://aws.amazon.com/about-aws/whats-new/2025/07/amazon-s3-tables-reduce-compaction-costs/)
+- [Change the server-side encryption type of Amazon S3 objects (2026-01-29)](https://aws.amazon.com/about-aws/whats-new/2026/01/change-the-server-side-encryption-type-of-s3-objects/)

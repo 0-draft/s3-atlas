@@ -47,7 +47,7 @@ There are some caveats.
 
 - Concurrent writes to the same key follow "last writer wins," and there is no locking. Use conditional writes to prevent conflicts.
 - Caching layers such as CloudFront are a separate matter and can return stale content.
-- Changes to bucket configuration (policies, lifecycle, and so on) can take time to propagate (unverified: there is no clear official guarantee in seconds).
+- Changes to bucket configuration can take time to propagate, and there is no general guarantee in seconds. The docs give examples: a new or updated lifecycle configuration takes "a few minutes" to take effect, and after enabling versioning for the first time AWS recommends waiting 15 minutes before PUT / DELETE.
 
 ### Q2. S3 has directories (folders)
 
@@ -346,7 +346,7 @@ Most S3 misconceptions are information that used to be true. When you read a blo
 | March 2026 | Account regional namespaces | "Bucket names are first come, first served" |
 | April 2026 | SSE-C disabled by default rollout, Amazon S3 Files GA | "SSE-C is always available," "S3 cannot be used as a file system" |
 
-The months above are based on What's New and blog announcement dates. The August / November 2024 months for conditional writes are from memory and unverified (the feature itself is confirmed in the official documentation).
+The months above are based on What's New and blog announcement dates. Conditional writes were announced on 2024-08-20 (`If-None-Match`) and 2024-11-25 (`If-Match`).
 
 ## 10. Self-assessment checklist
 
@@ -403,3 +403,7 @@ If you cannot immediately answer "yes" to each item, reread the relevant chapter
 - Amazon S3 Transfer Acceleration: <https://docs.aws.amazon.com/AmazonS3/latest/userguide/transfer-acceleration.html>
 - Amazon S3 Storage Lens: <https://docs.aws.amazon.com/AmazonS3/latest/userguide/storage_lens.html>
 - S3 Express One Zone: <https://docs.aws.amazon.com/AmazonS3/latest/userguide/directory-bucket-high-performance.html>
+- Setting an S3 Lifecycle configuration on a bucket (propagation delay): <https://docs.aws.amazon.com/AmazonS3/latest/userguide/how-to-set-lifecycle-configuration-intro.html>
+- put-bucket-versioning (wait 15 minutes after enabling): <https://docs.aws.amazon.com/cli/latest/reference/s3api/put-bucket-versioning.html>
+- Amazon S3 adds support for conditional writes (2024-08-20): <https://aws.amazon.com/about-aws/whats-new/2024/08/amazon-s3-conditional-writes/>
+- Amazon S3 adds new functionality for conditional writes (2024-11-25): <https://aws.amazon.com/about-aws/whats-new/2024/11/amazon-s3-functionality-conditional-writes/>

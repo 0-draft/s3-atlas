@@ -233,7 +233,7 @@ MAXFILESIZE 256 MB;
 | Lambda + S3 Files | Mounts an S3 bucket as a file system from Lambda (announced 2026-04) | Function file system settings | Not supported for functions that use a capacity provider |
 | Step Functions Distributed Map | `ItemReader` reads S3 object lists / CSV / JSON / JSONL / S3 Inventory manifests and runs child workflows in massive parallel | `ItemReader`, `ItemBatcher`, `ResultWriter`, `MaxConcurrency` | "Folder" objects created in the console count as items too, causing extra child executions |
 | Amazon EKS + Mountpoint CSI driver | Mounts an S3 bucket into Pods as a PersistentVolume via `s3.csi.aws.com` | EKS add-on `aws-mountpoint-s3-csi-driver`, IRSA / Pod Identity, `mountOptions` | Static provisioning only. No Fargate, Windows, or Hybrid Nodes. Not fully POSIX-compatible (append and rename restrictions) |
-| Amazon ECS | SDK access with a task role. For file access, use S3 Files / your own Mountpoint | Task role, VPC endpoint | Native Mountpoint integration for ECS is unverified |
+| Amazon ECS | SDK access with a task role. For file access, use S3 Files / your own Mountpoint | Task role, VPC endpoint | ECS has a native S3 Files volume type (`s3filesVolumeConfiguration`; Fargate, ECS Managed Instances, and EC2 as of 2026-09). There is no native Mountpoint volume type for ECS (unlike the EKS Mountpoint CSI driver) |
 | Amazon EC2 | SDK / CLI / Mountpoint with temporary credentials from an instance profile (IAM role) | Instance profile, IMDSv2 | Don't bake credentials into AMIs or user data. The IMDSv2 hop limit is a common reason containers can't see credentials |
 | AWS Batch | Job inputs and outputs on S3. At large scale, choose between it and S3 Batch Operations | Job role, container input/output prefixes | If you "just call an API per S3 object", S3 Batch Operations is cheaper and simpler |
 | Amazon S3 Files | Exposes an S3 bucket as an EFS-based file system (GA 2026-04) | File system creation, mount targets | Check the consistency model separately when using the file API and object API at the same time (details in another chapter) |
@@ -454,7 +454,7 @@ flowchart LR
 | OSS | How it uses S3 | Key settings | Pitfalls |
 | --- | --- | --- | --- |
 | Apache Iceberg | Stores metadata (metadata.json / manifest list / manifest) and data files in S3. Commits are atomic through the catalog | Catalog (Glue / REST / S3 Tables), `S3FileIO` | Small files and snapshots pile up. Compaction, expire snapshots, and orphan file removal are required operations (automatic with S3 Tables) |
-| Delta Lake | JSON commit log in `_delta_log/` + Parquet | `S3DynamoDBLogStore` (when writing from multiple clusters) | The official storage docs say concurrent writes from multiple clusters need DynamoDB-based locking (`S3DynamoDBLogStore`). Native support for S3 conditional writes is unverified |
+| Delta Lake | JSON commit log in `_delta_log/` + Parquet | `S3DynamoDBLogStore` (when writing from multiple clusters) | The official storage docs say concurrent writes from multiple clusters need DynamoDB-based locking (`S3DynamoDBLogStore`). Native S3 conditional-write support has not shipped as of Delta 4.4.0 (2026-08): the feature request was closed as not planned and the prototype PRs were closed unmerged |
 | Apache Hudi | Timeline (`.hoodie/`) + Parquet / log files. CoW / MoR | Table type, lock provider (DynamoDB, etc.) | Concurrent writes need a lock provider. In versioned buckets the cleaner piles up delete markers, so clean them up with lifecycle rules |
 | Apache Spark (S3A) | Uses `s3a://` through the Hadoop S3A connector | `fs.s3a.*`, S3A committer | The default committer is `file` (rename-based) and is a poor fit for S3. Specify `magic` / `directory` / `partitioned` |
 | Trino / Presto | Reads S3 through Hive / Iceberg / Delta connectors | `fs.s3.enabled=true` (as of Trino 483), `s3.region`, metastore | Native S3 file system settings and the old Hadoop-based (legacy) settings use different keys. Check the docs for your version |
@@ -502,12 +502,12 @@ storage_config:
 | OSS | How it uses S3 | Key settings | Pitfalls |
 | --- | --- | --- | --- |
 | Terraform S3 backend | Stores state files in S3. S3-native locking with `use_lockfile` | `bucket`, `key`, `region`, `encrypt`, `use_lockfile = true` | Introduced as experimental in 1.10, GA in 1.11. `dynamodb_table` and related settings are deprecated. Enabling versioning is recommended |
-| OpenTofu S3 backend | Supports S3 lockfiles like Terraform | `use_lockfile` | Check the OpenTofu release notes for supported versions (unverified) |
+| OpenTofu S3 backend | Supports S3 lockfiles like Terraform | `use_lockfile` | Added in 1.10.0 (2025-06), not marked experimental. Unlike Terraform, `dynamodb_table` is not deprecated: both locking mechanisms are supported, and you can migrate by enabling both first |
 | Velero | Backs up Kubernetes resources to S3; PVs via snapshots or file-level backup | `velero-plugin-for-aws`, BackupStorageLocation | Don't share a bucket prefix across multiple clusters |
 | restic | Deduplicated, encrypted repositories on S3 | `restic -r s3:s3.ap-northeast-1.amazonaws.com/bucket_name init` (path-style with a Regional endpoint) | Watch the interaction between prune and Object Lock or lifecycle deletion of noncurrent versions |
 | Docker Registry (CNCF Distribution) | Image layers / manifests on S3 | `storage.s3` (`region`, `bucket`, `encrypt`, `rootdirectory`, `chunksize`) | `chunksize` must be over 5 MB (default 10 MB). Switch to read-only mode while GC runs |
-| Git LFS | Uses S3 as the backend of an LFS server (GitLab / Gitea, etc.) | Each server's object storage settings | The Git LFS client itself does not talk to S3 directly. You need a server that implements the LFS API |
-| MLflow | `s3://` as the artifact store | `--artifacts-destination s3://...` (proxy) / `--default-artifact-root` | Which principal needs S3 permissions depends on proxy mode versus direct client access |
+| Git LFS | Uses S3 as the backend of an LFS server (GitLab / Gitea, etc.) | Each server's object storage settings | By default the Git LFS client does not talk to S3 directly; it needs a server that implements the LFS Batch API. The exception is a standalone custom transfer agent (e.g. `git-lfs-s3` from awslabs/git-remote-s3) |
+| MLflow | `s3://` as the artifact store | `--artifacts-destination s3://...` (proxy) / `--default-artifact-root` | Proxy mode (default, `--artifacts-destination`): the server holds the S3 credentials. Direct mode (`--default-artifact-root` + `--no-serve-artifacts`): clients need S3 credentials |
 | DVC | Remote for versioning data / models | `dvc remote add -d storage s3://bucket/path` | It is content-addressed, so object counts grow. Deleting with lifecycle rules breaks past versions |
 | rclone / s5cmd | Fast copy / sync CLIs | Remote settings, parallelism | Too much parallelism triggers 503 SlowDown |
 
@@ -855,3 +855,14 @@ flowchart TD
 - [Grafana Mimir: Configure object storage](https://grafana.com/docs/mimir/latest/configure/configure-object-storage-backend/)
 - [Thanos: Object Storage](https://thanos.io/tip/thanos/storage.md/)
 - [DVC remote: Amazon S3](https://doc.dvc.org/user-guide/data-management/remote-storage/amazon-s3)
+- [Amazon ECS: Amazon S3 Files volumes](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/s3files-volumes.html)
+- [Amazon ECS extends Amazon S3 Files support to the Amazon EC2 compute type (2026-09)](https://aws.amazon.com/about-aws/whats-new/2026/09/amazon-ecs-s3-files-ec2/)
+- [delta-io/delta #3596: S3 Conditional Writes (closed, not planned)](https://github.com/delta-io/delta/issues/3596)
+- [Delta Lake v4.4.0 release](https://github.com/delta-io/delta/releases/tag/v4.4.0)
+- [OpenTofu v1.10.0 release (native S3 locking)](https://github.com/opentofu/opentofu/releases/tag/v1.10.0)
+- [OpenTofu S3 backend](https://opentofu.org/docs/language/settings/backends/s3/)
+- [Git LFS custom transfer agents](https://github.com/git-lfs/git-lfs/blob/main/docs/custom-transfers.md)
+- [awslabs/git-remote-s3](https://github.com/awslabs/git-remote-s3)
+- [MLflow tracking server architecture](https://github.com/mlflow/mlflow/blob/master/docs/docs/self-hosting/architecture/tracking-server.mdx)
+- [ClickHouse S3Queue table engine](https://clickhouse.com/docs/engines/table-engines/integrations/s3queue)
+- [ClickHouse external disks for storing data](https://clickhouse.com/docs/operations/storing-data)

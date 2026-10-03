@@ -175,7 +175,7 @@ sequenceDiagram
 | Multiple destinations per event | Cannot configure multiple destinations for the same event type with overlapping prefixes (work around with SNS fan-out) | Fan out freely by creating multiple rules |
 | Enabling | Per notification configuration | Turn on "Send to EventBridge" on the bucket to get all events |
 | Redelivery / archive | None | Archive and replay supported |
-| Latency | Generally low | Some overhead (unverified: no official numeric guarantee) |
+| Latency | Typically seconds, but can sometimes take a minute or longer (per the S3 User Guide; no numeric SLA) | No published numeric latency (adds a routing hop). End-to-end delivery latency can be observed with the `IngestionToInvocationSuccessLatency` metric |
 
 ## 3. Data lake (zone design)
 
@@ -460,7 +460,7 @@ Checklist:
 | Best practice | S3 implementation |
 | --- | --- |
 | Do not keep unneeded data | Lifecycle expiration, deduplication |
-| Right storage class | Archive tiers are said to use less energy per GB (unverified: no published figures) |
+| Right storage class | The Well-Architected Sustainability pillar (SUS 4) recommends moving data to "more efficient, less performant storage" as requirements decrease (lifecycle to IA / Glacier tiers). Per-storage-class energy figures are unverified: no AWS publication of such numbers was found |
 | Efficient formats | Compression and columnar formats (Parquet) reduce scan and storage volume |
 | Reduce transfer | Caching, same-Region processing |
 
@@ -607,3 +607,6 @@ At the organization level, use SCPs / RCPs, AWS Config conformance packs, and Se
 - Cost-optimized log aggregation and archival in Amazon S3 using s3tar: <https://aws.amazon.com/blogs/storage/cost-optimized-log-aggregation-and-archival-in-amazon-s3-using-s3tar/>
 - AWS Well-Architected Framework: <https://docs.aws.amazon.com/wellarchitected/latest/framework/welcome.html>
 - Security best practices for Amazon S3: <https://docs.aws.amazon.com/AmazonS3/latest/userguide/security-best-practices.html>
+- Amazon S3 Event Notifications (delivery timing): <https://docs.aws.amazon.com/AmazonS3/latest/userguide/EventNotifications.html>
+- Best practices for monitoring event delivery in Amazon EventBridge: <https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-monitoring-events-best-practices.html>
+- Well-Architected Sustainability pillar, SUS 4 (data management): <https://docs.aws.amazon.com/wellarchitected/latest/framework/sus-04.html>

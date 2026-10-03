@@ -105,7 +105,7 @@ When reading and writing SSE-KMS objects, S3 calls KMS on behalf of the caller. 
 | Cross-account not possible with the AWS managed key (`aws/s3`) | The key policy of an AWS managed key cannot be edited | Use a customer managed key |
 | Denied by encryption context | The key policy conditions on `kms:EncryptionContext:aws:s3:arn`, but with Bucket Keys enabled the context is the bucket ARN | Change the condition to use the bucket ARN |
 
-KMS error names differ between SDKs and APIs (unverified: cases where the S3 `Code` contains a `KMS.`-prefixed value as is are limited). The reliable approach is to check `errorCode` in the KMS events in CloudTrail (`Decrypt`, `GenerateDataKey`).
+The S3 API Reference error code list includes `KMS.`-prefixed codes such as `KMS.DisabledException`, `KMS.KMSInvalidStateException`, and `KMS.NotFoundException` (KMS exceptions passed through by S3). Other APIs name them differently (S3 Vectors, for example, uses `KmsDisabledException`), and a KMS permission failure on S3 usually surfaces as `AccessDenied`. The reliable approach is to check `errorCode` in the KMS events in CloudTrail (`Decrypt`, `GenerateDataKey`).
 
 ## 2. Systematic diagnosis of 403 AccessDenied
 
@@ -258,7 +258,7 @@ curl -i -X OPTIONS "https://amzn-s3-demo-bucket.s3.ap-northeast-1.amazonaws.com/
 | Large file over a single stream | Stuck at the throughput limit of one connection | Parallel multipart upload, parallel range GET downloads, AWS CRT-based SDK / CLI (`aws configure set default.s3.preferred_transfer_client crt`) |
 | Distant Region | High latency (RTT) | A closer Region, Transfer Acceleration (check the benefit with the Speed Comparison tool), CloudFront |
 | Through a NAT Gateway | NAT bandwidth and cost | Gateway VPC endpoint |
-| EC2 instance network bandwidth | Network performance limit of the instance type | A larger instance, ENA Express (unverified: the effect on S3 depends on the path) |
+| EC2 instance network bandwidth | Network performance limit of the instance type | An instance type with higher network performance. ENA Express does not help here: it applies only to traffic between EC2 instances that both have it enabled, not to S3 |
 | Many small files | Per-request overhead dominates | Increase parallelism, combine files, S3 Express One Zone |
 | KMS throttling with SSE-KMS | KMS `ThrottlingException` | S3 Bucket Keys |
 | Client CPU (TLS / checksums) | CPU at 100% | CRT client, appropriate parallelism |
@@ -399,7 +399,7 @@ aws s3api head-object --bucket src-bucket --key path/key --query ReplicationStat
 | IAM role | `s3:GetObjectVersionForReplication`, `s3:GetObjectVersionAcl`, `s3:GetObjectVersionTagging` (source), `s3:ReplicateObject`, `s3:ReplicateDelete`, `s3:ReplicateTags` (destination) | The role's policy and trust policy (`s3.amazonaws.com`) |
 | Destination bucket policy (cross-account) | Does not allow the source replication role | Allow it in the destination bucket policy. To change ownership to the destination, add `s3:ObjectOwnerOverrideToBucketOwner` |
 | KMS | "Replicate KMS-encrypted objects" not selected in the rule, the role lacks `kms:Decrypt` on the source key or `kms:Encrypt` on the destination key, or the AWS managed key (`aws/s3`) is used cross-account | Customer managed keys and both key policies |
-| SSE-C | SSE-C objects depend on configuration (supported with conditions; unverified: see the User Guide for the detailed conditions) | Switch to SSE-KMS if possible |
+| SSE-C | S3 Replication supports SSE-C objects and configures them the same way as unencrypted objects, with no additional permissions. Only newly uploaded SSE-C objects are replicated automatically | Use S3 Batch Replication for existing SSE-C objects. Switch to SSE-KMS if possible |
 | Object Lock | The destination also needs Object Lock | Enable it on the destination |
 | Deletes | Delete marker replication is off by default (V2 configuration), and deletes with a version ID are not replicated (designed to protect against malicious deletes) | Enable `DeleteMarkerReplication` if needed |
 | Re-replicating replicas | Replicas are not chain-replicated (with A->B->C, objects from A do not reach C) | Create rules from each source |
@@ -453,7 +453,7 @@ To delete a bucket, you must empty it by removing every object version, delete m
 | Console "Empty" | Easy | At scale, the browser must stay open for a long time. Costs are DELETE requests (free) and LIST |
 | Expire everything with lifecycle | No API calls needed, DELETE is free, scales regardless of object count | Evaluated once a day, takes several days |
 | `DeleteObjects` script | Immediate | 1,000 keys per request, LIST charges, needs throttling handling |
-| S3 Batch Operations | Managed parallel processing | Batch Operations charges (unverified: Batch Operations has no direct "delete" operation, so implement it with Lambda invocation) |
+| S3 Batch Operations | Managed parallel processing | Batch Operations charges, plus Lambda. Batch Operations has no built-in delete operation, so delete via the "Invoke AWS Lambda function" operation |
 
 Lifecycle configuration to empty a bucket (equivalent to the Knowledge Center article's procedure):
 
@@ -521,3 +521,6 @@ Notes:
 - Amazon S3 Event Notifications: <https://docs.aws.amazon.com/AmazonS3/latest/userguide/EventNotifications.html>
 - Amazon S3 starts rolling out new security best practice (SSE-C, 2026-04): <https://aws.amazon.com/about-aws/whats-new/2026/04/s3-default-bucket-security-setting/>
 - General purpose bucket quotas: <https://docs.aws.amazon.com/AmazonS3/latest/userguide/BucketRestrictions.html>
+- ENA Express (requirements: traffic between EC2 instances): <https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ena-express.html>
+- Replicating encrypted objects (SSE-S3, SSE-KMS, DSSE-KMS, SSE-C): <https://docs.aws.amazon.com/AmazonS3/latest/userguide/replication-config-for-kms-objects.html>
+- Operations supported by S3 Batch Operations: <https://docs.aws.amazon.com/AmazonS3/latest/userguide/batch-ops-operations.html>

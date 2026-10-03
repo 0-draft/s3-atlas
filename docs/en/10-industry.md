@@ -120,7 +120,7 @@ How to read it:
 | Quarter | AWS revenue ($B) | YoY | AWS operating income ($B) |
 | --- | --- | --- | --- |
 | 2025 Q2 | 30.9 | +17.5% | 10.2 |
-| 2025 Q3 | 33.0 | +20% | unverified |
+| 2025 Q3 | 33.0 | +20% | 11.4 |
 | 2025 Q4 | 35.6 | +24% | 12.5 |
 | 2026 Q1 | 37.6 | +28% | 14.2 |
 | 2026 Q2 | 42.2 | +37% | 16.6 |
@@ -174,13 +174,13 @@ xychart-beta
 | S3 Vectors (July-December 2025) | More than 250,000 indexes, more than 40 billion vectors, more than 1 billion queries | 2025 | Same as above |
 | Configuration at launch | About 1 PB, about 400 nodes, 15 racks, 3 DCs, 15 Gbps total bandwidth | 2006 | Same as above |
 
-For reference, earlier published figures at one point cited "350 trillion objects and more than 100 million requests per second" (secondary sources such as ByteByteGo; year unverified). That works out to 1.4x the objects and 2x the requests in roughly two years, so growth has not slowed.
+For reference, AWS cited "more than 350 trillion objects and more than 100 million requests per second" in its S3 Express One Zone GA press release (2023-11-28). The 100 million requests per second figure goes back to Pi Day 2022, and "more than 400 trillion objects" first appeared in 2024-12. From 2023-11 to 2026-03 (about 2 years and 4 months), objects grew about 1.4x and requests 2x, so growth has not slowed.
 
 ### 2.5 Analyst assessments
 
 - **Gartner Magic Quadrant for Strategic Cloud Platform Services (2025-08-04)**: AWS has been a Leader for 15 consecutive years and is placed highest on Ability to Execute. The Leaders are AWS / Google / Microsoft / Oracle.
 - **Gartner Enterprise Storage Platforms MQ (2025-09-02)**: from 2025, Primary Storage and File and Object Storage were merged. The Leaders are Dell / HPE / Huawei / IBM / NetApp / Pure Storage (now Everpure). **Public cloud S3 itself is out of scope**. In other words, S3 is not evaluated in "the MQ for object storage products"; it is treated as "part of a platform" beyond any product category.
-- Object-storage-only share data from IDC / Canalys could not be confirmed from public sources and is **unverified**. Canalys publishes overall cloud infrastructure share, but its definition differs from Synergy's (Synergy is part of TechInsights as of 2026).
+- IDC sells file- and object-based storage market data and cloud storage service vendor share (split by file / block / object) only in paid reports and trackers. No public S3-only or object-storage-only share figures from IDC or Canalys were found, so those figures remain **unverified**. Canalys publishes overall cloud infrastructure share, but its definition differs from Synergy's (Synergy is part of TechInsights as of 2026).
 
 ## 3. S3 in data platforms
 
@@ -226,7 +226,7 @@ flowchart TB
 | RAG / vectors | Storing and searching embedding vectors | S3 Vectors (GA 2025-12, up to 2 billion vectors per index) |
 | Logs and evaluation data | Accumulating inference logs and evaluation results | Lifecycle, Intelligent-Tiering |
 
-**Tension with GPU neoclouds**: when you train on GPU clouds such as CoreWeave / Nebius, data that lives in S3 incurs egress every time. This is a tailwind for the neoclouds' own storage (S3-compatible, such as VAST) and for egress-free storage like R2. Backblaze reportedly signed a storage deal of about $335M with CoreWeave in 2026 (secondary source; details unverified).
+**Tension with GPU neoclouds**: when you train on GPU clouds such as CoreWeave / Nebius, data that lives in S3 incurs egress every time. This is a tailwind for the neoclouds' own storage (S3-compatible, such as VAST) and for egress-free storage like R2. Backblaze entered a Master Strategic Agreement with CoreWeave effective 2026-06-16, with an estimated total contract value of about $335M over the initial order forms (5- and 7-year terms), per its 8-K.
 
 ### 3.3 Concepts S3 established in the industry
 
@@ -508,4 +508,9 @@ At the same time, S3's weakness is clear, and it lies not in technology but in i
 - SlateDB: <https://slatedb.io/>
 - SlateDB GitHub: <https://github.com/slatedb/slatedb>
 - The New Stack, SlateDB: Bottomless Databases Built on Cloud Object Stores: <https://thenewstack.io/slatedb-bottomless-databases-built-on-cloud-object-stores/>
-- Backblaze 10-Q (CoreWeave storage deal, via secondary source): <https://www.stocktitan.net/sec-filings/BLZE/10-q-backblaze-inc-quarterly-earnings-report-b08f6342729b.html>
+- Backblaze, Form 8-K (Master Strategic Agreement with CoreWeave, 2026-06-16): <https://www.sec.gov/Archives/edgar/data/0001462056/000162828026044804/blze-20260616.htm>
+- Amazon IR, Amazon.com Announces Third Quarter Results (2025): <https://ir.aboutamazon.com/news-release/news-release-details/2025/Amazon-com-Announces-Third-Quarter-Results/default.aspx>
+- Amazon, AWS announces general availability of Amazon S3 Express One Zone (2023-11-28): <https://press.aboutamazon.com/2023/11/aws-announces-the-general-availability-of-amazon-s3-express-one-zone>
+- AWS, Welcome to AWS Pi Day 2022: <https://aws.amazon.com/blogs/aws/welcome-to-aws-pi-day-2022/>
+- Amazon, Amazon S3 expands capabilities with managed Apache Iceberg tables (2024-12-03): <https://press.aboutamazon.com/2024/12/amazon-s3-expands-capabilities-with-managed-apache-iceberg-tables-for-faster-data-lake-analytics-and-automatic-metadata-generation-to-simplify-data-discovery-and-understanding>
+- IDC, Storage Software and Cloud Services Tracker (paid): <https://www.idc.com/tracker/showproductinfo.jsp?containerId=IDC_P24761>

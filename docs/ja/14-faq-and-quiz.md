@@ -47,7 +47,7 @@ S3 は 2006 年から続くサービスなので、古いブログ記事や過�
 
 - 同一キーへの並行書き込みは「最後に完了したものが勝つ」であり、ロックはない。競合を防ぐには条件付き書き込みを使う。
 - CloudFront などのキャッシュ層は別問題で、古い内容が返ることはある。
-- バケット設定 (ポリシー、ライフサイクル等) の変更は反映に時間がかかる場合がある (未確認: 公式に明確な秒数保証はない)。
+- バケット設定の変更は反映に時間がかかる場合があり、一般的な秒数保証はない。ドキュメント上の例: ライフサイクル設定の追加・更新は反映まで「数分」、バージョニングを初めて有効化した後は PUT / DELETE の前に 15 分待つことが推奨されている。
 
 ### Q2. S3 にはディレクトリ (フォルダ) がある
 
@@ -346,7 +346,7 @@ S3 の誤解の多くは「昔は正しかった」情報。ブログや書籍�
 | 2026 年 3 月 | アカウントリージョナル名前空間 | 「バケット名は早い者勝ちのみ」 |
 | 2026 年 4 月 | SSE-C の既定無効化の展開、Amazon S3 Files の GA | 「SSE-C は常に使える」「S3 はファイルシステムとしては使えない」 |
 
-上記の月は What's New / ブログの発表時期に基づく。2024 年 8 月 / 11 月の条件付き書き込みの月は記憶に基づくもので未確認 (機能そのものは公式ドキュメントで確認済み)。
+上記の月は What's New / ブログの発表時期に基づく。条件付き書き込みは 2024-08-20 (`If-None-Match`) と 2024-11-25 (`If-Match`) に発表された。
 
 ## 10. 自己診断チェックリスト
 
@@ -403,3 +403,7 @@ S3 の誤解の多くは「昔は正しかった」情報。ブログや書籍�
 - Amazon S3 Transfer Acceleration: <https://docs.aws.amazon.com/AmazonS3/latest/userguide/transfer-acceleration.html>
 - Amazon S3 Storage Lens: <https://docs.aws.amazon.com/AmazonS3/latest/userguide/storage_lens.html>
 - S3 Express One Zone: <https://docs.aws.amazon.com/AmazonS3/latest/userguide/directory-bucket-high-performance.html>
+- Setting an S3 Lifecycle configuration on a bucket (propagation delay): <https://docs.aws.amazon.com/AmazonS3/latest/userguide/how-to-set-lifecycle-configuration-intro.html>
+- put-bucket-versioning (wait 15 minutes after enabling): <https://docs.aws.amazon.com/cli/latest/reference/s3api/put-bucket-versioning.html>
+- Amazon S3 adds support for conditional writes (2024-08-20): <https://aws.amazon.com/about-aws/whats-new/2024/08/amazon-s3-conditional-writes/>
+- Amazon S3 adds new functionality for conditional writes (2024-11-25): <https://aws.amazon.com/about-aws/whats-new/2024/11/amazon-s3-functionality-conditional-writes/>

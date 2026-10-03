@@ -233,7 +233,7 @@ MAXFILESIZE 256 MB;
 | Lambda + S3 Files | Lambda から S3 バケットをファイルシステムとしてマウント (2026-04 発表) | 関数のファイルシステム設定 | capacity provider を使う関数では非対応 |
 | Step Functions Distributed Map | `ItemReader` で S3 の object 一覧 / CSV / JSON / JSONL / S3 Inventory manifest を読み、子ワークフローを大量並列実行 | `ItemReader`、`ItemBatcher`、`ResultWriter`、`MaxConcurrency` | コンソールで作った「フォルダ」オブジェクトも 1 item として扱われ、余計な子実行が起きる |
 | Amazon EKS + Mountpoint CSI driver | `s3.csi.aws.com` で S3 バケットを PersistentVolume として Pod にマウント | EKS add-on `aws-mountpoint-s3-csi-driver`、IRSA / Pod Identity、`mountOptions` | 静的プロビジョニングのみ。Fargate・Windows・Hybrid Nodes 非対応。POSIX 完全互換ではない (追記・リネーム制約) |
-| Amazon ECS | タスクロールで SDK 経由アクセス。ファイルとして使うなら S3 Files / 自前 Mountpoint | task role、VPC endpoint | ECS 向けの Mountpoint ネイティブ統合は 未確認 |
+| Amazon ECS | タスクロールで SDK 経由アクセス。ファイルとして使うなら S3 Files / 自前 Mountpoint | task role、VPC endpoint | ECS にはネイティブの S3 Files ボリュームタイプがある (`s3filesVolumeConfiguration`。2026-09 時点で Fargate / ECS Managed Instances / EC2)。EKS の Mountpoint CSI ドライバーに相当するネイティブの Mountpoint ボリュームタイプは ECS にはない |
 | Amazon EC2 | instance profile (IAM role) の一時認証情報で SDK / CLI / Mountpoint | instance profile、IMDSv2 | 認証情報を AMI やユーザーデータに埋めない。IMDSv2 の hop limit がコンテナから見えない原因になりがち |
 | AWS Batch | ジョブの入出力を S3 に。大規模なら S3 Batch Operations と使い分け | job role、コンテナの入出力 prefix | 「S3 オブジェクトごとに API を叩くだけ」なら S3 Batch Operations の方が安く単純 |
 | Amazon S3 Files | S3 バケットを EFS ベースのファイルシステムとして公開 (2026-04 GA) | file system 作成、マウントターゲット | ファイル API とオブジェクト API の同時利用時の整合性モデルは個別に確認 (詳細は別章) |
@@ -454,7 +454,7 @@ flowchart LR
 | OSS | S3 の使い方 | 主要設定 | ハマりどころ |
 | --- | --- | --- | --- |
 | Apache Iceberg | メタデータ (metadata.json / manifest list / manifest) とデータファイルを S3 に置く。コミットはカタログでアトミックに | catalog (Glue / REST / S3 Tables)、`S3FileIO` | 小ファイルとスナップショットが溜まる。compaction・expire snapshots・orphan file 削除が運用必須 (S3 Tables は自動) |
-| Delta Lake | `_delta_log/` の JSON コミットログ + Parquet | `S3DynamoDBLogStore` (複数クラスター書き込み時) | 公式 storage ドキュメントでは、複数クラスターからの同時書き込みは DynamoDB による排他 (`S3DynamoDBLogStore`) が必要と記載。S3 条件付き書き込みへのネイティブ対応は 未確認 |
+| Delta Lake | `_delta_log/` の JSON コミットログ + Parquet | `S3DynamoDBLogStore` (複数クラスター書き込み時) | 公式 storage ドキュメントでは、複数クラスターからの同時書き込みは DynamoDB による排他 (`S3DynamoDBLogStore`) が必要と記載。S3 条件付き書き込みへのネイティブ対応は Delta 4.4.0 (2026-08) 時点で未リリース: 機能要望は not planned でクローズ、プロトタイプ PR は未マージでクローズ |
 | Apache Hudi | タイムライン (`.hoodie/`) + Parquet / log file。CoW / MoR | table type、lock provider (DynamoDB 等) | 並行書き込みにはロックプロバイダが必要。バージョニング有効バケットでは cleaner が delete marker を溜めるので lifecycle で掃除 |
 | Apache Spark (S3A) | `s3a://` で Hadoop S3A コネクタ経由 | `fs.s3a.*`、S3A committer | デフォルト committer は `file` (rename ベース) で S3 には不向き。`magic` / `directory` / `partitioned` を指定 |
 | Trino / Presto | Hive / Iceberg / Delta コネクタで S3 を読む | `fs.s3.enabled=true` (Trino 483 時点)、`s3.region`、metastore | ネイティブ S3 ファイルシステムと旧 Hadoop ベース (legacy) 設定はキーが異なる。バージョンごとのドキュメントで確認 |
@@ -502,12 +502,12 @@ storage_config:
 | OSS | S3 の使い方 | 主要設定 | ハマりどころ |
 | --- | --- | --- | --- |
 | Terraform S3 backend | state ファイルを S3 に保存。`use_lockfile` で S3 ネイティブロック | `bucket`、`key`、`region`、`encrypt`、`use_lockfile = true` | 1.10 で実験的導入、1.11 で GA。`dynamodb_table` 等は deprecated。バージョニング有効化を推奨 |
-| OpenTofu S3 backend | Terraform と同様に S3 lockfile をサポート | `use_lockfile` | 対応バージョンは OpenTofu のリリースノートで確認 (未確認) |
+| OpenTofu S3 backend | Terraform と同様に S3 lockfile をサポート | `use_lockfile` | 1.10.0 (2025-06) で追加、experimental 扱いではない。Terraform と違い `dynamodb_table` は非推奨ではなく両方の排他方式がサポートされ、両方を有効にしてから移行できる |
 | Velero | Kubernetes リソースのバックアップを S3 に、PV はスナップショット or ファイルレベル | `velero-plugin-for-aws`、BackupStorageLocation | バケット prefix を複数クラスターで共有しない |
 | restic | 重複排除 + 暗号化済みリポジトリを S3 に | `restic -r s3:s3.ap-northeast-1.amazonaws.com/bucket_name init` (リージョン別 endpoint の path-style) | Object Lock や lifecycle の noncurrent 削除と prune の相互作用に注意 |
 | Docker Registry (CNCF Distribution) | イメージ layer / manifest を S3 に | `storage.s3` (`region`, `bucket`, `encrypt`, `rootdirectory`, `chunksize`) | `chunksize` は 5 MB 超が必要 (デフォルト 10 MB)。GC 実行中は read-only モードに |
-| Git LFS | LFS サーバー (GitLab / Gitea 等) のバックエンドとして S3 を使う | 各サーバーの object storage 設定 | Git LFS クライアント自体は S3 を直接話さない。LFS API を実装したサーバーが必要 |
-| MLflow | artifact store として `s3://` | `--artifacts-destination s3://...` (proxy) / `--default-artifact-root` | proxy モードかクライアント直アクセスかで、S3 権限が必要な主体が変わる |
+| Git LFS | LFS サーバー (GitLab / Gitea 等) のバックエンドとして S3 を使う | 各サーバーの object storage 設定 | 標準では Git LFS クライアントは S3 を直接話さず、LFS Batch API を実装したサーバーが必要。例外はスタンドアロンのカスタム転送エージェント (awslabs/git-remote-s3 の `git-lfs-s3` など) |
+| MLflow | artifact store として `s3://` | `--artifacts-destination s3://...` (proxy) / `--default-artifact-root` | proxy モード (デフォルト、`--artifacts-destination`) ではサーバーが S3 の認証情報を持つ。直アクセス (`--default-artifact-root` + `--no-serve-artifacts`) ではクライアントに S3 の認証情報が必要 |
 | DVC | データ / モデルのバージョン管理リモート | `dvc remote add -d storage s3://bucket/path` | コンテンツアドレス方式なのでオブジェクト数が増える。lifecycle で消すと過去バージョンが壊れる |
 | rclone / s5cmd | 高速コピー / 同期 CLI | remote 設定、並列度 | 並列度を上げすぎると 503 SlowDown |
 
@@ -855,3 +855,14 @@ flowchart TD
 - [Grafana Mimir: Configure object storage](https://grafana.com/docs/mimir/latest/configure/configure-object-storage-backend/)
 - [Thanos: Object Storage](https://thanos.io/tip/thanos/storage.md/)
 - [DVC remote: Amazon S3](https://doc.dvc.org/user-guide/data-management/remote-storage/amazon-s3)
+- [Amazon ECS: Amazon S3 Files volumes](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/s3files-volumes.html)
+- [Amazon ECS extends Amazon S3 Files support to the Amazon EC2 compute type (2026-09)](https://aws.amazon.com/about-aws/whats-new/2026/09/amazon-ecs-s3-files-ec2/)
+- [delta-io/delta #3596: S3 Conditional Writes (closed, not planned)](https://github.com/delta-io/delta/issues/3596)
+- [Delta Lake v4.4.0 release](https://github.com/delta-io/delta/releases/tag/v4.4.0)
+- [OpenTofu v1.10.0 release (native S3 locking)](https://github.com/opentofu/opentofu/releases/tag/v1.10.0)
+- [OpenTofu S3 backend](https://opentofu.org/docs/language/settings/backends/s3/)
+- [Git LFS custom transfer agents](https://github.com/git-lfs/git-lfs/blob/main/docs/custom-transfers.md)
+- [awslabs/git-remote-s3](https://github.com/awslabs/git-remote-s3)
+- [MLflow tracking server architecture](https://github.com/mlflow/mlflow/blob/master/docs/docs/self-hosting/architecture/tracking-server.mdx)
+- [ClickHouse S3Queue table engine](https://clickhouse.com/docs/engines/table-engines/integrations/s3queue)
+- [ClickHouse external disks for storing data](https://clickhouse.com/docs/operations/storing-data)

@@ -184,7 +184,7 @@ S3 とその周辺で登場する用語を、英字のアルファベット順 (
 | OAC (Origin Access Control) | CloudFront が SigV4 で署名して S3 オリジンにアクセスする仕組み。バケットを非公開のまま配信でき、SSE-KMS にも対応する。 | OAI |
 | OAI (Origin Access Identity) | CloudFront から S3 へのアクセスを制限する旧方式。新規構築では OAC が推奨される。 | OAC |
 | Object | S3 に保存されるデータの単位。データ本体、キー、メタデータ、バージョン ID などからなり、最大サイズは 2025 年 12 月から 50 TB (48.8 TiB)。 | Key |
-| Object Lambda | GET 等のリクエスト時に Lambda でデータを変換して返す機能 (S3 Object Lambda)。未確認: 新規顧客への提供状況は変わっている可能性がある。 | Access Point |
+| Object Lambda | GET 等のリクエスト時に Lambda でデータを変換して返す機能 (S3 Object Lambda)。2025-11-07 以降、既存利用者と一部の APN パートナーのみ利用可能で、新機能の追加予定はない。 | Access Point |
 | Object Lock | WORM (Write Once Read Many) モデルでオブジェクトバージョンの削除・上書きを防ぐ機能。保持期間 (Governance / Compliance) と Legal hold がある。 | WORM |
 | Object Ownership | オブジェクトの所有者と ACL の扱いを決めるバケット設定。Bucket owner enforced、Bucket owner preferred、Object writer の 3 種類。 | ACL |
 | Object tag | オブジェクトに付けるキーと値のペア (最大 10 個)。ライフサイクルフィルタや権限条件に使える。 | Lifecycle |
@@ -406,3 +406,4 @@ S3 単体の機能ではないが、S3 を使う上で頻出する周辺サー�
 - Analyze Amazon S3 annotations at scale with materialized views: <https://aws.amazon.com/blogs/storage/analyze-amazon-s3-annotations-at-scale-with-materialized-views/>
 - Understanding your AWS billing and usage reports for Amazon S3: <https://docs.aws.amazon.com/AmazonS3/latest/userguide/aws-usage-report-understand.html>
 - AWS Backup continuous backups and PITR: <https://docs.aws.amazon.com/aws-backup/latest/devguide/point-in-time-recovery.html>
+- Amazon S3 Object Lambda availability change: <https://docs.aws.amazon.com/AmazonS3/latest/userguide/amazons3-ol-change.html>

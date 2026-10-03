@@ -8,7 +8,7 @@
   ],
   "awsRevenue": [
     { "period": "2025-Q2", "revenueUSDBillions": 30.9, "yoyGrowthPct": 17.5, "operatingIncomeUSDBillions": 10.2, "source": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results/" },
-    { "period": "2025-Q3", "revenueUSDBillions": 33.0, "yoyGrowthPct": 20, "operatingIncomeUSDBillions": null, "source": "https://www.aboutamazon.com/news/company-news/amazon-earnings-q4-2025-report" },
+    { "period": "2025-Q3", "revenueUSDBillions": 33.0, "yoyGrowthPct": 20, "operatingIncomeUSDBillions": 11.4, "source": "https://ir.aboutamazon.com/news-release/news-release-details/2025/Amazon-com-Announces-Third-Quarter-Results/default.aspx" },
     { "period": "2025-Q4", "revenueUSDBillions": 35.6, "yoyGrowthPct": 24, "operatingIncomeUSDBillions": 12.5, "source": "https://www.aboutamazon.com/news/company-news/amazon-earnings-q4-2025-report" },
     { "period": "2026-Q1", "revenueUSDBillions": 37.6, "yoyGrowthPct": 28, "operatingIncomeUSDBillions": 14.2, "source": "https://www.aboutamazon.com/news/company-news/amazon-earnings-q1-2026-report" },
     { "period": "2026-Q2", "revenueUSDBillions": 42.2, "yoyGrowthPct": 37, "operatingIncomeUSDBillions": 16.6, "source": "https://www.aboutamazon.com/news/company-news/amazon-earnings-q2-2026-report" }

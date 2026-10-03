@@ -120,7 +120,7 @@ pie showData
 | 四半期 | AWS 売上 ($B) | 前年比 | AWS 営業利益 ($B) |
 | --- | --- | --- | --- |
 | 2025 Q2 | 30.9 | +17.5% | 10.2 |
-| 2025 Q3 | 33.0 | +20% | 未確認 |
+| 2025 Q3 | 33.0 | +20% | 11.4 |
 | 2025 Q4 | 35.6 | +24% | 12.5 |
 | 2026 Q1 | 37.6 | +28% | 14.2 |
 | 2026 Q2 | 42.2 | +37% | 16.6 |
@@ -174,13 +174,13 @@ xychart-beta
 | S3 Vectors (2025 年 7〜12 月) | 25 万超のインデックス、400 億超のベクトル、10 億超のクエリ | 2025 | 同上 |
 | ローンチ時の構成 | 約 1PB、約 400 ノード、15 ラック、3 DC、総帯域 15Gbps | 2006 | 同上 |
 
-参考として、過去の公表値では「350 兆オブジェクト・毎秒 1 億リクエスト超」とされた時期がある (ByteByteGo 等の二次情報、年は未確認)。2 年程度でオブジェクト数が 1.4 倍、リクエストが 2 倍になった計算で、成長は鈍っていない。
+参考として、AWS は S3 Express One Zone GA のプレスリリース (2023-11-28) で「350 兆オブジェクト超・平均毎秒 1 億リクエスト超」と公表している。毎秒 1 億リクエストは Pi Day 2022 の時点で既に出ており、「400 兆オブジェクト超」は 2024-12 が初出。2023-11 から 2026-03 (約 2 年 4 か月) でオブジェクト数が約 1.4 倍、リクエストが 2 倍になった計算で、成長は鈍っていない。
 
 ### 2.5 アナリスト評価
 
 - **Gartner Magic Quadrant for Strategic Cloud Platform Services (2025-08-04)**: AWS は 15 年連続で Leader、Ability to Execute で最上位。Leaders は AWS / Google / Microsoft / Oracle。
 - **Gartner Enterprise Storage Platforms MQ (2025-09-02)**: 2025 年から Primary Storage と File and Object Storage を統合。Leaders は Dell / HPE / Huawei / IBM / NetApp / Pure Storage (現 Everpure)。**パブリッククラウドの S3 自体は対象外**。つまり「オブジェクトストレージ製品の MQ」で S3 は評価されない。S3 は製品カテゴリを超えた「プラットフォームの一部」として扱われている。
-- IDC / Canalys のオブジェクトストレージ単独のシェアデータは公開情報では確認できず **未確認**。Canalys はクラウドインフラ全体のシェアを出しているが、Synergy と定義が異なる (Synergy は 2026 年時点で TechInsights 傘下)。
+- IDC はファイル / オブジェクトストレージ市場データやクラウドストレージサービスのベンダーシェア (ファイル / ブロック / オブジェクト別) を有料レポート・トラッカーでのみ提供している。IDC / Canalys による S3 単独・オブジェクトストレージ単独の公開シェア数値は見つからず、数値は **未確認**。Canalys はクラウドインフラ全体のシェアを出しているが、Synergy と定義が異なる (Synergy は 2026 年時点で TechInsights 傘下)。
 
 ## 3. データ基盤における S3
 
@@ -226,7 +226,7 @@ flowchart TB
 | RAG / ベクトル | 埋め込みベクトルの保存と検索 | S3 Vectors (2025-12 GA、1 インデックス最大 20 億ベクトル) |
 | ログ・評価データ | 推論ログ、評価結果の蓄積 | Lifecycle、Intelligent-Tiering |
 
-**GPU ネオクラウドとの緊張関係**: CoreWeave / Nebius などの GPU クラウドで学習する場合、データが S3 にあると毎回 egress がかかる。これがネオクラウド側の自前ストレージ (VAST 等の S3 互換) や R2 のような egress 無料ストレージの追い風になっている。Backblaze は 2026 年に CoreWeave と約 $335M のストレージ契約を結んだと報じられている (二次情報、詳細未確認)。
+**GPU ネオクラウドとの緊張関係**: CoreWeave / Nebius などの GPU クラウドで学習する場合、データが S3 にあると毎回 egress がかかる。これがネオクラウド側の自前ストレージ (VAST 等の S3 互換) や R2 のような egress 無料ストレージの追い風になっている。Backblaze は 2026-06-16 付で CoreWeave と Master Strategic Agreement を締結し、初期発注 (5 年・7 年) の契約総額を約 $335M と見積もっている (8-K による)。
 
 ### 3.3 S3 が業界に定着させた概念
 
@@ -508,4 +508,9 @@ S3 は 2026 年時点で「オブジェクトストレージ製品」ではな�
 - SlateDB: <https://slatedb.io/>
 - SlateDB GitHub: <https://github.com/slatedb/slatedb>
 - The New Stack, SlateDB: Bottomless Databases Built on Cloud Object Stores: <https://thenewstack.io/slatedb-bottomless-databases-built-on-cloud-object-stores/>
-- Backblaze 10-Q (CoreWeave storage deal, 二次情報経由): <https://www.stocktitan.net/sec-filings/BLZE/10-q-backblaze-inc-quarterly-earnings-report-b08f6342729b.html>
+- Backblaze, Form 8-K (Master Strategic Agreement with CoreWeave, 2026-06-16): <https://www.sec.gov/Archives/edgar/data/0001462056/000162828026044804/blze-20260616.htm>
+- Amazon IR, Amazon.com Announces Third Quarter Results (2025): <https://ir.aboutamazon.com/news-release/news-release-details/2025/Amazon-com-Announces-Third-Quarter-Results/default.aspx>
+- Amazon, AWS announces general availability of Amazon S3 Express One Zone (2023-11-28): <https://press.aboutamazon.com/2023/11/aws-announces-the-general-availability-of-amazon-s3-express-one-zone>
+- AWS, Welcome to AWS Pi Day 2022: <https://aws.amazon.com/blogs/aws/welcome-to-aws-pi-day-2022/>
+- Amazon, Amazon S3 expands capabilities with managed Apache Iceberg tables (2024-12-03): <https://press.aboutamazon.com/2024/12/amazon-s3-expands-capabilities-with-managed-apache-iceberg-tables-for-faster-data-lake-analytics-and-automatic-metadata-generation-to-simplify-data-discovery-and-understanding>
+- IDC, Storage Software and Cloud Services Tracker (paid): <https://www.idc.com/tracker/showproductinfo.jsp?containerId=IDC_P24761>

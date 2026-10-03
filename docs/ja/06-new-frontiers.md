@@ -51,7 +51,7 @@ timeline
 
 ### 1.1 データの重力
 
-S3 には数百兆オブジェクト級のデータが溜まっている (AWS 公式の発表では 2025 年時点で 400 兆オブジェクト超とされる。正確な最新値は未確認)。データを使うたびに別のシステムにコピーするのは、
+S3 には数百兆オブジェクト級のデータが溜まっている (AWS は 2024-12 に 400 兆オブジェクト超、2026-03 の 20 周年記事で 500 兆オブジェクト超と公表)。データを使うたびに別のシステムにコピーするのは、
 
 - コピーのコスト (転送料金・二重保存)
 - 鮮度のズレ (コピーは常に古い)
@@ -250,7 +250,8 @@ aws s3tables put-table-bucket-storage-class \
 | 時期 | 出来事 |
 | --- | --- |
 | 2024-12 | 発表 (us-east-1 / us-east-2 / us-west-2 から)。Glue 統合はプレビュー |
-| 2025 前半 | SageMaker Lakehouse / Glue 統合 GA、リージョン拡大 (日付の詳細は未確認) |
+| 2025-01〜06 | リージョン拡大: 3 → 32 リージョン (2025-01-17 に 8、03-04 に 11、03-21 に 14、03-31 に 15、04-08 に 19、05-07 に 30、06-25 に 32) |
+| 2025-03 | SageMaker Lakehouse / AWS 分析サービス (Glue Data Catalog) との統合が GA (2025-03-13) |
 | 2025-07 | コンパクション料金を最大 90% 値下げ (2025-07-01 から有効) |
 | 2025-09 | S3 コンソールでテーブルのプレビュー |
 | 2025-12 | Intelligent-Tiering ストレージクラス、テーブルのレプリケーション |
@@ -274,7 +275,7 @@ Intelligent-Tiering の階層: 30 日連続アクセスなしで Infrequent Acce
 | コンパクション (オブジェクト) | $0.002/1,000 オブジェクト処理 |
 | コンパクション (データ量、binpack) | $0.005/GB 処理 |
 
-sort / z-order コンパクションの per-GB 料金は binpack と別建て (2025-07 に最大 80% 値下げ)。正確な現行値は料金ページで確認すること (本書では sort/z-order の現行単価は未確認)。
+sort / z-order コンパクションの per-GB 料金は binpack と別建て。2025-07 の値下げでオブジェクト単価は 50%、per-GB 単価は binpack で 90%、sort / z-order で 80% 下がった。sort / z-order の現行 per-GB 単価は未確認: 本書で確認した S3 料金ページの本文 (2026-10) には binpack の単価しか載っておらず、2025-06 の sort / z-order 発表にも価格の記載がない。見積もりは料金計算ツールで行うこと。
 
 ## 4. S3 Metadata と Annotations
 
@@ -429,10 +430,10 @@ aws s3vectors update-index-mode --vector-bucket-name kb-vectors \
 | ストレージ | $0.06/GB-月 |
 | PUT | $0.20/GB (1 リクエスト最低 128 KB 換算) |
 | クエリ API | $2.5/100 万クエリ |
-| クエリ処理データ | 規模で段階料金 (〜10 万ベクトル / 10 万〜1,000 万 / 1,000 万超)。1,000 万ベクトル超のインデックスは 2026-06 に最大 80% 値下げ |
+| クエリ処理データ | インデックス規模で段階料金: 最初の 10 万ベクトルは $0.004/TB、10 万〜1,000 万は $0.002/TB、1,000 万超は $0.0004/TB。1,000 万ベクトル超のインデックスは 2026-06 に最大 80% 値下げ |
 | 返却データ | topK 拡大に伴い、1 クエリ 512 KB を超えた返却データに少額課金 |
 
-クエリ処理データの単価は料金ページの表記 ($/TB) を本書では正確に再現できていないため **未確認** 扱い。見積もりは公式料金ページと料金計算ツールで行うこと。
+クエリ処理データはスキャンしたベクトルデータの TB 単位で課金されるため、請求額はインデックス規模とクエリ数で決まる。見積もりは公式料金ページと料金計算ツールで行うこと。
 
 ## 6. S3 Files (2026-04)
 
@@ -515,9 +516,9 @@ aws s3api put-object --bucket amzn-s3-demo-bucket --key state.json \
 | 2025-11 | ABAC (タグベースのアクセス制御、`PutBucketAbac`) |
 | 2025-11 | ポスト量子 TLS 鍵交換 (ML-KEM) をリージョナル / S3 Tables / Express One Zone エンドポイントで |
 | 2025-12 | Organizations ポリシーによる組織全体の Block Public Access |
+| 2026-01 | `UpdateObjectEncryption`: データ移動なしで既存オブジェクトのサーバー側暗号化タイプを SSE-S3 → SSE-KMS などに変更 (What's New 2026-01-29、全リージョン) |
 | 2026-03 | **アカウントリージョナル名前空間** (`<prefix>-<accountId>-<region>-an` 形式の、自分のアカウントだけが作れるバケット名。`create-bucket --bucket-namespace account-regional`) |
 | 2026-04 | 新規・既存バケットで SSE-C をデフォルト無効化 (SSE-C 使用実績のあるアカウントの既存バケットは除く) |
-| 2026 | `UpdateObjectEncryption`: データ移動なしで既存オブジェクトの暗号化を SSE-S3 → SSE-KMS などに変更 (CLI で確認。発表日は未確認) |
 | 2026-03 | レプリケーションに失敗したオブジェクトに対してライフサイクルの移行・期限切れを保留 |
 | 2026-07 | Standard-IA / One Zone-IA への移行の 30 日最小期間を撤廃 |
 | 2026-07 | イベント通知にシステム生成タグを含める |
@@ -669,3 +670,10 @@ flowchart TB
 - [S3 server access logs to CloudWatch Logs and S3 Tables (2026-06)](https://aws.amazon.com/about-aws/whats-new/2026/06/amazon-s3-cloudwatch-logs-tables/)
 - [S3 Event Notifications system-generated tags (2026-07)](https://aws.amazon.com/about-aws/whats-new/2026/07/amazon-s3-event-notifications-system-generated-tags/)
 - [Data Engineering Podcast: S3 Tables and Vectors (Andy Warfield)](https://www.dataengineeringpodcast.com/episodepage/s3-tables-and-vectors-episode-475)
+- [Amazon S3 expands capabilities with managed Apache Iceberg tables (press release, 2024-12-03; "more than 400 trillion objects")](https://press.aboutamazon.com/2024/12/amazon-s3-expands-capabilities-with-managed-apache-iceberg-tables-for-faster-data-lake-analytics-and-automatic-metadata-generation-to-simplify-data-discovery-and-understanding)
+- [Twenty years of Amazon S3 and building what's next (2026-03)](https://aws.amazon.com/blogs/aws/twenty-years-of-amazon-s3-and-building-whats-next/)
+- [Amazon S3 Tables in five additional Regions (2025-01)](https://aws.amazon.com/about-aws/whats-new/2025/01/amazon-s3-tables-additional-aws-regions/)
+- [Amazon S3 Tables in two additional Regions (2025-06)](https://aws.amazon.com/about-aws/whats-new/2025/06/amazon-s3-tables-two-additional-aws-regions/)
+- [Amazon SageMaker Lakehouse integration with S3 Tables generally available (2025-03-13)](https://aws.amazon.com/about-aws/whats-new/2025/03/amazon-sagemaker-lakehouse-integration-s3-tables-generally-available/)
+- [Amazon S3 Tables reduces compaction costs (2025-07)](https://aws.amazon.com/about-aws/whats-new/2025/07/amazon-s3-tables-reduce-compaction-costs/)
+- [Change the server-side encryption type of Amazon S3 objects (2026-01-29)](https://aws.amazon.com/about-aws/whats-new/2026/01/change-the-server-side-encryption-type-of-s3-objects/)

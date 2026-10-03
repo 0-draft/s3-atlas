@@ -175,7 +175,7 @@ sequenceDiagram
 | 1 イベントの複数宛先 | 同一イベント種別・重複プレフィックスで複数宛先を設定不可 (SNS ファンアウトで回避) | ルールを複数作れば自由にファンアウト |
 | 有効化 | 通知設定ごと | バケットで「EventBridge に送信」を ON にするだけで全イベント |
 | 再送 / アーカイブ | なし | アーカイブとリプレイ可能 |
-| 遅延 | 一般に低い | 若干のオーバーヘッドあり (未確認: 公式に数値保証なし) |
+| 遅延 | 通常は数秒、ときに 1 分以上かかる (S3 User Guide の記載。数値 SLA はない) | 数値の公表なし (ルーティングが 1 段増える)。エンドツーエンドの配信遅延は `IngestionToInvocationSuccessLatency` メトリクスで観測できる |
 
 ## 3. データレイク (Zone 設計)
 
@@ -460,7 +460,7 @@ sequenceDiagram
 | ベストプラクティス | S3 での実装 |
 | --- | --- |
 | 不要データを持たない | ライフサイクル Expire、重複データ排除 |
-| 適切なストレージクラス | アーカイブ層ほど 1 GB あたりのエネルギーも少ないとされる (未確認: 定量値は非公開) |
+| 適切なストレージクラス | Well-Architected 持続可能性の柱 (SUS 4) は、要件が下がったデータを「より効率的で性能の低いストレージ」へ移すことを推奨 (ライフサイクルで IA / Glacier 系へ)。ストレージクラス別のエネルギー定量値は未確認: AWS がそうした数値を公表している資料は見つからなかった |
 | 効率的なフォーマット | 圧縮・列指向 (Parquet) でスキャン量と保存量を削減 |
 | 転送削減 | キャッシュ、同一リージョン処理 |
 
@@ -607,3 +607,6 @@ export class BaselineBucket extends Construct {
 - Cost-optimized log aggregation and archival in Amazon S3 using s3tar: <https://aws.amazon.com/blogs/storage/cost-optimized-log-aggregation-and-archival-in-amazon-s3-using-s3tar/>
 - AWS Well-Architected Framework: <https://docs.aws.amazon.com/wellarchitected/latest/framework/welcome.html>
 - Security best practices for Amazon S3: <https://docs.aws.amazon.com/AmazonS3/latest/userguide/security-best-practices.html>
+- Amazon S3 Event Notifications (delivery timing): <https://docs.aws.amazon.com/AmazonS3/latest/userguide/EventNotifications.html>
+- Best practices for monitoring event delivery in Amazon EventBridge: <https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-monitoring-events-best-practices.html>
+- Well-Architected Sustainability pillar, SUS 4 (data management): <https://docs.aws.amazon.com/wellarchitected/latest/framework/sus-04.html>

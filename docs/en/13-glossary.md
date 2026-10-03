@@ -184,7 +184,7 @@ This glossary lists terms used in and around S3 in alphabetical order (symbols a
 | OAC (Origin Access Control) | Lets CloudFront access an S3 origin with SigV4-signed requests. You can serve content while keeping the bucket private, and it supports SSE-KMS. | OAI |
 | OAI (Origin Access Identity) | The older method of restricting access from CloudFront to S3. OAC is recommended for new setups. | OAC |
 | Object | The unit of data stored in S3. It consists of the data, key, metadata, version ID, and more. The maximum size has been 50 TB (48.8 TiB) since December 2025. | Key |
-| Object Lambda | Transforms data with Lambda on GET and other requests before returning it (S3 Object Lambda). Unverified: availability to new customers may have changed. | Access Point |
+| Object Lambda | Transforms data with Lambda on GET and other requests before returning it (S3 Object Lambda). As of 2025-11-07, available only to existing customers and select APN partners; no new capabilities are planned. | Access Point |
 | Object Lock | Prevents deletion or overwriting of object versions under a WORM (Write Once Read Many) model. It offers retention periods (Governance / Compliance) and legal holds. | WORM |
 | Object Ownership | A bucket setting that determines object ownership and how ACLs are handled. There are three options: Bucket owner enforced, Bucket owner preferred, and Object writer. | ACL |
 | Object tag | A key-value pair attached to an object (up to 10). Usable in lifecycle filters and permission conditions. | Lifecycle |
@@ -406,3 +406,4 @@ These are not S3 features themselves, but related services and general concepts 
 - Analyze Amazon S3 annotations at scale with materialized views: <https://aws.amazon.com/blogs/storage/analyze-amazon-s3-annotations-at-scale-with-materialized-views/>
 - Understanding your AWS billing and usage reports for Amazon S3: <https://docs.aws.amazon.com/AmazonS3/latest/userguide/aws-usage-report-understand.html>
 - AWS Backup continuous backups and PITR: <https://docs.aws.amazon.com/aws-backup/latest/devguide/point-in-time-recovery.html>
+- Amazon S3 Object Lambda availability change: <https://docs.aws.amazon.com/AmazonS3/latest/userguide/amazons3-ol-change.html>

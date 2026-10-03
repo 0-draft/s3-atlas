@@ -105,7 +105,7 @@ SSE-KMS オブジェクトの読み書きでは、S3 が呼び出し元に代わ
 | AWS マネージドキー (`aws/s3`) でクロスアカウント不可 | AWS マネージドキーのキーポリシーは編集できない | カスタマーマネージドキーを使う |
 | 暗号化コンテキストで拒否 | キーポリシーが `kms:EncryptionContext:aws:s3:arn` を条件にしているが、Bucket Keys 有効時はバケット ARN がコンテキストになる | 条件をバケット ARN ベースに変更 |
 
-KMS のエラー名は SDK・API により表記が異なる (未確認: S3 が返す `Code` に `KMS.` プレフィックス付きの値がそのまま入るケースは限定的)。CloudTrail の KMS イベント (`Decrypt`、`GenerateDataKey`) の `errorCode` を確認するのが確実。
+S3 API Reference のエラーコード一覧には `KMS.DisabledException`、`KMS.KMSInvalidStateException`、`KMS.NotFoundException` など `KMS.` プレフィックス付きのコードが載っている (KMS の例外を S3 がそのまま返すもの)。他の API では表記が異なり (S3 Vectors は `KmsDisabledException` など)、KMS の権限不足は S3 では通常 `AccessDenied` として現れる。CloudTrail の KMS イベント (`Decrypt`、`GenerateDataKey`) の `errorCode` を確認するのが確実。
 
 ## 2. 403 AccessDenied の体系的な切り分け
 
@@ -258,7 +258,7 @@ curl -i -X OPTIONS "https://amzn-s3-demo-bucket.s3.ap-northeast-1.amazonaws.com/
 | 単一ストリームで大きなファイル | 1 接続のスループット上限に張り付く | マルチパート並列アップロード、Range GET 並列ダウンロード、AWS CRT ベースの SDK / CLI (`aws configure set default.s3.preferred_transfer_client crt`) |
 | リージョンが遠い | レイテンシ (RTT) が大きい | 近いリージョン、Transfer Acceleration (Speed Comparison ツールで効果確認)、CloudFront |
 | NAT Gateway 経由 | NAT の帯域・コスト | Gateway VPC エンドポイント |
-| EC2 インスタンスのネットワーク帯域 | インスタンスタイプのネットワーク性能上限 | 大きいインスタンス、ENA Express (未確認: S3 への効果は経路依存) |
+| EC2 インスタンスのネットワーク帯域 | インスタンスタイプのネットワーク性能上限 | ネットワーク性能の高いインスタンスタイプ。ENA Express は効かない: 両方で有効化した EC2 インスタンス間の通信にのみ適用され、S3 との通信は対象外 |
 | 小さなファイル大量 | 1 リクエストあたりのオーバーヘッドが支配的 | 並列度を上げる、ファイルをまとめる、S3 Express One Zone |
 | SSE-KMS の KMS スロットリング | KMS の `ThrottlingException` | S3 Bucket Keys |
 | クライアントの CPU (TLS / チェックサム) | CPU 使用率 100% | CRT クライアント、適切な並列数 |
@@ -399,7 +399,7 @@ aws s3api head-object --bucket src-bucket --key path/key --query ReplicationStat
 | IAM ロール | `s3:GetObjectVersionForReplication`、`s3:GetObjectVersionAcl`、`s3:GetObjectVersionTagging` (送信元)、`s3:ReplicateObject`、`s3:ReplicateDelete`、`s3:ReplicateTags` (送信先) | ロールのポリシーと信頼ポリシー (`s3.amazonaws.com`) |
 | 送信先バケットポリシー (クロスアカウント) | 送信元のレプリケーションロールを許可していない | 送信先バケットポリシーで許可、所有者を送信先に変更するなら `s3:ObjectOwnerOverrideToBucketOwner` |
 | KMS | ルールで「KMS 暗号化オブジェクトを複製」が未選択、ロールに送信元キーの `kms:Decrypt`、送信先キーの `kms:Encrypt` がない、AWS マネージドキー (`aws/s3`) をクロスアカウントで使用 | カスタマーマネージドキーと両方のキーポリシー |
-| SSE-C | SSE-C オブジェクトは設定次第 (サポートされるが条件あり。未確認: 詳細条件は User Guide を参照) | 可能なら SSE-KMS へ |
+| SSE-C | S3 レプリケーションは SSE-C オブジェクトをサポートし、非暗号化オブジェクトと同じ手順で設定でき追加の権限も不要。自動で複製されるのは新規アップロードされた SSE-C オブジェクトのみ | 既存の SSE-C オブジェクトは S3 Batch Replication。可能なら SSE-KMS へ |
 | Object Lock | 送信先でも Object Lock が必要 | 送信先で有効化 |
 | 削除 | 削除マーカー複製は既定 (V2 設定) で無効、バージョン ID 指定削除は複製されない (悪意のある削除から守る設計) | 必要なら `DeleteMarkerReplication` を有効化 |
 | レプリカの再複製 | レプリカはチェーン複製されない (A→B→C では A のオブジェクトは C に行かない) | 各送信元からルールを作る |
@@ -453,7 +453,7 @@ aws s3api head-object --bucket amzn-s3-demo-bucket --key archive/2019/data.tar -
 | コンソールの「空にする (Empty)」 | 手軽 | 大規模だとブラウザを開いたまま長時間。料金は DELETE リクエスト (無料) と LIST |
 | ライフサイクルで全期限切れ | API 呼び出し不要、DELETE は無料、オブジェクト数に関係なくスケール | 1 日 1 回評価で数日かかる |
 | `DeleteObjects` スクリプト | 即時性 | 1 リクエスト 1,000 キー、LIST 料金、スロットリング対策が必要 |
-| S3 Batch Operations | 管理された並列処理 | Batch Operations の料金 (未確認: Batch Operations に「削除」操作は直接ないため Lambda 呼び出しで実装) |
+| S3 Batch Operations | 管理された並列処理 | Batch Operations の料金 + Lambda。Batch Operations に組み込みの削除操作はないため「Lambda 関数の呼び出し」操作で削除する |
 
 ライフサイクルで空にする設定 (KC 記事の手順と同等):
 
@@ -521,3 +521,6 @@ aws s3api head-object --bucket amzn-s3-demo-bucket --key archive/2019/data.tar -
 - Amazon S3 Event Notifications: <https://docs.aws.amazon.com/AmazonS3/latest/userguide/EventNotifications.html>
 - Amazon S3 starts rolling out new security best practice (SSE-C, 2026-04): <https://aws.amazon.com/about-aws/whats-new/2026/04/s3-default-bucket-security-setting/>
 - General purpose bucket quotas: <https://docs.aws.amazon.com/AmazonS3/latest/userguide/BucketRestrictions.html>
+- ENA Express (requirements: traffic between EC2 instances): <https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ena-express.html>
+- Replicating encrypted objects (SSE-S3, SSE-KMS, DSSE-KMS, SSE-C): <https://docs.aws.amazon.com/AmazonS3/latest/userguide/replication-config-for-kms-objects.html>
+- Operations supported by S3 Batch Operations: <https://docs.aws.amazon.com/AmazonS3/latest/userguide/batch-ops-operations.html>
