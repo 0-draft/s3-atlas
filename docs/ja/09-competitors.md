@@ -125,7 +125,7 @@ xychart-beta
 | AWS | S3 Glacier Deep Archive | 0.00099 | 180 日 | 12〜48 時間 |
 | Google | Nearline / Coldline / Archive (us-central1) | 0.010 / 0.004 / 0.0012 | 30 / 90 / 365 日 | 即時 (取り出し料金あり) |
 | Azure | Archive LRS (East US) | 0.00099 | 180 日 | rehydrate 数時間、$0.02/GB (優先 $0.10/GB) |
-| OCI | Archive | 0.0026 | 90 日 | 復元 1〜4 時間 (第三者情報) |
+| OCI | Archive | 0.0026 | 90 日 | 要復元。復元リクエストから最初のバイト取得まで最大 1 時間 (Oracle 公式ドキュメント) |
 | Cloudflare R2 | Infrequent Access | 0.01 | 30 日 | $0.01/GB |
 | Tigris | Archive | 0.004 | 90 日 | 復元型 |
 | DigitalOcean | Spaces Cold | 0.007/GiB | 早期削除課金あり | $0.01/GiB |
@@ -502,7 +502,7 @@ Hetzner     $7.99 + 99 TB x 0.0123 x 730 ≈ 896.91      egress 9 TB x $1.20 = 1
 | --- | --- | --- | --- |
 | A: 配信型 (egress 5x) | R2 / Tigris / B2 | 最高値グループ (30 倍) | CloudFront 前提の設計、AWS 内処理が大半 |
 | B: アーカイブ | S3 Deep Archive / Azure Archive | 最安グループ | 迷わず S3 (または Azure) |
-| C: 保存中心 | B2 / Storj / Wasabi | 4〜5 倍 | 分析・ML を AWS 内で回す、Intelligent-Tiering 活用 |
+| C: 保存中心 | B2 / Storj / Wasabi | 約 4〜4.5 倍 | 分析・ML を AWS 内で回す、Intelligent-Tiering 活用 |
 
 ## 6. 選び方ガイド
 
@@ -681,6 +681,7 @@ flowchart LR
 - Wasabi Docs, Event Notifications: <https://docs.wasabi.com/docs/event-notifications-bucket>
 - Wasabi Docs, Bucket Replication: <https://docs.wasabi.com/docs/bucket-replication>
 - Oracle Docs, Object Storage overview (consistency): <https://docs.oracle.com/en-us/iaas/Content/Object/Concepts/objectstorageoverview.htm>
+- Oracle Docs, Object Storage storage tiers (Archive restore time): <https://docs.oracle.com/en-us/iaas/Content/Object/Concepts/understandingstoragetiers.htm>
 - Oracle Docs, Autonomous AI Database workload types (Autonomous AI Lakehouse and Iceberg): <https://docs.oracle.com/en-us/iaas/autonomous-database-serverless/doc/about-autonomous-database-workloads.html>
 - IBM Cloud Docs, Cloud Object Storage FAQ (consistency): <https://cloud.ibm.com/docs/cloud-object-storage?topic=cloud-object-storage-faq>
 - IBM Cloud Docs, CIS Resolve Override with COS: <https://cloud.ibm.com/docs/cis?topic=cis-resolve-override-cos>

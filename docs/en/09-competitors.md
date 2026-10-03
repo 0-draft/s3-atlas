@@ -11,7 +11,7 @@ _Last verified: 2026-10-03_
 - **If you serve a lot of data, Cloudflare R2 (free egress) is the first thing to compare against**. In a scenario of 10TB stored + 50TB served per month, S3 costs about $4,530 versus about $150 for R2, a **30x** difference (calculation below).
 - **For long-term retention, S3 Glacier Deep Archive ($0.00099/GB) and Azure Archive ($0.00099/GB) are in the cheapest class**. The alt-cloud model of "a single hot tier only" is actually more expensive for archival use.
 - **2026 is the year storage prices went up**. AI data center demand has tightened HDD/NAND supply, and Backblaze B2 ($6 → $6.95/TB, 2026-05-01), Wasabi ($6.99 → $7.99/TB, 2026-07-01), and Hetzner (about 30% on 2026-04-01) raised prices one after another. The hyperscalers have kept list prices for their standard tiers unchanged.
-- **The self-hosted landscape has collapsed**. In 2025 the MinIO community edition lost its admin UI, then stopped binary distribution, then entered maintenance mode, and in 2026 it was archived. For new deployments, the choice is now Ceph RGW / Garage / SeaweedFS or a commercial product (AIStor, etc.).
+- **The self-hosted landscape has been upended**. In 2025 the MinIO community edition lost its admin UI, then stopped binary distribution, then entered maintenance mode, and in 2026 it was archived. For new deployments, the choice is now Ceph RGW / Garage / SeaweedFS or a commercial product (AIStor, etc.).
 - **S3 API compatibility is a gradient of quality**. Everyone can do PUT/GET/multipart, but differences show up in versioning, Object Lock, replication, events, and conditional writes.
 
 ## 1. Competitor map
@@ -125,7 +125,7 @@ xychart-beta
 | AWS | S3 Glacier Deep Archive | 0.00099 | 180 days | 12 to 48 hours |
 | Google | Nearline / Coldline / Archive (us-central1) | 0.010 / 0.004 / 0.0012 | 30 / 90 / 365 days | Immediate (retrieval fees apply) |
 | Azure | Archive LRS (East US) | 0.00099 | 180 days | Rehydration takes hours, $0.02/GB (priority $0.10/GB) |
-| OCI | Archive | 0.0026 | 90 days | Restore in 1 to 4 hours (third-party information) |
+| OCI | Archive | 0.0026 | 90 days | Restore required; at most 1 hour from the restore request to the first byte (Oracle docs) |
 | Cloudflare R2 | Infrequent Access | 0.01 | 30 days | $0.01/GB |
 | Tigris | Archive | 0.004 | 90 days | Restore-based |
 | DigitalOcean | Spaces Cold | 0.007/GiB | Early deletion charges apply | $0.01/GiB |
@@ -201,7 +201,7 @@ Before 2020, "S3 is eventually consistent" was common knowledge, and layers that
 - **Pricing**: Standard us-central1 $0.020/GiB-month. Internet egress is $0.12/GiB for 0 to 10TiB, $0.11 for 10 to 150TiB, and $0.08 above 150TiB (official pricing page). Class A $0.005/1k, Class B $0.0004/1k (flat namespace; hierarchical namespace is $0.0065 / $0.0005).
 - **Storage classes**: Standard / Nearline (30 days) / Coldline (90 days) / Archive (365 days). **Even Archive can be read in milliseconds**, which is a major difference from S3 Glacier Deep Archive. Autoclass handles automatic tiering.
 - **Unique features**: Dual-region / multi-region buckets (geo-redundancy under a single namespace), Turbo Replication (15-minute RPO), strongly consistent list.
-- **Weaknesses**: S3 compatibility is via "XML API + HMAC keys", so pointing the AWS SDK at it as-is gets stuck on details (some headers, differences in the versioning API). Its egress is the most expensive of the three. The 2023 pricing change doubled the Class A operation price for multi/dual-region.
+- **Weaknesses**: S3 compatibility is via "XML API + HMAC keys", so pointing the AWS SDK at it as-is runs into problems with details (some headers, differences in the versioning API). Its egress is the most expensive of the three. The 2023 pricing change doubled the Class A operation price for multi/dual-region.
 - **For the EU**: With the EU Data Act in mind, it offers Data Transfer Essentials, which makes multi-cloud transfers within the same organization free.
 
 ### 4.2 Azure Blob Storage / ADLS Gen2
@@ -277,7 +277,7 @@ Before 2020, "S3 is eventually consistent" was common knowledge, and layers that
 
 - **Positioning**: "One bucket, globally". Data is automatically cached/moved to the regions where it is read. Partnered with Fly.io.
 - **Pricing**: Standard $0.02, Infrequent Access $0.01 (30 days), Archive $0.004 (90 days). Class A $0.005/1k, Class B $0.0005/1k. **Free egress and the same price in every region**.
-- **Weaknesses**: Short history, so its long-term durability track record is short. Coverage of less common APIs is still maturing.
+- **Weaknesses**: It is young, so its long-term durability track record is limited. Coverage of less common APIs is still maturing.
 - **Good fit for**: Distributing model weights, user assets for multi-region apps.
 
 ### 4.13 Storj
@@ -305,7 +305,7 @@ timeline
 
 - The license (AGPLv3) itself has not changed. What ended was **maintenance and distribution**. The code can be forked, and community forks that restore the console have appeared.
 - Development of the commercial edition **AIStor** continues, but it requires a paid license.
-- **Lesson**: OSS controlled by a single company can be effectively closed without changing the license, simply by "stopping distribution and maintenance". The heavier the data in a piece of infrastructure, as with storage, the larger this dependency risk.
+- **Lesson**: OSS controlled by a single company can be effectively closed without changing the license, simply by "stopping distribution and maintenance". The more data-heavy the infrastructure (storage being the prime example), the larger this dependency risk.
 
 #### Ceph RGW
 
@@ -502,7 +502,7 @@ Hetzner     $7.99 + 99 TB x 0.0123 x 730 ≈ 896.91      egress 9 TB x $1.20 = 1
 | --- | --- | --- | --- |
 | A: Delivery (egress 5x) | R2 / Tigris / B2 | Most expensive group (30x) | Design built around CloudFront, most processing happens inside AWS |
 | B: Archive | S3 Deep Archive / Azure Archive | Cheapest group | Go with S3 (or Azure) without hesitation |
-| C: Storage-centric | B2 / Storj / Wasabi | 4 to 5x | Analytics and ML run inside AWS, use of Intelligent-Tiering |
+| C: Storage-centric | B2 / Storj / Wasabi | about 4 to 4.5x | Analytics and ML run inside AWS, use of Intelligent-Tiering |
 
 ## 6. Selection guide
 
@@ -585,7 +585,7 @@ timeline
 
 **Lessons**:
 
-1. **The egress waiver program worked for real**. Since 2024, the "hostage fee" at migration time is no longer a barrier, at least for a full exit.
+1. **The egress waiver program worked in practice**. Since 2024, the "hostage fee" at migration time is no longer a barrier, at least for a full exit.
 2. The savings estimate depends on the premise that **data center space, power, and network are already paid for** (DHH himself says so). These are not numbers a company renting a data center from scratch can replicate as-is.
 3. 37signals is a SaaS whose data "grows but does not spike". Predictable capacity planning is a prerequisite.
 
@@ -605,7 +605,7 @@ flowchart LR
 - **A chain of price increases**: Driven by AI data center demand, NAND contract prices rose more than 30% quarter-over-quarter in Q1 2026 (TrendForce forecast, secondary reports), and the two major HDD makers were reported to have sold out their 2026 supply. B2, Wasabi, and Hetzner raised prices, and Everpure (formerly Pure) was also reported to have raised customer prices. **S3's standard-tier list price is unchanged**.
 - **"Free egress" becoming the norm**: R2 / Tigris / Wasabi are free, B2 is free up to 3x, and OCI is free for 10TB. The hyperscalers have made partial concessions: "waivers only on exit" and "at cost in the EU". Under the EU Data Act, **from 2027-01-12, egress charges when EU customers switch providers are prohibited** (everyday egress is not covered).
 - **The race to put analytics on top of storage**: S3 Tables (Iceberg), S3 Vectors, R2's Basin Catalog, GCS's BigLake. Storage is shifting from "a place to put things" to "a data platform".
-- **S3-compatible APIs moving to L4**: Whether a compatible store can keep up with new S3 APIs such as conditional writes and new checksums has started to split how they are evaluated.
+- **S3-compatible APIs moving to L4**: Whether a compatible store can keep up with new S3 APIs such as conditional writes and new checksums has started to determine how compatible stores are rated.
 
 ## References
 
@@ -681,6 +681,7 @@ flowchart LR
 - Wasabi Docs, Event Notifications: <https://docs.wasabi.com/docs/event-notifications-bucket>
 - Wasabi Docs, Bucket Replication: <https://docs.wasabi.com/docs/bucket-replication>
 - Oracle Docs, Object Storage overview (consistency): <https://docs.oracle.com/en-us/iaas/Content/Object/Concepts/objectstorageoverview.htm>
+- Oracle Docs, Object Storage storage tiers (Archive restore time): <https://docs.oracle.com/en-us/iaas/Content/Object/Concepts/understandingstoragetiers.htm>
 - Oracle Docs, Autonomous AI Database workload types (Autonomous AI Lakehouse and Iceberg): <https://docs.oracle.com/en-us/iaas/autonomous-database-serverless/doc/about-autonomous-database-workloads.html>
 - IBM Cloud Docs, Cloud Object Storage FAQ (consistency): <https://cloud.ibm.com/docs/cloud-object-storage?topic=cloud-object-storage-faq>
 - IBM Cloud Docs, CIS Resolve Override with COS: <https://cloud.ibm.com/docs/cis?topic=cis-resolve-override-cos>

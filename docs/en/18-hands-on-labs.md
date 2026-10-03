@@ -219,7 +219,7 @@ aws s3 cp s3://$B/doc.txt -    # => v2
 
 # Method B: Copy an older version (v1) to make it current
 # (after Method A, v2 is current, so the only noncurrent version is v1.
-#  Sorting by LastModified is unreliable because it has 1-second precision.)
+#  LastModified has 1-second precision, so sorting by it may not tell v1 and v2 apart.)
 V1=$(aws s3api list-object-versions --bucket $B --prefix doc.txt \
   --query 'Versions[?!IsLatest].VersionId' --output text)
 aws s3api copy-object --bucket $B --key doc.txt --copy-source "$B/doc.txt?versionId=$V1"
@@ -353,7 +353,7 @@ The `expiry-date` above is for an object created at 2026-10-03 01:00 JST (= 10-0
 
 ### What you learned
 
-- Lifecycle days are "counted from midnight UTC on the day after creation", so the date in the `Expiration` header is the creation date + N days, rounded
+- Lifecycle days are "counted from midnight UTC on the day after creation", so the date in the `Expiration` header is the creation date + N days, rounded up to midnight UTC
 - Transitions to STANDARD_IA / ONEZONE_IA require **at least 30 days after creation**, and objects smaller than 128 KB are not transitioned by default
 - The Intelligent-Tiering access tiers (Frequent / Infrequent / Archive Instant) are automatic, while the Archive / Deep Archive tiers are **opt-in**, and reading an object that has moved there requires `RestoreObject`
 - `AbortIncompleteMultipartUpload` is a guard against "invisible garbage" that every bucket should have

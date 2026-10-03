@@ -107,7 +107,7 @@ Media companies share one access pattern: content is viewed heavily right after 
 
 - **Industry**: Gaming
 - **What is stored**: Event data from Fortnite clients
-- **Scale**: **14 PB** on S3 as of 2018, growing at **2 PB per month**. Ingests 40 GB per minute at peak
+- **Scale**: **14 PB** on S3 as of 2018, growing at **2 PB per month**
 - **Architecture**:
   - Kinesis with about 5,000 shards receives 92 million events per minute (about 54 billion per day)
   - 22 production EMR clusters (more than 4,000 EC2 instances) run more than 8,000 batch ETL jobs per day and aggregate into Hive tables
@@ -321,7 +321,7 @@ Finance needs to keep all trade data for a long time and still query it at any m
   - For older clients, a Git LFS Bridge that returns presigned URLs keeps compatibility
 - **Results**: CAS throughput peaked at about 300 Gb/s (while handling a normal load of about 40 Gb/s)
 - **Lessons**: Building a "deduplication layer" on top of S3 means a small update to a multi-GB file does not require re-uploading the whole file. S3 serves purely as the chunk store, and the smarts live in the layer above
-- **Sources**: [Hugging Face Blog: Migrating the Hub from Git LFS to Xet](https://huggingface.co/blog/migrating-the-hub-to-xet), [Hugging Face Docs: Storage](https://huggingface.co/docs/hub/storage-backends)
+- **Sources**: [Hugging Face Blog: Migrating the Hub from Git LFS to Xet](https://huggingface.co/blog/migrating-the-hub-to-xet), [Hugging Face Docs: Xet, our Storage Backend](https://huggingface.co/docs/hub/xet/index)
 
 ### 6.3 March Networks — video search with S3 Vectors and Glacier
 
@@ -363,7 +363,7 @@ Japanese cases were selected only from AWS case studies (aws.amazon.com/jp) and 
 - **What is stored**: Application logs
 - **Scale**: About 300 log tables moved from inside Redshift to S3 (Spectrum) (2017–2020)
 - **Architecture**:
-  - Logs land in S3 as JSON every minute, and an in-house tool (Prism) converts them to Parquet as Redshift Spectrum external tables
+  - Logs land in S3 as JSON every minute, and an in-house tool (Prism) converts them to Parquet and registers them as Redshift Spectrum external tables
   - Data on S3 can be joined with tables inside Redshift. Partitions are used to speed up queries
 - **Results**: Redshift disk usage fell below 50%, and the old load system was retired. Spectrum query speed was "at most about +10% even when slower", which was acceptable
 - **Lessons**: Verifying 186 jobs and 284 tables one by one was grinding work, and the migration took **a full 3 years**. The effort of a storage migration is driven by "verifying existing jobs" more than by technology
@@ -378,7 +378,7 @@ Japanese cases were selected only from AWS case studies (aws.amazon.com/jp) and 
   - Lifecycle rules delete unneeded objects
   - S3 Standard-IA 30 days after creation, Glacier IR after 90 days, deletion after 1 year
   - Intelligent-Tiering is not used (see the article for the reason)
-- **Results**: About ¥310,000 per month from capacity reduction, about ¥530,000 per month one-time and about ¥70,000 per month ongoing from class changes, and more, for **about ¥12 million per year** in total
+- **Results**: About ¥310,000 per month from capacity reduction, an immediate effect of about ¥530,000 per month and an ongoing effect of about ¥70,000 per month from class changes, and more, for **about ¥12 million per year** in total
 - **Lessons**: The first move is "delete". Lifecycle rules that combine deletion and class changes deliver results without major rework
 - **Source**: [CyberAgent Developers Blog: Every step I took to cut Amazon S3 costs](https://developers.cyberagent.co.jp/blog/archives/38950/)
 
@@ -466,9 +466,9 @@ Counterexamples matter just as much. In both cases, the premise was not that "S3
 - **Scale and cost** (from DHH's blog):
   - S3 cost just under $1.5 million per year (at this price under a 4-year contract)
   - The destination is **18 PB** of Pure Storage in total across two data centers (replicated about 1,600 km apart). About $1.5 million in hardware, and just under $1 million for 5 years of support
-  - **About 6 PB** had to be moved out of S3. A later DHH post is said to put the move at about 5 billion objects (**unverified**: not in the linked sources)
+  - **About 6 PB** had to be moved out of S3. A later DHH post reportedly puts the move at about 5 billion objects (**unverified**: not in the linked sources)
   - Under its policy for departing customers (a free 60-day egress window, per DHH), AWS waived about $250,000 in egress fees (The Register)
-- **Results**: Expected savings of almost $5 million over 5 years (blog). Numbers vary: press coverage said $1.3 million per year, and a later DHH post is said to put it at close to $1 million per year (**unverified**: not in the linked sources)
+- **Results**: Expected savings of almost $5 million over 5 years (blog). Numbers vary: press coverage said $1.3 million per year, and a later DHH post reportedly puts it at close to $1 million per year (**unverified**: not in the linked sources)
 - **Caveat**: Press coverage (DCD) points out that the comparison focuses on upfront hardware cost and may not include operational staffing costs
 - **Lessons**:
   - Pure Storage has an S3-compatible API, so the apps needed almost no changes. **The S3 API is the de facto standard**, and that also makes it easier to leave
@@ -509,7 +509,7 @@ flowchart LR
         GLUE[Glue Data Catalog / herd / Unity Catalog]
         LF[Lake Formation fine-grained access control]
     end
-    subgraph Compute[Compute any number independently]
+    subgraph Compute[Independent compute, any number]
         EMR[EMR / Spark]
         ATH[Athena]
         RS[Redshift Spectrum]
@@ -567,7 +567,7 @@ flowchart LR
     end
     META[Metadata / consensus layer Safekeeper, control plane]
     S3[(Amazon S3 source of truth)]
-    EXP[(S3 Express One Zone low-latency layer optional)]
+    EXP[(S3 Express One Zone low-latency layer, optional)]
 
     C --> A
     A --> M --> N --> S3
@@ -589,7 +589,7 @@ Benefits and costs of this structure:
 
 | Feature | Cases | Typical results |
 | --- | --- | --- |
-| Intelligent-Tiering | Zalando, Bynder, Salesforce, NASA, BMLL, BBC, Indeed, Anthropic, Capital One | 20–65% storage savings (Zalando 37%, Bynder 65%, NASA estimated 60%) |
+| Intelligent-Tiering | Zalando, Bynder, Salesforce, NASA, BMLL, BBC, Indeed, Anthropic, Capital One | 37–65% storage savings (Zalando 37%, Bynder 65%, NASA estimated 60%) |
 | Glacier Instant Retrieval | Snap, Canva, BBC, CyberAgent | Snap tens of millions of dollars, Canva $3.6M per year |
 | Glacier Flexible Retrieval / Deep Archive | Pinterest, Capital One, Ancestry, TV Tokyo, BMLL, NAVITIME (failure) | Pinterest millions of dollars per year, BMLL $3M per year |
 | Lifecycle (deletion and version cleanup) | Duolingo, CyberAgent, Capital One, Canva | CyberAgent about ¥12M per year |
@@ -737,7 +737,7 @@ All checked on 2026-10-03.
 33. [Grab Engineering: Scaling Grab's Data Lake: Our journey to Apache Iceberg adoption (2026)](https://engineering.grab.com/our-journey-to-apache-iceberg-adoption)
 34. [AWS re:Invent 2023 STG211: Optimizing storage price and performance with Amazon S3](https://aws.amazon.com/video/watch/70d82a08dd0/)
 35. [Hugging Face Blog: Migrating the Hub from Git LFS to Xet (2025)](https://huggingface.co/blog/migrating-the-hub-to-xet)
-36. [Hugging Face Docs: Storage](https://huggingface.co/docs/hub/storage-backends)
+36. [Hugging Face Docs: Xet, our Storage Backend](https://huggingface.co/docs/hub/xet/index)
 37. [March Networks: Reduces Long-Term Video Storage Cost By Up To 80% With Amazon S3 (2025)](https://www.marchnetworks.com/news/march-networks-reduces-long-term-video-storage-cost-by-up-to-80-with-amazon-s3/)
 38. [Amazon S3 Vectors](https://aws.amazon.com/s3/features/vectors/)
 39. [AWS case study: TV Tokyo (Japanese)](https://aws.amazon.com/jp/solutions/case-studies/tv-tokyo/)

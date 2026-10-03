@@ -107,7 +107,7 @@ S3 20 周年の AWS News Blog (2026-03-13) によると、S3 は **500 兆を超
 
 - **業種**: ゲーム
 - **保存対象**: Fortnite クライアントのイベントデータ
-- **規模**: 2018 年時点で S3 上に **14 PB**、月 **2 PB** のペースで増加。ピーク時は毎分 40 GB を取り込み
+- **規模**: 2018 年時点で S3 上に **14 PB**、月 **2 PB** のペースで増加
 - **アーキテクチャ**:
   - 毎分 9,200 万イベント (1 日約 540 億) を約 5,000 シャードの Kinesis で受ける
   - 22 の本番 EMR クラスタ (EC2 4,000 台超) が 1 日 8,000 本超のバッチ ETL を回し、Hive テーブルに集約
@@ -321,7 +321,7 @@ S3 20 周年の AWS News Blog (2026-03-13) によると、S3 は **500 兆を超
   - 旧クライアント向けには、presigned URL を返す Git LFS Bridge で互換性を保つ
 - **成果**: CAS のスループットはピークで約 300 Gb/s (通常負荷約 40 Gb/s を処理しながら)
 - **教訓**: S3 の上に「重複排除層」を作ると、数 GB のファイルの小さな更新でも全体を再アップロードしなくて済む。S3 はチャンクの置き場に徹し、賢さは上の層に持たせる
-- **出典**: [Hugging Face Blog: Migrating the Hub from Git LFS to Xet](https://huggingface.co/blog/migrating-the-hub-to-xet), [Hugging Face Docs: Storage](https://huggingface.co/docs/hub/storage-backends)
+- **出典**: [Hugging Face Blog: Migrating the Hub from Git LFS to Xet](https://huggingface.co/blog/migrating-the-hub-to-xet), [Hugging Face Docs: Xet, our Storage Backend](https://huggingface.co/docs/hub/xet/index)
 
 ### 6.3 March Networks — S3 Vectors と Glacier で映像検索
 
@@ -589,7 +589,7 @@ flowchart LR
 
 | 機能 | 事例 | 典型的な成果 |
 | --- | --- | --- |
-| Intelligent-Tiering | Zalando、Bynder、Salesforce、NASA、BMLL、BBC、Indeed、Anthropic、Capital One | 20〜65% のストレージ削減 (Zalando 37%、Bynder 65%、NASA 推定 60%) |
+| Intelligent-Tiering | Zalando、Bynder、Salesforce、NASA、BMLL、BBC、Indeed、Anthropic、Capital One | 37〜65% のストレージ削減 (Zalando 37%、Bynder 65%、NASA 推定 60%) |
 | Glacier Instant Retrieval | Snap、Canva、BBC、CyberAgent | Snap 数千万ドル、Canva 年 360 万ドル |
 | Glacier Flexible Retrieval / Deep Archive | Pinterest、Capital One、Ancestry、テレビ東京、BMLL、NAVITIME (失敗) | Pinterest 年数百万ドル、BMLL 年 300 万ドル |
 | Lifecycle (削除・バージョン整理) | Duolingo、CyberAgent、Capital One、Canva | CyberAgent 年約 1,200 万円 |
@@ -737,7 +737,7 @@ Dropbox と 37signals に共通する条件は次の 3 つ。
 33. [Grab Engineering: Scaling Grab's Data Lake: Our journey to Apache Iceberg adoption (2026)](https://engineering.grab.com/our-journey-to-apache-iceberg-adoption)
 34. [AWS re:Invent 2023 STG211: Optimizing storage price and performance with Amazon S3](https://aws.amazon.com/video/watch/70d82a08dd0/)
 35. [Hugging Face Blog: Migrating the Hub from Git LFS to Xet (2025)](https://huggingface.co/blog/migrating-the-hub-to-xet)
-36. [Hugging Face Docs: Storage](https://huggingface.co/docs/hub/storage-backends)
+36. [Hugging Face Docs: Xet, our Storage Backend](https://huggingface.co/docs/hub/xet/index)
 37. [March Networks: Reduces Long-Term Video Storage Cost By Up To 80% With Amazon S3 (2025)](https://www.marchnetworks.com/news/march-networks-reduces-long-term-video-storage-cost-by-up-to-80-with-amazon-s3/)
 38. [Amazon S3 Vectors](https://aws.amazon.com/s3/features/vectors/)
 39. [AWS 導入事例: テレビ東京](https://aws.amazon.com/jp/solutions/case-studies/tv-tokyo/)
