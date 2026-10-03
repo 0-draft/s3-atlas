@@ -15,8 +15,8 @@ _最終確認: 2026-10-03_
 | AWS CLI v2 | 全ラボ | `brew install awscli` (本章は v2.37.7 で確認) |
 | jq | JSON 整形 | `brew install jq` |
 | Docker | ローカル S3 互換サーバー | Docker Desktop / Rancher Desktop / colima など |
-| s5cmd | Lab 12 | `brew install peak/tap/s5cmd` |
-| warp | Lab 12 | GitHub Releases (`minio/warp`) からバイナリ取得 |
+| s5cmd | Lab 12 | `brew install peak/tap/s5cmd` (または `peakcom/s5cmd` コンテナイメージ) |
+| warp | Lab 12 | GitHub Releases (`minio/warp`) からバイナリ取得 (または `minio/warp` コンテナイメージ) |
 | Python 3.13 + pip | Lab 5 | `brew install python@3.13` |
 
 ### 0.2 実 AWS 用の環境変数
@@ -66,6 +66,8 @@ aws s3 ls --profile minio   # 何も出なければ接続 OK
 - コンソールは <http://localhost:9001>
 - 新しめの CLI はフレキシブルチェックサムを既定で送る。古い S3 互換実装でエラーになる場合は `export AWS_REQUEST_CHECKSUM_CALCULATION=when_required` で旧挙動に戻せる
 - ローカルで本ラボを回す場合は、以後のコマンドの `--profile minio` を付け、`LAB=local` のように適当な名前にする
+- `LocationConstraint=$AWS_REGION` はローカルでもそのままでよい。silo は空値 (`AWS_REGION` 未設定) も `ap-northeast-1` も受け付けた
+- 2026-10-03 に確認: 上の `docker run` で `pgsty/silo:RELEASE.2026-09-16T00-00-00Z` が pull・起動でき (Docker API として Podman 6.1 を使用)、`aws s3 ls --profile minio` は何も返さない (AWS CLI 2.37.7)
 
 ### 0.4 ローカル環境 B: LocalStack
 
@@ -81,22 +83,26 @@ docker run -d --name s3lab-localstack \
 aws --endpoint-url http://localhost:4566 s3 ls
 ```
 
+> **ローカルでは未検証**: 2026-10-03 に token なしで `localstack/localstack:latest` (2026.9.0) を起動したところ、exit code 55 (`License activation failed! ... No credentials were found in the environment`) で終了した。そのため 0.5 の LocalStack 列は実行結果ではなく LocalStack のドキュメントに基づく。
+
 ### 0.5 ラボとローカル環境の対応
 
 | ラボ | 実 AWS | MinIO 互換 (silo) | LocalStack |
 | --- | --- | --- | --- |
-| Lab 1 バケット + アップロード + Presign | OK | OK | OK |
+| Lab 1 バケット + アップロード + Presign | OK | 手順 2 以外 OK (Block Public Access / Object Ownership は `NotImplemented`、デフォルト暗号化なし) | OK |
 | Lab 2 バージョニング | OK | OK | OK |
-| Lab 3 ライフサイクル + Intelligent-Tiering | OK | ライフサイクルの失効のみ | 設定 API のみ |
+| Lab 3 ライフサイクル + Intelligent-Tiering | OK | 失効ルールのみ (Transitions、`AbortIncompleteMultipartUpload`、`INTELLIGENT_TIERING` クラス、Intelligent-Tiering 設定は拒否される) | 設定 API のみ |
 | Lab 4 CloudFront OAC | OK | 不可 | 一部 |
 | Lab 5 イベント → Lambda | OK | 不可 (Webhook 通知は可) | OK |
 | Lab 6 CRR | OK | 別方式 (サイトレプリケーション) | 一部 |
-| Lab 7 Object Lock | OK | OK | 一部 |
+| Lab 7 Object Lock | OK | OK (削除拒否時のエラーコードが異なる) | 一部 |
 | Lab 8 バケットポリシー / 403 | OK | 別方式 (MinIO ポリシー) | 評価は簡略 |
 | Lab 9 手動マルチパート | OK | OK | OK |
 | Lab 10 Athena / S3 Tables | OK | 不可 | 不可 |
 | Lab 11 S3 Vectors | OK | 不可 | 不可 |
 | Lab 12 ベンチマーク | OK | OK (ローカル性能になる) | 非推奨 |
+
+silo 列は 2026-10-03 に実際にラボを実行して確認した (Lab 1〜3、7、9、12)。Lab 4、5、6、8、10、11 は実 AWS では実行しておらず、同じコマンドをローカルのモック (moto 5.2.3 サーバー)に送って AWS CLI が引数を受け付けることだけを確認した。LocalStack 列は未検証 (0.4 参照)。
 
 ## Lab 1: バケット作成・アップロード・Presigned URL
 
@@ -107,6 +113,8 @@ aws --endpoint-url http://localhost:4566 s3 ls
 ### 前提
 
 0.2 の環境変数 (ローカルなら 0.3 の `minio` プロファイル)。
+
+> **ローカルで検証済み**: 2026-10-03 に `docker.io/pgsty/silo:RELEASE.2026-09-16T00-00-00Z`、AWS CLI 2.37.7 で手順 1、3、4、5 と後片付けが通った。手順 2 (デフォルトのセキュリティ設定) は AWS の挙動なので実 AWS アカウントが必要 (ローカルでは未検証)。
 
 ### 手順
 
@@ -154,6 +162,8 @@ hello s3 Sat Oct  3 01:00:00 JST 2026
 
 `head-object` は `ContentLength`、`ETag`、`ServerSideEncryption: AES256` などを返す。
 
+ローカルの silo では手順 2 が `NotImplemented` (`get-public-access-block` / `get-bucket-ownership-controls`) と `ServerSideEncryptionConfigurationNotFoundError` (`get-bucket-encryption`) になり、`head-object` に `ServerSideEncryption` は出ない。Presigned URL は `http://localhost:9000/local-l1/greetings/hello.txt?X-Amz-Algorithm=...` になり、手順 5 は代わりに `curl -s -o /dev/null -w '%{http_code}\n' "http://localhost:9000/$B/greetings/hello.txt"` を使う (こちらも `403` になる)。
+
 ### 学んだこと
 
 - 新規バケットは最初から「非公開・SSE-S3 暗号化・ACL 無効 (BucketOwnerEnforced)」
@@ -175,6 +185,8 @@ aws s3 rb s3://$B --force
 ### 前提
 
 Lab 1 と同じ。
+
+> **ローカルで検証済み**: 2026-10-03 に `docker.io/pgsty/silo:RELEASE.2026-09-16T00-00-00Z`、AWS CLI 2.37.7 で全手順と後片付けが通った。
 
 ### 手順
 
@@ -206,8 +218,10 @@ aws s3api delete-object --bucket $B --key doc.txt --version-id $MARKER
 aws s3 cp s3://$B/doc.txt -    # => v2
 
 # 方法 B: 古いバージョン (v1) をコピーして最新にする
+# (方法 A の後は v2 が最新なので、非最新のバージョンは v1 だけ。
+#  LastModified は秒精度なので並べ替えでは v1 / v2 を区別できないことがある)
 V1=$(aws s3api list-object-versions --bucket $B --prefix doc.txt \
-  --query 'sort_by(Versions,&LastModified)[0].VersionId' --output text)
+  --query 'Versions[?!IsLatest].VersionId' --output text)
 aws s3api copy-object --bucket $B --key doc.txt --copy-source "$B/doc.txt?versionId=$V1"
 aws s3 cp s3://$B/doc.txt -    # => v1
 ```
@@ -224,9 +238,13 @@ aws s3 cp s3://$B/doc.txt -    # => v1
         {"V": "x9Z...", "Latest": true}
     ]
 }
+{"DeleteMarker": true, "VersionId": "x9Z..."}
 v2
+{"CopySourceVersionId": "8bK...", "VersionId": "Qm7...", "CopyObjectResult": {...}}
 v1
 ```
+
+実際の CLI は JSON を複数行に整形して出す (ここでは詰めて書いている)。`aws s3 ls` は何も出さない。
 
 ### 学んだこと
 
@@ -240,19 +258,20 @@ v1
 
 ```bash
 empty_versioned() {
-  local b=$1
+  local b=$1 objs errs
   while :; do
-    local objs
     objs=$(aws s3api list-object-versions --bucket "$b" --max-items 1000 \
       --query '{Objects: [Versions, DeleteMarkers][][].{Key: Key, VersionId: VersionId}}' --output json)
     [ "$(echo "$objs" | jq '.Objects | length')" -eq 0 ] && break
-    aws s3api delete-objects --bucket "$b" --delete "$objs" > /dev/null
+    errs=$(aws s3api delete-objects --bucket "$b" --delete "$objs" \
+      --query 'length(Errors || `[]`)' --output text)
+    [ "$errs" -eq 0 ] || { echo "delete-objects: $errs object(s) could not be deleted" >&2; return 1; }
   done
 }
 empty_versioned $B && aws s3api delete-bucket --bucket $B
 ```
 
-この `empty_versioned` 関数は後続のラボでも使う。
+この `empty_versioned` 関数は後続のラボでも使う。`delete-objects` は一部のキーが消せなくても終了コード 0 を返す (失敗は `Errors` に入る) ので、関数は `Errors` を見て止まる。このチェックがないと、Object Lock (Lab 7) で保護されたバージョンが残ったときに無限ループになる。`local` をループの外で宣言しているのは、zsh では設定済みの変数を `local` で再宣言するとその値が表示されるため。
 
 ## Lab 3: ライフサイクルと Intelligent-Tiering
 
@@ -263,6 +282,8 @@ empty_versioned $B && aws s3api delete-bucket --bucket $B
 ### 前提
 
 Lab 1 と同じ。ライフサイクルは **非同期 (おおむね 1 日 1 回)** に評価されるので、このラボでは「設定が効いていることを API で確認する」までを行う。
+
+> **ローカルで検証済み**: 2026-10-03 に `docker.io/pgsty/silo:RELEASE.2026-09-16T00-00-00Z`、AWS CLI 2.37.7 で `tmp/` の失効ルールのみ確認した (手順の後の注記参照)。Transitions、`AbortIncompleteMultipartUpload`、Intelligent-Tiering は実 AWS アカウントが必要 (ローカルでは未検証) で、CLI 引数は moto 5.2.3 で確認した。
 
 ### 手順
 
@@ -305,6 +326,16 @@ aws s3api list-bucket-intelligent-tiering-configurations --bucket $B
 aws s3api head-object --bucket $B --key data/t.txt --query StorageClass
 ```
 
+ローカルの silo では、Transitions (STANDARD_IA / GLACIER_IR はリモート層の設定が必要で `InvalidStorageClass`) と `AbortIncompleteMultipartUpload` が未対応のため、`put-bucket-lifecycle-configuration` が設定全体を拒否する (`InvalidArgument`)。`--storage-class INTELLIGENT_TIERING` は `InvalidStorageClass`、Intelligent-Tiering 設定 API は `MalformedXML` / `NotImplemented` になる。ローカルでは失効ルールだけを登録する。
+
+```bash
+jq '{Rules: [.Rules[] | select(.ID == "tmp-expire-1day")]}' lifecycle.json > lifecycle-local.json
+aws s3api put-bucket-lifecycle-configuration --bucket $B --lifecycle-configuration file://lifecycle-local.json
+aws s3api get-bucket-lifecycle-configuration --bucket $B --query 'Rules[].ID'
+aws s3 cp t.txt s3://$B/tmp/t.txt
+aws s3api head-object --bucket $B --key tmp/t.txt --query Expiration
+```
+
 ### 期待される出力
 
 ```text
@@ -318,6 +349,8 @@ aws s3api head-object --bucket $B --key data/t.txt --query StorageClass
 "INTELLIGENT_TIERING"
 ```
 
+上の `expiry-date` は 2026-10-03 01:00 JST (= 10-02 16:00 UTC) に作ったオブジェクトの場合。10-03 の 00:00 UTC 以降に作ると `Mon, 05 Oct 2026 00:00:00 GMT` になる (13:30 UTC に実行したローカル silo の結果もこの値だった)。
+
 ### 学んだこと
 
 - ライフサイクルの日数は「作成日の翌日 0 時 UTC から数える」ので、`Expiration` ヘッダの日付は作成日 + N 日に丸められる
@@ -329,7 +362,7 @@ aws s3api head-object --bucket $B --key data/t.txt --query StorageClass
 
 ```bash
 aws s3 rb s3://$B --force
-rm -f lifecycle.json itier.json t.txt
+rm -f lifecycle.json lifecycle-local.json itier.json t.txt
 ```
 
 ## Lab 4: CloudFront + OAC で静的サイト配信
@@ -341,6 +374,8 @@ rm -f lifecycle.json itier.json t.txt
 ### 前提
 
 実 AWS。CloudFront はグローバルサービスなので、作成や削除の反映に数分〜15 分程度かかる。
+
+> **実 AWS アカウントが必要 (ローカルでは未検証)**。2026-10-03 に全手順と後片付けを AWS CLI 2.37.7 からローカルのモック (moto 5.2.3 サーバー)に送り、CLI が引数を受け付けること (`create-origin-access-control` の shorthand、`dist.json`、`--if-match` 付きの `update-distribution` / `delete-*`) を確認した。CloudFront 経由の実配信と直アクセス時の 403 は未検証。
 
 ### 手順
 
@@ -435,6 +470,8 @@ rm -f index.html dist.json dist-disabled.json policy.json
 ### 前提
 
 実 AWS (または LocalStack)。Python 3.13 と pip。**入力と出力を必ず別バケットにする** (同じバケットに書くと自分の出力で再起動する無限ループになり、課金が膨らむ)。
+
+> **実 AWS アカウントが必要 (ローカルでは未検証)**。2026-10-03 に S3 / IAM / Lambda のコマンドと後片付けを AWS CLI 2.37.7 からローカルのモック (moto 5.2.3 サーバー)に送って CLI が引数を受け付けることを確認し、手順 2 の `pip install` が Python 3.13 x86_64 向け wheel (Pillow 12.2.0) を取得することも確認した。`app.py` 自体は Lambda の外で手作りの S3 イベントを渡して実行し、821 バイトの `thumbs/test.png.jpg` が書かれた。Lambda 上での実行、S3 → Lambda のトリガー、CloudWatch Logs は未検証。
 
 ### 手順
 
@@ -532,7 +569,7 @@ aws logs tail /aws/lambda/${LAB}-thumb --since 5m
 ### 期待される出力
 
 ```text
-2026-10-03 01:20:00       1843 test.png.jpg
+2026-10-03 01:20:00        821 test.png.jpg
 ... START RequestId: ...
 ... thumbnail written for s3://s3lab-111122223333-a1b2c3-l5-src/uploads/test.png
 ... END RequestId: ...
@@ -567,6 +604,8 @@ rm -rf l5 test.png
 ### 前提
 
 実 AWS。**リージョン間データ転送料金** が複製量に応じてかかる (このラボは数 KB なので誤差)。
+
+> **実 AWS アカウントが必要 (ローカルでは未検証)**。2026-10-03 に全手順と後片付けを AWS CLI 2.37.7 からローカルのモック (moto 5.2.3 サーバー)に送り、CLI が引数を受け付けること (`repl.json` が受理され `get-bucket-replication` で読み戻せる) を確認した。実際の複製と `PENDING` → `COMPLETED` / `REPLICA` の状態遷移は未検証。
 
 ### 手順
 
@@ -658,6 +697,8 @@ GOVERNANCE モードの保持期間とリーガルホールドで、バージョ
 
 実 AWS または MinIO 互換サーバー。**COMPLIANCE モードは絶対に使わない** (保持期限まで root ユーザーでもバージョンを消せず、バケットも削除できない)。このラボでは保持期限を「今から 3 分後」にする。
 
+> **ローカルで検証済み**: 2026-10-03 に `docker.io/pgsty/silo:RELEASE.2026-09-16T00-00-00Z`、AWS CLI 2.37.7 で全手順と後片付け (`sleep 180` を含む) が通った。コメント内の `--bypass-governance-retention` 付き削除も動いた。削除拒否時のエラーだけが異なる (期待される出力を参照)。
+
 ### 手順
 
 ```bash
@@ -693,9 +734,11 @@ aws s3api get-object-legal-hold --bucket $B --key audit.txt --version-id $VID
 ```text
 {"ObjectLockConfiguration": {"ObjectLockEnabled": "Enabled"}}
 {"Retention": {"Mode": "GOVERNANCE", "RetainUntilDate": "2026-10-03T01:33:00+00:00"}}
-An error occurred (AccessDenied) when calling the DeleteObject operation: Access Denied because object protected by object lock.
+aws: [ERROR]: An error occurred (AccessDenied) when calling the DeleteObject operation: Access Denied because object protected by object lock.
 {"LegalHold": {"Status": "ON"}}
 ```
+
+AWS CLI 2.37 はエラー行の先頭に `aws: [ERROR]:` を付ける。ローカルの silo では削除が代わりに `An error occurred (InvalidRequest) when calling the DeleteObject operation: Object is WORM protected and cannot be overwritten` で失敗し、バージョン ID は UUID になる。
 
 ### 学んだこと
 
@@ -713,6 +756,8 @@ empty_versioned $B && aws s3api delete-bucket --bucket $B
 rm -f audit.txt
 ```
 
+保持期限が過ぎる前に `empty_versioned` を実行すると `delete-objects: 1 object(s) could not be deleted` で止まる (Lab 2 の `Errors` チェックはこのためにある)。待ってからもう一度実行する。
+
 ## Lab 8: バケットポリシーと 403 のデバッグ
 
 ### ゴール
@@ -722,6 +767,8 @@ rm -f audit.txt
 ### 前提
 
 実 AWS。自アカウント内で引き受けられる IAM ロールを 1 つ作る。
+
+> **実 AWS アカウントが必要 (ローカルでは未検証)**。2026-10-03 に全手順と後片付けを AWS CLI 2.37.7 からローカルのモック (moto 5.2.3 サーバー)に送り、CLI が引数を受け付けることと、`eval $(aws sts assume-role ... | awk ...)` の行が 3 つの変数を export することを確認した。モックはポリシーを評価しないので、403 とそのメッセージは未検証。期待される出力のうち CLI 側の書式 (`download failed: ...` / `aws: [ERROR]: ...`) は AWS CLI 2.37.7 で確認した。
 
 ### 手順
 
@@ -772,9 +819,9 @@ curl -s --aws-sigv4 "aws:amz:${AWS_REGION}:s3" \
 ```text
 "arn:aws:sts::111122223333:assumed-role/s3lab-...-l8-reader/lab8"
 secret
-fatal error: An error occurred (403) when calling the HeadObject operation: Forbidden
-fatal error: An error occurred (403) when calling the HeadObject operation: Forbidden
-An error occurred (AccessDenied) when calling the ListObjectsV2 operation: User: arn:aws:sts::111122223333:assumed-role/s3lab-...-l8-reader/lab8 is not authorized to perform: s3:ListBucket on resource: "arn:aws:s3:::s3lab-...-l8" because no identity-based policy allows the s3:ListBucket action
+download failed: s3://s3lab-...-l8/team-a/missing.txt to - An error occurred (403) when calling the HeadObject operation: Forbidden
+download failed: s3://s3lab-...-l8/team-b/x.txt to - An error occurred (403) when calling the HeadObject operation: Forbidden
+aws: [ERROR]: An error occurred (AccessDenied) when calling the ListObjectsV2 operation: User: arn:aws:sts::111122223333:assumed-role/s3lab-...-l8-reader/lab8 is not authorized to perform: s3:ListBucket on resource: "arn:aws:s3:::s3lab-...-l8" because no identity-based policy allows the s3:ListBucket action
 <?xml version="1.0" encoding="UTF-8"?>
 <Error><Code>AccessDenied</Code><Message>User: ... is not authorized to perform: s3:GetObject on resource: "..." with an explicit deny in a resource-based policy</Message>...
 ```
@@ -813,6 +860,8 @@ rm -f s.txt deny.json
 ### 前提
 
 実 AWS または MinIO 互換サーバー。
+
+> **ローカルで検証済み**: 2026-10-03 に `docker.io/pgsty/silo:RELEASE.2026-09-16T00-00-00Z`、AWS CLI 2.37.7 で全手順と後片付けが通った (合成 CRC32 の `...-3` と `COMPOSITE` も期待どおり返った)。
 
 ### 手順
 
@@ -866,9 +915,9 @@ aws s3api abort-multipart-upload --bucket $B --key orphan.bin --upload-id "$ID2"
 -rw-r--r--  1 you  staff  5242880 Oct  3 01:40 part-aa
 -rw-r--r--  1 you  staff  5242880 Oct  3 01:40 part-ab
 -rw-r--r--  1 you  staff  2097152 Oct  3 01:40 part-ac
-"\"9b2c...\""
-"\"41e7...\""
-"\"c0d3...\""
+"9b2c..."
+"41e7..."
+"c0d3..."
 ...
 {
     "Size": 12582912,
@@ -877,8 +926,11 @@ aws s3api abort-multipart-upload --bucket $B --key orphan.bin --upload-id "$ID2"
     "Type": "COMPOSITE"
 }
 3
+download: s3://s3lab-111122223333-a1b2c3-l9/big.bin to ./downloaded.bin
 identical
 ```
+
+`--output text` では ETag が前後のダブルクォートごとそのまま出る (`"9b2c..."`)。
 
 ### 学んだこと
 
@@ -903,6 +955,8 @@ rm -f big.bin downloaded.bin part-* parts.json
 
 実 AWS。Athena はスキャン量課金 (このラボは KB 単位)。S3 Tables はストレージ・リクエスト・メンテナンス (コンパクション) に課金がある。
 
+> **実 AWS アカウントが必要 (ローカルでは未検証)**。2026-10-03 にコマンドを AWS CLI 2.37.7 からローカルのモック (moto 5.2.3 サーバー)に送り、CLI が引数を受け付けることを確認した。`athena` ヘルパーと `s3tables` の作成・一覧・削除 (`--metadata` のスキーマを含む) は最後まで通り、`glue create-catalog` は CLI の検証を通過した (モックは未実装)。SQL の結果 (DDL、`MSCK REPAIR`、`INSERT`、`$snapshots`) は未検証。
+
 ### 手順 (A): 汎用バケット + 外部テーブル
 
 ```bash
@@ -923,7 +977,7 @@ athena() {  # SQL を投げて結果を表示する小さなヘルパー
   local qid
   qid=$(aws athena start-query-execution --work-group primary \
     --result-configuration OutputLocation=s3://$RES/ \
-    ${CTX:+--query-execution-context "$CTX"} \
+    ${CTX:+--query-execution-context} ${CTX:+"$CTX"} \
     --query-string "$1" --query QueryExecutionId --output text)
   while :; do
     st=$(aws athena get-query-execution --query-execution-id $qid --query QueryExecution.Status.State --output text)
@@ -943,6 +997,8 @@ athena "CREATE EXTERNAL TABLE s3lab.sales (order_id int, region string, amount i
 athena "MSCK REPAIR TABLE s3lab.sales"
 athena "SELECT region, sum(amount) AS total FROM s3lab.sales WHERE dt='2026-09' GROUP BY region ORDER BY total DESC"
 ```
+
+`athena` ヘルパーで `--query-execution-context` と値を別々の展開に分けているのは zsh (macOS の既定シェル) でも動かすため。zsh はクォートなしの展開を単語分割しないので、`${CTX:+--query-execution-context "$CTX"}` だと 1 つの引数として CLI に渡ってしまう。
 
 ### 手順 (B): S3 Tables
 
@@ -1022,6 +1078,8 @@ rm -f sales.csv
 ### 前提
 
 実 AWS (S3 Vectors 提供 Region)。本番では Amazon Bedrock の埋め込みモデル等でベクトルを作るが、ここでは仕組みに集中するため 4 次元の手書きベクトルを使う。
+
+> **実 AWS アカウントが必要 (ローカルでは未検証)**。2026-10-03 にコマンドを AWS CLI 2.37.7 からローカルのモック (moto 5.2.3 サーバー)に送った。`create-vector-bucket` / `create-index` / `put-vectors` / `get-vectors` / `delete-*` は最後まで通り、`query-vectors` (`--filter` と `--query-mode ENHANCED` を含む) は CLI の検証を通過した (モックは未実装)。期待される出力の距離はローカルで計算した値。
 
 ### 手順
 
@@ -1103,6 +1161,8 @@ rm -f vectors.json
 
 実 AWS (できれば同じ Region の EC2 から。手元回線だとネットワークが律速になる) または MinIO 互換サーバー。**warp は対象バケットの中身をベンチ前後に全削除する** ので、必ず専用の空バケットを使う。
 
+> **ローカルで検証済み**: 2026-10-03 に `docker.io/pgsty/silo:RELEASE.2026-09-16T00-00-00Z`、AWS CLI 2.37.7、s5cmd v2.3.0 (`peakcom/s5cmd`)、warp 1.3.1 (`minio/warp`) で、AWS CLI / s5cmd の手順、ローカル向けの warp コマンド、後片付けが通った。実 AWS 向けの warp コマンドは実 AWS アカウントが必要 (ローカルでは未検証)。
+
 ### 手順: 小さいファイル 2,000 個のアップロード比較
 
 ```bash
@@ -1113,10 +1173,10 @@ mkdir -p small && for i in $(seq 1 2000); do head -c 16384 /dev/urandom > small/
 # AWS CLI (既定の並列数 10)
 time aws s3 cp small s3://$B/cli/ --recursive --quiet
 
-# AWS CLI の並列数を上げる
-aws configure set default.s3.max_concurrent_requests 64
+# AWS CLI の並列数を上げる (使用中のプロファイルに効く。ローカルでは --profile minio を付ける)
+aws configure set s3.max_concurrent_requests 64
 time aws s3 cp small s3://$B/cli64/ --recursive --quiet
-aws configure set default.s3.max_concurrent_requests 10
+aws configure set s3.max_concurrent_requests 10
 
 # s5cmd (既定 256 ワーカー)
 time s5cmd cp 'small/*' s3://$B/s5cmd/
@@ -1130,6 +1190,19 @@ time s5cmd cp --concurrency 32 large.bin s3://$B/large-c32.bin
 
 ローカルの MinIO 互換サーバーなら `s5cmd --endpoint-url http://localhost:9000` を付け、`AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY` を `minioadmin` 系にする。
 
+`default.s3.max_concurrent_requests` は常に `[default]` プロファイルに書かれるので、`--profile minio` で回すときは効かない。`s3.max_concurrent_requests` なら使用中のプロファイルに書かれる。
+
+s5cmd / warp をインストールしたくなければコンテナで動かせる。`--network container:s3lab-minio` を付けると、コンテナ内の `localhost:9000` が silo に届く。
+
+```bash
+s5cmd() {
+  docker run --rm --network container:s3lab-minio -v "$PWD:/w" -w /w \
+    -e AWS_ACCESS_KEY_ID=minioadmin -e AWS_SECRET_ACCESS_KEY=minioadmin-change-me \
+    docker.io/peakcom/s5cmd:latest --endpoint-url http://localhost:9000 "$@"
+}
+warp() { docker run --rm --network container:s3lab-minio docker.io/minio/warp:latest "$@"; }
+```
+
 ### 手順: warp で負荷を掛ける
 
 ```bash
@@ -1137,7 +1210,8 @@ WB=${LAB}-l12-warp
 aws s3api create-bucket --bucket $WB --create-bucket-configuration LocationConstraint=$AWS_REGION
 
 eval $(aws configure export-credentials --format env)
-# 長期キーでない場合、warp はセッショントークンを環境変数から読めないことがあるので注意
+# 一時認証情報 (SSO / AssumeRole) の場合、warp はセッショントークンを WARP_SESSION_TOKEN (または --session-token) から読む
+export WARP_SESSION_TOKEN=${AWS_SESSION_TOKEN:-}
 warp put   --host s3.$AWS_REGION.amazonaws.com --tls --region $AWS_REGION --bucket $WB \
   --access-key $AWS_ACCESS_KEY_ID --secret-key $AWS_SECRET_ACCESS_KEY \
   --obj.size 1MiB --concurrent 32 --duration 1m
@@ -1145,9 +1219,9 @@ warp mixed --host s3.$AWS_REGION.amazonaws.com --tls --region $AWS_REGION --buck
   --access-key $AWS_ACCESS_KEY_ID --secret-key $AWS_SECRET_ACCESS_KEY \
   --obj.size 64KiB --concurrent 64 --duration 2m --autoterm
 
-# ローカル (MinIO 互換) の場合
+# ローカル (MinIO 互換) の場合 (--bucket を省くと warp は warp-benchmark-bucket を作って残す)
 warp mixed --host localhost:9000 --access-key minioadmin --secret-key minioadmin-change-me \
-  --obj.size 1MiB --concurrent 16 --duration 1m
+  --bucket $WB --obj.size 1MiB --concurrent 16 --duration 1m
 ```
 
 ### 期待される出力
@@ -1160,13 +1234,17 @@ aws s3 cp (64 並列)   real    0m15s
 s5cmd (256 workers)   real    0m06s
 s5cmd (32 workers)    real    0m11s
 
-Reqs: 10234, Errs:0, Objs:10234, Bytes: 10.0GiB
- -  PUT Average: 170 Obj/s, 170.6MiB/s; Current 172 Obj/s, 172.0MiB/s, 186.3 ms/req
+Report: PUT. Concurrency: 32. Ran: 58s
+ * Average: 170.60 MiB/s, 170.60 obj/s
+ * Reqs: Avg: 186.3ms, 50%: 170.2ms, 90%: 260.4ms, 99%: 410.0ms, Fastest: ..., Slowest: ..., StdDev: ...
 ...
 Report: GET. Concurrency: 64. Ran: 1m58s
  * Average: 95.20 MiB/s, 1523.21 obj/s
- * Reqs: Avg: 41.2ms, 50%: 35.9ms, 90%: 67.0ms, 99%: 140.1ms
+ * Reqs: Avg: 41.2ms, 50%: 35.9ms, 90%: 67.0ms, 99%: 140.1ms, Fastest: ..., Slowest: ..., StdDev: ...
+ * TTFB: Avg: 30ms, ...
 ```
+
+ローカルサーバーでは手元の CPU が律速になるので、並列度による差は小さい (2026-10-03 の実行では 2,000 ファイルが AWS CLI で約 5 秒、s5cmd で約 3 秒、warp mixed は合計 225 MiB/s)。
 
 ### 学んだこと
 
@@ -1196,6 +1274,7 @@ aws cloudfront list-distributions --query "DistributionList.Items[?Comment=='s3 
 aws s3tables list-table-buckets --query "tableBuckets[?starts_with(name, '${LAB}')].name"
 aws s3vectors list-vector-buckets --query "vectorBuckets[?starts_with(vectorBucketName, '${LAB}')].vectorBucketName"
 docker rm -f s3lab-minio s3lab-localstack 2>/dev/null
+rm -rf minio-data   # ローカル silo のデータディレクトリ (Linux では sudo が要る場合がある)
 ```
 
 すべて空 (`[]`) なら完了。

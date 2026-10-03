@@ -15,8 +15,8 @@ Twelve labs for confirming, hands-on, the mechanisms covered in earlier chapters
 | AWS CLI v2 | All labs | `brew install awscli` (this chapter was verified with v2.37.7) |
 | jq | JSON formatting | `brew install jq` |
 | Docker | Local S3-compatible server | Docker Desktop / Rancher Desktop / colima, etc. |
-| s5cmd | Lab 12 | `brew install peak/tap/s5cmd` |
-| warp | Lab 12 | Download the binary from GitHub Releases (`minio/warp`) |
+| s5cmd | Lab 12 | `brew install peak/tap/s5cmd` (or the `peakcom/s5cmd` container image) |
+| warp | Lab 12 | Download the binary from GitHub Releases (`minio/warp`) (or the `minio/warp` container image) |
 | Python 3.13 + pip | Lab 5 | `brew install python@3.13` |
 
 ### 0.2 Environment variables for real AWS
@@ -66,6 +66,8 @@ aws s3 ls --profile minio   # No output means the connection works
 - The console is at <http://localhost:9001>
 - Recent CLI versions send flexible checksums by default. If an older S3-compatible implementation returns errors, `export AWS_REQUEST_CHECKSUM_CALCULATION=when_required` restores the old behavior
 - To run these labs locally, add `--profile minio` to the commands that follow and set `LAB` to any name, such as `LAB=local`
+- `LocationConstraint=$AWS_REGION` can stay as written locally: silo accepted both an empty value (`AWS_REGION` unset) and `ap-northeast-1`
+- Verified on 2026-10-03: the `docker run` above pulls and starts `pgsty/silo:RELEASE.2026-09-16T00-00-00Z` (Podman 6.1 as the Docker API), and `aws s3 ls --profile minio` returns nothing (AWS CLI 2.37.7)
 
 ### 0.4 Local environment B: LocalStack
 
@@ -81,22 +83,26 @@ docker run -d --name s3lab-localstack \
 aws --endpoint-url http://localhost:4566 s3 ls
 ```
 
+> **Not verified locally**: on 2026-10-03, `localstack/localstack:latest` (2026.9.0) started without a token exited with code 55 (`License activation failed! ... No credentials were found in the environment`). The LocalStack column in 0.5 is therefore based on LocalStack's documentation, not on an actual run.
+
 ### 0.5 Labs by environment
 
 | Lab | Real AWS | MinIO-compatible (silo) | LocalStack |
 | --- | --- | --- | --- |
-| Lab 1 Bucket + upload + presign | OK | OK | OK |
+| Lab 1 Bucket + upload + presign | OK | OK except step 2 (Block Public Access / Object Ownership return `NotImplemented`, no default encryption) | OK |
 | Lab 2 Versioning | OK | OK | OK |
-| Lab 3 Lifecycle + Intelligent-Tiering | OK | Lifecycle expiration only | Configuration API only |
+| Lab 3 Lifecycle + Intelligent-Tiering | OK | Expiration rules only (Transitions, `AbortIncompleteMultipartUpload`, the `INTELLIGENT_TIERING` class, and Intelligent-Tiering configuration are rejected) | Configuration API only |
 | Lab 4 CloudFront OAC | OK | Not possible | Partial |
 | Lab 5 Events → Lambda | OK | Not possible (webhook notifications work) | OK |
 | Lab 6 CRR | OK | Different mechanism (site replication) | Partial |
-| Lab 7 Object Lock | OK | OK | Partial |
+| Lab 7 Object Lock | OK | OK (the error code on a rejected delete differs) | Partial |
 | Lab 8 Bucket policy / 403 | OK | Different mechanism (MinIO policies) | Simplified evaluation |
 | Lab 9 Manual multipart | OK | OK | OK |
 | Lab 10 Athena / S3 Tables | OK | Not possible | Not possible |
 | Lab 11 S3 Vectors | OK | Not possible | Not possible |
 | Lab 12 Benchmarking | OK | OK (measures local performance) | Not recommended |
+
+The silo column was verified by actually running the labs on 2026-10-03 (Labs 1–3, 7, 9, and 12). Labs 4, 5, 6, 8, 10, and 11 were not run on real AWS; only their CLI arguments were checked by sending the same commands to a local mock (moto 5.2.3 server) to confirm that the AWS CLI accepts them. The LocalStack column was not verified (see 0.4).
 
 ## Lab 1: Create a bucket, upload, and presigned URLs
 
@@ -107,6 +113,8 @@ Create a bucket, upload and download objects, and issue a presigned URL that all
 ### Prerequisites
 
 The environment variables from 0.2 (or the `minio` profile from 0.3 when running locally).
+
+> **Verified locally** on 2026-10-03 with `docker.io/pgsty/silo:RELEASE.2026-09-16T00-00-00Z`, AWS CLI 2.37.7: steps 1, 3, 4, and 5 and the cleanup pass. Step 2 (the default security settings) is AWS behavior and requires a real AWS account (not verified locally).
 
 ### Steps
 
@@ -154,6 +162,8 @@ hello s3 Sat Oct  3 01:00:00 JST 2026
 
 `head-object` returns `ContentLength`, `ETag`, `ServerSideEncryption: AES256`, and more.
 
+On the local silo server, step 2 returns `NotImplemented` (`get-public-access-block` / `get-bucket-ownership-controls`) and `ServerSideEncryptionConfigurationNotFoundError` (`get-bucket-encryption`), and `head-object` has no `ServerSideEncryption`. The presigned URL becomes `http://localhost:9000/local-l1/greetings/hello.txt?X-Amz-Algorithm=...`, and for step 5 use `curl -s -o /dev/null -w '%{http_code}\n' "http://localhost:9000/$B/greetings/hello.txt"` instead (this also returns `403`).
+
 ### What you learned
 
 - New buckets are "private, SSE-S3 encrypted, ACLs disabled (BucketOwnerEnforced)" from the start
@@ -175,6 +185,8 @@ Enable versioning and recover an overwritten and deleted object from a previous 
 ### Prerequisites
 
 Same as Lab 1.
+
+> **Verified locally** on 2026-10-03 with `docker.io/pgsty/silo:RELEASE.2026-09-16T00-00-00Z`, AWS CLI 2.37.7: all steps and the cleanup pass.
 
 ### Steps
 
@@ -206,8 +218,10 @@ aws s3api delete-object --bucket $B --key doc.txt --version-id $MARKER
 aws s3 cp s3://$B/doc.txt -    # => v2
 
 # Method B: Copy an older version (v1) to make it current
+# (after Method A, v2 is current, so the only noncurrent version is v1.
+#  Sorting by LastModified is unreliable because it has 1-second precision.)
 V1=$(aws s3api list-object-versions --bucket $B --prefix doc.txt \
-  --query 'sort_by(Versions,&LastModified)[0].VersionId' --output text)
+  --query 'Versions[?!IsLatest].VersionId' --output text)
 aws s3api copy-object --bucket $B --key doc.txt --copy-source "$B/doc.txt?versionId=$V1"
 aws s3 cp s3://$B/doc.txt -    # => v1
 ```
@@ -224,9 +238,13 @@ aws s3 cp s3://$B/doc.txt -    # => v1
         {"V": "x9Z...", "Latest": true}
     ]
 }
+{"DeleteMarker": true, "VersionId": "x9Z..."}
 v2
+{"CopySourceVersionId": "8bK...", "VersionId": "Qm7...", "CopyObjectResult": {...}}
 v1
 ```
+
+The CLI actually prints JSON pretty-printed over multiple lines; it is shown compressed here. `aws s3 ls` prints nothing.
 
 ### What you learned
 
@@ -240,19 +258,20 @@ A versioned bucket is not emptied by `aws s3 rb --force` alone. Delete all versi
 
 ```bash
 empty_versioned() {
-  local b=$1
+  local b=$1 objs errs
   while :; do
-    local objs
     objs=$(aws s3api list-object-versions --bucket "$b" --max-items 1000 \
       --query '{Objects: [Versions, DeleteMarkers][][].{Key: Key, VersionId: VersionId}}' --output json)
     [ "$(echo "$objs" | jq '.Objects | length')" -eq 0 ] && break
-    aws s3api delete-objects --bucket "$b" --delete "$objs" > /dev/null
+    errs=$(aws s3api delete-objects --bucket "$b" --delete "$objs" \
+      --query 'length(Errors || `[]`)' --output text)
+    [ "$errs" -eq 0 ] || { echo "delete-objects: $errs object(s) could not be deleted" >&2; return 1; }
   done
 }
 empty_versioned $B && aws s3api delete-bucket --bucket $B
 ```
 
-This `empty_versioned` function is reused in later labs.
+This `empty_versioned` function is reused in later labs. `delete-objects` exits with 0 even when some keys fail (they are reported in `Errors`), so the function checks `Errors` and stops. Without that check, versions protected by Object Lock (Lab 7) make the loop spin forever. `local` is declared outside the loop because in zsh, redeclaring an already set variable with `local` prints its value.
 
 ## Lab 3: Lifecycle and Intelligent-Tiering
 
@@ -263,6 +282,8 @@ Configure different lifecycle rules per prefix and enable the Intelligent-Tierin
 ### Prerequisites
 
 Same as Lab 1. Lifecycle rules are evaluated **asynchronously (roughly once a day)**, so this lab goes as far as "confirming through the API that the configuration is in effect".
+
+> **Verified locally** on 2026-10-03 with `docker.io/pgsty/silo:RELEASE.2026-09-16T00-00-00Z`, AWS CLI 2.37.7: only the `tmp/` expiration rule (see the note after the steps). Transitions, `AbortIncompleteMultipartUpload`, and Intelligent-Tiering require a real AWS account (not verified locally); their CLI arguments were confirmed against moto 5.2.3.
 
 ### Steps
 
@@ -305,6 +326,16 @@ aws s3api list-bucket-intelligent-tiering-configurations --bucket $B
 aws s3api head-object --bucket $B --key data/t.txt --query StorageClass
 ```
 
+On the local silo server, `put-bucket-lifecycle-configuration` rejects the whole configuration (`InvalidArgument`), because Transitions (STANDARD_IA / GLACIER_IR need a configured remote tier: `InvalidStorageClass`) and `AbortIncompleteMultipartUpload` are not supported. `--storage-class INTELLIGENT_TIERING` fails with `InvalidStorageClass`, and the Intelligent-Tiering configuration API returns `MalformedXML` / `NotImplemented`. Locally, register only the expiration rule.
+
+```bash
+jq '{Rules: [.Rules[] | select(.ID == "tmp-expire-1day")]}' lifecycle.json > lifecycle-local.json
+aws s3api put-bucket-lifecycle-configuration --bucket $B --lifecycle-configuration file://lifecycle-local.json
+aws s3api get-bucket-lifecycle-configuration --bucket $B --query 'Rules[].ID'
+aws s3 cp t.txt s3://$B/tmp/t.txt
+aws s3api head-object --bucket $B --key tmp/t.txt --query Expiration
+```
+
 ### Expected output
 
 ```text
@@ -318,6 +349,8 @@ aws s3api head-object --bucket $B --key data/t.txt --query StorageClass
 "INTELLIGENT_TIERING"
 ```
 
+The `expiry-date` above is for an object created at 2026-10-03 01:00 JST (= 10-02 16:00 UTC). For an object created after 00:00 UTC on 10-03, it becomes `Mon, 05 Oct 2026 00:00:00 GMT` (the local silo run at 13:30 UTC returned exactly that).
+
 ### What you learned
 
 - Lifecycle days are "counted from midnight UTC on the day after creation", so the date in the `Expiration` header is the creation date + N days, rounded
@@ -329,7 +362,7 @@ aws s3api head-object --bucket $B --key data/t.txt --query StorageClass
 
 ```bash
 aws s3 rb s3://$B --force
-rm -f lifecycle.json itier.json t.txt
+rm -f lifecycle.json lifecycle-local.json itier.json t.txt
 ```
 
 ## Lab 4: Static site delivery with CloudFront + OAC
@@ -341,6 +374,8 @@ Keep the bucket private and serve it only through CloudFront Origin Access Contr
 ### Prerequisites
 
 Real AWS. CloudFront is a global service, so creation and deletion take a few minutes to about 15 minutes to propagate.
+
+> **Requires a real AWS account (not verified locally).** On 2026-10-03, every step and the cleanup were sent to a local mock (moto 5.2.3 server) with AWS CLI 2.37.7 to confirm that the CLI accepts the arguments (`create-origin-access-control` shorthand, `dist.json`, `update-distribution` / `delete-*` with `--if-match`). Actual delivery through CloudFront and the 403 on direct access were not verified.
 
 ### Steps
 
@@ -435,6 +470,8 @@ When an image lands in `uploads/`, a Lambda function runs and writes a resized i
 ### Prerequisites
 
 Real AWS (or LocalStack). Python 3.13 and pip. **Always use separate buckets for input and output** (writing to the same bucket makes the function retrigger on its own output, creating an infinite loop that runs up charges).
+
+> **Requires a real AWS account (not verified locally).** On 2026-10-03, the S3 / IAM / Lambda commands and the cleanup were sent to a local mock (moto 5.2.3 server) with AWS CLI 2.37.7 to confirm that the CLI accepts the arguments, and the `pip install` in step 2 was confirmed to fetch the Python 3.13 x86_64 wheel (Pillow 12.2.0). `app.py` itself was run outside Lambda with a hand-made S3 event and wrote an 821-byte `thumbs/test.png.jpg`. Execution inside Lambda, the S3 → Lambda trigger, and CloudWatch Logs were not verified.
 
 ### Steps
 
@@ -532,7 +569,7 @@ aws logs tail /aws/lambda/${LAB}-thumb --since 5m
 ### Expected output
 
 ```text
-2026-10-03 01:20:00       1843 test.png.jpg
+2026-10-03 01:20:00        821 test.png.jpg
 ... START RequestId: ...
 ... thumbnail written for s3://s3lab-111122223333-a1b2c3-l5-src/uploads/test.png
 ... END RequestId: ...
@@ -567,6 +604,8 @@ Automatically replicate writes to a bucket in Tokyo (ap-northeast-1) to a bucket
 ### Prerequisites
 
 Real AWS. **Inter-Region data transfer charges** apply in proportion to the replicated volume (negligible here, since this lab moves a few KB).
+
+> **Requires a real AWS account (not verified locally).** On 2026-10-03, every step and the cleanup were sent to a local mock (moto 5.2.3 server) with AWS CLI 2.37.7 to confirm that the CLI accepts the arguments (`repl.json` was accepted and read back by `get-bucket-replication`). Actual replication and the `PENDING` → `COMPLETED` / `REPLICA` status changes were not verified.
 
 ### Steps
 
@@ -658,6 +697,8 @@ Prevent deletion and overwriting of versions with a GOVERNANCE-mode retention pe
 
 Real AWS or a MinIO-compatible server. **Never use COMPLIANCE mode** (until the retention date passes, not even the root user can delete the version, and the bucket cannot be deleted either). In this lab the retention date is set to "3 minutes from now".
 
+> **Verified locally** on 2026-10-03 with `docker.io/pgsty/silo:RELEASE.2026-09-16T00-00-00Z`, AWS CLI 2.37.7: all steps and the cleanup pass (including `sleep 180`). The `--bypass-governance-retention` delete in the comment also worked. Only the error on the rejected delete differs (see the expected output).
+
 ### Steps
 
 ```bash
@@ -693,9 +734,11 @@ aws s3api get-object-legal-hold --bucket $B --key audit.txt --version-id $VID
 ```text
 {"ObjectLockConfiguration": {"ObjectLockEnabled": "Enabled"}}
 {"Retention": {"Mode": "GOVERNANCE", "RetainUntilDate": "2026-10-03T01:33:00+00:00"}}
-An error occurred (AccessDenied) when calling the DeleteObject operation: Access Denied because object protected by object lock.
+aws: [ERROR]: An error occurred (AccessDenied) when calling the DeleteObject operation: Access Denied because object protected by object lock.
 {"LegalHold": {"Status": "ON"}}
 ```
+
+AWS CLI 2.37 prefixes error lines with `aws: [ERROR]:`. On the local silo server, the delete fails with `An error occurred (InvalidRequest) when calling the DeleteObject operation: Object is WORM protected and cannot be overwritten` instead, and the version IDs are UUIDs.
 
 ### What you learned
 
@@ -713,6 +756,8 @@ empty_versioned $B && aws s3api delete-bucket --bucket $B
 rm -f audit.txt
 ```
 
+If you run `empty_versioned` before the retention date passes, it stops with `delete-objects: 1 object(s) could not be deleted` (that is what the `Errors` check in Lab 2 is for). Wait and run it again.
+
 ## Lab 8: Bucket policies and debugging 403s
 
 ### Goal
@@ -722,6 +767,8 @@ Trigger 403s on purpose and learn the procedure for isolating "which statement i
 ### Prerequisites
 
 Real AWS. You will create one IAM role that can be assumed within your own account.
+
+> **Requires a real AWS account (not verified locally).** On 2026-10-03, every step and the cleanup were sent to a local mock (moto 5.2.3 server) with AWS CLI 2.37.7 to confirm that the CLI accepts the arguments and that the `eval $(aws sts assume-role ... | awk ...)` line exports the three variables. The mock does not evaluate policies, so the 403s and their messages were not verified. The CLI-side formats in the expected output (`download failed: ...` / `aws: [ERROR]: ...`) were confirmed with AWS CLI 2.37.7.
 
 ### Steps
 
@@ -772,9 +819,9 @@ If `aws configure get` returns nothing (for example with SSO), run `eval $(aws c
 ```text
 "arn:aws:sts::111122223333:assumed-role/s3lab-...-l8-reader/lab8"
 secret
-fatal error: An error occurred (403) when calling the HeadObject operation: Forbidden
-fatal error: An error occurred (403) when calling the HeadObject operation: Forbidden
-An error occurred (AccessDenied) when calling the ListObjectsV2 operation: User: arn:aws:sts::111122223333:assumed-role/s3lab-...-l8-reader/lab8 is not authorized to perform: s3:ListBucket on resource: "arn:aws:s3:::s3lab-...-l8" because no identity-based policy allows the s3:ListBucket action
+download failed: s3://s3lab-...-l8/team-a/missing.txt to - An error occurred (403) when calling the HeadObject operation: Forbidden
+download failed: s3://s3lab-...-l8/team-b/x.txt to - An error occurred (403) when calling the HeadObject operation: Forbidden
+aws: [ERROR]: An error occurred (AccessDenied) when calling the ListObjectsV2 operation: User: arn:aws:sts::111122223333:assumed-role/s3lab-...-l8-reader/lab8 is not authorized to perform: s3:ListBucket on resource: "arn:aws:s3:::s3lab-...-l8" because no identity-based policy allows the s3:ListBucket action
 <?xml version="1.0" encoding="UTF-8"?>
 <Error><Code>AccessDenied</Code><Message>User: ... is not authorized to perform: s3:GetObject on resource: "..." with an explicit deny in a resource-based policy</Message>...
 ```
@@ -813,6 +860,8 @@ Run the multipart upload that `aws s3 cp` performs behind the scenes, one step a
 ### Prerequisites
 
 Real AWS or a MinIO-compatible server.
+
+> **Verified locally** on 2026-10-03 with `docker.io/pgsty/silo:RELEASE.2026-09-16T00-00-00Z`, AWS CLI 2.37.7: all steps and the cleanup pass (the composite CRC32 `...-3` and `COMPOSITE` were returned as expected).
 
 ### Steps
 
@@ -866,9 +915,9 @@ aws s3api abort-multipart-upload --bucket $B --key orphan.bin --upload-id "$ID2"
 -rw-r--r--  1 you  staff  5242880 Oct  3 01:40 part-aa
 -rw-r--r--  1 you  staff  5242880 Oct  3 01:40 part-ab
 -rw-r--r--  1 you  staff  2097152 Oct  3 01:40 part-ac
-"\"9b2c...\""
-"\"41e7...\""
-"\"c0d3...\""
+"9b2c..."
+"41e7..."
+"c0d3..."
 ...
 {
     "Size": 12582912,
@@ -877,8 +926,11 @@ aws s3api abort-multipart-upload --bucket $B --key orphan.bin --upload-id "$ID2"
     "Type": "COMPOSITE"
 }
 3
+download: s3://s3lab-111122223333-a1b2c3-l9/big.bin to ./downloaded.bin
 identical
 ```
+
+With `--output text`, the ETag is printed with its surrounding double quotes as is (`"9b2c..."`).
 
 ### What you learned
 
@@ -903,6 +955,8 @@ rm -f big.bin downloaded.bin part-* parts.json
 
 Real AWS. Athena bills by data scanned (KB-scale in this lab). S3 Tables bills for storage, requests, and maintenance (compaction).
 
+> **Requires a real AWS account (not verified locally).** On 2026-10-03, the commands were sent to a local mock (moto 5.2.3 server) with AWS CLI 2.37.7 to confirm that the CLI accepts the arguments: the `athena` helper and the `s3tables` create / list / delete commands (including the `--metadata` schema) ran through, and `glue create-catalog` passed CLI validation (the mock does not implement it). The SQL results (DDL, `MSCK REPAIR`, `INSERT`, `$snapshots`) were not verified.
+
 ### Steps (A): General purpose bucket + external table
 
 ```bash
@@ -923,7 +977,7 @@ athena() {  # Small helper that submits SQL and prints the result
   local qid
   qid=$(aws athena start-query-execution --work-group primary \
     --result-configuration OutputLocation=s3://$RES/ \
-    ${CTX:+--query-execution-context "$CTX"} \
+    ${CTX:+--query-execution-context} ${CTX:+"$CTX"} \
     --query-string "$1" --query QueryExecutionId --output text)
   while :; do
     st=$(aws athena get-query-execution --query-execution-id $qid --query QueryExecution.Status.State --output text)
@@ -943,6 +997,8 @@ athena "CREATE EXTERNAL TABLE s3lab.sales (order_id int, region string, amount i
 athena "MSCK REPAIR TABLE s3lab.sales"
 athena "SELECT region, sum(amount) AS total FROM s3lab.sales WHERE dt='2026-09' GROUP BY region ORDER BY total DESC"
 ```
+
+The `athena` helper writes `--query-execution-context` and its value as two separate expansions so that it also works in zsh (the macOS default), where unquoted expansions are not word-split and `${CTX:+--query-execution-context "$CTX"}` would reach the CLI as a single argument.
 
 ### Steps (B): S3 Tables
 
@@ -1022,6 +1078,8 @@ Create a vector bucket and index, write vectors with metadata, and run (filtered
 ### Prerequisites
 
 Real AWS (a Region where S3 Vectors is available). In production you would generate vectors with an embedding model such as one on Amazon Bedrock, but here we use hand-written 4-dimensional vectors to focus on the mechanism.
+
+> **Requires a real AWS account (not verified locally).** On 2026-10-03, the commands were sent to a local mock (moto 5.2.3 server) with AWS CLI 2.37.7: `create-vector-bucket` / `create-index` / `put-vectors` / `get-vectors` / `delete-*` ran through, and `query-vectors` (including `--filter` and `--query-mode ENHANCED`) passed CLI validation (the mock does not implement it). The distances in the expected output were computed locally.
 
 ### Steps
 
@@ -1103,6 +1161,8 @@ Measure parallel transfers of many small files and throughput by object size, an
 
 Real AWS (ideally from EC2 in the same Region; on a home connection the network becomes the bottleneck) or a MinIO-compatible server. **warp deletes everything in the target bucket before and after the benchmark**, so always use a dedicated empty bucket.
 
+> **Verified locally** on 2026-10-03 with `docker.io/pgsty/silo:RELEASE.2026-09-16T00-00-00Z`, AWS CLI 2.37.7, s5cmd v2.3.0 (`peakcom/s5cmd`), and warp 1.3.1 (`minio/warp`): the AWS CLI / s5cmd steps, the local warp command, and the cleanup pass. The real AWS warp commands require a real AWS account (not verified locally).
+
 ### Steps: Upload comparison with 2,000 small files
 
 ```bash
@@ -1113,10 +1173,10 @@ mkdir -p small && for i in $(seq 1 2000); do head -c 16384 /dev/urandom > small/
 # AWS CLI (default concurrency 10)
 time aws s3 cp small s3://$B/cli/ --recursive --quiet
 
-# Raise the AWS CLI concurrency
-aws configure set default.s3.max_concurrent_requests 64
+# Raise the AWS CLI concurrency (applies to the profile in use; add --profile minio locally)
+aws configure set s3.max_concurrent_requests 64
 time aws s3 cp small s3://$B/cli64/ --recursive --quiet
-aws configure set default.s3.max_concurrent_requests 10
+aws configure set s3.max_concurrent_requests 10
 
 # s5cmd (256 workers by default)
 time s5cmd cp 'small/*' s3://$B/s5cmd/
@@ -1130,6 +1190,19 @@ time s5cmd cp --concurrency 32 large.bin s3://$B/large-c32.bin
 
 For a local MinIO-compatible server, add `s5cmd --endpoint-url http://localhost:9000` and set `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY` to the `minioadmin` credentials.
 
+`default.s3.max_concurrent_requests` always writes to the `[default]` profile, so it has no effect on runs with `--profile minio`. `s3.max_concurrent_requests` writes to the profile in use.
+
+If you do not want to install s5cmd / warp, you can run them as containers. With `--network container:s3lab-minio`, `localhost:9000` inside the container reaches silo.
+
+```bash
+s5cmd() {
+  docker run --rm --network container:s3lab-minio -v "$PWD:/w" -w /w \
+    -e AWS_ACCESS_KEY_ID=minioadmin -e AWS_SECRET_ACCESS_KEY=minioadmin-change-me \
+    docker.io/peakcom/s5cmd:latest --endpoint-url http://localhost:9000 "$@"
+}
+warp() { docker run --rm --network container:s3lab-minio docker.io/minio/warp:latest "$@"; }
+```
+
 ### Steps: Generate load with warp
 
 ```bash
@@ -1137,7 +1210,8 @@ WB=${LAB}-l12-warp
 aws s3api create-bucket --bucket $WB --create-bucket-configuration LocationConstraint=$AWS_REGION
 
 eval $(aws configure export-credentials --format env)
-# Note: with non-long-term keys, warp may not be able to read the session token from environment variables
+# With temporary credentials (SSO / AssumeRole), warp reads the session token from WARP_SESSION_TOKEN (or --session-token)
+export WARP_SESSION_TOKEN=${AWS_SESSION_TOKEN:-}
 warp put   --host s3.$AWS_REGION.amazonaws.com --tls --region $AWS_REGION --bucket $WB \
   --access-key $AWS_ACCESS_KEY_ID --secret-key $AWS_SECRET_ACCESS_KEY \
   --obj.size 1MiB --concurrent 32 --duration 1m
@@ -1145,9 +1219,9 @@ warp mixed --host s3.$AWS_REGION.amazonaws.com --tls --region $AWS_REGION --buck
   --access-key $AWS_ACCESS_KEY_ID --secret-key $AWS_SECRET_ACCESS_KEY \
   --obj.size 64KiB --concurrent 64 --duration 2m --autoterm
 
-# Local (MinIO-compatible) case
+# Local (MinIO-compatible) case (without --bucket, warp creates and leaves behind warp-benchmark-bucket)
 warp mixed --host localhost:9000 --access-key minioadmin --secret-key minioadmin-change-me \
-  --obj.size 1MiB --concurrent 16 --duration 1m
+  --bucket $WB --obj.size 1MiB --concurrent 16 --duration 1m
 ```
 
 ### Expected output
@@ -1160,13 +1234,17 @@ aws s3 cp (64 parallel)  real    0m15s
 s5cmd (256 workers)   real    0m06s
 s5cmd (32 workers)    real    0m11s
 
-Reqs: 10234, Errs:0, Objs:10234, Bytes: 10.0GiB
- -  PUT Average: 170 Obj/s, 170.6MiB/s; Current 172 Obj/s, 172.0MiB/s, 186.3 ms/req
+Report: PUT. Concurrency: 32. Ran: 58s
+ * Average: 170.60 MiB/s, 170.60 obj/s
+ * Reqs: Avg: 186.3ms, 50%: 170.2ms, 90%: 260.4ms, 99%: 410.0ms, Fastest: ..., Slowest: ..., StdDev: ...
 ...
 Report: GET. Concurrency: 64. Ran: 1m58s
  * Average: 95.20 MiB/s, 1523.21 obj/s
- * Reqs: Avg: 41.2ms, 50%: 35.9ms, 90%: 67.0ms, 99%: 140.1ms
+ * Reqs: Avg: 41.2ms, 50%: 35.9ms, 90%: 67.0ms, 99%: 140.1ms, Fastest: ..., Slowest: ..., StdDev: ...
+ * TTFB: Avg: 30ms, ...
 ```
+
+On a local server, the machine's CPU becomes the bottleneck, so the gap between parallelism settings is small (in the 2026-10-03 run, 2,000 files took about 5 s with the AWS CLI and about 3 s with s5cmd, and warp mixed reached a total of 225 MiB/s).
 
 ### What you learned
 
@@ -1196,6 +1274,7 @@ aws cloudfront list-distributions --query "DistributionList.Items[?Comment=='s3 
 aws s3tables list-table-buckets --query "tableBuckets[?starts_with(name, '${LAB}')].name"
 aws s3vectors list-vector-buckets --query "vectorBuckets[?starts_with(vectorBucketName, '${LAB}')].vectorBucketName"
 docker rm -f s3lab-minio s3lab-localstack 2>/dev/null
+rm -rf minio-data   # Data directory of the local silo server (on Linux, sudo may be needed)
 ```
 
 If everything is empty (`[]`), you are done.
