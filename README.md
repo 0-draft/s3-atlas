@@ -103,4 +103,4 @@ S3 Atlas is an independent study guide. It is not affiliated with or endorsed by
 
 ## License
 
-Code is under the [MIT License](./LICENSE). Documentation and data in `docs/` and `data/` are under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+Code is under the [MIT License](./LICENSE). Documentation and data in `docs/` and `data/` are under [CC BY 4.0](./LICENSE-docs.md).

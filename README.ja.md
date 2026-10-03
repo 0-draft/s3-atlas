@@ -96,4 +96,4 @@ S3 Atlas は個人による学習ガイドであり、Amazon Web Services とは
 
 ## ライセンス
 
-コードは [MIT License](./LICENSE)、`docs/` と `data/` のドキュメントとデータは [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) です。
+コードは [MIT License](./LICENSE)、`docs/` と `data/` のドキュメントとデータは [CC BY 4.0](./LICENSE-docs.md) です。
