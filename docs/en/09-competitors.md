@@ -136,28 +136,32 @@ AWS Glacier prices are known list prices confirmed on the S3 pricing page (us-ea
 
 ### 3.1 Key feature matrix
 
-Legend: ○ = supported / △ = partial or proprietary API / × = not supported / ? = not yet checked against official documentation (the 2026-10-03 primary-source check covered prices, not these feature cells; confirm in each provider's docs before adopting)
+Legend: ○ = supported / △ = partial, preview, or via a separate first-party product / × = not supported, or absent from the official API/feature list / ? = the official documentation does not say. Every cell was checked against official documentation on 2026-10-03; the only cells left as ? are strong consistency for Backblaze B2, DigitalOcean Spaces, and Hetzner, whose docs make no statement about read-after-write consistency. In `data/competitors.json`, ○ and △ map to `true`, × to `false`, and ? to `null`.
 
 | Service | S3 compatibility | Strong consistency | Versioning | Object Lock | Lifecycle | Replication | Events | Iceberg/tables | Vector | CDN integration |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | AWS S3 | Native | ○ (since 2020-12) | ○ | ○ | ○ | ○ (CRR/SRR) | ○ (EventBridge/SNS/SQS/Lambda) | ○ S3 Tables | ○ S3 Vectors | ○ CloudFront |
 | GCS | △ (XML API + HMAC) | ○ | ○ | ○ Bucket Lock / Object Retention | ○ | ○ dual/multi-region | ○ Pub/Sub | ○ BigLake | × (Vertex AI is a separate product) | ○ Cloud CDN |
-| Azure Blob / ADLS Gen2 | × (proprietary API) | ○ | ○ | ○ Immutable storage | ○ | ○ Object replication / GRS | ○ Event Grid | △ via Fabric/OneLake | × | ○ Front Door |
+| Azure Blob / ADLS Gen2 | × (proprietary API) | ○ | ○ | ○ Immutable storage | ○ | ○ Object replication / GRS | ○ Event Grid | △ via Fabric OneLake (Iceberg metadata virtualization) | × | ○ Front Door |
 | Cloudflare R2 | High | ○ | × | △ bucket lock (proprietary) | ○ | × | ○ via Queues | ○ Basin Catalog | × (Vectorize is a separate product) | ○ |
-| Backblaze B2 | High | ? | ○ | ○ | ○ | ○ Cloud Replication | ○ (paid) | × | × | △ partner CDNs |
-| Wasabi | High | ? | ○ | ○ | ○ | ○ | ? | × | × | △ partners |
-| OCI | △ | ○ | ○ | ○ Retention rules | ○ | ○ | ○ OCI Events | ? | × | × |
-| IBM COS | High | ○ | ○ | ○ | ○ | ○ | ○ | ? (watsonx.data) | × | ? |
-| Alibaba OSS | △ | ○ | ○ | ○ WORM | ○ | ○ CRR | ○ | ? | ? | ○ |
-| DO Spaces | High | ? | ○ | ? | ○ | × | × | × | × | ○ |
-| Akamai | High | ? | ○ | ? | ○ | × | × | × | × | ○ |
-| Hetzner | High | ? | ○ | ○ | △ (expiry-based deletion) | × | × | × | × | × |
-| Tigris | High | ○ (configurable) | ? | ? | ○ | ○ automatic global distribution | ○ | × | × | ○ (distributed cache) |
-| Storj | High | ? | ○ | ○ | ? | Not needed (distributed) | × | × | × | × |
-| MinIO / AIStor | High | ○ | ○ | ○ | ○ | ○ | ○ | ? (AIStor) | ? | × |
+| Backblaze B2 | High | ? (not stated in the docs) | ○ | ○ | ○ | ○ Cloud Replication | ○ (paid, access on request) | × | × | × (partner CDNs only) |
+| Wasabi | High | ○ ("immediate consistency") | ○ | ○ | ○ | ○ | ○ (delivered via AWS SNS) | × | × | × (partners only) |
+| OCI | △ | ○ | ○ | ○ Retention rules | ○ | ○ | ○ OCI Events | × (Autonomous AI Lakehouse queries Iceberg; no managed catalog documented) | × | × |
+| IBM COS | High | ○ | ○ | ○ | ○ | ○ | ○ | △ watsonx.data (Iceberg REST catalog) | × | △ via IBM Cloud Internet Services |
+| Alibaba OSS | △ | ○ | ○ | ○ WORM | ○ | ○ CRR | ○ | △ OSS Tables (invitational preview) | △ OSS Vectors (public preview) | ○ |
+| DO Spaces | High | ? (not stated in the docs) | ○ (API only) | × | △ (expiration only) | × | × | × | × | ○ |
+| Akamai | High | ○ | ○ | ○ (Governance/Compliance) | △ (expiration only) | × | × | × | × | ○ (origin for Akamai CDN) |
+| Hetzner | High | ? (not stated in the docs) | ○ | ○ | △ (expiry-based deletion) | × | × | × | × | × |
+| Tigris | High | ○ (scope set by bucket location type) | △ (via snapshots; no PutBucketVersioning) | × | ○ | ○ automatic global distribution | ○ (webhooks) | × | × | ○ (distributed cache) |
+| Storj | High | ○ | ○ | ○ | × (per-object TTL only) | Not needed (distributed) | × | × | × | × |
+| MinIO / AIStor | High | ○ | ○ | ○ | ○ | ○ | ○ | ○ AIStor Tables | × | × |
 | Ceph RGW | High | ○ (within a site) | ○ | ○ | ○ | ○ multisite (asynchronous) | ○ | × | × | × |
-| SeaweedFS | △ | ? | ○ | ? | ? | ○ | ? | × | × | × |
-| Garage | △ | ? | × | × | △ (expiration, etc.) | ○ (built in) | × | × | × | × |
+| SeaweedFS | △ | ○ (replica writes W=N) | ○ | ○ | △ (expiration only) | ○ | △ (filer webhook/Kafka, no S3 bucket notifications) | ○ S3 Table Buckets + Iceberg REST catalog | △ Lance table buckets | × |
+| Garage | △ | ○ (default `consistency_mode`) | × | × | △ (expiration, etc.) | ○ (built in) | × | × | × | × |
+| VAST Data | High | ○ | ○ | ○ | △ (expiration rules per view) | ○ | ○ (Kafka) | × (VAST DataBase; no Iceberg catalog documented) | ○ vector indexing | × |
+| Everpure FlashBlade | High | ○ | ○ | ○ | △ (expiration) | ○ | × (not in the supported S3 operations) | × | × | × |
+| NetApp StorageGRID | High | ○ | ○ | ○ | ○ (ILM) | ○ CloudMirror | ○ (Kafka/webhook/SNS) | × | × | × |
+| Dell ObjectScale / ECS | High | ○ | ○ | ○ | ○ | ○ geo-replication | ○ (webhook; Kafka from 4.4) | ○ S3 Tables (GA in 4.4) | × | × |
 
 R2's S3 API implementation status was confirmed in the official documentation. `GetBucketVersioning`, `PutBucketReplication`, the notification configuration APIs, ACLs, and object tagging are **not implemented**. On the other hand, SSE-C and conditional headers (`If-Match`, etc.) are implemented.
 
@@ -666,3 +670,53 @@ flowchart LR
 - DCD, How Dropbox pulled off its hybrid cloud transition: <https://www.datacenterdynamics.com/en/analysis/how-dropbox-pulled-off-its-hybrid-cloud-transition/>
 - Akave, The storage squeeze 2026 (a competing vendor's view): <https://akave.com/blog/the-storage-squeeze-why-wasabi-backblaze-and-everpure-are-all-raising-prices-in-2026>
 - Tom's Hardware, storage costs driven up by AI demand: <https://www.tomshardware.com/pc-components/storage/perfect-storm-of-demand-and-supply-driving-up-storage-costs>
+- Microsoft Learn, Use Iceberg tables with OneLake: <https://learn.microsoft.com/en-us/fabric/onelake/onelake-iceberg-tables>
+- Microsoft Learn, Managing concurrency in Blob Storage (strong consistency): <https://learn.microsoft.com/en-us/azure/storage/blobs/concurrency-manage>
+- Microsoft Learn, Integrate Azure Front Door with a storage account: <https://learn.microsoft.com/en-us/azure/frontdoor/integrate-storage-account>
+- Backblaze Docs, Event Notifications: <https://www.backblaze.com/docs/cloud-storage-event-notifications>
+- Backblaze Docs, Cloud Replication: <https://www.backblaze.com/docs/cloud-storage-cloud-replication>
+- Backblaze Docs, Object Lock: <https://www.backblaze.com/docs/cloud-storage-object-lock>
+- Backblaze Docs, S3-compatible API (no consistency statement): <https://www.backblaze.com/docs/cloud-storage-s3-compatible-api>
+- Wasabi Docs, What data consistency model does Wasabi employ?: <https://docs.wasabi.com/docs/what-data-consistency-model-does-wasabi-employ>
+- Wasabi Docs, Event Notifications: <https://docs.wasabi.com/docs/event-notifications-bucket>
+- Wasabi Docs, Bucket Replication: <https://docs.wasabi.com/docs/bucket-replication>
+- Oracle Docs, Object Storage overview (consistency): <https://docs.oracle.com/en-us/iaas/Content/Object/Concepts/objectstorageoverview.htm>
+- Oracle Docs, Autonomous AI Database workload types (Autonomous AI Lakehouse and Iceberg): <https://docs.oracle.com/en-us/iaas/autonomous-database-serverless/doc/about-autonomous-database-workloads.html>
+- IBM Cloud Docs, Cloud Object Storage FAQ (consistency): <https://cloud.ibm.com/docs/cloud-object-storage?topic=cloud-object-storage-faq>
+- IBM Cloud Docs, CIS Resolve Override with COS: <https://cloud.ibm.com/docs/cis?topic=cis-resolve-override-cos>
+- IBM Docs, watsonx.data Metadata Service (Iceberg REST Catalog APIs): <https://www.ibm.com/docs/en/watsonxdata/saas?topic=components-metadata-service>
+- Alibaba Cloud, What is OSS (strong consistency): <https://www.alibabacloud.com/help/en/oss/product-overview/what-is-oss>
+- Alibaba Cloud, OSS vector bucket: <https://www.alibabacloud.com/help/en/oss/user-guide/vector-bucket>
+- Alibaba Cloud, OSS release notes (OSS Tables, OSS Vectors): <https://www.alibabacloud.com/help/en/oss/release-notes>
+- Google Cloud, Cloud Storage product overview: <https://docs.cloud.google.com/storage/docs/introduction>
+- DigitalOcean Docs, Spaces S3 compatibility: <https://docs.digitalocean.com/products/spaces/reference/s3-compatibility/>
+- DigitalOcean Docs, Spaces features: <https://docs.digitalocean.com/products/spaces/details/features/>
+- Akamai TechDocs, Object Storage (strong read-after-write consistency): <https://techdocs.akamai.com/cloud-computing/docs/object-storage>
+- Akamai TechDocs, Object Storage data protection (versioning, Object Lock): <https://techdocs.akamai.com/cloud-computing/docs/data-protection>
+- Akamai TechDocs, Object Storage lifecycle policies: <https://techdocs.akamai.com/cloud-computing/docs/lifecycle-policies>
+- Akamai, Object Storage product page (CDN origin): <https://www.akamai.com/products/object-storage>
+- Hetzner Docs, Object Storage FAQ (buckets and objects): <https://docs.hetzner.com/storage/object-storage/faq/buckets-objects/>
+- Hetzner Docs, Object Storage supported actions: <https://docs.hetzner.com/storage/object-storage/supported-actions/>
+- Tigris Docs, S3 API compatibility: <https://www.tigrisdata.com/docs/api/s3/>
+- Tigris Docs, Snapshots and forks (object versions): <https://www.tigrisdata.com/docs/buckets/snapshots-and-forks/>
+- Tigris Docs, Consistency: <https://www.tigrisdata.com/docs/concepts/consistency/>
+- Tigris Docs, Object notifications: <https://www.tigrisdata.com/docs/buckets/object-notifications/>
+- Storj Docs, Consistency: <https://storj.dev/learn/concepts/consistency>
+- Storj Docs, S3 compatibility (lifecycle, object TTL): <https://storj.dev/dcs/api/s3/s3-compatibility>
+- Storj Docs, Object Lock: <https://storj.dev/dcs/api/s3/object-lock>
+- MinIO AIStor Docs, AIStor Tables: <https://docs.min.io/aistor/developers/aistor-tables/>
+- SeaweedFS Wiki, Amazon S3 API: <https://github.com/seaweedfs/seaweedfs/wiki/Amazon-S3-API>
+- SeaweedFS Wiki, S3 Object Lock and Retention: <https://github.com/seaweedfs/seaweedfs/wiki/S3-Object-Lock-and-Retention>
+- SeaweedFS Wiki, S3 Lifecycle: <https://github.com/seaweedfs/seaweedfs/wiki/S3-Lifecycle>
+- SeaweedFS Wiki, Filer Notification Webhook: <https://github.com/seaweedfs/seaweedfs/wiki/Filer-Notification-Webhook>
+- SeaweedFS Wiki, Replication (W=N, R=1): <https://github.com/seaweedfs/seaweedfs/wiki/Replication>
+- SeaweedFS Wiki, Iceberg Catalog: <https://github.com/seaweedfs/seaweedfs/wiki/SeaweedFS-Iceberg-Catalog>
+- Garage, S3 compatibility status: <https://garagehq.deuxfleurs.fr/documentation/reference-manual/s3-compatibility/>
+- Garage, Configuration file (`consistency_mode`): <https://garagehq.deuxfleurs.fr/documentation/reference-manual/configuration/>
+- VAST Data KB, Overview of lifecycle rules (5.5): <https://kb.vastdata.com/documentation/docs/overview-of-lifecycle-rules-55>
+- VAST Data KB, Publishing S3 bucket events to third-party event brokers (5.5): <https://kb.vastdata.com/documentation/docs/publishing-s3-bucket-events-to-third-party-event-brokers-55>
+- VAST Data KB, VAST Cluster 5.5.0 release notes (vector indexing): <https://kb.vastdata.com/documentation/docs/vast-cluster-5-5-0-release-notes>
+- Everpure, FlashBlade Object Store S3 REST API v2.5 (supported operations): <https://support.everpuredata.com/go/pdf/flashblade_object_store_s3_rest_api_2.5.pdf>
+- NetApp StorageGRID docs, Understanding notifications for buckets: <https://docs.netapp.com/us-en/storagegrid/tenant/understanding-notifications-for-buckets.html>
+- NetApp StorageGRID docs, CloudMirror replication service: <https://docs.netapp.com/us-en/storagegrid/tenant/understanding-cloudmirror-replication-service.html>
+- Dell Info Hub, ObjectScale Overview and Architecture, S3 (event notifications, S3 Tables): <https://infohub.delltechnologies.com/en-us/l/dell-objectscale-overview-and-architecture-1/s3-260/>

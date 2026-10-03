@@ -68,7 +68,7 @@
     "minStorageDays": 0,
     "s3Compatible": "none",
     "strongConsistency": true,
-    "features": { "versioning": true, "objectLock": true, "lifecycle": true, "replication": true, "events": true, "iceberg": null, "vectors": false, "cdn": true },
+    "features": { "versioning": true, "objectLock": true, "lifecycle": true, "replication": true, "events": true, "iceberg": true, "vectors": false, "cdn": true },
     "strengths": {
       "en": ["ADLS Gen2 hierarchical namespace gives atomic directory rename for analytics", "Hot / Cool / Cold / Archive tiers with per-blob tiering", "Enterprise identity integration via Entra ID", "Natural fit for Microsoft Fabric / OneLake"],
       "ja": ["ADLS Gen2 の階層型名前空間で、分析向けのアトミックなディレクトリ rename が可能", "Hot / Cool / Cold / Archive をブロブ単位で切り替え可能", "Entra ID による企業 ID 統合", "Microsoft Fabric / OneLake との親和性"]
@@ -151,8 +151,8 @@
     "getPer1k": 0,
     "minStorageDays": 90,
     "s3Compatible": "high",
-    "strongConsistency": null,
-    "features": { "versioning": true, "objectLock": true, "lifecycle": true, "replication": true, "events": null, "iceberg": false, "vectors": false, "cdn": false },
+    "strongConsistency": true,
+    "features": { "versioning": true, "objectLock": true, "lifecycle": true, "replication": true, "events": true, "iceberg": false, "vectors": false, "cdn": false },
     "strengths": {
       "en": ["Flat $7.99/TB-month with no egress or API fees", "Predictable bills for backup software (Veeam etc.)", "Reserved Capacity Storage for multi-year discounts"],
       "ja": ["$7.99/TB-月の定額で egress / API 料金なし", "Veeam などバックアップ用途で請求が読みやすい", "Reserved Capacity Storage で複数年割引"]
@@ -180,7 +180,7 @@
     "minStorageDays": 0,
     "s3Compatible": "partial",
     "strongConsistency": true,
-    "features": { "versioning": true, "objectLock": true, "lifecycle": true, "replication": true, "events": true, "iceberg": null, "vectors": false, "cdn": false },
+    "features": { "versioning": true, "objectLock": true, "lifecycle": true, "replication": true, "events": true, "iceberg": false, "vectors": false, "cdn": false },
     "strengths": {
       "en": ["First 10 TB/month of internet egress free, then $0.0085/GB", "Same price in every commercial region", "Archive tier $0.0026/GB-month"],
       "ja": ["インターネット egress は月 10TB まで無料、以降 $0.0085/GB", "全商用リージョンで同一価格", "Archive 層は $0.0026/GB-月"]
@@ -209,7 +209,7 @@
     "minStorageDays": 0,
     "s3Compatible": "high",
     "strongConsistency": true,
-    "features": { "versioning": true, "objectLock": true, "lifecycle": true, "replication": true, "events": true, "iceberg": null, "vectors": false, "cdn": null },
+    "features": { "versioning": true, "objectLock": true, "lifecycle": true, "replication": true, "events": true, "iceberg": true, "vectors": false, "cdn": true },
     "strengths": {
       "en": ["Descends from Cleversafe information-dispersal erasure coding", "Smart Tier auto-pricing and One-Rate plan (flat USD 10/TB at 2 PB+, egress included)", "Available as software for on-premises deployment"],
       "ja": ["Cleversafe 由来の情報分散型イレイジャーコーディング", "Smart Tier の自動料金と One-Rate プラン (2PB 以上で egress 込み USD 10/TB 定額)", "オンプレ向けソフトウェアとしても提供"]
@@ -238,7 +238,7 @@
     "minStorageDays": 0,
     "s3Compatible": "partial",
     "strongConsistency": true,
-    "features": { "versioning": true, "objectLock": true, "lifecycle": true, "replication": true, "events": true, "iceberg": null, "vectors": null, "cdn": true },
+    "features": { "versioning": true, "objectLock": true, "lifecycle": true, "replication": true, "events": true, "iceberg": true, "vectors": true, "cdn": true },
     "strengths": {
       "en": ["Largest footprint in mainland China and strong APAC presence", "Rich classes (Standard / IA / Archive / Cold Archive / Deep Cold Archive)", "Free OSS-to-CDN transfer outside mainland China"],
       "ja": ["中国本土で最大級、APAC にも強い", "Standard / IA / Archive / Cold Archive / Deep Cold Archive と階層が豊富", "中国本土外では OSS から CDN への転送が無料"]
@@ -267,7 +267,7 @@
     "minStorageDays": 0,
     "s3Compatible": "high",
     "strongConsistency": null,
-    "features": { "versioning": true, "objectLock": null, "lifecycle": true, "replication": false, "events": false, "iceberg": false, "vectors": false, "cdn": true },
+    "features": { "versioning": true, "objectLock": false, "lifecycle": true, "replication": false, "events": false, "iceberg": false, "vectors": false, "cdn": true },
     "strengths": {
       "en": ["$5/month includes 250 GiB storage and 1 TiB transfer", "Built-in CDN at no extra cost", "Cold storage tier at $0.007/GiB-month", "Simple developer experience"],
       "ja": ["月 $5 で 250GiB ストレージと 1TiB 転送込み", "CDN が追加料金なしで付属", "Cold ストレージ層 $0.007/GiB-月", "シンプルな開発者体験"]
@@ -294,8 +294,8 @@
     "getPer1k": 0,
     "minStorageDays": 0,
     "s3Compatible": "high",
-    "strongConsistency": null,
-    "features": { "versioning": true, "objectLock": null, "lifecycle": true, "replication": false, "events": false, "iceberg": false, "vectors": false, "cdn": true },
+    "strongConsistency": true,
+    "features": { "versioning": true, "objectLock": true, "lifecycle": true, "replication": false, "events": false, "iceberg": false, "vectors": false, "cdn": true },
     "strengths": {
       "en": ["$5/month includes 250 GB storage and 1 TB transfer pool", "Very low transfer overage ($0.005/GB in most data centers)", "No API request charges today", "Close to the Akamai CDN"],
       "ja": ["月 $5 で 250GB と 1TB の転送プール込み", "転送超過が非常に安い (多くの DC で $0.005/GB)", "現時点で API リクエスト課金なし", "Akamai CDN に近い"]
@@ -352,7 +352,7 @@
     "minStorageDays": 0,
     "s3Compatible": "high",
     "strongConsistency": true,
-    "features": { "versioning": null, "objectLock": null, "lifecycle": true, "replication": true, "events": true, "iceberg": false, "vectors": false, "cdn": true },
+    "features": { "versioning": true, "objectLock": false, "lifecycle": true, "replication": true, "events": true, "iceberg": false, "vectors": false, "cdn": true },
     "strengths": {
       "en": ["Globally distributed bucket; data moves close to where it is read", "Zero egress fees in every region", "Same price in all geographies", "Popular with Fly.io and AI inference workloads"],
       "ja": ["グローバル分散バケットで、読まれる場所の近くにデータが移動する", "全リージョンで egress 無料", "地域によらず同一価格", "Fly.io や AI 推論ワークロードで採用"]
@@ -379,8 +379,8 @@
     "getPer1k": 0,
     "minStorageDays": 30,
     "s3Compatible": "high",
-    "strongConsistency": null,
-    "features": { "versioning": true, "objectLock": true, "lifecycle": null, "replication": false, "events": false, "iceberg": false, "vectors": false, "cdn": false },
+    "strongConsistency": true,
+    "features": { "versioning": true, "objectLock": true, "lifecycle": false, "replication": false, "events": false, "iceberg": false, "vectors": false, "cdn": false },
     "strengths": {
       "en": ["Decentralised: erasure-coded pieces spread over tens of thousands of nodes", "High parallel download throughput", "Simple $7/TB storage and $7/TB egress"],
       "ja": ["分散型: イレイジャーコードの断片を数万ノードに分散", "並列ダウンロードのスループットが高い", "保存 $7/TB・egress $7/TB とシンプル"]
@@ -408,7 +408,7 @@
     "minStorageDays": null,
     "s3Compatible": "high",
     "strongConsistency": true,
-    "features": { "versioning": true, "objectLock": true, "lifecycle": true, "replication": true, "events": true, "iceberg": null, "vectors": null, "cdn": false },
+    "features": { "versioning": true, "objectLock": true, "lifecycle": true, "replication": true, "events": true, "iceberg": true, "vectors": false, "cdn": false },
     "strengths": {
       "en": ["Historically the most S3-faithful self-hosted server", "High throughput on NVMe; simple single binary", "AIStor (commercial) continues active development"],
       "ja": ["歴史的に最も S3 に忠実なセルフホストサーバー", "NVMe 上で高スループット、単一バイナリでシンプル", "商用版 AIStor は開発継続"]
@@ -463,8 +463,8 @@
     "getPer1k": null,
     "minStorageDays": null,
     "s3Compatible": "partial",
-    "strongConsistency": null,
-    "features": { "versioning": true, "objectLock": null, "lifecycle": null, "replication": true, "events": null, "iceberg": false, "vectors": false, "cdn": false },
+    "strongConsistency": true,
+    "features": { "versioning": true, "objectLock": true, "lifecycle": true, "replication": true, "events": true, "iceberg": true, "vectors": true, "cdn": false },
     "strengths": {
       "en": ["Haystack-inspired design that handles billions of small files well", "Apache 2.0 licence", "Filer offers POSIX-ish, WebDAV and S3 front ends; cloud tiering"],
       "ja": ["Haystack 由来の設計で数十億の小ファイルに強い", "Apache 2.0 ライセンス", "Filer で POSIX 風 / WebDAV / S3 のフロントエンド、クラウド階層化"]
@@ -491,7 +491,7 @@
     "getPer1k": null,
     "minStorageDays": null,
     "s3Compatible": "partial",
-    "strongConsistency": null,
+    "strongConsistency": true,
     "features": { "versioning": false, "objectLock": false, "lifecycle": true, "replication": true, "events": false, "iceberg": false, "vectors": false, "cdn": false },
     "strengths": {
       "en": ["Lightweight; designed for geo-distributed clusters on modest hardware", "CRDT-based metadata tolerates high-latency links", "Popular landing spot for MinIO refugees in 2025-2026"],
@@ -520,7 +520,7 @@
     "minStorageDays": null,
     "s3Compatible": "high",
     "strongConsistency": true,
-    "features": { "versioning": true, "objectLock": true, "lifecycle": null, "replication": true, "events": true, "iceberg": null, "vectors": true, "cdn": false },
+    "features": { "versioning": true, "objectLock": true, "lifecycle": true, "replication": true, "events": true, "iceberg": false, "vectors": true, "cdn": false },
     "strengths": {
       "en": ["All-flash disaggregated architecture serving file and object on the same data", "Strong position in GPU cloud / AI training clusters", "Built-in database and vector features (VAST DataBase / InsightEngine)"],
       "ja": ["オールフラッシュの分離型アーキテクチャで同じデータにファイルとオブジェクトでアクセス", "GPU クラウド / AI 学習クラスタで強い", "データベース・ベクトル機能を内蔵 (VAST DataBase / InsightEngine)"]
@@ -548,7 +548,7 @@
     "minStorageDays": null,
     "s3Compatible": "high",
     "strongConsistency": true,
-    "features": { "versioning": true, "objectLock": true, "lifecycle": true, "replication": true, "events": null, "iceberg": false, "vectors": false, "cdn": false },
+    "features": { "versioning": true, "objectLock": true, "lifecycle": true, "replication": true, "events": false, "iceberg": false, "vectors": false, "cdn": false },
     "strengths": {
       "en": ["Unified fast file and object on all-flash", "Proven S3 drop-in (37signals moved ~6 PB off S3 to FlashBlade in 2025)", "Evergreen subscription model and SafeMode snapshots"],
       "ja": ["オールフラッシュで高速ファイルとオブジェクトを統合", "S3 のドロップイン置換の実績 (37signals が 2025 年に約 6PB を移行)", "Evergreen サブスクリプションと SafeMode スナップショット"]
@@ -576,7 +576,7 @@
     "minStorageDays": null,
     "s3Compatible": "high",
     "strongConsistency": true,
-    "features": { "versioning": true, "objectLock": true, "lifecycle": true, "replication": true, "events": true, "iceberg": null, "vectors": false, "cdn": false },
+    "features": { "versioning": true, "objectLock": true, "lifecycle": true, "replication": true, "events": true, "iceberg": false, "vectors": false, "cdn": false },
     "strengths": {
       "en": ["Policy-driven ILM across sites and cloud tiers", "Long enterprise track record, multi-site geo-distribution", "Can tier to S3 / Azure as a cloud pool"],
       "ja": ["サイトやクラウド階層をまたぐポリシー駆動の ILM", "長いエンタープライズ実績、マルチサイト地理分散", "S3 / Azure をクラウドプールとして階層化可能"]
@@ -604,7 +604,7 @@
     "minStorageDays": null,
     "s3Compatible": "high",
     "strongConsistency": true,
-    "features": { "versioning": true, "objectLock": true, "lifecycle": true, "replication": true, "events": null, "iceberg": null, "vectors": false, "cdn": false },
+    "features": { "versioning": true, "objectLock": true, "lifecycle": true, "replication": true, "events": true, "iceberg": true, "vectors": false, "cdn": false },
     "strengths": {
       "en": ["Long-running enterprise object platform with geo-replication", "Dell support and procurement channels", "Software-defined and appliance options"],
       "ja": ["地理複製を備えた長期運用のエンタープライズ向けオブジェクト基盤", "Dell のサポートと調達チャネル", "SDS とアプライアンスの両方を提供"]
