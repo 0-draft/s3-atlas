@@ -1,0 +1,37 @@
+name: Data freshness
+
+on:
+  schedule:
+    - cron: '17 3 1,15 * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+      - name: Build report
+        run: node scripts/check-freshness.mjs > report.md
+      - name: Open or update the tracking issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if grep -qE '\(([1-9][0-9]*)\)' report.md; then
+            title="Data freshness review"
+            num=$(gh issue list --state open --search "in:title \"$title\"" --json number --jq '.[0].number')
+            if [ -n "$num" ]; then
+              gh issue edit "$num" --body-file report.md
+            else
+              gh label create freshness --color 0E8A16 --description "Keep S3 facts current" 2>/dev/null || true
+              gh issue create --title "$title" --label freshness --body-file report.md
+            fi
+          else
+            echo "Nothing new."
+          fi
