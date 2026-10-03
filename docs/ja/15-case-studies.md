@@ -13,7 +13,7 @@ _最終確認: 2026-10-03_
   - **adopter**: S3 を自社システムのストレージとして使う
   - **built-on-s3**: S3 を土台に製品・サービスそのものを作っている
   - **migrated-away**: S3 から自前ストレージへ移った (反例)
-- 機械可読版は `data/cases.json` にある (英日併記)。公開日が確認できなかった事例 (BMLL、Bynder、Ancestry、テレビ東京など) は、JSON の `year` に確認年の 2026 を入れている
+- 機械可読版は `data/cases.json` にある (英日併記)。JSON の `year` は出典の公開年。ページに日付がない事例は、PDF 版の著作権表記とメタデータ (Ancestry 2023、テレビ東京 2020)、AWS の事例インデックス (Bynder 2024)、その事例を引用した日付付きの AWS 記事 (BMLL 2025) から年を決めた。BMW Group はページに日付がないため、`year` は確認年の 2026
 
 ## 前提: 2026 年時点の S3 の規模
 
@@ -34,7 +34,7 @@ S3 20 周年の AWS News Blog (2026-03-13) によると、S3 は **500 兆を超
   - S3 上のデータを、Netflix 自身が生み出したテーブルフォーマット **Apache Iceberg** で管理する
   - Hive から「Iceberg のみ」の構成へ移行するために、独自の移行ツール、secure Iceberg tables、Iceberg REST catalog を作った
   - データの物理的な移動とユーザーへの影響を最小限にする方針をとった
-- **成果**: ACID トランザクション、リッチなメタデータ層、クエリ性能の向上 (講演の要約より)。削減額などの数値は公開されていない (未確認)
+- **成果**: ACID トランザクション、リッチなメタデータ層、クエリ性能の向上 (講演の要約より)。削減額などの数値は講演の紹介文には書かれていない
 - **教訓**: S3 は「ファイルを置く場所」で、テーブルとしての整合性やスキーマ進化はテーブルフォーマットが担う。Netflix は Iceberg の生みの親であり、S3 Tables (2024 年発表) のような「マネージド Iceberg」が登場する流れの起点になった
 - **出典**: [AWS re:Invent 2023 NFX306](https://aws.amazon.com/video/watch/3db41488539/)
 
@@ -100,8 +100,8 @@ S3 20 周年の AWS News Blog (2026-03-13) によると、S3 は **500 兆を超
 - **アーキテクチャ**:
   - 録画を有効にした配信は、生成されたセグメント・サムネイル・プレイリストが S3 バケットに保存され、そこから Highlights を切り出す
   - Tahoe は中央のバッチ取り込み API がデータを変換して S3 に保存する構成
-- **教訓**: 2014 年の Twitch ブログでは「ストレージ容量の 80% が一度も視聴されない過去配信で埋まっていた」として、無期限保存をやめている。保存期間ポリシーは技術ではなくプロダクト判断で決まる (2014 年当時のストレージが S3 だったかは未確認)
-- **出典**: [Twitch State of Engineering 2023](https://blog.twitch.tv/en/2023/09/28/twitch-state-of-engineering-2023/), [Twitch: Update: Changes To VODs (2014)](https://blog.twitch.tv/en/2014/08/06/update-changes-to-vods-on-twitch-169cd8bda850/)
+- **教訓**: 2014 年の Twitch ブログでは「ストレージ容量の 80% が一度も視聴されない過去配信で埋まっていた」として、無期限保存をやめている。保存期間ポリシーは技術ではなくプロダクト判断で決まる。2014 年の記事は過去配信を「30 分単位のチャンクで複数のメディアサーバーに」保存していたとだけ書いており、S3 の名前は出てこない。2015 年 12 月の Twitch のエンジニアリング概要記事は「AWS へ移すサービスを増やしている」と書くが、VOD のストレージがそこに含まれるかは書いていない。2014 年当時のストレージが S3 だったかは引き続き未確認
+- **出典**: [Twitch State of Engineering 2023](https://blog.twitch.tv/en/2023/09/28/twitch-state-of-engineering-2023/), [Twitch: Update: Changes To VODs (2014)](https://blog.twitch.tv/en/2014/08/06/update-changes-to-vods-on-twitch-169cd8bda850/), [Twitch Engineering: An Introduction and Overview (2015)](https://blog.twitch.tv/en/2015/12/18/twitch-engineering-an-introduction-and-overview-a23917b71a25/)
 
 ### 1.7 Epic Games — Fortnite のテレメトリを S3 データレイクへ
 
@@ -113,7 +113,7 @@ S3 20 周年の AWS News Blog (2026-03-13) によると、S3 は **500 兆を超
   - 22 の本番 EMR クラスタ (EC2 4,000 台超) が 1 日 8,000 本超のバッチ ETL を回し、Hive テーブルに集約
   - S3 をデータウェアハウスの土台として使い、リアルタイム系は Spark + DynamoDB
 - **教訓**: ストリーム (Kinesis) とバッチ (EMR) の両方が同じ S3 を最終的な置き場にすることで、ピークが最小時の 10 倍になるゲームの負荷変動にも耐える
-- **出典**: [Datanami: Inside Fortnite's Massive Data Analytics Pipeline (2018)](https://www.datanami.com/2018/07/31/inside-fortnites-massive-data-analytics-pipeline/)
+- **出典**: [BigDATAwire (旧 Datanami): Inside Fortnite's Massive Data Analytics Pipeline (2018)](https://hpcwire.com/bigdatawire/2018/07/31/inside-fortnites-massive-data-analytics-pipeline/)
 
 ### 1.8 Duolingo — バージョニング済みバケットに lifecycle を入れる
 
@@ -173,11 +173,11 @@ S3 20 周年の AWS News Blog (2026-03-13) によると、S3 は **500 兆を超
 
 - **業種**: 金融データ / 分析
 - **保存対象**: 過去の板情報・取引データ
-- **規模**: **20 PB 超**、2030 年までに 50 PB を見込む (公開日は未確認、2026 年確認時点の掲載値)
+- **規模**: **20 PB 超**、2030 年までに 50 PB を見込む (2025 年の AWS 事例。ページに日付はないが、2026-02-02 公開の AWS ブログ「Cloud Adoption Update for Financial Market Infrastructure Providers 2H25」が BMLL の公開した事例として引用している)
 - **アーキテクチャ**: S3、Intelligent-Tiering、Replication、Glacier、Access Points、Object Lock。S3 Tables の検討も挙げている
 - **成果**: Intelligent-Tiering で年 **50 万ドル**、アーカイブ・バックアップ用の Glacier で年 **300 万ドル**、合計 **年 350 万ドル** の削減
 - **教訓**: 「アクセスが読めない現役データ」は Intelligent-Tiering、「明確にコールドなバックアップ」は Glacier と、性質で分けると両方から削減が取れる
-- **出典**: [AWS case study: BMLL](https://aws.amazon.com/solutions/case-studies/bmll-case-study/)
+- **出典**: [AWS case study: BMLL](https://aws.amazon.com/solutions/case-studies/bmll-case-study/), [AWS for Industries Blog: Cloud Adoption Update for Financial Market Infrastructure Providers 2H25 (2026)](https://aws.amazon.com/blogs/industries/cloud-adoption-update-for-financial-market-infrastructure-providers-2h25/)
 
 ## 3. ヘルスケア・ライフサイエンス・公共
 
@@ -205,7 +205,7 @@ S3 20 周年の AWS News Blog (2026-03-13) によると、S3 は **500 兆を超
 
 - **業種**: 系図・家系調査
 - **保存対象**: 手書き歴史文書の画像 (手書き文字認識 AI の学習用)
-- **規模**: 数百 TB の画像を S3 Glacier に保存 (公開日は未確認)
+- **規模**: 数百 TB の画像を S3 Glacier に保存 (AWS の PDF 事例、© 2023。PDF の作成日は 2023-03-21)
 - **アーキテクチャ**: 学習データの元画像を Glacier に置き、学習時に restore する
 - **成果**: 「数百 TB の画像の restore が、数日ではなく数時間で済む」。2022 年 11 月の S3 Glacier の restore スループット最大 10 倍改善 (アカウント・リージョンあたり最大 1,000 TPS の restore リクエスト) が背景にある
 - **教訓**: ML 学習データのような「たまに一括で読む」データは Glacier Flexible Retrieval / Deep Archive に置ける。ボトルネックは restore のスループットで、ここは AWS 側の改善で変わってきた
@@ -254,11 +254,11 @@ S3 20 周年の AWS News Blog (2026-03-13) によると、S3 は **500 兆を超
 
 - **業種**: デジタルアセット管理 SaaS
 - **保存対象**: 顧客企業のデジタルアセット (画像・動画など)
-- **規模**: **18 PB**、**1 億 7,500 万** アセット、顧客企業約 4,000 社 (公開日は未確認、2026 年確認時点の掲載値)
+- **規模**: **18 PB**、**1 億 7,500 万** アセット、顧客企業約 4,000 社 (2024 年の AWS 事例。AWS の事例インデックスではページの作成日が 2024-03-22)
 - **アーキテクチャ**: S3 Intelligent-Tiering に全面的に載せる。AWS Transfer Family も併用
 - **成果**: ストレージコストを **65%** 削減
 - **教訓**: 顧客ごとにアクセスパターンが違う SaaS では、手動のアクセス分析よりも Intelligent-Tiering のほうが運用負荷とコストの両方で勝つ
-- **出典**: [AWS case study: Bynder](https://aws.amazon.com/solutions/case-studies/bynder-amazon-s3-case-study/)
+- **出典**: [AWS case study: Bynder](https://aws.amazon.com/solutions/case-studies/bynder-amazon-s3-case-study/), [AWS 事例インデックスの Bynder エントリ (JSON)](https://aws.amazon.com/api/dirs/items/search?item.directoryId=customer-references&item.locale=en_US&q=Bynder&size=10)
 
 ### 5.3 Salesforce — 100 PB 超の社内データレイクを Intelligent-Tiering で
 
@@ -268,7 +268,7 @@ S3 20 周年の AWS News Blog (2026-03-13) によると、S3 は **500 兆を超
 - **アーキテクチャ**: オンプレミスのデータレイクのスケール問題と取り出しの遅さを解消するため AWS へ移行。S3 + EMR、ストレージクラスに Intelligent-Tiering
 - **成果**: 年間 **数百万ドル** の削減と、データレイクの性能・弾力性の向上
 - **教訓**: ログの分析データは「直近は熱く、古いものはたまに読む」パターンだが、どれが読まれるかは予測しにくい。ここでも Intelligent-Tiering が選ばれている
-- **出典**: [AWS case study: Salesforce と S3 Intelligent-Tiering](https://aws.amazon.com/solutions/case-studies/salesforce-amazons3-intelligent-tiering-case-study/)
+- **出典**: [AWS case study: Salesforce と S3 Intelligent-Tiering (アーカイブ。元の URL は現在 AWS の事例一覧にリダイレクトされる)](https://web.archive.org/web/2024/https://aws.amazon.com/solutions/case-studies/salesforce-amazons3-intelligent-tiering-case-study/)
 
 ### 5.4 Indeed — 101 PB の Hive データレイクを S3 Tables へ
 
@@ -305,10 +305,10 @@ S3 20 周年の AWS News Blog (2026-03-13) によると、S3 は **500 兆を超
 - **保存対象**: AI モデルの学習データ
 - **規模**: 「数百 PB」(re:Invent 2023 の講演紹介より)
 - **アーキテクチャ**: AWS re:Invent 2023「Optimizing storage price and performance with Amazon S3」(STG211) に Anthropic の Nova DasSarma が登壇。S3 Storage Lens による可視化、Intelligent-Tiering によるコスト最適化、スループットを最大化するベストプラクティスを紹介
-- **成果**: 具体的な削減額は講演紹介文からは未確認
-- **補足**: Project Rainier (Trainium2 のクラスタ) で学習データをどう保存しているかを明示した公開資料は見つからなかった (未確認)
+- **成果**: 講演の紹介文に削減額は書かれていない。今回の確認では講演の文字起こしを取得できなかったため、講演本編で数値が出たかは未確認
+- **補足**: Amazon の Project Rainier (Trainium2 のクラスタ) の記事はチップ、サーバー、ネットワーク、サステナビリティを説明しているが、学習データの保存方法 (S3 かどうかを含む) には触れていない。これを明示した公開資料はほかにも見つからず、未確認のまま
 - **教訓**: 学習データは「巨大で、読み出しスループットが命で、古いデータの再利用が予測しにくい」。可視化 → 自動ティアリング → 並列読み出しの最適化、という順番が基本になる
-- **出典**: [AWS re:Invent 2023 STG211 (AWS video)](https://aws.amazon.com/video/watch/70d82a08dd0/), [YouTube: STG211](https://www.youtube.com/watch?v=RxgYNrXPOLw)
+- **出典**: [AWS re:Invent 2023 STG211 (AWS video)](https://aws.amazon.com/video/watch/70d82a08dd0/), [YouTube: STG211](https://www.youtube.com/watch?v=RxgYNrXPOLw), [About Amazon: Project Rainier](https://www.aboutamazon.com/news/aws/aws-project-rainier-ai-trainium-chips-compute-cluster)
 
 ### 6.2 Hugging Face — Hub のモデル・データセットを S3 に、Xet でチャンク単位に重複排除
 
@@ -341,17 +341,17 @@ S3 20 周年の AWS News Blog (2026-03-13) によると、S3 は **500 兆を超
 
 - **業種**: 放送
 - **保存対象**: 開局以来の映像アーカイブ (放送しなかった素材を含む)
-- **規模**: **13 PB**、HDCAM / XDCAM テープ約 **22 万本**、年 **約 600 TB** 増加 (公開日は未確認)
+- **規模**: **13 PB**、HDCAM / XDCAM テープ約 **22 万本**、年 **約 600 TB** 増加 (2020 年の AWS 事例。PDF 版は © 2020、作成日は 2020-03-25)
 - **アーキテクチャ**: 本社とアーカイブセンターの 2 拠点を AWS Direct Connect で接続。MXF ファイルを S3 に置き、Lambda でメタデータのタグ付けを自動化。lifecycle で S3 Glacier に移して長期保管
 - **成果**: 「年間数千万円の直接費の削減」。毎年 1 万本以上買っていたテープの購入費が不要になった
 - **教訓**: 放送局のアーカイブは「テープの調達・保管・劣化対策」というコストが見えにくい。S3 化でこれが従量課金に置き換わる
-- **出典**: [AWS 導入事例: テレビ東京](https://aws.amazon.com/jp/solutions/case-studies/tv-tokyo/)
+- **出典**: [AWS 導入事例: テレビ東京](https://aws.amazon.com/jp/solutions/case-studies/tv-tokyo/), [AWS 導入事例: テレビ東京 (PDF、2020)](https://d1.awsstatic.com/case-studies/jp/pdf/tvtokyo.pdf)
 
 ### 7.2 NTT ドコモ — 約 9,000 万会員のデータ分析基盤を 7 か月で AWS へ
 
 - **業種**: 通信
 - **保存対象**: 会員データを含む分析基盤のデータ
-- **規模**: 約 9,000 万会員 (2023 年ごろの AWS 事例。PDF 内の正確な公開日は未確認)
+- **規模**: 約 9,000 万会員 (d ポイントクラブ会員数は 2021 年度末時点で 8,908 万人)。データ基盤は 2021 年 1 月から構築し、同年 7 月に提供開始 (AWS の PDF 事例、© 2023。PDF の作成日は 2023-03-14)
 - **アーキテクチャ**: オンプレミスのデータ基盤を約 7 か月で AWS に移行。画一的な分析環境から、組織ごとの個別分析環境を提供する形に変更し、データカタログを整備。主なサービスは Amazon S3、SageMaker、QuickSight、PrivateLink
 - **成果**: 提供開始から 1 年足らずで分析環境のアカウント数が **13 倍**、環境構築数が **10 倍**、データカタログの MAU が **2.4 倍**
 - **教訓**: データを S3 に集めたうえで、組織ごとに分析環境を切り出せるようにすると、利用者が一気に増える。「データを置く」より「使える状態にする」設計が成果を決めた
@@ -654,21 +654,21 @@ Dropbox と 37signals に共通する条件は次の 3 つ。
 | FINRA | 金融規制 | adopter | 1 日 370 億レコード、3 億オブジェクト (2017) | データレイク、EMR | 同一データに複数ワークロード |
 | Nasdaq | 取引所 | adopter | 1 日 700 億レコード (2019) | データレイク、Redshift Spectrum | RI 費用 75% 削減 |
 | Capital One | 銀行 | adopter | 数百バケット (2021) | lifecycle、Glacier、Deep Archive、バージョニング | 非公開 |
-| BMLL | 金融データ | adopter | 20 PB 超 | Intelligent-Tiering、Glacier、Object Lock、Replication | 年 350 万ドル削減 |
+| BMLL | 金融データ | adopter | 20 PB 超 (2025) | Intelligent-Tiering、Glacier、Object Lock、Replication | 年 350 万ドル削減 |
 | NASA Earthdata | 公共・科学 | adopter | 170 PB 超 (2026) | Intelligent-Tiering、Open Data | 推定 60% 削減 |
 | Moderna | バイオ | adopter | 非公開 (2023) | データレイク | 抽出・分析 70% 高速化 |
-| Ancestry | 系図 | adopter | 数百 TB | Glacier | restore が日から時間へ |
+| Ancestry | 系図 | adopter | 数百 TB (2023) | Glacier | restore が日から時間へ |
 | BMW Group | 自動車 | adopter | 20 PB、日次 110 TB (2026) | データレイク、Lake Formation | 全社データ基盤 |
 | Toyota Connected | 自動車 | adopter | PB 級 (2022) | データレイク、EMR、Athena | 処理 27 分から 30 秒 |
 | Zalando | EC | adopter | 15 PB (2020) | Intelligent-Tiering、バージョニング | 年 37% 削減 |
-| Bynder | SaaS | adopter | 18 PB / 1.75 億アセット | Intelligent-Tiering | 65% 削減 |
+| Bynder | SaaS | adopter | 18 PB / 1.75 億アセット (2024) | Intelligent-Tiering | 65% 削減 |
 | Salesforce | SaaS | adopter | 100 PB 超 (2023) | Intelligent-Tiering、EMR | 年数百万ドル削減 |
 | Indeed | HR テック | adopter | 101 PB (2026) | S3 Tables、Replication、Intelligent-Tiering | 10% 削減、年 1,000 時間超 |
 | Grab | スーパーアプリ | adopter | PB 級 / 数十億オブジェクト (2026) | Iceberg | S3 API コスト最大 95% 削減 |
-| Anthropic | AI | adopter | 数百 PB (2023) | Storage Lens、Intelligent-Tiering | 未確認 |
+| Anthropic | AI | adopter | 数百 PB (2023) | Storage Lens、Intelligent-Tiering | 講演紹介文に記載なし |
 | Hugging Face | AI | adopter | 45 PB (LFS)、Xet へ 20 PB (2025) | S3 Standard、presigned URL | チャンク単位の重複排除 |
 | March Networks | 映像監視 | adopter | 数十億ベクトル (2025) | S3 Vectors、Glacier | 最大 80% 削減 (5 年) |
-| テレビ東京 | 放送 | adopter | 13 PB | S3、Glacier、lifecycle、Direct Connect | 年数千万円削減 |
+| テレビ東京 | 放送 | adopter | 13 PB (2020) | S3、Glacier、lifecycle、Direct Connect | 年数千万円削減 |
 | NTT ドコモ | 通信 | adopter | 約 9,000 万会員 (2023) | データレイク | 利用アカウント 13 倍 |
 | クックパッド | レシピ | adopter | ログテーブル約 300 本 (2020) | Redshift Spectrum、Parquet | ディスク使用率 50% 未満に |
 | サイバーエージェント | 広告 | adopter | 100 TB 超を削除・移行 (2022) | lifecycle、Standard-IA、Glacier IR | 年約 1,200 万円削減 |
@@ -688,10 +688,10 @@ Dropbox と 37signals に共通する条件は次の 3 つ。
 | 企業 | 見送った理由 |
 | --- | --- |
 | Airbnb | AWS 事例はあるが、S3 にユーザー写真 10 TB という初期の数字のみで年が不明 |
-| Zoom | 録画を S3 に送る連携サンプルはあるが、Zoom 自身のストレージ基盤の公開情報は未確認 |
-| Shopify | S3 に関する一次ソースが見つからない (主要基盤は Google Cloud とされるが未確認) |
+| Zoom | 録画を S3 に送る連携サンプルはあるが、Zoom 自身のストレージ基盤を説明した AWS 事例や Zoom の公開資料は見つからない (AWS の事例インデックスに Zoom のエントリはない)。未確認 |
+| Shopify | S3 に関する一次ソースが見つからない。Shopify Engineering (2018 年 3 月) は、自社データセンターから Google Cloud へ移行中で、データセンターのワークロードの 50% 超を移したと書いている |
 | Riot Games | Databricks lakehouse が S3 上にあるという言及 (Alation 事例) のみで、数値と年がない |
-| Woven by Toyota | Step Functions の結果を S3 に書くという記述のみ。データレイクの規模は未確認 |
+| Woven by Toyota | Step Functions の結果を S3 に書くという記述のみ。データレイクの規模を示す AWS 事例や Woven by Toyota の公開資料は見つからず、未確認 |
 | Peloton、Pfizer、任天堂 | S3 に特化した公開事例が見つからない |
 | ソニー (aibo) | 構成要素に S3 があるが、S3 固有の規模・成果の記載なし |
 | メルカリ | 2019 年のブログで商品画像・バックアップに S3 を使うとあるが、規模の数字なし |
@@ -713,7 +713,7 @@ Dropbox と 37signals に共通する条件は次の 3 つ。
 10. [AWS case study: BBC](https://aws.amazon.com/solutions/case-studies/bbc-s3-case-study/)
 11. [Twitch Blog: State of Engineering 2023](https://blog.twitch.tv/en/2023/09/28/twitch-state-of-engineering-2023/)
 12. [Twitch Blog: Update: Changes To VODs On Twitch (2014)](https://blog.twitch.tv/en/2014/08/06/update-changes-to-vods-on-twitch-169cd8bda850/)
-13. [Datanami: Inside Fortnite's Massive Data Analytics Pipeline (2018)](https://www.datanami.com/2018/07/31/inside-fortnites-massive-data-analytics-pipeline/)
+13. [BigDATAwire (旧 Datanami): Inside Fortnite's Massive Data Analytics Pipeline (2018)](https://hpcwire.com/bigdatawire/2018/07/31/inside-fortnites-massive-data-analytics-pipeline/)
 14. [Duolingo Blog: Reducing Cloud Spending (2024)](https://blog.duolingo.com/reducing-cloud-spending/)
 15. [AWS Public Sector Blog: Analytics without limits — FINRA (2017)](https://aws.amazon.com/blogs/publicsector/analytics-without-limits-finras-scalable-and-secure-big-data-architecture-part-1/)
 16. [AWS case study: Nasdaq Migrates to a More Modern Data Lake Architecture](https://aws.amazon.com/solutions/case-studies/nasdaq-data-lake/)
@@ -730,7 +730,7 @@ Dropbox と 37signals に共通する条件は次の 3 つ。
 27. [AWS for Industries Blog: Toyota Connected optimizes EMR costs (2022)](https://aws.amazon.com/blogs/industries/toyota-connected-optimizes-emr-costs-and-improves-resiliency-of-batch-jobs/)
 28. [AWS Storage Blog: How Zalando built its data lake on Amazon S3 (2020)](https://aws.amazon.com/blogs/storage/how-zalando-built-its-data-lake-on-amazon-s3/)
 29. [AWS case study: Bynder](https://aws.amazon.com/solutions/case-studies/bynder-amazon-s3-case-study/)
-30. [AWS case study: Salesforce and S3 Intelligent-Tiering](https://aws.amazon.com/solutions/case-studies/salesforce-amazons3-intelligent-tiering-case-study/)
+30. [AWS case study: Salesforce and S3 Intelligent-Tiering (アーカイブ)](https://web.archive.org/web/2024/https://aws.amazon.com/solutions/case-studies/salesforce-amazons3-intelligent-tiering-case-study/)
 31. [AWS case study: Indeed and Amazon S3 Tables](https://aws.amazon.com/solutions/case-studies/indeed-s3-tables-case-study/)
 32. [Amazon S3 Tables](https://aws.amazon.com/s3/features/tables/)
 33. [Grab Engineering: Scaling Grab's Data Lake: Our journey to Apache Iceberg adoption (2026)](https://engineering.grab.com/our-journey-to-apache-iceberg-adoption)
@@ -760,3 +760,9 @@ Dropbox と 37signals に共通する条件は次の 3 つ。
 57. [DHH: It's five grand a day to miss our S3 exit (2025)](https://world.hey.com/dhh/it-s-five-grand-a-day-to-miss-our-s3-exit-b8293563)
 58. [The Register: 37signals is completing its on-prem move (2025)](https://www.theregister.com/2025/05/09/37signals_cloud_repatriation_storage_savings)
 59. [DCD: 37signals begins exiting AWS storage service](https://www.datacenterdynamics.com/en/news/37signals-begins-exiting-aws-storage-service/)
+60. [AWS 導入事例: テレビ東京 (PDF、2020)](https://d1.awsstatic.com/case-studies/jp/pdf/tvtokyo.pdf)
+61. [AWS for Industries Blog: Cloud Adoption Update for Financial Market Infrastructure Providers 2H25 (2026)](https://aws.amazon.com/blogs/industries/cloud-adoption-update-for-financial-market-infrastructure-providers-2h25/)
+62. [AWS 事例インデックスの Bynder エントリ (JSON)](https://aws.amazon.com/api/dirs/items/search?item.directoryId=customer-references&item.locale=en_US&q=Bynder&size=10)
+63. [Twitch Blog: Twitch Engineering: An Introduction and Overview (2015)](https://blog.twitch.tv/en/2015/12/18/twitch-engineering-an-introduction-and-overview-a23917b71a25/)
+64. [About Amazon: Project Rainier](https://www.aboutamazon.com/news/aws/aws-project-rainier-ai-trainium-chips-compute-cluster)
+65. [Shopify Engineering: Shopify's Infrastructure Collaboration with Google (2018)](https://shopify.engineering/shopify-infrastructure-collaboration-with-google)

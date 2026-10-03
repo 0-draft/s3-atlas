@@ -13,7 +13,7 @@ This chapter organizes, by industry, public case studies from real companies tha
   - **adopter**: uses S3 as storage for its own systems
   - **built-on-s3**: builds the product or service itself on top of S3
   - **migrated-away**: moved from S3 to self-managed storage (counterexamples)
-- A machine-readable version is in `data/cases.json` (English and Japanese). For cases whose publication date could not be confirmed (BMLL, Bynder, Ancestry, TV Tokyo, and others), the JSON `year` field holds 2026, the year they were checked
+- A machine-readable version is in `data/cases.json` (English and Japanese). The JSON `year` field is the source's publication year. Where the page itself shows no date, the year comes from the PDF version's copyright and metadata (Ancestry 2023, TV Tokyo 2020), from AWS's case study index (Bynder 2024), or from a dated AWS post that cites it (BMLL 2025). BMW Group's page shows no date, so its `year` is the year it was checked (2026)
 
 ## Background: the scale of S3 in 2026
 
@@ -34,7 +34,7 @@ Media companies share one access pattern: content is viewed heavily right after 
   - Data on S3 is managed with **Apache Iceberg**, the table format Netflix itself created
   - To move from Hive to an "Iceberg-only" setup, Netflix built its own migration tools, secure Iceberg tables, and an Iceberg REST catalog
   - The approach minimized physical data movement and impact on users
-- **Results**: ACID transactions, a rich metadata layer, and better query performance (from the talk summary). No savings figures have been published (unverified)
+- **Results**: ACID transactions, a rich metadata layer, and better query performance (from the talk summary). The talk description gives no cost or savings figures
 - **Lessons**: S3 is "the place to put files"; the table format handles table-level consistency and schema evolution. Netflix created Iceberg and started the trend that led to "managed Iceberg" offerings such as S3 Tables (announced 2024)
 - **Source**: [AWS re:Invent 2023 NFX306](https://aws.amazon.com/video/watch/3db41488539/)
 
@@ -100,8 +100,8 @@ Media companies share one access pattern: content is viewed heavily right after 
 - **Architecture**:
   - For broadcasts with recording enabled, the generated segments, thumbnails, and playlists are stored in an S3 bucket, and Highlights are cut from there
   - In Tahoe, a central batch ingestion API transforms data and stores it in S3
-- **Lessons**: A 2014 Twitch blog post said "80% of our storage capacity was taken up by past broadcasts that were never watched", and Twitch stopped keeping them indefinitely. Retention policy is a product decision, not a technical one (whether the 2014 storage was S3 is unverified)
-- **Sources**: [Twitch State of Engineering 2023](https://blog.twitch.tv/en/2023/09/28/twitch-state-of-engineering-2023/), [Twitch: Update: Changes To VODs (2014)](https://blog.twitch.tv/en/2014/08/06/update-changes-to-vods-on-twitch-169cd8bda850/)
+- **Lessons**: A 2014 Twitch blog post said "80% of our storage capacity was taken up by past broadcasts that were never watched", and Twitch stopped keeping them indefinitely. Retention policy is a product decision, not a technical one. The 2014 post only says past broadcasts were saved "in 30-minute chunks across multiple media servers" and does not name S3. A December 2015 Twitch engineering overview says Twitch "has been moving an increasing amount of our services to Amazon Web Services" but does not say whether VOD storage was among them, so whether the 2014 storage was S3 is still unverified
+- **Sources**: [Twitch State of Engineering 2023](https://blog.twitch.tv/en/2023/09/28/twitch-state-of-engineering-2023/), [Twitch: Update: Changes To VODs (2014)](https://blog.twitch.tv/en/2014/08/06/update-changes-to-vods-on-twitch-169cd8bda850/), [Twitch Engineering: An Introduction and Overview (2015)](https://blog.twitch.tv/en/2015/12/18/twitch-engineering-an-introduction-and-overview-a23917b71a25/)
 
 ### 1.7 Epic Games — Fortnite telemetry into an S3 data lake
 
@@ -113,7 +113,7 @@ Media companies share one access pattern: content is viewed heavily right after 
   - 22 production EMR clusters (more than 4,000 EC2 instances) run more than 8,000 batch ETL jobs per day and aggregate into Hive tables
   - S3 is the foundation of the data warehouse; the real-time path uses Spark + DynamoDB
 - **Lessons**: Because both streaming (Kinesis) and batch (EMR) land in the same S3, the system copes with game load swings where peak traffic is 10x the minimum
-- **Source**: [Datanami: Inside Fortnite's Massive Data Analytics Pipeline (2018)](https://www.datanami.com/2018/07/31/inside-fortnites-massive-data-analytics-pipeline/)
+- **Source**: [BigDATAwire (formerly Datanami): Inside Fortnite's Massive Data Analytics Pipeline (2018)](https://hpcwire.com/bigdatawire/2018/07/31/inside-fortnites-massive-data-analytics-pipeline/)
 
 ### 1.8 Duolingo — adding lifecycle rules to versioned buckets
 
@@ -173,11 +173,11 @@ Finance needs to keep all trade data for a long time and still query it at any m
 
 - **Industry**: Financial data / analytics
 - **What is stored**: Historical order book and trade data
-- **Scale**: **More than 20 PB**, expected to reach 50 PB by 2030 (publication date unverified; figures as listed when checked in 2026)
+- **Scale**: **More than 20 PB**, expected to reach 50 PB by 2030 (2025 AWS case study. The page shows no date; AWS's "Cloud Adoption Update for Financial Market Infrastructure Providers 2H25", published 2026-02-02, cites it as a case study BMLL published)
 - **Architecture**: S3, Intelligent-Tiering, Replication, Glacier, Access Points, Object Lock. S3 Tables is also mentioned as under consideration
 - **Results**: **$500,000 per year** from Intelligent-Tiering and **$3 million per year** from Glacier for archives and backups, **$3.5 million per year** in total
 - **Lessons**: Split data by its nature: Intelligent-Tiering for "active data with unpredictable access" and Glacier for "clearly cold backups". You get savings from both
-- **Source**: [AWS case study: BMLL](https://aws.amazon.com/solutions/case-studies/bmll-case-study/)
+- **Sources**: [AWS case study: BMLL](https://aws.amazon.com/solutions/case-studies/bmll-case-study/), [AWS for Industries Blog: Cloud Adoption Update for Financial Market Infrastructure Providers 2H25 (2026)](https://aws.amazon.com/blogs/industries/cloud-adoption-update-for-financial-market-infrastructure-providers-2h25/)
 
 ## 3. Healthcare, life sciences, and public sector
 
@@ -205,7 +205,7 @@ Finance needs to keep all trade data for a long time and still query it at any m
 
 - **Industry**: Genealogy and family history
 - **What is stored**: Images of handwritten historical documents (for training handwriting recognition AI)
-- **Scale**: Hundreds of TB of images stored in S3 Glacier (publication date unverified)
+- **Scale**: Hundreds of TB of images stored in S3 Glacier (AWS PDF case study, © 2023; the PDF was created 2023-03-21)
 - **Architecture**: Source images for training data are kept in Glacier and restored at training time
 - **Results**: "Restoring hundreds of TB of images takes hours instead of days." The background is the November 2022 improvement of up to 10x in S3 Glacier restore throughput (up to 1,000 TPS of restore requests per account per Region)
 - **Lessons**: Data that is "read in bulk once in a while", like ML training data, can live in Glacier Flexible Retrieval / Deep Archive. The bottleneck is restore throughput, and AWS-side improvements have changed that
@@ -254,11 +254,11 @@ Finance needs to keep all trade data for a long time and still query it at any m
 
 - **Industry**: Digital asset management SaaS
 - **What is stored**: Customers' digital assets (images, videos, and more)
-- **Scale**: **18 PB**, **175 million** assets, about 4,000 customer companies (publication date unverified; figures as listed when checked in 2026)
+- **Scale**: **18 PB**, **175 million** assets, about 4,000 customer companies (2024 AWS case study; AWS's case study index dates the page 2024-03-22)
 - **Architecture**: Runs fully on S3 Intelligent-Tiering. Also uses AWS Transfer Family
 - **Results**: Cut storage cost by **65%**
 - **Lessons**: In SaaS, where each customer has a different access pattern, Intelligent-Tiering beats manual access analysis on both operational effort and cost
-- **Source**: [AWS case study: Bynder](https://aws.amazon.com/solutions/case-studies/bynder-amazon-s3-case-study/)
+- **Sources**: [AWS case study: Bynder](https://aws.amazon.com/solutions/case-studies/bynder-amazon-s3-case-study/), [AWS case study index entry for Bynder (JSON)](https://aws.amazon.com/api/dirs/items/search?item.directoryId=customer-references&item.locale=en_US&q=Bynder&size=10)
 
 ### 5.3 Salesforce — Intelligent-Tiering on an internal data lake of more than 100 PB
 
@@ -268,7 +268,7 @@ Finance needs to keep all trade data for a long time and still query it at any m
 - **Architecture**: Moved to AWS to fix the scaling problems and slow retrieval of the on-premises data lake. S3 + EMR, with Intelligent-Tiering as the storage class
 - **Results**: **Millions of dollars** saved per year, plus better data lake performance and elasticity
 - **Lessons**: Log analytics data follows a "recent data is hot, old data is read occasionally" pattern, but which data gets read is hard to predict. Intelligent-Tiering is the choice here too
-- **Source**: [AWS case study: Salesforce and S3 Intelligent-Tiering](https://aws.amazon.com/solutions/case-studies/salesforce-amazons3-intelligent-tiering-case-study/)
+- **Source**: [AWS case study: Salesforce and S3 Intelligent-Tiering (archived copy; the original URL now redirects to the AWS case study index)](https://web.archive.org/web/2024/https://aws.amazon.com/solutions/case-studies/salesforce-amazons3-intelligent-tiering-case-study/)
 
 ### 5.4 Indeed — a 101 PB Hive data lake moved to S3 Tables
 
@@ -305,10 +305,10 @@ Finance needs to keep all trade data for a long time and still query it at any m
 - **What is stored**: Training data for AI models
 - **Scale**: "Hundreds of PB" (from the re:Invent 2023 talk abstract)
 - **Architecture**: Anthropic's Nova DasSarma spoke at AWS re:Invent 2023 "Optimizing storage price and performance with Amazon S3" (STG211). The talk covered visibility with S3 Storage Lens, cost optimization with Intelligent-Tiering, and best practices for maximizing throughput
-- **Results**: Specific savings are unverified from the talk abstract
-- **Note**: No public material was found that states how training data is stored for Project Rainier (the Trainium2 cluster) (unverified)
+- **Results**: The talk description gives no savings figure. The recording's transcript could not be retrieved for this check, so whether the talk itself gave figures is unverified
+- **Note**: Amazon's Project Rainier article (the Trainium2 cluster) covers chips, servers, networking, and sustainability, but says nothing about how training data is stored, on S3 or otherwise. No other public material stating this was found, so it remains unverified
 - **Lessons**: Training data is "huge, lives or dies by read throughput, and reuse of old data is hard to predict". The basic order is visibility, then automatic tiering, then optimizing parallel reads
-- **Sources**: [AWS re:Invent 2023 STG211 (AWS video)](https://aws.amazon.com/video/watch/70d82a08dd0/), [YouTube: STG211](https://www.youtube.com/watch?v=RxgYNrXPOLw)
+- **Sources**: [AWS re:Invent 2023 STG211 (AWS video)](https://aws.amazon.com/video/watch/70d82a08dd0/), [YouTube: STG211](https://www.youtube.com/watch?v=RxgYNrXPOLw), [About Amazon: Project Rainier](https://www.aboutamazon.com/news/aws/aws-project-rainier-ai-trainium-chips-compute-cluster)
 
 ### 6.2 Hugging Face — Hub models and datasets on S3, chunk-level deduplication with Xet
 
@@ -341,17 +341,17 @@ Japanese cases were selected only from AWS case studies (aws.amazon.com/jp) and 
 
 - **Industry**: Broadcasting
 - **What is stored**: Video archives since the station opened (including material never aired)
-- **Scale**: **13 PB**, about **220,000** HDCAM / XDCAM tapes, growing **about 600 TB** per year (publication date unverified)
+- **Scale**: **13 PB**, about **220,000** HDCAM / XDCAM tapes, growing **about 600 TB** per year (2020 AWS case study; the PDF version is © 2020 and was created 2020-03-25)
 - **Architecture**: Head office and archive center connected with AWS Direct Connect. MXF files go into S3, and Lambda automates metadata tagging. Lifecycle rules move data to S3 Glacier for long-term storage
 - **Results**: "Direct cost reductions of tens of millions of yen per year." The purchase of more than 10,000 tapes per year is no longer needed
 - **Lessons**: A broadcaster's archive hides costs in buying, storing, and protecting tapes from degradation. Moving to S3 replaces these with pay-as-you-go pricing
-- **Source**: [AWS case study: TV Tokyo](https://aws.amazon.com/jp/solutions/case-studies/tv-tokyo/)
+- **Sources**: [AWS case study: TV Tokyo](https://aws.amazon.com/jp/solutions/case-studies/tv-tokyo/), [AWS case study: TV Tokyo (PDF, 2020)](https://d1.awsstatic.com/case-studies/jp/pdf/tvtokyo.pdf)
 
 ### 7.2 NTT DOCOMO — an analytics platform for about 90 million members moved to AWS in 7 months
 
 - **Industry**: Telecommunications
 - **What is stored**: Analytics platform data, including member data
-- **Scale**: About 90 million members (AWS case study from around 2023; the exact publication date in the PDF is unverified)
+- **Scale**: About 90 million members (d POINT CLUB had 89.08 million members at the end of FY2021). The platform was built from January 2021 and launched in July 2021 (AWS PDF case study, © 2023; the PDF was created 2023-03-14)
 - **Architecture**: Moved the on-premises data platform to AWS in about 7 months. Replaced a one-size-fits-all analytics environment with per-organization analytics environments, and built out a data catalog. Main services are Amazon S3, SageMaker, QuickSight, and PrivateLink
 - **Results**: Within a year of launch, analytics environment accounts grew **13x**, environments built grew **10x**, and data catalog MAU grew **2.4x**
 - **Lessons**: Once data is collected in S3, letting each organization carve out its own analytics environment makes usage jump. The design for "making data usable" mattered more than "storing data"
@@ -654,21 +654,21 @@ Put the other way, if any of these three is missing, staying on S3 is usually th
 | FINRA | Financial regulation | adopter | 37 billion records per day, 300 million objects (2017) | Data lake, EMR | Multiple workloads on the same data |
 | Nasdaq | Exchange | adopter | 70 billion records per day (2019) | Data lake, Redshift Spectrum | RI cost cut 75% |
 | Capital One | Banking | adopter | Hundreds of buckets (2021) | Lifecycle, Glacier, Deep Archive, versioning | Not disclosed |
-| BMLL | Financial data | adopter | More than 20 PB | Intelligent-Tiering, Glacier, Object Lock, Replication | $3.5M saved per year |
+| BMLL | Financial data | adopter | More than 20 PB (2025) | Intelligent-Tiering, Glacier, Object Lock, Replication | $3.5M saved per year |
 | NASA Earthdata | Public sector and science | adopter | More than 170 PB (2026) | Intelligent-Tiering, Open Data | Estimated 60% saved |
 | Moderna | Biotech | adopter | Not disclosed (2023) | Data lake | Extraction and analysis 70% faster |
-| Ancestry | Genealogy | adopter | Hundreds of TB | Glacier | Restores went from days to hours |
+| Ancestry | Genealogy | adopter | Hundreds of TB (2023) | Glacier | Restores went from days to hours |
 | BMW Group | Automotive | adopter | 20 PB, 110 TB per day (2026) | Data lake, Lake Formation | Company-wide data platform |
 | Toyota Connected | Automotive | adopter | PB scale (2022) | Data lake, EMR, Athena | Processing from 27 minutes to 30 seconds |
 | Zalando | E-commerce | adopter | 15 PB (2020) | Intelligent-Tiering, versioning | 37% saved per year |
-| Bynder | SaaS | adopter | 18 PB / 175 million assets | Intelligent-Tiering | 65% saved |
+| Bynder | SaaS | adopter | 18 PB / 175 million assets (2024) | Intelligent-Tiering | 65% saved |
 | Salesforce | SaaS | adopter | More than 100 PB (2023) | Intelligent-Tiering, EMR | Millions of dollars saved per year |
 | Indeed | HR tech | adopter | 101 PB (2026) | S3 Tables, Replication, Intelligent-Tiering | 10% saved, more than 1,000 hours per year |
 | Grab | Super app | adopter | PB scale / billions of objects (2026) | Iceberg | S3 API cost cut by up to 95% |
-| Anthropic | AI | adopter | Hundreds of PB (2023) | Storage Lens, Intelligent-Tiering | Unverified |
+| Anthropic | AI | adopter | Hundreds of PB (2023) | Storage Lens, Intelligent-Tiering | Not given in the talk description |
 | Hugging Face | AI | adopter | 45 PB (LFS), 20 PB moved to Xet (2025) | S3 Standard, presigned URLs | Chunk-level deduplication |
 | March Networks | Video surveillance | adopter | Billions of vectors (2025) | S3 Vectors, Glacier | Up to 80% saved (5 years) |
-| TV Tokyo | Broadcasting | adopter | 13 PB | S3, Glacier, lifecycle, Direct Connect | Tens of millions of yen saved per year |
+| TV Tokyo | Broadcasting | adopter | 13 PB (2020) | S3, Glacier, lifecycle, Direct Connect | Tens of millions of yen saved per year |
 | NTT DOCOMO | Telecommunications | adopter | About 90 million members (2023) | Data lake | 13x more user accounts |
 | Cookpad | Recipes | adopter | About 300 log tables (2020) | Redshift Spectrum, Parquet | Disk usage below 50% |
 | CyberAgent | Advertising | adopter | More than 100 TB deleted or moved (2022) | Lifecycle, Standard-IA, Glacier IR | About ¥12M saved per year |
@@ -688,10 +688,10 @@ The following came up as candidates but were left out of the main text because n
 | Company | Reason for exclusion |
 | --- | --- |
 | Airbnb | There is an AWS case study, but it only has an early figure of 10 TB of user photos on S3, with no year |
-| Zoom | There are integration samples that send recordings to S3, but public information on Zoom's own storage platform is unverified |
-| Shopify | No primary source on S3 found (its main platform is said to be Google Cloud, but this is unverified) |
+| Zoom | There are integration samples that send recordings to S3, but no AWS case study or Zoom publication describing Zoom's own storage platform was found (AWS's case study index has no Zoom entry), so this is unverified |
+| Shopify | No primary source on S3 found. Shopify Engineering (March 2018) says Shopify was moving from its own data centers to Google Cloud and had migrated over 50% of its data center workloads |
 | Riot Games | Only a mention (in an Alation case study) that its Databricks lakehouse runs on S3, with no numbers or year |
-| Woven by Toyota | Only a mention of writing Step Functions results to S3. Data lake scale is unverified |
+| Woven by Toyota | Only a mention of writing Step Functions results to S3. No AWS case study or Woven by Toyota publication giving data lake scale was found, so scale is unverified |
 | Peloton, Pfizer, Nintendo | No public case study specific to S3 found |
 | Sony (aibo) | S3 is one of the components, but there is no S3-specific scale or result |
 | Mercari | A 2019 blog post says S3 is used for product images and backups, but gives no scale figures |
@@ -713,7 +713,7 @@ All checked on 2026-10-03.
 10. [AWS case study: BBC](https://aws.amazon.com/solutions/case-studies/bbc-s3-case-study/)
 11. [Twitch Blog: State of Engineering 2023](https://blog.twitch.tv/en/2023/09/28/twitch-state-of-engineering-2023/)
 12. [Twitch Blog: Update: Changes To VODs On Twitch (2014)](https://blog.twitch.tv/en/2014/08/06/update-changes-to-vods-on-twitch-169cd8bda850/)
-13. [Datanami: Inside Fortnite's Massive Data Analytics Pipeline (2018)](https://www.datanami.com/2018/07/31/inside-fortnites-massive-data-analytics-pipeline/)
+13. [BigDATAwire (formerly Datanami): Inside Fortnite's Massive Data Analytics Pipeline (2018)](https://hpcwire.com/bigdatawire/2018/07/31/inside-fortnites-massive-data-analytics-pipeline/)
 14. [Duolingo Blog: Reducing Cloud Spending (2024)](https://blog.duolingo.com/reducing-cloud-spending/)
 15. [AWS Public Sector Blog: Analytics without limits — FINRA (2017)](https://aws.amazon.com/blogs/publicsector/analytics-without-limits-finras-scalable-and-secure-big-data-architecture-part-1/)
 16. [AWS case study: Nasdaq Migrates to a More Modern Data Lake Architecture](https://aws.amazon.com/solutions/case-studies/nasdaq-data-lake/)
@@ -730,7 +730,7 @@ All checked on 2026-10-03.
 27. [AWS for Industries Blog: Toyota Connected optimizes EMR costs (2022)](https://aws.amazon.com/blogs/industries/toyota-connected-optimizes-emr-costs-and-improves-resiliency-of-batch-jobs/)
 28. [AWS Storage Blog: How Zalando built its data lake on Amazon S3 (2020)](https://aws.amazon.com/blogs/storage/how-zalando-built-its-data-lake-on-amazon-s3/)
 29. [AWS case study: Bynder](https://aws.amazon.com/solutions/case-studies/bynder-amazon-s3-case-study/)
-30. [AWS case study: Salesforce and S3 Intelligent-Tiering](https://aws.amazon.com/solutions/case-studies/salesforce-amazons3-intelligent-tiering-case-study/)
+30. [AWS case study: Salesforce and S3 Intelligent-Tiering (archived copy)](https://web.archive.org/web/2024/https://aws.amazon.com/solutions/case-studies/salesforce-amazons3-intelligent-tiering-case-study/)
 31. [AWS case study: Indeed and Amazon S3 Tables](https://aws.amazon.com/solutions/case-studies/indeed-s3-tables-case-study/)
 32. [Amazon S3 Tables](https://aws.amazon.com/s3/features/tables/)
 33. [Grab Engineering: Scaling Grab's Data Lake: Our journey to Apache Iceberg adoption (2026)](https://engineering.grab.com/our-journey-to-apache-iceberg-adoption)
@@ -760,3 +760,9 @@ All checked on 2026-10-03.
 57. [DHH: It's five grand a day to miss our S3 exit (2025)](https://world.hey.com/dhh/it-s-five-grand-a-day-to-miss-our-s3-exit-b8293563)
 58. [The Register: 37signals is completing its on-prem move (2025)](https://www.theregister.com/2025/05/09/37signals_cloud_repatriation_storage_savings)
 59. [DCD: 37signals begins exiting AWS storage service](https://www.datacenterdynamics.com/en/news/37signals-begins-exiting-aws-storage-service/)
+60. [AWS case study: TV Tokyo (PDF, Japanese, 2020)](https://d1.awsstatic.com/case-studies/jp/pdf/tvtokyo.pdf)
+61. [AWS for Industries Blog: Cloud Adoption Update for Financial Market Infrastructure Providers 2H25 (2026)](https://aws.amazon.com/blogs/industries/cloud-adoption-update-for-financial-market-infrastructure-providers-2h25/)
+62. [AWS case study index entry for Bynder (JSON)](https://aws.amazon.com/api/dirs/items/search?item.directoryId=customer-references&item.locale=en_US&q=Bynder&size=10)
+63. [Twitch Blog: Twitch Engineering: An Introduction and Overview (2015)](https://blog.twitch.tv/en/2015/12/18/twitch-engineering-an-introduction-and-overview-a23917b71a25/)
+64. [About Amazon: Project Rainier](https://www.aboutamazon.com/news/aws/aws-project-rainier-ai-trainium-chips-compute-cluster)
+65. [Shopify Engineering: Shopify's Infrastructure Collaboration with Google (2018)](https://shopify.engineering/shopify-infrastructure-collaboration-with-google)

@@ -101,7 +101,7 @@
     "outcome": { "en": "Handles 92 million events per minute and 8,000+ daily ETL jobs.", "ja": "毎分 9,200 万イベント、1 日 8,000 本超の ETL を処理。" },
     "year": 2018,
     "kind": "adopter",
-    "url": "https://www.datanami.com/2018/07/31/inside-fortnites-massive-data-analytics-pipeline/"
+    "url": "https://hpcwire.com/bigdatawire/2018/07/31/inside-fortnites-massive-data-analytics-pipeline/"
   },
   {
     "id": "duolingo",
@@ -164,7 +164,7 @@
     "scale": { "en": "20+ PB, expected 50 PB by 2030", "ja": "20 PB 超、2030 年に 50 PB 見込み" },
     "features": ["Intelligent-Tiering", "S3 Glacier", "Replication", "Object Lock", "Access Points"],
     "outcome": { "en": "$3.5M saved per year ($0.5M Intelligent-Tiering + $3M Glacier).", "ja": "年 350 万ドル削減 (Intelligent-Tiering 50 万ドル + Glacier 300 万ドル)。" },
-    "year": 2026,
+    "year": 2025,
     "kind": "adopter",
     "url": "https://aws.amazon.com/solutions/case-studies/bmll-case-study/"
   },
@@ -203,7 +203,7 @@
     "scale": { "en": "Hundreds of TB", "ja": "数百 TB" },
     "features": ["S3 Glacier"],
     "outcome": { "en": "Restoring hundreds of TB takes hours instead of days.", "ja": "数百 TB の restore が数日から数時間に。" },
-    "year": 2026,
+    "year": 2023,
     "kind": "adopter",
     "url": "https://d1.awsstatic.com/AWS%20Cloud%20Storage/Ancestry-uses-Amazon-S3-Glacier-to-restore-terabytes-of-images-in-mere-hours-instead-of-days.pdf"
   },
@@ -255,7 +255,7 @@
     "scale": { "en": "18 PB, 175M+ assets", "ja": "18 PB、1 億 7,500 万超のアセット" },
     "features": ["Intelligent-Tiering"],
     "outcome": { "en": "65% reduction in storage costs.", "ja": "ストレージコスト 65% 削減。" },
-    "year": 2026,
+    "year": 2024,
     "kind": "adopter",
     "url": "https://aws.amazon.com/solutions/case-studies/bynder-amazon-s3-case-study/"
   },
@@ -270,7 +270,7 @@
     "outcome": { "en": "Millions of dollars saved annually with better performance and elasticity.", "ja": "年間数百万ドルの削減と、性能・弾力性の向上。" },
     "year": 2023,
     "kind": "adopter",
-    "url": "https://aws.amazon.com/solutions/case-studies/salesforce-amazons3-intelligent-tiering-case-study/"
+    "url": "https://web.archive.org/web/2024/https://aws.amazon.com/solutions/case-studies/salesforce-amazons3-intelligent-tiering-case-study/"
   },
   {
     "id": "indeed",
@@ -306,7 +306,7 @@
     "summary": { "en": "Presented at re:Invent 2023 how it manages AI training data on S3 using Storage Lens, Intelligent-Tiering and throughput best practices.", "ja": "re:Invent 2023 で、Storage Lens、Intelligent-Tiering、スループット最適化を使った S3 上の学習データ管理を紹介した。" },
     "scale": { "en": "Hundreds of PB of training data", "ja": "学習データ数百 PB" },
     "features": ["Storage Lens", "Intelligent-Tiering"],
-    "outcome": { "en": "Specific savings not confirmed from public sources.", "ja": "具体的な削減額は公開ソースでは未確認。" },
+    "outcome": { "en": "No savings figures in the talk description; the talk recording itself could not be checked.", "ja": "講演紹介文に削減額の記載なし。講演本編は確認できず未確認。" },
     "year": 2023,
     "kind": "adopter",
     "url": "https://aws.amazon.com/video/watch/70d82a08dd0/"
@@ -346,7 +346,7 @@
     "scale": { "en": "13 PB, ~220,000 tapes, ~600 TB/year growth", "ja": "13 PB、テープ約 22 万本、年約 600 TB 増" },
     "features": ["S3 Glacier", "Lifecycle"],
     "outcome": { "en": "Direct cost savings of tens of millions of yen per year; no more annual tape purchases.", "ja": "年間数千万円の直接費削減。毎年のテープ購入が不要に。" },
-    "year": 2026,
+    "year": 2020,
     "kind": "adopter",
     "url": "https://aws.amazon.com/jp/solutions/case-studies/tv-tokyo/"
   },
