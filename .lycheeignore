@@ -1,0 +1,9 @@
+# CLI arguments such as file://policy.json, not links
+^file://
+# Local endpoints used in the hands-on labs
+^https?://localhost
+^https?://127\.0\.0\.1
+# Service API endpoints, not web pages
+^https://[a-z0-9.-]+\.amazonaws\.com/
+# Rejects lychee's HTTP/2 client; verified manually
+^https://clickhouse\.com/

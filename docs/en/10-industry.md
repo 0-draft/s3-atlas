@@ -482,7 +482,7 @@ At the same time, S3's weakness is clear, and it lies not in technology but in i
 - AWS, AWS named as a Leader in 2025 Gartner MQ for Strategic Cloud Platform Services: <https://aws.amazon.com/blogs/aws/aws-named-as-a-leader-in-2025-gartner-magic-quadrant-for-strategic-cloud-platform-services-for-15-years-in-a-row/>
 - StorageNewsletter, New Enterprise Storage Platforms MQ from Gartner for 2025: <https://www.storagenewsletter.com/2025/09/18/new-enterprise-storage-platforms-mq-from-gartner-for-2025/>
 - NetApp, Gartner Magic Quadrant leader 2025: <https://www.netapp.com/blog/gartner-magic-quadrant-leader-2025/>
-- AWS, Amazon S3 Availability Event: July 20, 2008: <https://status.aws.amazon.com/s3-20080720.html>
+- AWS, Amazon S3 Availability Event: July 20, 2008: <https://web.archive.org/web/2008/http://status.aws.amazon.com/s3-20080720.html> (archived)
 - AWS, Summary of the Amazon S3 Service Disruption (2017): <https://aws.amazon.com/message/41926/>
 - The Register, A single DNS race condition brought AWS to its knees (2025-10-23): <https://www.theregister.com/2025/10/23/amazon_outage_postmortem/>
 - ThousandEyes, AWS Outage Analysis: October 20, 2025: <https://www.thousandeyes.com/blog/aws-outage-analysis-october-20-2025>
