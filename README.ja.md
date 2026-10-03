@@ -83,6 +83,7 @@ node scripts/validate-data.mjs   # JSON の妥当性と日英ドキュメント�
 | `ci.yml` | 型チェック、ESLint、Prettier、markdownlint、Node 22 / 24 での Vitest (カバレッジ付き)、データと日英対応の検証、本番ビルド、外部リンクチェック (lychee) |
 | `deploy.yml` | `main` への push ごとに GitHub Pages へビルド・公開 |
 | `codeql.yml` | push、プルリクエスト、毎週の CodeQL 解析 |
+| `freshness.yml` | 毎月 1 日と 15 日に、AWS What's New の新しい S3 発表と古くなった価格データを追跡 Issue にまとめる |
 | `dependabot.yml` | npm パッケージと GitHub Actions を毎週グループ単位で更新 |
 
 サイトを公開するには **Settings → Pages → Source** を **GitHub Actions** に設定してください。

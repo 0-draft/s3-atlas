@@ -90,6 +90,7 @@ node scripts/validate-data.mjs   # JSON validity and en/ja doc parity
 | `ci.yml` | type-check, ESLint, Prettier, markdownlint, Vitest on Node 22 and 24 with coverage, data and doc-parity validation, production build, external link check (lychee) |
 | `deploy.yml` | builds and publishes to GitHub Pages on every push to `main` |
 | `codeql.yml` | CodeQL analysis on push, pull request and weekly |
+| `freshness.yml` | on the 1st and 15th, lists new S3 announcements from AWS What's New and stale price data in a tracking issue |
 | `dependabot.yml` | weekly grouped updates for npm packages and GitHub Actions |
 
 To enable the site, set **Settings → Pages → Source** to **GitHub Actions**.
