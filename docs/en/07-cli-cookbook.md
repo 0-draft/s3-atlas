@@ -2,7 +2,7 @@
 
 _Last verified: 2026-10-03_
 
-This chapter is a "dictionary for getting your hands dirty." AWS CLI v2 flag names were checked against the local `aws <service> <command> help` (this book's test environment is **aws-cli/2.37.7**). Following AWS documentation conventions, the bucket name is `amzn-s3-demo-bucket` and the account ID is `111122223333`.
+This chapter is a hands-on reference. AWS CLI v2 flag names were checked against the local `aws <service> <command> help` (this book's test environment is **aws-cli/2.37.7**). Following AWS documentation conventions, the bucket name is `amzn-s3-demo-bucket` and the account ID is `111122223333`.
 
 > Destructive commands (deletes, overwrites, policy changes) are marked **[Danger]** in the heading or text. Make it a habit to use `--dryrun`, `--generate-cli-skeleton`, or a separate account for testing before you run them.
 
@@ -999,7 +999,7 @@ aws s3api rename-object --bucket amzn-s3-demo-bucket--apne1-az4--x-s3 \
   --key logs/app-2026-10-03.log --rename-source logs/app.log
 ```
 
-AZ IDs (such as `apne1-az4`) map to per-account AZ names (`ap-northeast-1a`) differently in each account. Check with `aws ec2 describe-availability-zones --query 'AvailabilityZones[].[ZoneName,ZoneId]'`.
+AZ IDs (such as `apne1-az4`) map to AZ names (such as `ap-northeast-1a`) differently in each account. Check with `aws ec2 describe-availability-zones --query 'AvailabilityZones[].[ZoneName,ZoneId]'`.
 
 ## 15. `aws s3tables`
 

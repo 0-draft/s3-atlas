@@ -690,7 +690,7 @@ flowchart TB
 | Routing | Proximity-based, over the AWS global network |
 | Failover | Active-active or active-passive. Manual switching via failover controls |
 | Signing | Requires **SigV4A** (multi-Region signing). SDKs often depend on CRT for it |
-| Data consistency | MRAP itself does not replicate. **Configure replication separately** (RTC offers a 15-minute SLA) |
+| Data consistency | MRAP itself does not replicate. **Configure replication separately** (RTC can also add a 15-minute SLA) |
 | Pricing | Data routing charges + acceleration charges (when over the internet) |
 
 Performance-wise, steering clients worldwide to the nearest Region lowers latency. Note that when writes land in multiple Regions, data may be inconsistent during replication lag.

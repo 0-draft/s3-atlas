@@ -339,7 +339,7 @@ Assumptions: 10 TB (10,240 GB) stored in Standard, 100 million GETs per month, 5
 | S3 → CloudFront transfer | Free | $0 |
 | CloudFront delivery charges | Per the CloudFront price list (out of scope) | Separate |
 
-Lesson: for high-volume delivery workloads, **transfer charges can be more than 18x storage charges**. Putting CloudFront in front to cut S3 GETs and DTO pays off more than shaving S3's own costs.
+Lesson: for high-volume delivery workloads, **transfer charges come to more than 18x storage charges**. Putting CloudFront in front to cut S3 GETs and DTO pays off more than shaving S3's own costs.
 
 ### 10.2 Example 2: a 1 PB archive
 

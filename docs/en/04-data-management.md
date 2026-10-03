@@ -1,4 +1,4 @@
-# Amazon S3 data management guide
+# The complete guide to Amazon S3 data management
 
 _Last verified: 2026-10-03_
 
@@ -115,7 +115,7 @@ Key: reports/2026-q3.csv
 Key points:
 
 - A delete marker has no data and is billed only for the size of its key name.
-- When the current version is a delete marker and there are zero noncurrent versions, it is called an "expired object delete marker". Lifecycle can clean these up.
+- A delete marker that is the current version and has no remaining noncurrent versions is called an "expired object delete marker". Lifecycle can clean these up.
 - Noncurrent versions are billed at full price. When versioning is enabled, **always configure Lifecycle for noncurrent versions** (Security Hub S3.10).
 - ListObjectsV2 returns only current versions; ListObjectVersions returns all versions and delete markers.
 
@@ -567,7 +567,7 @@ A dashboard that shows storage usage and activity at the organization (with Orga
 
 | Item | Free tier | Paid (Advanced metrics and recommendations) |
 | --- | --- | --- |
-| Metrics | Usage metrics (usage metrics in the cost optimization, data protection, access management, performance, and event categories) | Free metrics + activity (request counts, etc.), detailed status codes (403, etc.), advanced cost optimization and data protection (number of Lifecycle / Replication rules, etc.), advanced performance metrics |
+| Metrics | Usage metrics in the cost optimization, data protection, access management, performance, and event categories | Free metrics + activity (request counts, etc.), detailed status codes (403, etc.), advanced cost optimization and data protection (number of Lifecycle / Replication rules, etc.), advanced performance metrics |
 | History | 14 days | 15 months |
 | Prefix aggregation | No | Yes (since 2025-12, expanded to billions of prefixes per bucket) |
 | Publish to CloudWatch | No | Yes |
@@ -644,7 +644,7 @@ S3 Metadata automatically captures object metadata from general purpose buckets 
 | --- | --- | --- | --- |
 | Journal table | Required | Records object change events (uploads, deletes, metadata updates, Lifecycle transitions, etc.). Only changes made after the configuration is created. You can set a record expiration (minimum 7 days) | Near real time |
 | Live inventory table (2025-07) | Optional | The latest state of every object and every version in the bucket. Enabling it backfills existing objects (at least 15 minutes; hours for large buckets) | Usually within 1 hour |
-| Annotation table (2026-06) | Optional | The latest state of object annotations (described later). One row = one annotation on one object version. Enabling it backfills existing annotations (minutes to hours, charged) | Typically within one hour after backfilling completes |
+| Annotation table (2026-06) | Optional | The latest state of object annotations (described later). One row = one annotation on one object version. Enabling it backfills existing annotations (minutes to hours, charged) | Usually within 1 hour after the backfill completes |
 
 In the initial release, the journal table was simply called the "metadata table". The 2025-07 expansion added support for existing objects (live inventory) and cut the journal price by 33%. Pricing is based on the number of journal records + live inventory backfill (per object) + a monthly fee for buckets with more than 1 billion objects.
 
@@ -1045,7 +1045,7 @@ An example that enforces conditional deletes (based on the example in the offici
 | Part size | 5 MiB to 5 GiB (except the last part) |
 | CopyObject (single request) | 5 GB. Larger objects require a multipart copy with UploadPartCopy |
 
-For objects around 50 TB, AWS recommends the AWS CRT-based S3 Transfer Manager. The part size limit has not changed (5 MiB to 5 GiB, up to 10,000 parts), and the multipart upload limits table in the S3 User Guide lists the maximum object size as 48.8 TiB. Since 10,000 parts x 5 GiB = 50,000 GiB ≈ 48.8 TiB, an object of the maximum size fits only if all 10,000 parts are at the 5 GiB maximum.
+For objects around 50 TB, AWS recommends the AWS CRT-based S3 Transfer Manager. The part size limit has not changed (5 MiB to 5 GiB, up to 10,000 parts), and the multipart upload limits table in the S3 User Guide lists the maximum object size as 48.8 TiB. Because 10,000 parts × 5 GiB = 50,000 GiB ≈ 48.8 TiB, an object of the maximum size fits exactly when all 10,000 parts are at the 5 GiB maximum.
 
 ### 14.2 There is no real "rename"
 
@@ -1084,7 +1084,7 @@ The CLI parameter names were confirmed with `aws s3api rename-object help` in AW
 - Change metadata with `--metadata-directive REPLACE` (for example, to fix Content-Type).
 - Change the storage class with `--storage-class` (without waiting for Lifecycle).
 - Change `--tagging-directive` and `--server-side-encryption`.
-- If you only need to change encryption, use UpdateObjectEncryption (2026-01) instead of a copy so the timers do not reset.
+- If you only need to change encryption, use UpdateObjectEncryption (2026-01) instead of a copy so that the Lifecycle and minimum storage duration clocks do not reset.
 
 ## 15. File access: Mountpoint for Amazon S3 and Amazon S3 Files
 
@@ -1092,7 +1092,7 @@ The CLI parameter names were confirmed with `aws s3api rename-object help` in AW
 
 | Option | Protocol | Writes | POSIX compatibility | Caching | Typical use |
 | --- | --- | --- | --- | --- | --- |
-| Mountpoint for Amazon S3 | FUSE (client) | Sequential writes to new files; append / overwrite (with configuration). No random writes | Limited (no directory rename, no symbolic links, etc.) | Local cache / S3 Express One Zone cache | Large-scale parallel reads (ML training, genomics, log processing) |
+| Mountpoint for Amazon S3 | FUSE (client) | Sequential writes to new files; appends and overwrites when configured. No random writes | Limited (no directory rename, no symbolic links, etc.) | Local cache / S3 Express One Zone cache | Large-scale parallel reads (ML training, genomics, log processing) |
 | Mountpoint CSI driver | Kubernetes CSI | Same as above | Same as above | Same as above | Mount S3 from EKS pods |
 | Amazon S3 Files (GA 2026-04) | NFS v4.1+ | Full (create, read, update, delete) | Full file system semantics | Automatic caching in a high-performance storage layer | Existing file-based applications, shared file systems, agentic AI |
 | Storage Gateway (S3 File Gateway) | NFS / SMB (on-premises VM) | Full | Depends on the gateway | Local cache | Using S3 from on premises |
@@ -1119,7 +1119,7 @@ Not a good fit for: random writes to existing files, file locking, hard links, a
 
 ### 15.3 Amazon S3 Files (2026-04)
 
-A new service that became GA in 2026-04 and **makes general purpose S3 buckets accessible as file systems as they are**. The AWS News Blog describes S3 as "the first and only cloud object store that offers fully featured, high-performance file system access".
+A new service that became GA in 2026-04 and **makes existing general purpose S3 buckets directly accessible as file systems**. The AWS News Blog describes S3 as "the first and only cloud object store that offers fully featured, high-performance file system access".
 
 | Feature | Details |
 | --- | --- |
@@ -1127,7 +1127,7 @@ A new service that became GA in 2026-04 and **makes general purpose S3 buckets a
 | Protocol | All NFS v4.1+ operations (create, read, update, delete) |
 | Scope | Any new or existing general purpose bucket (no data migration needed). Can be scoped to a prefix |
 | Synchronization | Changes on the file system are automatically reflected in the S3 bucket. Fine-grained control over synchronization is available |
-| Performance | Metadata and contents of frequently used files are placed in a high-performance storage layer for low latency. Large sequential reads are served directly from S3. Aggregate read throughput reaches multiple TB per second |
+| Performance | Metadata and contents of frequently used files are placed in a high-performance storage layer for low latency. Large sequential reads are served directly from S3. Aggregate read throughput of up to multiple TB per second |
 | Concurrent connections | Mounted concurrently from thousands of compute resources |
 | Compute | EC2, ECS, EKS, Lambda |
 | Concurrent use | Supports simultaneous access through the file system and the S3 API |
@@ -1192,7 +1192,7 @@ A managed service for online data transfer.
 ### 16.3 AWS Snow Family (availability)
 
 - **AWS Snowball Edge is not available to new customers** (existing customers only since 2025-11-07). As a result, AWS no longer offers any Snow Family devices to new customers. Snowcone and Snowmobile were discontinued earlier.
-- Alternatives recommended by AWS: DataSync for online transfer, **AWS Data Transfer Terminal** for physical transfer (bring your own storage to an AWS location and upload over a high-speed connection), or partner solutions. For edge computing, AWS Outposts.
+- Alternatives recommended by AWS: DataSync for online transfer, **AWS Data Transfer Terminal** for physical transfer (bring your own storage to an AWS location and upload over a high-speed connection), or partner solutions. For edge computing, AWS recommends AWS Outposts.
 
 ### 16.4 AWS Transfer Family
 

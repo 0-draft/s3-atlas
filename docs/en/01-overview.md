@@ -70,7 +70,7 @@ According to the 20th-anniversary post (published 2026-03-13), S3 at launch look
 | --- | --- | --- |
 | Total capacity | About 1 PB | Hundreds of exabytes |
 | Storage nodes | About 400 nodes / 15 racks / 3 data centers | Not published (said to be tens of millions of HDDs) |
-| Total bandwidth | 15 Gbps | Said to peak at about 1 PB/s (see below; check the source) |
+| Total bandwidth | 15 Gbps | Said to peak at about 1 PB/s (see below; treat the source with caution) |
 | Maximum object size | 5 GB | 50 TB (10,000x) |
 | Storage price | 15 cents / GB-month | Just over 2 cents / GB-month (about 85% lower) |
 | Scale | — | Over 500 trillion objects, over 200 million req/s, 39 Regions and 123 AZs |
@@ -261,7 +261,7 @@ As of 2026, S3 has **four types of buckets**. They are all called "buckets", but
 
 - Dedicated to the S3 Express One Zone storage class (One Zone-IA is also allowed in Local Zones)
 - Stores data in a single AZ, targeting consistent single-digit millisecond latency
-- Authentication is session-based, using sessions obtained via `CreateSession` (to avoid the cost of per-request IAM evaluation)
+- Authentication is session-based, using sessions obtained from `CreateSession` (to avoid the cost of per-request IAM evaluation)
 - Keys are managed as a true hierarchical directory. LIST results are not guaranteed to be in lexicographic order
 - Up to 2 million GET TPS / 200,000 PUT TPS per directory bucket (per the AWS News Blog)
 - The default limit is 100 per account (adjustable)
@@ -657,8 +657,7 @@ Much of S3's internal structure is not public, but a rough picture emerges from 
 │                   │   tiering, placement, billing/metering ...)    │  │
 │                   └────────────────────────────────────────────────┘  │
 │                                                                       │
-│   * S3 as a whole consists of "hundreds of microservices"             │
-│     (Warfield, 2023)                                                  │
+│   * S3 as a whole is "hundreds of microservices" (Warfield, 2023)     │
 └───────────────────────────────────────────────────────────────────────┘
 ```
 
