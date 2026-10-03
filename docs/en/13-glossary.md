@@ -22,19 +22,20 @@ This glossary lists terms used in and around S3 in alphabetical order (symbols a
 | Term | Description | Related |
 | --- | --- | --- |
 | ABAC (Attribute-Based Access Control) | An access model that grants permissions based on attributes such as tags. In S3 you can embed principal tags (`aws:PrincipalTag`) in ARNs, and since November 2025 you can also control access with general purpose bucket tags (`aws:ResourceTag`). | Session tags, PutBucketAbac |
-| Abort Incomplete Multipart Upload | A lifecycle action that automatically aborts multipart uploads left incomplete after a set number of days. Until aborted, the uploaded parts keep incurring storage charges. | Multipart upload, Lifecycle |
+| Abort Incomplete Multipart Upload | A lifecycle action that automatically aborts multipart uploads left incomplete after a set number of days. Until aborted, the uploaded parts keep incurring storage charges. | Multipart upload, Lifecycle configuration |
 | Access Analyzer for S3 | An IAM Access Analyzer feature that finds buckets shared with external accounts or the public. It also validates policies and analyzes unused access. | Block Public Access |
 | Access Control List (ACL) | A legacy permission list attached to buckets and objects. New buckets created after April 2023 have ACLs disabled by default (Bucket owner enforced), and their use is not recommended. | Object Ownership |
-| Access Grants | Grants access at the prefix level to IAM Identity Center users and groups or to IAM principals. Applications call `GetDataAccess` to receive temporary credentials. | Identity Center |
+| Access Grants | Grants access at the prefix level to IAM Identity Center users and groups or to IAM principals. Applications call `GetDataAccess` to receive temporary credentials. | IAM Identity Center |
 | Access Point | A named network endpoint attached to a bucket. Each one has its own policy and Block Public Access settings, and it can be restricted to access from a VPC only. | Multi-Region Access Point |
 | Access Point alias | A bucket-name-compatible alias (`...-s3alias`) assigned automatically to each access point. It lets tools that require a bucket name access data through the access point. | Access Point |
+| AccessDenied | The 403 error returned when a request is refused for lack of permission. Somewhere in the IAM policies, bucket policy, SCPs / RCPs, KMS key policy, or VPC endpoint policy there is an explicit Deny, or a required Allow is missing. | IAM policy, Bucket policy |
 | Account regional namespace | A namespace introduced in March 2026 that reserves bucket names with an account- and Region-specific suffix (for example, `-123456789012-us-east-1-an`) for your account. It prevents others from claiming your names first. | Bucket name |
 | AllAccessDisabled | A 403 error indicating that all access to the target has been disabled. It is usually an account-level issue that requires contacting AWS Support. | AccessDenied |
 | Amazon S3 Files | A service, generally available since April 2026, that mounts an S3 bucket as a file system. Built on Amazon EFS, it lets you access the same data through both file APIs and S3 APIs. | Mountpoint for Amazon S3 |
 | Annotation (S3 annotations) | A feature that attaches up to 1,000 named payloads of 1 byte to 1 MiB each to an object. You can add or change them later with APIs such as `PutObjectAnnotation` and analyze them in the S3 Metadata annotation table. | Metadata, User-defined metadata |
-| ARN (Amazon Resource Name) | A unique identifier for an AWS resource. S3 uses two forms, `arn:aws:s3:::bucket` (bucket) and `arn:aws:s3:::bucket/key` (object), with the Region and account omitted. | IAM |
 | Archive Access tier | An optional S3 Intelligent-Tiering tier for objects not accessed for 90 days or more. Retrieval requires a restore. | Intelligent-Tiering |
 | Archive Instant Access tier | The Intelligent-Tiering tier that objects move to automatically after 90 days without access. It provides millisecond access without a restore. | Intelligent-Tiering |
+| ARN (Amazon Resource Name) | A unique identifier for an AWS resource. S3 uses two forms, `arn:aws:s3:::bucket` (bucket) and `arn:aws:s3:::bucket/key` (object), with the Region and account omitted. | IAM policy |
 | AWS Backup for S3 | S3 backup through AWS Backup. It offers continuous backups (restore to any point within 35 days) and periodic snapshots, and it requires versioning. | PITR |
 | AWS CRT (Common Runtime) | A high-performance foundation library for the AWS SDKs. It maximizes S3 throughput with automatic multipart splitting and parallel transfers. | Transfer Manager |
 
@@ -51,6 +52,7 @@ This glossary lists terms used in and around S3 in alphabetical order (symbols a
 | Bucket name | The name of a bucket. It must be 3–63 characters of lowercase letters, numbers, hyphens, and dots, and in the global namespace it must be unique within the partition. | Account regional namespace |
 | Bucket owner enforced | An Object Ownership setting that disables ACLs and makes the bucket owner the owner of every object. This is the recommended setting. | Object Ownership |
 | Bucket policy | A resource-based JSON policy attached to a bucket. Use it for cross-account access and conditional denies (such as enforcing TLS). | IAM policy |
+| Bucket sniping | An attack in which a third party first creates a deleted or easily guessed bucket name, then receives data from apps or templates that still reference that name, or serves fake data from it (also called bucket squatting). `ExpectedBucketOwner` and Account regional namespaces prevent it. | ExpectedBucketOwner, Account regional namespace |
 | BucketAlreadyExists | A 409 error returned when another account already uses the bucket name you tried to create. If your own account owns it, you get `BucketAlreadyOwnedByYou` instead. | Bucket name |
 | Byte-range fetch | Retrieving only part of an object with the `Range` header. Use it for parallel downloads or partial reads of large files. | GetObject |
 
@@ -79,7 +81,7 @@ This glossary lists terms used in and around S3 in alphabetical order (symbols a
 | Deep Archive Access tier | An optional Intelligent-Tiering tier for objects not accessed for 180 days or more. Retrieval takes up to about 12 hours. | Intelligent-Tiering |
 | Default encryption | The encryption setting applied automatically to objects written to a bucket. Since January 2023, all new objects are encrypted with at least SSE-S3. | SSE-S3 |
 | Delete marker | A placeholder created when you delete an object in a versioning-enabled bucket without specifying a version ID. The data itself remains as a noncurrent version. | Versioning |
-| DeleteObjects | A batch delete API that removes up to 1,000 objects in one request. | Lifecycle |
+| DeleteObjects | A batch delete API that removes up to 1,000 objects in one request. | Lifecycle configuration |
 | Directory bucket | The bucket type used by S3 Express One Zone and similar classes. It sits in a single AZ (or Local Zone) and has a hierarchical namespace and session-based authentication. | Express One Zone |
 | DSSE-KMS | Server-side encryption that applies two layers of encryption with KMS keys. It targets specific compliance requirements. | SSE-KMS |
 | Durability | The likelihood that data is not lost. S3 Standard and other classes are designed for 99.999999999% (11 nines). | Availability |
@@ -91,11 +93,11 @@ This glossary lists terms used in and around S3 in alphabetical order (symbols a
 | Early delete fee | A prorated charge for deleting, overwriting, or transitioning an object before the minimum storage duration: 30 days for IA classes, 90 days for Glacier Instant/Flexible Retrieval, and 180 days for Deep Archive. | Storage class |
 | Endpoint | The URL you send S3 requests to. Variants include `bucket.s3.region.amazonaws.com` (virtual-hosted style), the website endpoint, FIPS, dual-stack, and access points. | Virtual-hosted style |
 | ETag | The object's entity tag. For a single PUT with SSE-S3 or no encryption it is the MD5 of the content, but for multipart uploads or SSE-KMS it is not an MD5. | Checksum |
-| Event Notifications | Sends notifications about object creation, deletion, restore, and other events to SNS, SQS, Lambda, or EventBridge. Delivery is at-least-once. | EventBridge |
+| Event Notifications | Sends notifications about object creation, deletion, restore, and other events to SNS, SQS, Lambda, or EventBridge. Delivery is at-least-once. | EventBridge integration |
 | EventBridge integration | When enabled per bucket, sends all S3 events to Amazon EventBridge. It supports advanced filtering, multiple targets, and replay. | Event Notifications |
-| Expedited retrieval | The fastest retrieval option from Glacier Flexible Retrieval (usually 1–5 minutes). Provisioned capacity guarantees its availability. | Restore |
 | ExpectedBucketOwner | A request parameter that makes the request fail with 403 if the bucket owner's account ID does not match. It protects against bucket name takeover. | Bucket sniping |
-| Expiration | A lifecycle action that expires objects after a set number of days. When versioning is enabled, it adds a delete marker. | Lifecycle |
+| Expedited retrieval | The fastest retrieval option from Glacier Flexible Retrieval (usually 1–5 minutes). Provisioned capacity guarantees its availability. | Restore |
+| Expiration | A lifecycle action that expires objects after a set number of days. When versioning is enabled, it adds a delete marker. | Lifecycle configuration |
 | Expired object delete marker | A delete marker with no remaining noncurrent versions. Lifecycle rules can remove it automatically. | Delete marker |
 | Express One Zone (S3 Express One Zone) | A high-performance storage class in a single AZ that delivers consistent single-digit millisecond latency. It uses directory buckets. | Directory bucket |
 
@@ -138,8 +140,8 @@ This glossary lists terms used in and around S3 in alphabetical order (symbols a
 | Infrequent Access tier | The Intelligent-Tiering tier that objects move to automatically after 30 days without access. | Intelligent-Tiering |
 | Intelligent-Tiering | A storage class that automatically moves objects between tiers based on access patterns. It has no retrieval fees but charges a per-object monitoring fee (objects under 128 KB are excluded). | Storage class |
 | Interface endpoint | An S3 VPC endpoint powered by AWS PrivateLink. It has private IPs and can also be used from on premises over Direct Connect or VPN (paid). | Gateway endpoint |
-| Inventory (S3 Inventory) | Outputs a daily or weekly list of the objects in a bucket and their metadata as CSV, ORC, or Parquet. Use it as an alternative to LIST. | Batch Operations |
 | InvalidObjectState | A 403 error returned when you GET an archived object that has not been restored. | Restore |
+| Inventory (S3 Inventory) | Outputs a daily or weekly list of the objects in a bucket and their metadata as CSV, ORC, or Parquet. Use it as an alternative to LIST. | Batch Operations |
 
 ## K
 
@@ -161,7 +163,7 @@ This glossary lists terms used in and around S3 in alphabetical order (symbols a
 
 | Term | Description | Related |
 | --- | --- | --- |
-| Macie | A service that uses machine learning and pattern matching to find sensitive data (such as personal information) in S3. | GuardDuty |
+| Macie | A service that uses machine learning and pattern matching to find sensitive data (such as personal information) in S3. | GuardDuty S3 Protection |
 | Manifest | The list of objects a Batch Operations job processes. You provide it as a CSV or an S3 Inventory report, or have it generated when you create the job. | Batch Operations |
 | Metadata (S3 Metadata) | Automatically maintains a bucket's object information as Iceberg tables in S3 Tables (journal, live inventory, annotation) that you can query with SQL. | S3 Tables |
 | MFA Delete | A setting that requires MFA to permanently delete versions or change the versioning state. Only the root user can enable it, and it cannot be used with lifecycle rules. | Versioning |
@@ -173,9 +175,9 @@ This glossary lists terms used in and around S3 in alphabetical order (symbols a
 
 | Term | Description | Related |
 | --- | --- | --- |
-| NoSuchKey | A 404 error returned when you GET a key that does not exist. If the caller lacks `s3:ListBucket`, the response is 403 instead. | AccessDenied |
 | Noncurrent version | In a versioning-enabled bucket, a version that is no longer the latest because it was overwritten or deleted. It keeps incurring storage charges. | NoncurrentVersionExpiration |
-| NoncurrentVersionExpiration | A lifecycle action that permanently deletes versions a set number of days after they become noncurrent. `NewerNoncurrentVersions` sets how many to keep. | Lifecycle |
+| NoncurrentVersionExpiration | A lifecycle action that permanently deletes versions a set number of days after they become noncurrent. `NewerNoncurrentVersions` sets how many to keep. | Lifecycle configuration |
+| NoSuchKey | A 404 error returned when you GET a key that does not exist. If the caller lacks `s3:ListBucket`, the response is 403 instead. | AccessDenied |
 
 ## O
 
@@ -187,7 +189,7 @@ This glossary lists terms used in and around S3 in alphabetical order (symbols a
 | Object Lambda | Transforms data with Lambda on GET and other requests before returning it (S3 Object Lambda). As of 2025-11-07, available only to existing customers and select APN partners; no new capabilities are planned. | Access Point |
 | Object Lock | Prevents deletion or overwriting of object versions under a WORM (Write Once Read Many) model. It offers retention periods (Governance / Compliance) and legal holds. | WORM |
 | Object Ownership | A bucket setting that determines object ownership and how ACLs are handled. There are three options: Bucket owner enforced, Bucket owner preferred, and Object writer. | ACL |
-| Object tag | A key-value pair attached to an object (up to 10). Usable in lifecycle filters and permission conditions. | Lifecycle |
+| Object tag | A key-value pair attached to an object (up to 10). Usable in lifecycle filters and permission conditions. | Lifecycle configuration |
 | One Zone-IA | An infrequent access storage class stored in a single AZ. It is cheaper, but data can be lost if the AZ is lost. | Standard-IA |
 | Outposts (S3 on Outposts) | Brings the S3 API to on-premises AWS Outposts. | Directory bucket |
 
@@ -199,6 +201,7 @@ This glossary lists terms used in and around S3 in alphabetical order (symbols a
 | Path-style URL | A URL of the form `s3.region.amazonaws.com/bucket/key`. Buckets created after September 30, 2020 do not support it; virtual-hosted style is recommended. | Virtual-hosted style |
 | PermanentRedirect | A 301 error returned when you send a request to an endpoint in a different Region from the bucket. | Endpoint |
 | PITR (Point-in-time restore) | Restoring S3 data to its state at any point within the last 35 days using AWS Backup continuous backups. | AWS Backup for S3 |
+| PreconditionFailed | The 412 error returned when the condition of a conditional request (`If-Match`, `If-None-Match`, and so on) is not met. Conditional writes use it to detect conflicts with an existing object. | Conditional write |
 | Prefix | The string at the beginning of a key. It is the unit for request rate scaling, lifecycle rules, permissions, and LIST. | Folder |
 | Presigned POST | A signed policy for uploading directly from a browser form. Conditions such as `content-length-range` can limit size and Content-Type. | Presigned URL |
 | Presigned URL | A URL that grants a specific operation for a limited time using the creator's permissions. With SigV4 the maximum is 7 days, but if created with temporary credentials, their expiration is the limit. | SigV4 |
@@ -211,6 +214,7 @@ This glossary lists terms used in and around S3 in alphabetical order (symbols a
 
 | Term | Description | Related |
 | --- | --- | --- |
+| RAG (Retrieval-Augmented Generation) | A technique in which a generative AI model searches external data for relevant information and adds it to the prompt before answering. S3 Vectors can serve as its vector store for that search. | S3 Vectors (vector bucket) |
 | RCP (Resource Control Policy) | An AWS Organizations policy that applies organization-wide guardrails to resources such as S3 buckets. Introduced in November 2024, it is used to restrict access from external principals, among other things. | SCP, Data perimeter |
 | Read-after-write consistency | A read right after a write returns the latest data. Since December 2020, S3 provides strong consistency in all Regions (including LIST). | Strong consistency |
 | Reduced Redundancy Storage (RRS) | A legacy storage class with lower durability. It is no longer recommended, and Standard is often cheaper. | Storage class |
@@ -218,8 +222,8 @@ This glossary lists terms used in and around S3 in alphabetical order (symbols a
 | Replication | Automatically and asynchronously copies objects between buckets (CRR, SRR). Both source and destination need versioning. | Batch Replication |
 | Replication Time Control (RTC) | A replication option with an SLA to replicate 99.99% of new objects within 15 minutes. It includes metrics and notifications. | Replication |
 | Request rate | Requests per second. It scales automatically per prefix, and sudden spikes can temporarily return 503 SlowDown. | SlowDown |
-| Requester Pays | A bucket setting that bills request and data transfer charges to the requester. Requesters must include `x-amz-request-payer: requester`. | Billing |
-| Restore (RestoreObject) | Creates a temporary readable copy of an archived object. You choose the Expedited, Standard, or Bulk retrieval speed. | Glacier |
+| Requester Pays | A bucket setting that bills request and data transfer charges to the requester. Requesters must include `x-amz-request-payer: requester`. | Usage type, CUR (Cost and Usage Report) |
+| Restore (RestoreObject) | Creates a temporary readable copy of an archived object. You choose the Expedited, Standard, or Bulk retrieval speed. | Glacier Flexible Retrieval, Glacier Deep Archive |
 | Retention period | The Object Lock retention deadline. Until it passes, the version cannot be deleted or overwritten. | Object Lock |
 | Routing rules | Rules for conditional redirects in static website hosting. | Website endpoint |
 
@@ -233,8 +237,8 @@ This glossary lists terms used in and around S3 in alphabetical order (symbols a
 | Server access logging | Delivers requests to a bucket as log files in another bucket. Delivery is best effort, and the feature is free (storage is billed separately). | CloudTrail data events |
 | Server-side encryption (SSE) | S3 encrypts data at rest. Options are SSE-S3, SSE-KMS, DSSE-KMS, and SSE-C. | Default encryption |
 | Session tags | Tags passed during `AssumeRole`. Policies can reference them as `aws:PrincipalTag`, which enables multi-tenant ABAC. | ABAC |
-| SigV4 (Signature Version 4) | The signing method for AWS API requests. SigV2 is deprecated for S3, and new Regions and features support SigV4 only. | Presigned URL |
 | SignatureDoesNotMatch | A 403 error returned when the computed signature does not match the server's. Causes include a wrong key, modified headers, or encoding differences. | SigV4 |
+| SigV4 (Signature Version 4) | The signing method for AWS API requests. SigV2 is deprecated for S3, and new Regions and features support SigV4 only. | Presigned URL |
 | SlowDown | A 503 error returned when the request rate is too high. Retry with exponential backoff and spread requests across prefixes. | Request rate |
 | SRR (Same-Region Replication) | Replication to another bucket in the same Region. Used for log aggregation and copies between accounts. | CRR |
 | SSE-C | S3 encrypts data with a key the customer supplies on every request. AWS does not store the key. Since April 2026, blocking by default has been rolling out for new buckets and others. | BlockedEncryptionTypes |
@@ -243,8 +247,8 @@ This glossary lists terms used in and around S3 in alphabetical order (symbols a
 | Standard (S3 Standard) | The default storage class for frequently accessed data. Data is stored across three or more AZs. | Storage class |
 | Standard-IA | A storage class for infrequent access. Storage is cheaper, but it has retrieval fees and a minimum billing of 30 days and 128 KB. | One Zone-IA |
 | Static website hosting | Serves a bucket as an HTTP website. The website endpoint does not support HTTPS, so put CloudFront in front of it in production. | Website endpoint |
-| Storage class | A combination of durability, availability, price, and retrieval characteristics. You set it per object. | Lifecycle |
-| Storage Class Analysis | Analyzes access patterns per prefix or tag and suggests when to transition to Standard-IA. | Lifecycle |
+| Storage class | A combination of durability, availability, price, and retrieval characteristics. You set it per object. | Lifecycle configuration |
+| Storage Class Analysis | Analyzes access patterns per prefix or tag and suggests when to transition to Standard-IA. | Lifecycle configuration |
 | Storage Lens | A dashboard of organization-wide S3 metrics for usage, activity, cost optimization, and data protection. It offers free metrics and advanced metrics. | Usage type |
 | Strong consistency | Every read and LIST reflects the latest state immediately after a write, overwrite, or delete. S3 provides it at no extra cost. | Read-after-write consistency |
 
@@ -255,7 +259,7 @@ This glossary lists terms used in and around S3 in alphabetical order (symbols a
 | TagStorage | The Usage Type for object tag storage charges (`TagStorage-TagHrs`). | Object tag |
 | Transfer Acceleration | Speeds up long-distance uploads and downloads through CloudFront edge locations. You are not charged for transfers that were not faster. | Endpoint |
 | Transfer Manager | A high-level SDK transfer API. It handles multipart splitting, parallelism, and retries automatically. | AWS CRT |
-| Transition | A lifecycle action that moves an object to another storage class. Objects cannot move up to a higher class (waterfall model). | Lifecycle |
+| Transition | A lifecycle action that moves an object to another storage class. Objects cannot move up to a higher class (waterfall model). | Lifecycle configuration |
 
 ## U
 
@@ -298,15 +302,15 @@ These are not S3 features themselves, but related services and general concepts 
 
 | Term | Description | Related |
 | --- | --- | --- |
-| Amazon Athena | A serverless query service that runs standard SQL directly on data in S3. It charges by data scanned, so Parquet and partitioning matter. | Glue Data Catalog |
+| Amazon Athena | A serverless query service that runs standard SQL directly on data in S3. It charges by data scanned, so Parquet and partitioning matter. | AWS Glue Data Catalog |
 | AssumeRole | The STS API that returns temporary credentials for an IAM role. You can attach session tags and session policies. | Session tags |
 | At-least-once delivery | A delivery guarantee in which messages arrive at least once but may be duplicated. S3 Event Notifications works this way, so make processing idempotent. | Event Notifications |
 | Availability | The fraction of time a service is usable. S3 Standard is designed for 99.99% availability, and the SLA is defined separately. | Durability |
 | Availability Zone (AZ) | A physically separate group of data centers within a Region. Standard and other classes store data across three or more AZs. | One Zone-IA |
 | AWS DataSync | A managed service that transfers and syncs large amounts of data quickly between S3 and on premises or other clouds. | Transfer Acceleration |
-| AWS Glue Data Catalog | A metadata catalog that holds schemas and partition information for data in S3. Athena and EMR read from it. | Athena |
+| AWS Glue Data Catalog | A metadata catalog that holds schemas and partition information for data in S3. Athena and EMR read from it. | Amazon Athena |
 | AWS Lake Formation | A service that centrally manages data lake permissions (database, table, column, row). Use it instead of direct S3 permissions. | Data lake |
-| AWS Snowball | A service that moves petabytes of data to S3 on physical devices. Use it when network transfer is impractical. | DataSync |
+| AWS Snowball | A service that moves petabytes of data to S3 on physical devices. Use it when network transfer is impractical. | AWS DataSync |
 | AWS Storage Gateway | A hybrid storage service for using S3 from on premises over NFS, SMB, or iSCSI (for example, S3 File Gateway). | Amazon S3 Files |
 | Bulk retrieval | The lowest-cost Glacier retrieval option. Usually 5–12 hours for Flexible Retrieval and within 48 hours for Deep Archive. | Restore |
 | Cache-Control | An HTTP header, storable as object metadata, that controls how long browsers and CloudFront cache content. | CloudFront |
@@ -319,6 +323,7 @@ These are not S3 features themselves, but related services and general concepts 
 | Default root object | The object CloudFront returns for requests to the root (`/`), such as `index.html`. It does not apply to subdirectories. | Static website hosting |
 | Dual-stack endpoint | An S3 endpoint that supports both IPv4 and IPv6 (`s3.dualstack.region.amazonaws.com`). | Endpoint |
 | Exponential backoff | A technique that increases the wait time exponentially with each retry. The standard response to 503 SlowDown and 500 InternalError. | SlowDown |
+| IAM Identity Center | A service that centrally manages users and groups and provides single sign-on to multiple AWS accounts and applications. It can be the identity source for S3 Access Grants. | Access Grants |
 | Idempotency | The property that running the same operation repeatedly produces the same result. The basis for handling duplicates in event-driven processing. | At-least-once delivery |
 | Index document | The object returned for requests to a directory in static website hosting, such as `index.html`. | Website endpoint |
 | Lambda recursive loop detection | A Lambda feature that detects and stops the same event cycling between Lambda and services such as S3. It assumes your design already separates input and output buckets. | Event Notifications |
@@ -352,7 +357,7 @@ These are not S3 features themselves, but related services and general concepts 
 | SRR | CRR | Within the same Region versus across Regions. |
 | Gateway endpoint | Interface endpoint | The former uses route tables, is free, and works only within the VPC; the latter uses ENIs, is paid, and also works from on premises. |
 | ETag | Checksum | An ETag is an identifier that is not always an MD5; an additional checksum is an integrity value computed with an algorithm you explicitly choose. |
-| Server access logging | CloudTrail data events | The former is best-effort log files; the latter is structured API call events that integrate with other services and are easier to analyze in CloudTrail Lake. |
+| Server access logging | CloudTrail data events | The former is best-effort log files; the latter is structured API call events that integrate with other services and are easier to analyze in CloudTrail Lake (note that CloudTrail Lake closed to new customers on 2026-05-31, and AWS recommends migrating to Amazon CloudWatch). |
 | Directory bucket | General purpose bucket | The former is single-AZ with a hierarchical namespace and session authentication; the latter is the original type with full feature support. |
 | Folder | Prefix | A folder is a console display concept; underneath, it is a prefix (the leading part of the key string). |
 

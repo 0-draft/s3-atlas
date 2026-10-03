@@ -324,7 +324,7 @@ spec:
 ```
 
 - v2 runs Mountpoint in dedicated Pods, so multiple Pods can share a volume with the same configuration (pod sharing). It also supports EKS Pod Identity and SELinux.
-- POSIX operations such as overwriting or renaming existing files are limited. Its strengths are reading ML training data and writing new files rather than appending to logs.
+- Its strengths are sequential and parallel reads of large files such as ML training data, and sequential writes of new files. Changes to existing files are limited: random writes are not supported, overwrites are only full rewrites with `--allow-overwrite` + `O_TRUNC`, and appends (`--incremental-upload`) and renames work only on S3 Express One Zone directory buckets. It is not suited to continuously appending logs to an existing file.
 
 ## 4. AI / ML
 

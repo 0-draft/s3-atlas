@@ -197,7 +197,7 @@ flowchart TD
 | Objects owned by another account | `bucket-owner-full-control` was not set on upload to an ACL-enabled bucket | Setting Object Ownership to enforced also makes the bucket owner the owner of existing objects |
 | Presigned URL | Expired, `ExpiredToken`, or the session of the signing role (up to 12 hours, etc.) is shorter than the URL | `X-Amz-Date`, `X-Amz-Expires`, and `X-Amz-Security-Token` in the URL |
 | Presigned URL | The creator lacks permission (a presigned URL runs with the creator's permissions) | Call the API directly with the creator's role to check |
-| Clock skew | Client clock off by 15 minutes or more -> `RequestTimeTooSkewed`. Presigned URLs fail with an `X-Amz-Date` in the future | `date -u`, `chronyc tracking` |
+| Clock skew | Client clock off by more than 15 minutes -> `RequestTimeTooSkewed`. Presigned URLs fail with an `X-Amz-Date` in the future | `date -u`, `chronyc tracking` |
 | Missing key | Without `s3:ListBucket`, you get 403 instead of 404 | Check whether the key exists using other permissions |
 | Object Lock | Deleting or overwriting a version under retention (delete with a version ID) | `aws s3api get-object-retention`, `get-object-legal-hold` |
 | Access point | Both the access point policy and the bucket policy (delegating to access points) are required | Delegate in the bucket policy with an `s3:DataAccessPointAccount` condition |
@@ -426,7 +426,7 @@ aws s3api head-object --bucket src-bucket --key path/key --query ReplicationStat
 | --- | --- | --- | --- |
 | Expedited | Usually 1 to 5 minutes (guideline: under 250 MB, guaranteed with provisioned capacity) | Not available | Archive Access tier only |
 | Standard | Usually 3 to 5 hours (restores started through Batch Operations can begin within minutes) | Usually within 12 hours | 3 to 5 hours / 12 hours |
-| Bulk | Usually 5 to 12 hours (free) | Usually within 48 hours | Same as Flexible Retrieval / Deep Archive |
+| Bulk | Usually 5 to 12 hours (free) | Usually within 48 hours | 5 to 12 hours / within 48 hours (Archive Access tier / Deep Archive Access tier) |
 | After restore | Temporary copy for the specified number of days (billed at Standard rates) | Same as Flexible Retrieval | Restored objects move back to the Frequent Access tier (no day count) |
 
 Common pitfalls:

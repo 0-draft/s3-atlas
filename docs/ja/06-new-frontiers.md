@@ -509,8 +509,8 @@ aws s3api put-object --bucket amzn-s3-demo-bucket --key state.json \
 
 | 時期 | 内容 |
 | --- | --- |
-| 2023-04 | 新規バケットは Block Public Access 有効・ACL 無効がデフォルト |
 | 2023-01 | 新規オブジェクトは SSE-S3 でデフォルト暗号化 |
+| 2023-04 | 新規バケットは Block Public Access 有効・ACL 無効がデフォルト |
 | 2024-11 | アカウントあたりの汎用バケット既定上限 100 → 10,000 (申請で最大 100 万) |
 | 2025-10 | Email Grantee ACL のサポート終了 (CLI ヘルプに記載) |
 | 2025-11 | ABAC (タグベースのアクセス制御、`PutBucketAbac`) |
@@ -518,8 +518,8 @@ aws s3api put-object --bucket amzn-s3-demo-bucket --key state.json \
 | 2025-12 | Organizations ポリシーによる組織全体の Block Public Access |
 | 2026-01 | `UpdateObjectEncryption`: データ移動なしで既存オブジェクトのサーバー側暗号化タイプを SSE-S3 → SSE-KMS などに変更 (What's New 2026-01-29、全リージョン) |
 | 2026-03 | **アカウントリージョナル名前空間** (`<prefix>-<accountId>-<region>-an` 形式の、自分のアカウントだけが作れるバケット名。`create-bucket --bucket-namespace account-regional`) |
-| 2026-04 | 新規・既存バケットで SSE-C をデフォルト無効化 (SSE-C 使用実績のあるアカウントの既存バケットは除く) |
 | 2026-03 | レプリケーションに失敗したオブジェクトに対してライフサイクルの移行・期限切れを保留 |
+| 2026-04 | 新規・既存バケットで SSE-C をデフォルト無効化 (SSE-C 使用実績のあるアカウントの既存バケットは除く) |
 | 2026-07 | Standard-IA / One Zone-IA への移行の 30 日最小期間を撤廃 |
 | 2026-07 | イベント通知にシステム生成タグを含める |
 

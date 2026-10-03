@@ -72,7 +72,7 @@ S3 の REST API は XML の `<Error><Code>...</Code><Message>...</Message></Erro
 | `InvalidRange` | 416 | Range が オブジェクトサイズ外 | サイズを HEAD で確認 |
 | `BucketAlreadyExists` | 409 | その名前は他のアカウントが使用中 (グローバル名前空間) | 別名、またはアカウントリージョナル名前空間 |
 | `BucketAlreadyOwnedByYou` | 409 | 自分のアカウントが既に同名バケットを所有 (us-east-1 のレガシー挙動では 200 OK が返り ACL がリセットされうる) | 冪等な IaC で既存チェック |
-| `BucketNotEmpty` | 409 | 空でないバケットの削除 (旧バージョン・削除マーカー・未完了 MPU も含む) | 11 章参照 |
+| `BucketNotEmpty` | 409 | 空でないバケットの削除 (旧バージョン・削除マーカー・未完了 MPU も含む) | 12 章参照 |
 | `ConditionalRequestConflict` | 409 | 条件付き書き込み中に同じキーへの競合操作 (例: 同時に削除が成功) | `PutObject` はリトライ可。`CompleteMultipartUpload` の場合は MPU を最初からやり直す |
 | `InvalidBucketState` | 409 | バケットの状態と矛盾する要求 (例: Object Lock 有効バケットでバージョニング停止) | 設定の前提条件を確認 |
 | `OperationAborted` | 409 | 同じリソースへの競合する条件付き操作が進行中 | 少し待ってリトライ |
@@ -85,7 +85,7 @@ S3 の REST API は XML の `<Error><Code>...</Code><Message>...</Message></Erro
 | `InternalError` | 500 | S3 内部エラー | 指数バックオフ付きリトライ (SDK の既定動作)。継続するなら request-id を添えてサポートへ |
 | `NotImplemented` | 501 | 未実装の機能 / ヘッダー (例: 未対応の `Transfer-Encoding`) | ヘッダーを見直す |
 | `ServiceUnavailable` | 503 | 一時的に処理不可 | リトライ |
-| `SlowDown` | 503 | リクエストレートが高すぎる (プレフィックス単位のスケール途中、KMS ではない) | 7 章参照 |
+| `SlowDown` | 503 | リクエストレートが高すぎる (プレフィックス単位のスケール途中、KMS ではない) | 5 章参照 |
 
 5xx はバケット所有者に課金されない。4xx は基本的に課金されるが、組織外 / アカウント外から来た 403 はバケット所有者に課金されない (2024 年の変更)。
 
@@ -157,13 +157,13 @@ flowchart TD
   MSG -- "いいえ (汎用メッセージ)" --> WHO{"呼び出し元とバケットは、同一組織?"}
   WHO -- "いいえ: 組織外クロスアカウント" --> X1["IAM Allow と バケットポリシー Allow の両方が必要"]
   WHO -- "はい / 不明" --> URL{"Presigned URL か?"}
-  URL -- はい --> P1{"X-Amz-Expires 経過 / 署名クレデンシャル失効 /、時刻ずれ / 署名外ヘッダー付与?"}
+  URL -- はい --> P1{"X-Amz-Expires 経過 / 署名クレデンシャル失効 / 時刻ずれ / 署名外ヘッダー付与?"}
   P1 -- はい --> P2["URL を再生成、時刻同期、ヘッダーを署名に含める"]
   P1 -- いいえ --> ID
   URL -- いいえ --> ID{"IAM (identity) で、Action と Resource が Allow?"}
   ID -- いいえ --> ID2["IAM ポリシーを修正、ListBucket はバケット ARN、GetObject は bucket/* に"]
   ID -- はい --> BP{"バケットポリシー / アクセスポイントポリシーに、該当する Deny?"}
-  BP -- はい --> BP2["条件 (aws:SourceVpce, aws:SecureTransport,、aws:PrincipalOrgID, s3:x-amz-server-side-encryption) を確認"]
+  BP -- はい --> BP2["条件 (aws:SourceVpce, aws:SecureTransport, aws:PrincipalOrgID, s3:x-amz-server-side-encryption) を確認"]
   BP -- いいえ --> BPA{"公開アクセスや ACL 付与を伴う?、BPA が有効?"}
   BPA -- はい --> BPA2["BPA 設定 (アカウント/バケット/AP) を確認、公開は CloudFront OAC で代替"]
   BPA -- いいえ --> OWN{"オブジェクトの所有者が、別アカウント? (ACL 有効バケット)"}
@@ -172,11 +172,11 @@ flowchart TD
   KMS -- はい --> KMS2["kms:Decrypt / kms:GenerateDataKey を、IAM とキーポリシーで許可、キーの状態確認"]
   KMS -- いいえ --> VPCE{"VPC エンドポイント経由?"}
   VPCE -- はい --> VPCE2["VPCE ポリシーで対象バケット/アクションを Allow"]
-  VPCE -- いいえ --> ORG{"SCP / RCP / Permissions boundary /、セッションポリシー?"}
+  VPCE -- いいえ --> ORG{"SCP / RCP / Permissions boundary / セッションポリシー?"}
   ORG -- はい --> ORG2["組織ポリシーと境界を確認"]
   ORG -- いいえ --> RP{"Requester Pays バケット?"}
   RP -- はい --> RP2["x-amz-request-payer: requester を付与 (CLI: --request-payer requester)"]
-  RP -- いいえ --> OTHER["その他: Glacier は InvalidObjectState、、Object Lock 中の削除、Access Point 経由の指定漏れ、、404 のはずが ListBucket 無しで 403"]
+  RP -- いいえ --> OTHER["その他: Glacier は InvalidObjectState、Object Lock 中の削除、Access Point 経由の指定漏れ、404 のはずが ListBucket 無しで 403"]
 ```
 
 ### 2.3 原因別チェックリスト
@@ -197,7 +197,7 @@ flowchart TD
 | 別アカウント所有オブジェクト | ACL 有効バケットでアップロード時に `bucket-owner-full-control` を付けなかった | Object Ownership を enforced にすれば既存オブジェクトも所有者がバケット所有者に変わる |
 | Presigned URL | 有効期限切れ、`ExpiredToken`、署名に使ったロールのセッション期限 (最大 12 時間等) が URL より短い | URL の `X-Amz-Date` と `X-Amz-Expires`、`X-Amz-Security-Token` |
 | Presigned URL | 生成者自身に権限がない (Presigned URL は生成者の権限で実行される) | 生成者のロールで直接 API を叩いて確認 |
-| 時刻ずれ | クライアント時計が 15 分以上ずれ → `RequestTimeTooSkewed`。Presigned URL では未来日時の `X-Amz-Date` で失敗 | `date -u`、`chronyc tracking` |
+| 時刻ずれ | クライアント時計が 15 分超ずれ → `RequestTimeTooSkewed`。Presigned URL では未来日時の `X-Amz-Date` で失敗 | `date -u`、`chronyc tracking` |
 | 存在しないキー | `s3:ListBucket` がないと 404 ではなく 403 が返る | キーの存在を別の権限で確認 |
 | Object Lock | 保持期間中のバージョン削除・上書き (バージョン ID 指定の削除) | `aws s3api get-object-retention`、`get-object-legal-hold` |
 | Access Point | アクセスポイントポリシーとバケットポリシー (アクセスポイントへの委任) の両方が必要 | バケットポリシーに `s3:DataAccessPointAccount` 条件で委任 |
@@ -426,7 +426,7 @@ aws s3api head-object --bucket src-bucket --key path/key --query ReplicationStat
 | --- | --- | --- | --- |
 | Expedited | 通常 1〜5 分 (250 MB 未満が目安、プロビジョンド容量で保証) | 不可 | Archive Access 層のみ可 |
 | Standard | 通常 3〜5 時間 (Batch Operations 経由なら数分で開始される改善あり) | 通常 12 時間以内 | 3〜5 時間 / 12 時間 |
-| Bulk | 通常 5〜12 時間 (無料) | 通常 48 時間以内 | 同左 |
+| Bulk | 通常 5〜12 時間 (無料) | 通常 48 時間以内 | 5〜12 時間 / 48 時間以内 (Archive Access 層 / Deep Archive Access 層) |
 | 復元後 | 指定日数だけ一時コピー (Standard 料金で課金) | 同左 | 復元されると Frequent Access 層に戻る (日数指定なし) |
 
 よくあるつまずき:

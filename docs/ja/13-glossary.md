@@ -22,19 +22,20 @@ S3 とその周辺で登場する用語を、英字のアルファベット順 (
 | 用語 | 説明 | 関連 |
 | --- | --- | --- |
 | ABAC (Attribute-Based Access Control) | タグなどの属性で権限を決める方式。S3 ではプリンシパルタグ (`aws:PrincipalTag`) を ARN に埋め込む方法に加え、2025 年 11 月から汎用バケットのタグ (`aws:ResourceTag`) による制御もサポートされた。 | Session tags、PutBucketAbac |
-| Abort Incomplete Multipart Upload | 指定日数を過ぎた未完了マルチパートアップロードを自動中止するライフサイクルアクション。中止しないとアップロード済みパーツの保存料金が発生し続ける。 | Multipart upload、Lifecycle |
+| Abort Incomplete Multipart Upload | 指定日数を過ぎた未完了マルチパートアップロードを自動中止するライフサイクルアクション。中止しないとアップロード済みパーツの保存料金が発生し続ける。 | Multipart upload、Lifecycle configuration |
 | Access Analyzer for S3 | IAM Access Analyzer の機能で、外部アカウントや公開に共有されているバケットを検出する。ポリシーの検証や未使用アクセスの分析にも使う。 | Block Public Access |
 | Access Control List (ACL) | バケットやオブジェクトに付与するレガシーな権限リスト。2023 年 4 月以降の新規バケットは既定で無効 (Bucket owner enforced) で、使用は推奨されない。 | Object Ownership |
-| Access Grants | IAM Identity Center のユーザー・グループや IAM プリンシパルに、プレフィックス単位でアクセスを付与する仕組み。アプリは `GetDataAccess` で一時クレデンシャルを受け取る。 | Identity Center |
+| Access Grants | IAM Identity Center のユーザー・グループや IAM プリンシパルに、プレフィックス単位でアクセスを付与する仕組み。アプリは `GetDataAccess` で一時クレデンシャルを受け取る。 | IAM Identity Center |
 | Access Point | バケットに対する名前付きのネットワークエンドポイント。個別のポリシーと Block Public Access 設定を持ち、VPC からのみのアクセスに限定することもできる。 | Multi-Region Access Point |
 | Access Point alias | アクセスポイントに自動付与されるバケット名互換の別名 (`...-s3alias`)。バケット名を要求するツールでもアクセスポイント経由のアクセスができる。 | Access Point |
+| AccessDenied | 権限不足でリクエストが拒否されたときの 403 エラー。IAM ポリシー、バケットポリシー、SCP / RCP、KMS キーポリシー、VPC エンドポイントポリシーのどこかに明示的な Deny があるか、必要な Allow がない。 | IAM policy、Bucket policy |
 | Account regional namespace | 2026 年 3 月に導入された、アカウントとリージョン固有のサフィックス (例: `-123456789012-us-east-1-an`) を付けたバケット名を自アカウント専用に予約できる名前空間。名前の先取りを防げる。 | Bucket name |
 | AllAccessDisabled | 対象へのアクセスが全面的に無効化されていることを示す 403 エラー。通常はアカウントレベルの問題で、AWS サポートへの問い合わせが必要。 | AccessDenied |
 | Amazon S3 Files | 2026 年 4 月に GA した、S3 バケットをファイルシステムとしてマウントできるサービス。Amazon EFS をベースにし、ファイル API と S3 API の両方から同じデータにアクセスできる。 | Mountpoint for Amazon S3 |
 | Annotation (S3 annotations) | オブジェクトに 1 バイト〜1 MiB の名前付きペイロードを最大 1,000 個まで付与できる機能。`PutObjectAnnotation` 等の API で後から追加・変更でき、S3 Metadata の annotation テーブルで分析できる。 | Metadata、User-defined metadata |
-| ARN (Amazon Resource Name) | AWS リソースの一意な識別子。S3 では `arn:aws:s3:::bucket` (バケット) と `arn:aws:s3:::bucket/key` (オブジェクト) の 2 形式があり、リージョンとアカウントは省略される。 | IAM |
 | Archive Access tier | S3 Intelligent-Tiering のオプション層で、90 日以上アクセスのないオブジェクトを移す。取り出しには復元が必要。 | Intelligent-Tiering |
 | Archive Instant Access tier | Intelligent-Tiering で 90 日アクセスのないオブジェクトが自動的に移る層。復元不要でミリ秒アクセスできる。 | Intelligent-Tiering |
+| ARN (Amazon Resource Name) | AWS リソースの一意な識別子。S3 では `arn:aws:s3:::bucket` (バケット) と `arn:aws:s3:::bucket/key` (オブジェクト) の 2 形式があり、リージョンとアカウントは省略される。 | IAM policy |
 | AWS Backup for S3 | AWS Backup による S3 のバックアップ。継続バックアップ (35 日以内の任意時点に復元) と定期スナップショットがあり、バージョニングが必須。 | PITR |
 | AWS CRT (Common Runtime) | AWS SDK の高性能な基盤ライブラリ。自動的なマルチパート分割・並列転送で S3 のスループットを引き出す。 | Transfer Manager |
 
@@ -51,6 +52,7 @@ S3 とその周辺で登場する用語を、英字のアルファベット順 (
 | Bucket name | バケットの名前。3〜63 文字の小文字・数字・ハイフン・ドットで、グローバル名前空間ではパーティション内で一意でなければならない。 | Account regional namespace |
 | Bucket owner enforced | Object Ownership の設定値の 1 つで、ACL を無効にし、すべてのオブジェクトの所有者をバケット所有者に統一する。推奨設定。 | Object Ownership |
 | Bucket policy | バケットに付与するリソースベースの JSON ポリシー。クロスアカウントアクセスや条件付きの拒否 (TLS 強制等) に使う。 | IAM policy |
+| Bucket sniping | 削除済みや推測しやすいバケット名を第三者が先に作成し、その名前を参照し続けるアプリやテンプレートからデータを受け取ったり、偽のデータを配ったりする攻撃 (bucket squatting とも)。`ExpectedBucketOwner` や Account regional namespace で防ぐ。 | ExpectedBucketOwner、Account regional namespace |
 | BucketAlreadyExists | 作成しようとしたバケット名を他アカウントが使っているときの 409 エラー。自アカウント所有なら `BucketAlreadyOwnedByYou`。 | Bucket name |
 | Byte-range fetch | `Range` ヘッダーでオブジェクトの一部だけを取得すること。並列ダウンロードや大きなファイルの部分読みに使う。 | GetObject |
 
@@ -79,7 +81,7 @@ S3 とその周辺で登場する用語を、英字のアルファベット順 (
 | Deep Archive Access tier | Intelligent-Tiering のオプション層で、180 日以上アクセスのないオブジェクトを移す。取り出しは最大 12 時間程度。 | Intelligent-Tiering |
 | Default encryption | バケットに書き込まれたオブジェクトに自動的に適用される暗号化設定。2023 年 1 月以降、すべての新規オブジェクトは少なくとも SSE-S3 で暗号化される。 | SSE-S3 |
 | Delete marker | バージョニング有効バケットでバージョン ID を指定せずに削除したとき作られるプレースホルダ。データ自体は非現行バージョンとして残る。 | Versioning |
-| DeleteObjects | 1 リクエストで最大 1,000 オブジェクトを削除するバッチ削除 API。 | Lifecycle |
+| DeleteObjects | 1 リクエストで最大 1,000 オブジェクトを削除するバッチ削除 API。 | Lifecycle configuration |
 | Directory bucket | S3 Express One Zone などで使うバケット種別。単一 AZ (またはローカルゾーン) に配置され、階層的な名前空間とセッション認証を持つ。 | Express One Zone |
 | DSSE-KMS | KMS キーを使い 2 層の暗号化を行うサーバー側暗号化。特定のコンプライアンス要件向け。 | SSE-KMS |
 | Durability | データが失われない確率。S3 Standard 等は 99.999999999% (11 nines) を目標に設計されている。 | Availability |
@@ -91,11 +93,11 @@ S3 とその周辺で登場する用語を、英字のアルファベット順 (
 | Early delete fee | IA 系 (30 日)、Glacier Instant/Flexible Retrieval (90 日)、Deep Archive (180 日) の最低保存期間前に削除・上書き・遷移したときの日割り料金。 | Storage class |
 | Endpoint | S3 にリクエストを送る URL。`bucket.s3.region.amazonaws.com` (仮想ホスト形式)、website endpoint、FIPS、デュアルスタック、アクセスポイント等がある。 | Virtual-hosted style |
 | ETag | オブジェクトのエンティティタグ。単一 PUT かつ SSE-S3/平文なら内容の MD5 だが、マルチパートや SSE-KMS では MD5 ではない。 | Checksum |
-| Event Notifications | オブジェクトの作成・削除・復元などを SNS、SQS、Lambda、EventBridge に通知する機能。配信は at-least-once。 | EventBridge |
+| Event Notifications | オブジェクトの作成・削除・復元などを SNS、SQS、Lambda、EventBridge に通知する機能。配信は at-least-once。 | EventBridge integration |
 | EventBridge integration | バケット単位で有効化すると全 S3 イベントを Amazon EventBridge に送る機能。高度なフィルタ、複数ターゲット、リプレイが使える。 | Event Notifications |
-| Expedited retrieval | Glacier Flexible Retrieval からの最速の取り出し (通常 1〜5 分)。プロビジョンド容量で可用性を保証できる。 | Restore |
 | ExpectedBucketOwner | リクエストに付けると、バケット所有者のアカウント ID が一致しない場合に 403 で失敗させるパラメータ。バケット名の乗っ取り対策になる。 | Bucket sniping |
-| Expiration | ライフサイクルで、指定日数を過ぎたオブジェクトを期限切れにするアクション。バージョニング有効時は削除マーカーが付く。 | Lifecycle |
+| Expedited retrieval | Glacier Flexible Retrieval からの最速の取り出し (通常 1〜5 分)。プロビジョンド容量で可用性を保証できる。 | Restore |
+| Expiration | ライフサイクルで、指定日数を過ぎたオブジェクトを期限切れにするアクション。バージョニング有効時は削除マーカーが付く。 | Lifecycle configuration |
 | Expired object delete marker | 非現行バージョンが 1 つも残っていない削除マーカー。ライフサイクルで自動削除できる。 | Delete marker |
 | Express One Zone (S3 Express One Zone) | 単一 AZ に置かれ、1 桁ミリ秒の一貫したレイテンシを提供する高性能ストレージクラス。ディレクトリバケットを使う。 | Directory bucket |
 
@@ -138,8 +140,8 @@ S3 とその周辺で登場する用語を、英字のアルファベット順 (
 | Infrequent Access tier | Intelligent-Tiering で 30 日アクセスのないオブジェクトが自動的に移る層。 | Intelligent-Tiering |
 | Intelligent-Tiering | アクセスパターンに応じてオブジェクトを自動的に層移動するストレージクラス。取り出し料金はなく、オブジェクトごとの監視料がかかる (128 KB 未満は対象外)。 | Storage class |
 | Interface endpoint | AWS PrivateLink による S3 の VPC エンドポイント。プライベート IP を持ち、オンプレミスから Direct Connect / VPN 経由でも使える (有料)。 | Gateway endpoint |
-| Inventory (S3 Inventory) | バケット内のオブジェクト一覧とメタデータを日次または週次で CSV / ORC / Parquet で出力する機能。LIST の代替として使う。 | Batch Operations |
 | InvalidObjectState | 復元していないアーカイブ層のオブジェクトを GET したときの 403 エラー。 | Restore |
+| Inventory (S3 Inventory) | バケット内のオブジェクト一覧とメタデータを日次または週次で CSV / ORC / Parquet で出力する機能。LIST の代替として使う。 | Batch Operations |
 
 ## K
 
@@ -161,7 +163,7 @@ S3 とその周辺で登場する用語を、英字のアルファベット順 (
 
 | 用語 | 説明 | 関連 |
 | --- | --- | --- |
-| Macie | 機械学習とパターンマッチで S3 内の機密データ (個人情報等) を検出するサービス。 | GuardDuty |
+| Macie | 機械学習とパターンマッチで S3 内の機密データ (個人情報等) を検出するサービス。 | GuardDuty S3 Protection |
 | Manifest | Batch Operations が処理対象とするオブジェクトの一覧。CSV、S3 Inventory レポート、またはジョブ作成時の自動生成で用意する。 | Batch Operations |
 | Metadata (S3 Metadata) | バケットのオブジェクト情報を S3 Tables 上の Iceberg テーブル (journal、live inventory、annotation) として自動的に保持し、SQL でクエリできる機能。 | S3 Tables |
 | MFA Delete | バージョンの完全削除とバージョニング状態の変更に MFA を要求する設定。root ユーザーのみが有効化でき、ライフサイクルと併用できない。 | Versioning |
@@ -173,9 +175,9 @@ S3 とその周辺で登場する用語を、英字のアルファベット順 (
 
 | 用語 | 説明 | 関連 |
 | --- | --- | --- |
-| NoSuchKey | 存在しないキーを GET したときの 404 エラー。呼び出し元に `s3:ListBucket` がない場合は 403 になる。 | AccessDenied |
 | Noncurrent version | バージョニング有効バケットで、上書きや削除によって最新ではなくなったバージョン。保存料金がかかり続ける。 | NoncurrentVersionExpiration |
-| NoncurrentVersionExpiration | 非現行になってから指定日数経過したバージョンを完全削除するライフサイクルアクション。`NewerNoncurrentVersions` で保持数を指定できる。 | Lifecycle |
+| NoncurrentVersionExpiration | 非現行になってから指定日数経過したバージョンを完全削除するライフサイクルアクション。`NewerNoncurrentVersions` で保持数を指定できる。 | Lifecycle configuration |
+| NoSuchKey | 存在しないキーを GET したときの 404 エラー。呼び出し元に `s3:ListBucket` がない場合は 403 になる。 | AccessDenied |
 
 ## O
 
@@ -187,7 +189,7 @@ S3 とその周辺で登場する用語を、英字のアルファベット順 (
 | Object Lambda | GET 等のリクエスト時に Lambda でデータを変換して返す機能 (S3 Object Lambda)。2025-11-07 以降、既存利用者と一部の APN パートナーのみ利用可能で、新機能の追加予定はない。 | Access Point |
 | Object Lock | WORM (Write Once Read Many) モデルでオブジェクトバージョンの削除・上書きを防ぐ機能。保持期間 (Governance / Compliance) と Legal hold がある。 | WORM |
 | Object Ownership | オブジェクトの所有者と ACL の扱いを決めるバケット設定。Bucket owner enforced、Bucket owner preferred、Object writer の 3 種類。 | ACL |
-| Object tag | オブジェクトに付けるキーと値のペア (最大 10 個)。ライフサイクルフィルタや権限条件に使える。 | Lifecycle |
+| Object tag | オブジェクトに付けるキーと値のペア (最大 10 個)。ライフサイクルフィルタや権限条件に使える。 | Lifecycle configuration |
 | One Zone-IA | 単一 AZ に保存される低頻度アクセス用ストレージクラス。安価だが AZ の喪失でデータを失う可能性がある。 | Standard-IA |
 | Outposts (S3 on Outposts) | オンプレミスの AWS Outposts 上で S3 API を使えるようにする機能。 | Directory bucket |
 
@@ -199,6 +201,7 @@ S3 とその周辺で登場する用語を、英字のアルファベット順 (
 | Path-style URL | `s3.region.amazonaws.com/bucket/key` 形式の URL。2020 年 9 月 30 日より後に作成されたバケットでは非対応で、仮想ホスト形式が推奨される。 | Virtual-hosted style |
 | PermanentRedirect | バケットと異なるリージョンのエンドポイントにリクエストしたときの 301 エラー。 | Endpoint |
 | PITR (Point-in-time restore) | AWS Backup の継続バックアップで、過去 35 日以内の任意の時点の状態に S3 データを復元すること。 | AWS Backup for S3 |
+| PreconditionFailed | 条件付きリクエスト (`If-Match`、`If-None-Match` など) の条件が満たされなかったときの 412 エラー。条件付き書き込みで既存オブジェクトとの競合を検出するのに使う。 | Conditional write |
 | Prefix | キーの先頭部分の文字列。リクエストレートのスケーリング、ライフサイクル、権限、LIST の単位になる。 | Folder |
 | Presigned POST | ブラウザフォームから直接アップロードするための署名付きポリシー。`content-length-range` などの条件でサイズや Content-Type を制限できる。 | Presigned URL |
 | Presigned URL | 生成者の権限で特定の操作を期限付きで許可する URL。SigV4 では最大 7 日だが、一時クレデンシャルで作るとその有効期限が上限になる。 | SigV4 |
@@ -211,6 +214,7 @@ S3 とその周辺で登場する用語を、英字のアルファベット順 (
 
 | 用語 | 説明 | 関連 |
 | --- | --- | --- |
+| RAG (Retrieval-Augmented Generation) | 生成 AI が回答する前に外部データから関連情報を検索し、プロンプトに加える手法。S3 Vectors はその検索用のベクトルストアとして使える。 | S3 Vectors (vector bucket) |
 | RCP (Resource Control Policy) | AWS Organizations のポリシーで、リソース側 (S3 バケット等) に組織全体のガードレールを課す。2024 年 11 月に導入され、外部プリンシパルからのアクセス制限などに使う。 | SCP、Data perimeter |
 | Read-after-write consistency | 書き込み直後の読み取りで最新データが返ること。S3 は 2020 年 12 月以降、全リージョンで強い整合性を提供する (LIST を含む)。 | Strong consistency |
 | Reduced Redundancy Storage (RRS) | 耐久性を下げた旧ストレージクラス。現在は非推奨で、Standard の方が安価な場合が多い。 | Storage class |
@@ -218,8 +222,8 @@ S3 とその周辺で登場する用語を、英字のアルファベット順 (
 | Replication | バケット間でオブジェクトを非同期に自動複製する機能 (CRR、SRR)。送信元と送信先の両方でバージョニングが必要。 | Batch Replication |
 | Replication Time Control (RTC) | 新しいオブジェクトの 99.99% を 15 分以内に複製する SLA 付きのレプリケーションオプション。メトリクスと通知も付く。 | Replication |
 | Request rate | 1 秒あたりのリクエスト数。プレフィックスごとに自動スケールし、急増時は一時的に 503 SlowDown が返ることがある。 | SlowDown |
-| Requester Pays | リクエストとデータ転送の料金をリクエスタ側に請求するバケット設定。リクエスタは `x-amz-request-payer: requester` を付ける必要がある。 | Billing |
-| Restore (RestoreObject) | アーカイブ層のオブジェクトの一時コピーを作り、読めるようにする操作。Expedited、Standard、Bulk の取り出し速度を選ぶ。 | Glacier |
+| Requester Pays | リクエストとデータ転送の料金をリクエスタ側に請求するバケット設定。リクエスタは `x-amz-request-payer: requester` を付ける必要がある。 | Usage type、CUR (Cost and Usage Report) |
+| Restore (RestoreObject) | アーカイブ層のオブジェクトの一時コピーを作り、読めるようにする操作。Expedited、Standard、Bulk の取り出し速度を選ぶ。 | Glacier Flexible Retrieval、Glacier Deep Archive |
 | Retention period | Object Lock の保持期限。期間中は対象バージョンの削除・上書きができない。 | Object Lock |
 | Routing rules | 静的 Web サイトホスティングで、条件に応じてリダイレクトするルール。 | Website endpoint |
 
@@ -233,8 +237,8 @@ S3 とその周辺で登場する用語を、英字のアルファベット順 (
 | Server access logging | バケットへのリクエストをログファイルとして別バケットに配信する機能。ベストエフォート配信で、無料 (保存料は別)。 | CloudTrail data events |
 | Server-side encryption (SSE) | S3 がデータを保存時に暗号化する方式。SSE-S3、SSE-KMS、DSSE-KMS、SSE-C がある。 | Default encryption |
 | Session tags | `AssumeRole` 時に付与するタグ。`aws:PrincipalTag` としてポリシーで参照でき、マルチテナント ABAC に使う。 | ABAC |
-| SigV4 (Signature Version 4) | AWS API リクエストの署名方式。S3 では SigV2 は非推奨で、新しいリージョンや機能は SigV4 のみ対応。 | Presigned URL |
 | SignatureDoesNotMatch | 計算した署名がサーバー側と一致しないときの 403 エラー。キーの誤り、ヘッダー改変、エンコード差などが原因。 | SigV4 |
+| SigV4 (Signature Version 4) | AWS API リクエストの署名方式。S3 では SigV2 は非推奨で、新しいリージョンや機能は SigV4 のみ対応。 | Presigned URL |
 | SlowDown | リクエストレートが高すぎるときの 503 エラー。指数バックオフでリトライし、プレフィックスを分散する。 | Request rate |
 | SRR (Same-Region Replication) | 同一リージョン内の別バケットへの複製。ログ集約やアカウント間のコピーに使う。 | CRR |
 | SSE-C | 顧客が毎回提供する鍵で S3 が暗号化する方式。AWS は鍵を保存しない。2026 年 4 月から新規バケット等で既定ブロックが展開されている。 | BlockedEncryptionTypes |
@@ -243,8 +247,8 @@ S3 とその周辺で登場する用語を、英字のアルファベット順 (
 | Standard (S3 Standard) | 頻繁にアクセスするデータ向けの既定ストレージクラス。3 つ以上の AZ に保存される。 | Storage class |
 | Standard-IA | 低頻度アクセス向けのストレージクラス。保存料は安いが取り出し料金と最低 30 日・最低 128 KB の課金がある。 | One Zone-IA |
 | Static website hosting | バケットを HTTP の Web サイトとして公開する機能。website endpoint は HTTPS 非対応なので本番では CloudFront を前段に置く。 | Website endpoint |
-| Storage class | 耐久性、可用性、料金、取り出し特性の組み合わせ。オブジェクトごとに指定する。 | Lifecycle |
-| Storage Class Analysis | プレフィックスやタグ単位でアクセスパターンを分析し、Standard-IA への遷移タイミングを提案する機能。 | Lifecycle |
+| Storage class | 耐久性、可用性、料金、取り出し特性の組み合わせ。オブジェクトごとに指定する。 | Lifecycle configuration |
+| Storage Class Analysis | プレフィックスやタグ単位でアクセスパターンを分析し、Standard-IA への遷移タイミングを提案する機能。 | Lifecycle configuration |
 | Storage Lens | 組織全体の S3 の使用量・アクティビティ・コスト最適化・データ保護の指標をダッシュボードで可視化する機能。無料メトリクスと高度なメトリクスがある。 | Usage type |
 | Strong consistency | 書き込み・上書き・削除の直後から、すべての読み取りと LIST が最新状態を反映する性質。S3 は追加料金なしで提供する。 | Read-after-write consistency |
 
@@ -255,7 +259,7 @@ S3 とその周辺で登場する用語を、英字のアルファベット順 (
 | TagStorage | オブジェクトタグの保存料金を表す Usage Type (`TagStorage-TagHrs`)。 | Object tag |
 | Transfer Acceleration | CloudFront のエッジロケーション経由で長距離のアップロード・ダウンロードを高速化する機能。速くならなかった転送には課金されない。 | Endpoint |
 | Transfer Manager | SDK の高レベル転送 API。マルチパートの分割、並列化、リトライを自動で行う。 | AWS CRT |
-| Transition | ライフサイクルでオブジェクトを別のストレージクラスへ移すアクション。上位クラスへの移動はできない (ウォーターフォールモデル)。 | Lifecycle |
+| Transition | ライフサイクルでオブジェクトを別のストレージクラスへ移すアクション。上位クラスへの移動はできない (ウォーターフォールモデル)。 | Lifecycle configuration |
 
 ## U
 
@@ -298,15 +302,15 @@ S3 単体の機能ではないが、S3 を使う上で頻出する周辺サー�
 
 | 用語 | 説明 | 関連 |
 | --- | --- | --- |
-| Amazon Athena | S3 上のデータに標準 SQL を直接実行するサーバーレスクエリサービス。スキャンしたデータ量で課金されるため、Parquet 化とパーティションが重要。 | Glue Data Catalog |
+| Amazon Athena | S3 上のデータに標準 SQL を直接実行するサーバーレスクエリサービス。スキャンしたデータ量で課金されるため、Parquet 化とパーティションが重要。 | AWS Glue Data Catalog |
 | AssumeRole | IAM ロールの一時クレデンシャルを取得する STS の API。セッションタグやセッションポリシーを付けられる。 | Session tags |
 | At-least-once delivery | 少なくとも 1 回は届くが重複する可能性がある配信保証。S3 Event Notifications はこの方式なので処理を冪等にする。 | Event Notifications |
 | Availability | サービスが利用可能な時間の割合。S3 Standard は 99.99% の可用性を目標に設計され、SLA は別途定められている。 | Durability |
 | Availability Zone (AZ) | リージョン内の物理的に独立したデータセンター群。Standard 等は 3 つ以上の AZ にデータを保存する。 | One Zone-IA |
 | AWS DataSync | オンプレミスや他クラウドと S3 の間で大量データを高速に転送・同期するマネージドサービス。 | Transfer Acceleration |
-| AWS Glue Data Catalog | S3 上のデータのスキーマとパーティション情報を保持するメタデータカタログ。Athena や EMR が参照する。 | Athena |
+| AWS Glue Data Catalog | S3 上のデータのスキーマとパーティション情報を保持するメタデータカタログ。Athena や EMR が参照する。 | Amazon Athena |
 | AWS Lake Formation | データレイクの権限 (データベース、テーブル、列、行) を一元管理するサービス。S3 への直接権限の代わりに使う。 | Data lake |
-| AWS Snowball | 物理デバイスでペタバイト級のデータを S3 に移送するサービス。ネットワーク転送が非現実的な場合に使う。 | DataSync |
+| AWS Snowball | 物理デバイスでペタバイト級のデータを S3 に移送するサービス。ネットワーク転送が非現実的な場合に使う。 | AWS DataSync |
 | AWS Storage Gateway | オンプレミスから NFS/SMB/iSCSI で S3 を使うためのハイブリッドストレージサービス (S3 File Gateway 等)。 | Amazon S3 Files |
 | Bulk retrieval | Glacier の最も安価な取り出し方式。Flexible Retrieval で通常 5〜12 時間、Deep Archive で 48 時間以内。 | Restore |
 | Cache-Control | オブジェクトのメタデータとして保存でき、ブラウザや CloudFront のキャッシュ期間を制御する HTTP ヘッダー。 | CloudFront |
@@ -319,6 +323,7 @@ S3 単体の機能ではないが、S3 を使う上で頻出する周辺サー�
 | Default root object | CloudFront でルート (`/`) へのリクエストに返すオブジェクト (例: `index.html`)。サブディレクトリには効かない。 | Static website hosting |
 | Dual-stack endpoint | IPv4 と IPv6 の両方に対応する S3 エンドポイント (`s3.dualstack.region.amazonaws.com`)。 | Endpoint |
 | Exponential backoff | リトライのたびに待ち時間を指数的に増やす手法。503 SlowDown や 500 InternalError への標準対処。 | SlowDown |
+| IAM Identity Center | 複数の AWS アカウントやアプリケーションへのシングルサインオンと、ユーザー・グループを一元管理するサービス。S3 Access Grants の ID ソースとして使える。 | Access Grants |
 | Idempotency | 同じ操作を何度実行しても結果が変わらない性質。イベント駆動処理の重複対策の基本。 | At-least-once delivery |
 | Index document | 静的 Web サイトホスティングでディレクトリへのリクエストに返すオブジェクト (例: `index.html`)。 | Website endpoint |
 | Lambda recursive loop detection | Lambda と S3 などの間で同じイベントが循環していることを検出して停止する Lambda の機能。設計で入出力バケットを分けるのが前提。 | Event Notifications |
@@ -352,7 +357,7 @@ S3 単体の機能ではないが、S3 を使う上で頻出する周辺サー�
 | SRR | CRR | 同一リージョン内か、リージョンをまたぐか。 |
 | Gateway endpoint | Interface endpoint | 前者はルートテーブル方式で無料・VPC 内のみ、後者は ENI 方式で有料・オンプレミスからも使える。 |
 | ETag | Checksum | ETag は MD5 とは限らない識別子、追加チェックサムは明示的に指定したアルゴリズムでの完全性検証値。 |
-| Server access logging | CloudTrail data events | 前者はベストエフォートのログファイル、後者は API 呼び出しの構造化イベントで、他サービスとの統合や Lake で分析しやすい。 |
+| Server access logging | CloudTrail data events | 前者はベストエフォートのログファイル、後者は API 呼び出しの構造化イベントで、他サービスとの統合や CloudTrail Lake で分析しやすい (ただし CloudTrail Lake は 2026-05-31 に新規顧客の受付を終了しており、AWS は Amazon CloudWatch への移行を推奨している)。 |
 | Directory bucket | General purpose bucket | 前者は単一 AZ・階層的名前空間・セッション認証、後者は従来型で全機能対応。 |
 | Folder | Prefix | フォルダはコンソールの表示概念、実体はプレフィックス (キー文字列の先頭部分)。 |
 

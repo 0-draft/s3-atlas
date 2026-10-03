@@ -509,8 +509,8 @@ If another operation runs concurrently, you may get `409 ConditionalRequestConfl
 
 | When | Details |
 | --- | --- |
-| 2023-04 | New buckets default to Block Public Access enabled and ACLs disabled |
 | 2023-01 | New objects encrypted with SSE-S3 by default |
+| 2023-04 | New buckets default to Block Public Access enabled and ACLs disabled |
 | 2024-11 | Default general purpose bucket quota per account raised from 100 to 10,000 (up to 1 million on request) |
 | 2025-10 | End of support for Email Grantee ACLs (noted in the CLI help) |
 | 2025-11 | ABAC (tag-based access control, `PutBucketAbac`) |
@@ -518,8 +518,8 @@ If another operation runs concurrently, you may get `409 ConditionalRequestConfl
 | 2025-12 | Organization-wide Block Public Access via Organizations policies |
 | 2026-01 | `UpdateObjectEncryption`: change the server-side encryption type of existing objects, e.g. SSE-S3 → SSE-KMS, without moving data (What's New 2026-01-29, all Regions) |
 | 2026-03 | **Account regional namespaces** (bucket names of the form `<prefix>-<accountId>-<region>-an` that only your account can create; `create-bucket --bucket-namespace account-regional`) |
-| 2026-04 | SSE-C disabled by default on new and existing buckets (except existing buckets in accounts with prior SSE-C usage) |
 | 2026-03 | Lifecycle transitions and expirations paused for objects that failed to replicate |
+| 2026-04 | SSE-C disabled by default on new and existing buckets (except existing buckets in accounts with prior SSE-C usage) |
 | 2026-07 | 30-day minimum for transitions to Standard-IA / One Zone-IA removed |
 | 2026-07 | Event notifications include system-generated tags |
 
