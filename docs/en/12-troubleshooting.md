@@ -2,7 +2,7 @@
 
 _Last verified: 2026-10-03_
 
-About 80% of S3 problems fall into one of these buckets: permissions (403), location (301/404), signatures and clock, throttling (503), or unexpected charges. This chapter starts with a full error code table to narrow down the cause, then gives step-by-step diagnosis by symptom.
+About 80% of S3 problems fall into one of these categories: permissions (403), location (301/404), signatures and clock, throttling (503), or unexpected charges. This chapter starts with a full error code table to narrow down the cause, then gives step-by-step diagnosis by symptom.
 
 ## 0. Basic diagnosis steps
 
@@ -72,7 +72,7 @@ The S3 REST API returns XML in the form `<Error><Code>...</Code><Message>...</Me
 | `InvalidRange` | 416 | The range is outside the object size | Check the size with HEAD |
 | `BucketAlreadyExists` | 409 | Another account already uses the name (global namespace) | Use another name, or the account regional namespace |
 | `BucketAlreadyOwnedByYou` | 409 | Your account already owns a bucket with that name (the legacy us-east-1 behavior returns 200 OK and can reset ACLs) | Check for existing buckets with idempotent IaC |
-| `BucketNotEmpty` | 409 | Deleting a bucket that is not empty (including old versions, delete markers, incomplete MPUs) | See section 11 |
+| `BucketNotEmpty` | 409 | Deleting a bucket that is not empty (including old versions, delete markers, incomplete MPUs) | See section 12 |
 | `ConditionalRequestConflict` | 409 | A conflicting operation on the same key during a conditional write (for example, a concurrent delete succeeded) | `PutObject` can be retried. For `CompleteMultipartUpload`, restart the MPU from the beginning |
 | `InvalidBucketState` | 409 | The request conflicts with the bucket state (for example, suspending versioning on a bucket with Object Lock) | Check the configuration prerequisites |
 | `OperationAborted` | 409 | A conflicting conditional operation on the same resource is in progress | Wait a moment and retry |
@@ -85,7 +85,7 @@ The S3 REST API returns XML in the form `<Error><Code>...</Code><Message>...</Me
 | `InternalError` | 500 | Internal S3 error | Retry with exponential backoff (the SDK default). If it persists, contact Support with the request ID |
 | `NotImplemented` | 501 | Unimplemented feature / header (for example, an unsupported `Transfer-Encoding`) | Review the headers |
 | `ServiceUnavailable` | 503 | Temporarily unable to process | Retry |
-| `SlowDown` | 503 | Request rate too high (S3 is still scaling the prefix; not KMS) | See section 7 |
+| `SlowDown` | 503 | Request rate too high (S3 is still scaling the prefix; not KMS) | See section 5 |
 
 The bucket owner is not charged for 5xx errors. 4xx errors are generally charged, but the bucket owner is not charged for 403s that come from outside the organization / account (a 2024 change).
 
@@ -313,7 +313,7 @@ Compare `<StringToSign>` and `<CanonicalRequest>` in the error response with the
 ### 7.1 Investigation steps
 
 1. In Cost Explorer, set Service = S3 and Group by = Usage Type to find which usage type increased.
-2. Depending on the usage type, use Storage Lens (by bucket / prefix), CloudWatch request metrics, and server access logs / CloudTrail data events to find which bucket and who.
+2. Depending on the usage type, use Storage Lens (by bucket / prefix), CloudWatch request metrics, and server access logs / CloudTrail data events to find which bucket and which caller.
 3. For details, query CUR 2.0 (Data Exports) with Athena and aggregate by `line_item_resource_id` (bucket name), `line_item_usage_type`, and `line_item_operation`.
 
 ```sql
@@ -425,9 +425,9 @@ aws s3api head-object --bucket src-bucket --key path/key --query ReplicationStat
 | Item | Glacier Flexible Retrieval | Glacier Deep Archive | Intelligent-Tiering archive tiers |
 | --- | --- | --- | --- |
 | Expedited | Usually 1 to 5 minutes (guideline: under 250 MB, guaranteed with provisioned capacity) | Not available | Archive Access tier only |
-| Standard | Usually 3 to 5 hours (improved to start within minutes through Batch Operations) | Usually within 12 hours | 3 to 5 hours / 12 hours |
-| Bulk | Usually 5 to 12 hours (free) | Usually within 48 hours | Same as left |
-| After restore | Temporary copy for the specified number of days (billed at Standard rates) | Same as left | Restored objects move back to the Frequent Access tier (no day count) |
+| Standard | Usually 3 to 5 hours (restores started through Batch Operations can begin within minutes) | Usually within 12 hours | 3 to 5 hours / 12 hours |
+| Bulk | Usually 5 to 12 hours (free) | Usually within 48 hours | Same as Flexible Retrieval / Deep Archive |
+| After restore | Temporary copy for the specified number of days (billed at Standard rates) | Same as Flexible Retrieval | Restored objects move back to the Frequent Access tier (no day count) |
 
 Common pitfalls:
 

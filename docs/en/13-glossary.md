@@ -199,7 +199,7 @@ This glossary lists terms used in and around S3 in alphabetical order (symbols a
 | Path-style URL | A URL of the form `s3.region.amazonaws.com/bucket/key`. Buckets created after September 30, 2020 do not support it; virtual-hosted style is recommended. | Virtual-hosted style |
 | PermanentRedirect | A 301 error returned when you send a request to an endpoint in a different Region from the bucket. | Endpoint |
 | PITR (Point-in-time restore) | Restoring S3 data to its state at any point within the last 35 days using AWS Backup continuous backups. | AWS Backup for S3 |
-| Prefix | The leading part of a key string. It is the unit for request rate scaling, lifecycle rules, permissions, and LIST. | Folder |
+| Prefix | The string at the beginning of a key. It is the unit for request rate scaling, lifecycle rules, permissions, and LIST. | Folder |
 | Presigned POST | A signed policy for uploading directly from a browser form. Conditions such as `content-length-range` can limit size and Content-Type. | Presigned URL |
 | Presigned URL | A URL that grants a specific operation for a limited time using the creator's permissions. With SigV4 the maximum is 7 days, but if created with temporary credentials, their expiration is the limit. | SigV4 |
 | Principal | The entity a policy allows or denies (IAM user, role, account, service, or `*`). | Bucket policy |
@@ -321,7 +321,7 @@ These are not S3 features themselves, but related services and general concepts 
 | Exponential backoff | A technique that increases the wait time exponentially with each retry. The standard response to 503 SlowDown and 500 InternalError. | SlowDown |
 | Idempotency | The property that running the same operation repeatedly produces the same result. The basis for handling duplicates in event-driven processing. | At-least-once delivery |
 | Index document | The object returned for requests to a directory in static website hosting, such as `index.html`. | Website endpoint |
-| Lambda recursive loop detection | A Lambda feature that detects and stops the same event cycling between Lambda and services such as S3. Separating input and output buckets in your design is still the baseline. | Event Notifications |
+| Lambda recursive loop detection | A Lambda feature that detects and stops the same event cycling between Lambda and services such as S3. It assumes your design already separates input and output buckets. | Event Notifications |
 | Optimistic locking | A concurrency control that writes with the ETag read earlier in `If-Match` and fails if the object has changed. S3 conditional writes make this possible. | Conditional write |
 | Parquet | A columnar file format. It compresses well and reduces the data scanned by Athena and similar engines. | Data lake |
 | PrivateLink | AWS private connectivity technology. S3 interface endpoints use it. | Interface endpoint |
@@ -352,7 +352,7 @@ These are not S3 features themselves, but related services and general concepts 
 | SRR | CRR | Within the same Region versus across Regions. |
 | Gateway endpoint | Interface endpoint | The former uses route tables, is free, and works only within the VPC; the latter uses ENIs, is paid, and also works from on premises. |
 | ETag | Checksum | An ETag is an identifier that is not always an MD5; an additional checksum is an integrity value computed with an algorithm you explicitly choose. |
-| Server access logging | CloudTrail data events | The former is best-effort log files; the latter is structured API call events that integrate with other services and are easier to analyze in Lake. |
+| Server access logging | CloudTrail data events | The former is best-effort log files; the latter is structured API call events that integrate with other services and are easier to analyze in CloudTrail Lake. |
 | Directory bucket | General purpose bucket | The former is single-AZ with a hierarchical namespace and session authentication; the latter is the original type with full feature support. |
 | Folder | Prefix | A folder is a console display concept; underneath, it is a prefix (the leading part of the key string). |
 

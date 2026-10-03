@@ -240,7 +240,7 @@ flowchart TB
 | Object Lock (WORM) | 2018 | Immutable backups against ransomware became a must-have for S3-compatible storage |
 | Tables / vectors on storage | 2024-2025 | The starting point of competition where "storage providers offer up to the database layer" |
 
-**Key point**: new S3 features tend to become industry standards 2-5 years later. When looking at a compatible vendor's feature list, using "up to how many years ago of S3 features has it caught up?" as a yardstick makes maturity easier to gauge.
+**Key point**: new S3 features tend to become industry standards 2-5 years later. When reading a compatible vendor's feature list, a useful yardstick for maturity is "how many years behind S3 is the newest S3 feature it supports?"
 
 ## 4. "S3 as database": impact on architecture
 
@@ -367,7 +367,7 @@ timeline
 | 2024-01-11 to 2027-01-12 | Allowed, but capped at the provider's direct costs (egress, etc.) and disclosed before the contract |
 | From 2027-01-12 | Article 29 bans switching charges (including egress) for the switching process |
 
-- It covers IaaS / PaaS / SaaS **provided to EU customers**. Even if the Region is in the US, an EU customer can bring a service into scope.
+- It covers IaaS / PaaS / SaaS **provided to EU customers**. It can apply even if the Region is in the US, as long as the customer is in the EU.
 - **Everyday egress (delivery to users, cross-Region replication) is out of scope**. Running multiple clouds in parallel is also generally interpreted as "operations" and out of scope.
 - Standard service fees and early termination penalties remain. Note that **the remaining balance of committed-spend contracts remains a de facto lock-in**.
 

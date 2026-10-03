@@ -284,46 +284,46 @@ See `data/quiz.json` for each question's answer and explanation. This list shows
 
 | ID | Topic | Difficulty | Question |
 | --- | --- | --- | --- |
-| q01 | Consistency | easy | Right after a PUT that overwrites an existing object succeeds, another client GETs the same key. What does S3 return? |
+| q01 | Consistency | easy | You overwrite an existing object with a successful PUT and immediately issue a GET for the same key from another client. What does S3 return? |
 | q02 | Limits | easy | As of 2026, what is the maximum size of a single S3 object? |
-| q03 | Limits | easy | What is the maximum size you can upload in a single PutObject request? |
-| q04 | Multipart upload | easy | In a multipart upload, what is the minimum size of each part except the last? |
+| q03 | Limits | easy | What is the largest object you can upload with a single PutObject request? |
+| q04 | Multipart upload | easy | In a multipart upload, what is the minimum size of each part except the last one? |
 | q05 | Multipart upload | easy | What is the maximum number of parts in a single multipart upload? |
-| q06 | Performance | medium | What is the minimum number of GET/HEAD requests per second that S3 supports per prefix? |
-| q07 | Encryption | easy | You upload a new object without specifying any encryption. How is it stored? |
-| q08 | Access control | easy | What is the default Object Ownership setting for a newly created general purpose bucket? |
-| q09 | Architecture | easy | You want to serve an S3 static site on a custom domain over HTTPS. What is the recommended approach? |
-| q10 | Troubleshooting | medium | A user with s3:GetObject but without s3:ListBucket GETs a key that does not exist. What HTTP status is returned? |
-| q11 | Presigned URL | medium | You generate a presigned URL with a 7-day expiration using temporary role credentials that expire in 1 hour. What happens after 1 hour? |
-| q12 | Troubleshooting | hard | In which case does S3 return only a generic Access Denied message instead of an enhanced message that includes the policy type? |
+| q06 | Performance | medium | At minimum, how many GET/HEAD requests per second does S3 support per partitioned prefix? |
+| q07 | Encryption | easy | You upload a new object to a bucket without specifying any encryption settings. How is it stored? |
+| q08 | Access control | easy | What is the default S3 Object Ownership setting for newly created general purpose buckets? |
+| q09 | Architecture | easy | You want to serve a static website from S3 over HTTPS with a custom domain. What is the recommended approach? |
+| q10 | Troubleshooting | medium | A user with s3:GetObject but without s3:ListBucket requests a key that does not exist. Which HTTP status is returned? |
+| q11 | Presigned URLs | medium | A presigned URL is generated with a 7-day expiry using temporary role credentials that expire in 1 hour. What happens after 1 hour? |
+| q12 | Troubleshooting | hard | In which case does S3 return only a generic 'Access Denied' message instead of the enhanced message that names the policy type? |
 | q13 | Encryption | medium | Which KMS permission does a caller need to download an object encrypted with SSE-KMS? |
-| q14 | Encryption | hard | Which combination of KMS permissions is required for a multipart upload of an SSE-KMS object? |
-| q15 | Encryption | medium | What is the main benefit of enabling S3 Bucket Keys with SSE-KMS? |
+| q14 | Encryption | hard | For a multipart upload of an SSE-KMS object, which pair of KMS permissions is required? |
+| q15 | Encryption | medium | What is the main benefit of enabling S3 Bucket Keys for SSE-KMS? |
 | q16 | Access control | medium | What does an AWS Organizations resource control policy (RCP) do for S3? |
-| q17 | Conditional requests | medium | You send PutObject with the If-None-Match: * header, but an object with the same key already exists. What happens? |
-| q18 | Conditional requests | hard | A conditional CompleteMultipartUpload returned 409 Conflict because a concurrent delete succeeded first. What should you do? |
-| q19 | Storage classes | medium | What is the minimum storage duration (for billing) of S3 Glacier Deep Archive? |
-| q20 | Cost | medium | How is a 40 KB object stored in S3 Standard-IA billed? |
+| q17 | Conditional requests | medium | You send PutObject with the header If-None-Match: * and an object with that key already exists. What happens? |
+| q18 | Conditional requests | hard | A conditional CompleteMultipartUpload returns 409 Conflict because a concurrent delete succeeded first. What must you do? |
+| q19 | Storage classes | medium | What is the minimum storage duration charge for S3 Glacier Deep Archive? |
+| q20 | Cost | medium | How are 40 KB objects stored in S3 Standard-IA billed? |
 | q21 | Storage classes | medium | How does S3 Intelligent-Tiering handle objects smaller than 128 KB? |
-| q22 | Lifecycle | hard | You set a lifecycle rule to transition all objects to Glacier Flexible Retrieval after 30 days, but a 50 KB object created in 2026 does not transition. Why? |
-| q23 | Storage classes | medium | You GET a Glacier Flexible Retrieval object without restoring it. What error is returned? |
-| q24 | Storage classes | medium | Which retrieval option is not available for S3 Glacier Deep Archive? |
-| q25 | Versioning | easy | After you enable versioning on a bucket, which state change is possible? |
-| q26 | Versioning | easy | What happens when you call DeleteObject without a version ID in a versioning-enabled bucket? |
-| q27 | Replication | medium | You add a replication rule to a bucket that already holds 10 million objects. How do you replicate the existing objects? |
-| q28 | Data protection | medium | Who can shorten the retention period of a version locked in Object Lock Compliance mode? |
+| q22 | Lifecycle | hard | A lifecycle rule transitions all objects to Glacier Flexible Retrieval after 30 days, but 50 KB objects created in 2026 are not transitioned. Why? |
+| q23 | Storage classes | medium | You GET an object stored in Glacier Flexible Retrieval without restoring it first. Which error do you get? |
+| q24 | Storage classes | medium | Which retrieval option is NOT available for S3 Glacier Deep Archive? |
+| q25 | Versioning | easy | After enabling versioning on a bucket, which state changes are possible? |
+| q26 | Versioning | easy | In a versioning-enabled bucket, what does DeleteObject without a version ID do? |
+| q27 | Replication | medium | You add a replication rule to a bucket that already contains 10 million objects. How do you replicate those existing objects? |
+| q28 | Data protection | medium | Under Object Lock compliance mode, who can shorten the retention period of a locked object version? |
 | q29 | Data protection | medium | With AWS Backup continuous backups for S3, how far back can you restore to any point in time? |
 | q30 | Versioning | hard | Which statement about MFA Delete is correct? |
-| q31 | Performance | easy | Your application frequently gets 503 SlowDown. What is the best response? |
-| q32 | Cost | medium | Are requests that fail with HTTP 503 Slow Down billed to the bucket owner? |
-| q33 | Cost | hard | Millions of unauthorized requests from an unknown external account fail with 403 AccessDenied. Who pays for them? |
-| q34 | Cost | medium | The Usage Type "TimedStorage-ByteHrs" spiked on your bill. What does it represent? |
-| q35 | Cost | medium | Which requests are included in the S3 Standard Usage Type "Requests-Tier1"? |
-| q36 | Events | hard | You want to send S3 Event Notifications directly to an SQS FIFO queue. What happens? |
-| q37 | Networking | easy | EC2 instances in a private subnet download several TB from S3 in the same Region through a NAT gateway. What is the simplest change to cut costs? |
-| q38 | Data integrity | medium | An object uploaded with multipart upload and SSE-S3 has an ETag of the form "...-12". Which statement is correct? |
-| q39 | Buckets | hard | With the S3 account regional namespaces introduced in 2026, what format do bucket names take? |
-| q40 | Architecture | easy | Which of these is an S3 anti-pattern? |
+| q31 | Performance | easy | Your application receives many 503 SlowDown errors. Which is the best response? |
+| q32 | Cost | medium | Are bucket owners billed for requests that fail with HTTP 503 Slow Down? |
+| q33 | Cost | hard | An unknown external account sends millions of unauthorized requests that receive 403 AccessDenied. Who pays for them? |
+| q34 | Cost | medium | In your bill, the usage type TimedStorage-ByteHrs suddenly increased. What does it measure? |
+| q35 | Cost | medium | Which requests are counted in the Requests-Tier1 usage type for S3 Standard? |
+| q36 | Events | hard | You want S3 Event Notifications delivered directly to an SQS FIFO queue. What happens? |
+| q37 | Networking | easy | EC2 instances in a private subnet download terabytes from S3 in the same Region through a NAT gateway. What change reduces cost most simply? |
+| q38 | Data integrity | medium | An object was uploaded with multipart upload using SSE-S3. Its ETag looks like "...-12". What is true? |
+| q39 | Buckets | hard | With S3 account regional namespaces (introduced in 2026), what does a bucket name look like? |
+| q40 | Architecture | easy | Which design is an S3 anti-pattern? |
 
 ## 9. Why misconceptions arise: a timeline of changes
 
@@ -343,7 +343,7 @@ Most S3 misconceptions are information that used to be true. When you read a blo
 | September 2025 | Conditional deletes for general purpose buckets | "Delete conflicts cannot be prevented" |
 | November 2025 | ABAC for general purpose buckets, SSE-C blocking setting | "Bucket tags are only for cost allocation" |
 | December 2025 | Maximum object size of 50 TB | "The maximum is 5 TB" |
-| March 2026 | Account regional namespaces | "Bucket names are first come, first served" |
+| March 2026 | Account regional namespaces | "Bucket names are strictly first come, first served" |
 | April 2026 | SSE-C disabled by default rollout, Amazon S3 Files GA | "SSE-C is always available," "S3 cannot be used as a file system" |
 
 The months above are based on What's New and blog announcement dates. Conditional writes were announced on 2024-08-20 (`If-None-Match`) and 2024-11-25 (`If-Match`).
@@ -361,7 +361,7 @@ If you cannot immediately answer "yes" to each item, reread the relevant chapter
 7. For ransomware, you have a copy that survives even if your production account is fully compromised.
 8. You can explain what the Usage Types `TimedStorage-ByteHrs`, `Requests-Tier1`, and `DataTransfer-Out-Bytes` mean.
 9. You can explain how replication handles existing objects and deletes.
-10. You know the defaults changed since 2023 (encryption, BPA, ACLs) and the 2025–2026 changes (50 TB, ABAC, namespaces, SSE-C).
+10. You know the defaults that changed in 2023 and later (encryption, BPA, ACLs) and the 2025–2026 changes (50 TB, ABAC, namespaces, SSE-C).
 
 ## 11. Tips for using the quiz
 

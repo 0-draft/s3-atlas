@@ -440,7 +440,7 @@ Checklist:
 | Best practice | S3 implementation |
 | --- | --- |
 | Unknown access patterns | S3 Intelligent-Tiering (objects under 128 KB are not monitored and always pay the Frequent Access rate) |
-| Data that clearly ages | Lifecycle from Standard-IA -> Glacier Instant Retrieval -> Glacier Flexible Retrieval -> Deep Archive |
+| Data that clearly ages | Lifecycle transitions: Standard-IA -> Glacier Instant Retrieval -> Glacier Flexible Retrieval -> Deep Archive |
 | Delete unneeded data | Expire noncurrent versions, remove expired delete markers, abort incomplete MPUs |
 | Visibility | S3 Storage Lens, Cost Explorer (by usage type), CUR 2.0 + Athena |
 | Data transfer | Deliver through CloudFront, process within the same Region, use Gateway VPC endpoints (avoid NAT Gateway data processing charges) |

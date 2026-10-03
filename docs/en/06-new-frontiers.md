@@ -51,7 +51,7 @@ timeline
 
 ### 1.1 Data gravity
 
-S3 holds data on the scale of hundreds of trillions of objects (AWS first cited more than 400 trillion objects in 2024-12, and more than 500 trillion objects in its 2026-03 20th-anniversary post). Copying data into another system every time you use it creates "data friction":
+S3 holds data on the scale of hundreds of trillions of objects (AWS cited more than 400 trillion objects in 2024-12, and more than 500 trillion objects in its 2026-03 20th-anniversary post). Copying data into another system every time you use it creates "data friction":
 
 - The cost of copying (transfer charges, duplicate storage)
 - Freshness drift (a copy is always stale)

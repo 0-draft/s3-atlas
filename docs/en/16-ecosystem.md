@@ -113,7 +113,7 @@ Three ideas to keep in mind:
 | SageMaker Unified Studio | Integrated studio for using the Lakehouse above from a UI / notebooks | Roles per domain / project | First check that the project role has S3 permissions |
 | Amazon Quick (formerly QuickSight) | Uses S3 manifests / Athena / S3 Tables as BI data sources | Data source settings, SPICE | Became Quick Suite in 2025-10 and is labeled Amazon Quick in 2026. Older articles use the QuickSight name |
 | OpenSearch direct query | Queries data on S3 with SQL / PPL from OpenSearch Dashboards without ingesting it | Data source (Amazon S3 with Glue Data Catalog), checkpoint bucket | Tables must be created in the Glue Data Catalog by hand (automatic for Security Lake) |
-| OpenSearch Ingestion | Pipeline that ingests from S3 (SQS notifications or scan) into OpenSearch | Pipeline `s3` source | With SQS notifications, assume no deduplication and no ordering guarantee |
+| OpenSearch Ingestion | Pipeline that ingests from S3 (SQS notifications or scan) into OpenSearch | Pipeline `s3` source | With SQS notifications, assume duplicates can occur and ordering is not guaranteed |
 | Amazon Data Firehose | Buffers streams and PUTs to S3. Parquet/ORC conversion, dynamic partitioning, Iceberg destinations | Buffer size 1–128 MB / interval 0–900 seconds, prefix, dynamic partitioning | With Parquet conversion / dynamic partitioning enabled, the buffer is 64–128 MB. Small buffer = lots of small files |
 | MSK Connect | Kafka Connect S3 sink connector (Confluent, etc.) from topic to S3 | `connector.class=io.confluent.connect.s3.S3SinkConnector`, `flush.size`, `partitioner.class` | A small `flush.size` produces small files. You upload the plugin yourself as a custom plugin |
 | AWS DMS | Outputs a database full load + CDC to S3 as CSV / Parquet | `DataFormat=parquet`, `ParquetVersion`, `CdcPath`, `DatePartitionEnabled` | CDC is an append-only log with an `Op` column (I/U/D). It is not a table as is, so MERGE it with Iceberg or similar |
@@ -421,7 +421,7 @@ flowchart LR
 
 | Service | Relationship to S3 | Key settings | Pitfalls |
 | --- | --- | --- | --- |
-| AWS Organizations | Guards S3 operations across accounts with SCPs / RCPs (for example, blocking Block Public Access from being disabled) | SCP, RCP, organization-level S3 Block Public Access policy | SCPs cap the principal side and RCPs cap the resource side. Neither grants permissions |
+| AWS Organizations | Guards S3 operations across accounts with SCPs / RCPs (for example, preventing Block Public Access from being disabled) | SCP, RCP, organization-level S3 Block Public Access policy | SCPs cap the principal side and RCPs cap the resource side. Neither grants permissions |
 | AWS Control Tower | Creates a central log bucket in the Log Archive account of the landing zone. Provides S3-related controls | Landing zone, controls (preventive / detective / proactive) | Changing Control Tower–managed buckets by hand counts as drift |
 | AWS Config | Records S3 configuration and evaluates it with managed rules | For example, `s3-bucket-public-read-prohibited`, `s3-bucket-ssl-requests-only`, `s3-bucket-server-side-encryption-enabled` | Config itself also delivers to S3. Rule names come and go, so check the list in the documentation |
 | AWS CloudTrail | Delivers management events and S3 data events (GetObject / PutObject, etc.) to an S3 bucket | Trail, advanced event selectors | Data events are high-volume and get expensive. Narrow down target buckets and operations |
@@ -755,7 +755,7 @@ Anti-patterns:
 | Concurrent writes | Basically no protection | Optimistic concurrency control through the catalog |
 | Operations | Handle small files yourself | Needs compaction / snapshot expiration (automatic with S3 Tables) |
 
-## 13. Choosing (summary)
+## 13. Selection guidelines (summary)
 
 ```mermaid
 flowchart TD
