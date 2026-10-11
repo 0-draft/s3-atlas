@@ -652,7 +652,7 @@ flowchart LR
 - Vonng, MinIO Is Dead, Long Live MinIO: <https://blog.vonng.com/en/db/minio-resurrect/>
 - Bex, MinIO Vanished From Docker Hub (2026-09-25, single source): <https://bex.co/blog/2026/09/25/minio-docker-hub-removal-quay-repoint>
 - Docker Hub API, repositories in the minio namespace (minio/minio and minio/mc absent as of 2026-10-03): <https://hub.docker.com/v2/repositories/minio/?page_size=100>
-- Matt Gerega, Migrating from MinIO to Garage: <https://www.mattgerega.com/2025/12/10/migrating-from-minio-to-garage-when-open-source-isnt-so-open-anymore/>
+- Matt Gerega, Migrating from MinIO to Garage: <https://web.archive.org/web/20260514044100/https://www.mattgerega.com/2025/12/10/migrating-from-minio-to-garage-when-open-source-isnt-so-open-anymore/> (archived)
 - Ceph, RADOS Gateway docs: <https://docs.ceph.com/en/latest/radosgw/>
 - SeaweedFS: <https://github.com/seaweedfs/seaweedfs>
 - Garage: <https://garagehq.deuxfleurs.fr/>
