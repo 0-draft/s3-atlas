@@ -75,6 +75,8 @@ jobs:
 
   links:
     name: Check external links
+    # Dependency bumps never touch links; skip so transient site timeouts don't flag them
+    if: github.actor != 'dependabot[bot]'
     runs-on: ubuntu-latest
     continue-on-error: true
     steps:
