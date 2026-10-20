@@ -7,3 +7,5 @@
 ^https://[a-z0-9.-]+\.amazonaws\.com/
 # Rejects lychee's HTTP/2 client; verified manually
 ^https://clickhouse\.com/
+# TLS handshake fails under lychee (rustls HandshakeFailure)
+^https://blog\.purestorage\.com/
